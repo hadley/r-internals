@@ -23,7 +23,7 @@ At the C-level, all R objects are stored in a common datatype, the `SEXP`, or S-
 * [Strings](strings.md): Character vectors are a more complex object made of 
   vector `CHARSXP`s.
 
-* [Environments](environment.md), or `ENVSXP`s.
+* [Environments](environments.md), or `ENVSXP`s.
 
 * [Functions](functions,md), including `CLOSXP`s and the rarer `BUILTINSXP`s,
   `SPECIALSXP`s and `FUNSXPs`.
