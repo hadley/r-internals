@@ -9,6 +9,9 @@
 * Raw     (`RAWSXP`)
 * Expression (`EXPRSXP`)
 
+__Beware:__ In C, lists are called `VECSXP`s not `LISTSXP`s. This is because early implementations of lists were Lisp-like linked lists, which are now known as "pairlists".
+
+
 ```cpp
 typedef unsigned char Rbyte;
 
@@ -62,11 +65,24 @@ SEXP (VECTOR_ELT)(SEXP x, R_xlen_t i);
 SEXP SET_VECTOR_ELT(SEXP x, R_xlen_t i, SEXP v);
 SEXP *(STRING_PTR)(SEXP x);
 SEXP * NORET (VECTOR_PTR)(SEXP x);
-
-
 ```
 
+When working with longer vectors, there's a performance advantage to using the helper function once and saving the result in a pointer:
+
+Strings and lists are more complicated because the individual elements of a vector are `SEXP`s, not basic C data structures. Each element of a `STRSXP` is a `CHARSXP`s, an immutable object that contains a pointer to C string stored in a global pool. Use `STRING_ELT(x, i)` to extract the `CHARSXP`, and `CHAR(STRING_ELT(x, i))` to get the actual `const char*` string. Set values with `SET_STRING_ELT(x, i, value)`. The elements of a list can be any other `SEXP`, which generally makes them hard to work with in C (you'll need lots of `switch` statements to deal with the possibilities). The accessor functions for lists are `VECTOR_ELT(x, i)` and `SET_VECTOR_ELT(x, i, value)`.
+
+
+
+
 ## Missing/special values vlaues
+
+Each atomic vector has a special constant for getting or setting missing values:
+
+* `INTSXP`: `NA_INTEGER`
+* `LGLSXP`: `NA_LOGICAL`
+* `STRSXP`: `NA_STRING`
+  
+Missing values are somewhat more complicated for `REALSXP` because there is an existing protocol for missing values defined by the floating point standard ([IEEE 754](http://en.wikipedia.org/wiki/IEEE_floating_point)). In doubles, an `NA` is `NaN` with a special bit pattern (the lowest word is 1954, the year Ross Ihaka was born), and there are other special values for positive and negative infinity. Use `ISNA()`, `ISNAN()`, and `!R_FINITE()` macros to check for missing, NaN, or non-finite values. Use the constants `NA_REAL`, `R_NaN`, `R_PosInf`, and `R_NegInf` to set those values. \index{missing values!in C}
 
 ```cpp
 double R_NaN;		  /* IEEE NaN */
@@ -112,6 +128,8 @@ void Rf_copyVector(SEXP, SEXP);
 ```
 
 ## Internals
+
+As of R 3.0.0, R vectors can have length greater than $2 ^ 31 -  1$. This means that vector lengths can no longer be reliably stored in an `int` and if you want your code to work with long vectors, you can't write code like `int n = length(x)`. Instead use the `R_xlen_t` type and the `xlength()` function, and write `R_xlen_t n = xlength(x)`.
 
 ```cpp
 /* type for length of (standard, not long) vectors etc */

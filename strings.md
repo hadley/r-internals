@@ -13,6 +13,8 @@ typedef enum {
 cetype_t Rf_getCharCE(SEXP);
 ```
 
+Character vectors are a little more complicated than the other atomic vectors. A `STRSXP`s contains a vector of `CHARSXP`s, where each `CHARSXP` points to C-style string stored in a global pool. This design allows individual `CHARSXP`'s to be shared between multiple character vectors, reducing memory usage. See [object size](#object-size) for more details.
+
 
 ## Creating from C strings
 

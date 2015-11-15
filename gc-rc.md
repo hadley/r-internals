@@ -2,6 +2,19 @@
 
 ## GC
 
+You might wonder what all the `PROTECT()` calls do. They tell R that the object is in use and shouldn't be deleted if the garbage collector is activated. (We don't need to protect objects that R already knows we're using, like function arguments.)
+
+You also need to make sure that every protected object is unprotected. `UNPROTECT()` takes a single integer argument, `n`, and unprotects the last n objects that were protected. The number of protects and unprotects must match. If not, R will warn about a "stack imbalance in .Call".  Other specialised forms of protection are needed in some circumstances: 
+
+* `UNPROTECT_PTR()` unprotects the object pointed to by the `SEXP`s. 
+
+* `PROTECT_WITH_INDEX()` saves an index of the protection location that can 
+  be used to replace the protected value using `REPROTECT()`. 
+  
+Consult the R externals section on [garbage collection](http://cran.r-project.org/doc/manuals/R-exts.html#Garbage-Collection) for more details.
+
+Properly protecting the R objects you allocate is extremely important! Improper protection leads to difficulty diagnosing errors, typically segfaults, but other corruption is possible as well. In general, if you allocate a new R object, you must `PROTECT` it.
+
 ```cpp
 #define NEWSXP      30    /* fresh node created in new page */
 #define FREESXP     31    /* node released by GC */
@@ -52,6 +65,9 @@ char*	S_realloc(char *, long, long, int);
 ```
 
 ## Reference counting
+
+You must be very careful when modifying function inputs. If you're working with lists, use `shallow_duplicate()` to make a shallow copy; `duplicate()` will also copy every element in the list.
+
 
 ```cpp
 #define MAYBE_SHARED(x) (NAMED(x) > 1)

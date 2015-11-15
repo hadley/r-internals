@@ -1,5 +1,10 @@
 # Pairlists (`NILSXP`, `LISTSXP`, `DOTSXP` & `LANGSXP`)
 
+In R code, there are only a few instances when you need to care about the difference between a pairlist and a list (as described in [Pairlists](#pairlists)). In C, pairlists play much more important role because they are used for calls, unevaluated arguments, attributes, and in `...`. In C, lists and pairlists differ primarily in how you access and name elements. \index{pairlists}
+
+Unlike lists (`VECSXP`s), pairlists (`LISTSXP`s) have no way to index into an arbitrary location. Instead, R provides a set of helper functions that navigate along a linked list. The basic helpers are `CAR()`, which extracts the first element of the list, and `CDR()`, which extracts the rest of the list. These can be composed to get `CAAR()`, `CDAR()`, `CADDR()`, `CADDDR()`, and so on. Corresponding to the getters, R provides setters `SETCAR()`, `SETCDR()`, etc.
+
+
 ```cpp
 SEXP Rf_allocList(int);
 Rboolean Rf_isPairList(SEXP);
@@ -85,6 +90,9 @@ void Rf_copyMostAttrib(SEXP, SEXP);
 SEXP Rf_getAttrib(SEXP, SEXP);
 SEXP Rf_setAttrib(SEXP, SEXP, SEXP);
 ```
+
+There are some (confusingly named) shortcuts for common setting operations: `classgets()`, `namesgets()`, `dimgets()`, and `dimnamesgets()` are the internal versions of the default methods of `class<-`, `names<-`, `dim<-`, and `dimnames<-`.
+
 
 ## Language
 
