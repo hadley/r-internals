@@ -76,7 +76,22 @@ Rboolean R_HasFancyBindings(SEXP rho);
 Rboolean R_envHasNoSpecialSymbols(SEXP);
 ```
 
-## Hashing functions
+## Internals
+
+> This is almost unused. The only current use is for hash tables of 
+> environments (VECSXPs), where length is the size of the table and 
+> truelength is the number of primary slots in use, and for the reference 
+> hash tables in serialization (VECSXPs), where truelength is the number of 
+> slots in use.
+> --- R-internals
+
+```cpp
+int  (TRUELENGTH)(SEXP x);
+R_xlen_t  (XTRUELENGTH)(SEXP x);
+void (SET_TRUELENGTH)(SEXP x, int v);
+```
+
+### Hashing functions
 
 ```cpp
 SEXP HASHTAB(SEXP x);
