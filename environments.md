@@ -1,7 +1,7 @@
 # Environments (`ENVSXP`)
 
 ```cpp
-Rboolean Rf_isEnvironment(SEXP s);
+Rboolean Rf_isEnvironment(SEXP x); // (TYPEOF(x) == ENVSXP)
 ```
 
 * `R_GlobalEnv`: The "global" environment
@@ -10,20 +10,7 @@ Rboolean Rf_isEnvironment(SEXP s);
 * `R_BaseNamespace`: The (fake) namespace for base
 * `R_NamespaceRegistry`: Registry for registered namespaces
 
-## Accessors
-
-```cpp
-SEXP FRAME(SEXP x);
-void SET_FRAME(SEXP x, SEXP v);
-
-SEXP ENCLOS(SEXP x);
-void SET_ENCLOS(SEXP x, SEXP v);
-
-int  ENVFLAGS(SEXP x);
-void SET_ENVFLAGS(SEXP x, int v);
-```
-
-## Get set objects in environment
+## Get and set objects in environment
 
 `symbol` should be a `SYMSXP`; `environment` should be an `ENVSXP`.
 
@@ -53,10 +40,9 @@ SEXP R_lsInternal(SEXP, Rboolean);
 
 // Copy variables from (VECSXP) unless already present in to
 void Rf_addMissingVarsToNewEnv(SEXP to, SEXP from);
-
 ```
 
-## Bindings
+## Miscellaneous
 
 ```cpp
 Rboolean R_IsPackageEnv(SEXP rho);
@@ -78,6 +64,19 @@ Rboolean R_envHasNoSpecialSymbols(SEXP);
 
 ## Internals
 
+```cpp
+SEXP FRAME(SEXP x);
+void SET_FRAME(SEXP x, SEXP v);
+
+SEXP ENCLOS(SEXP x);
+void SET_ENCLOS(SEXP x, SEXP v);
+
+int  ENVFLAGS(SEXP x);
+void SET_ENVFLAGS(SEXP x, int v);
+```
+
+### Truelength
+
 > This is almost unused. The only current use is for hash tables of 
 > environments (VECSXPs), where length is the size of the table and 
 > truelength is the number of primary slots in use, and for the reference 
@@ -91,7 +90,7 @@ R_xlen_t  (XTRUELENGTH)(SEXP x);
 void (SET_TRUELENGTH)(SEXP x, int v);
 ```
 
-### Hashing functions
+### Hash
 
 ```cpp
 SEXP HASHTAB(SEXP x);

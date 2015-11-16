@@ -94,6 +94,13 @@ SEXP Rf_ScalarComplex(Rcomplex x);
 
 // [[SEXP creator]]
 SEXP Rf_ScalarRaw(Rbyte x);
+
+// Makes STRSXP from CHARSXP
+// [[SEXP creator]]
+SEXP Rf_ScalarString(SEXP);
+// Makes STRSXP from C string
+// [[SEXP creator]]
+SEXP Rf_mkString(const char*);
 ```
 
 (Note, as with all SEXP creation functions you must `Rf_protect()` the result of any of these calls unless you're immediately assigning it into an already protected object)
@@ -138,6 +145,8 @@ double*   REAL(SEXP x);
 Rcomplex* COMPLEX(SEXP x);
 Rbyte*    RAW(SEXP x);
 ```
+
+__NB__: these functions are all upper case and don't start with `Rf_`.
 
 When working with longer vectors, there's typically a performance advantage to saving the index and reusing. For example, instead of:
 
@@ -309,6 +318,10 @@ Rboolean Rf_isFrame(SEXP);
 // Copies from source to target, recylcing as necessary.
 void Rf_copyVector(SEXP source, SEXP target);
 // use Rf_duplicate if you simply want to duplicate a vector
+
+// Extract tail of a STRSXP
+// [[SEXP creator]]
+SEXP Rf_stringSuffix(SEXP string, int fromIndex);
 ```
 
 A couple of macros aid in testing if an object is a "scalar" (a vector of length 1):
