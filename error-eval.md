@@ -57,11 +57,13 @@ SEXP R_forceAndCall(SEXP expression, int n, SEXP environment);
  * R_tryEval and R_tryEvalSilent both call R_ToplevelExec under the hood.
  */
 // [[SEXP creator]]
-// Returns NULL on failure
+// On error, returns NULL and sets contents of pOutError to 1
 SEXP R_tryEval(SEXP expression, SEXP environment, int* pOutError);
+
 // [[SEXP creator]]
-// Returns NULL on failure
+// same as R_tryEval, but doesn't print error messages
 SEXP R_tryEvalSilent(SEXP expression, SEXP environment, int* pOutError);
+
 // [[SEXP creator]]
 // @param fun C function to call after context setup. Passed *data
 Rboolean R_ToplevelExec(void (*fun)(void *), void *data);
