@@ -11,7 +11,7 @@ void R_SetExternalPtrTag(SEXP s, SEXP tag);
 void R_SetExternalPtrProtected(SEXP s, SEXP p);
 ```
 
-## Fianlisation
+## Finalization
 
 ```cpp
 typedef void (*R_CFinalizer_t)(SEXP);
