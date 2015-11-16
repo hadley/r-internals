@@ -10,6 +10,8 @@ Rboolean Rf_isEnvironment(SEXP x); // (TYPEOF(x) == ENVSXP)
 * `R_BaseNamespace`: The (fake) namespace for base
 * `R_NamespaceRegistry`: Registry for registered namespaces
 
+Environments are commonly called `rho` in the sources.
+
 ## Get and set objects in environment
 
 `symbol` should be a `SYMSXP`; `environment` should be an `ENVSXP`.
