@@ -1,6 +1,6 @@
 # R internals
 
-The goal of this site is to provide comprehensive documentation for R's internal C API in the rare circumstance where you need to use it instead of [Rcpp](http://www.rcpp.org). This site draws heavily from Section 5 ("System and foreign language interfaces") of [Writing R extensions](http://cran.r-project.org/doc/manuals/R-exts.html), [R internals](https://cran.r-project.org/doc/manuals/r-release/R-ints.html), and inspection of R's source code to see how functions are used.
+This repo aims to provide some useful additional information about R's internal C API (for the rare circumstance where you need to use it instead of [Rcpp](http://www.rcpp.org)). This site draws heavily from Section 5 ("System and foreign language interfaces") of [Writing R extensions](http://cran.r-project.org/doc/manuals/R-exts.html), [R internals](https://cran.r-project.org/doc/manuals/r-release/R-ints.html), and inspection of R's source code to see how functions are used.
 
 Here we focus on best practices and modern tools. To wit, we recommend that you use `R_NO_REMAP` so all API functions have the prefix `R_` or `Rf_`:
 
