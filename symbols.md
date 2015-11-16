@@ -1,15 +1,21 @@
 # Symbols (`SYMSXP`)
 
-## Create and test
+```cpp
+Rboolean Rf_isSymbol(SEXP s);
+```
+
+## Create
+
+If symbol exists, return it; otherwise create it. `SYMSXP`s don't need to be protected because symbols are not currently reclaimed by the garbage collector. If you are using a symbol many times, it may be worth caching it to avoid repeated lookups.
 
 ```cpp
-Rboolean (Rf_isSymbol)(SEXP s);
-
 SEXP Rf_install(const char *);
 SEXP Rf_installChar(SEXP);
 ```
 
 ## Predefined symbols
+
+A number of symbols are so commonly used, they're predefined and exported:
 
 * `R_dot_defined`: ".defined"
 * `R_dot_Method`: ".Method"
@@ -49,13 +55,15 @@ SEXP Rf_installChar(SEXP);
 
 ```cpp
 SEXP (PRINTNAME)(SEXP x);
+void SET_PRINTNAME(SEXP x, SEXP v);
+
 SEXP (SYMVALUE)(SEXP x);
+void SET_SYMVALUE(SEXP x, SEXP v);
+
 SEXP (INTERNAL)(SEXP x);
+void SET_INTERNAL(SEXP x, SEXP v);
+
 int  (DDVAL)(SEXP x);
 void (SET_DDVAL)(SEXP x, int v);
-void SET_PRINTNAME(SEXP x, SEXP v);
-void SET_SYMVALUE(SEXP x, SEXP v);
-void SET_INTERNAL(SEXP x, SEXP v);
+SEXP Rf_installDDVAL(int i);
 ```
-
-
