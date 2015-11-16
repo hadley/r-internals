@@ -104,3 +104,30 @@ void SET_HASHASH(SEXP x, int v);
 int  HASHVALUE(SEXP x);
 void SET_HASHVALUE(SEXP x, int v);
 ```
+
+Code from lobstr should help me understand how they work:
+
+```cpp
+int envlength(SEXP x) {
+  bool isHashed = HASHTAB(x) != R_NilValue;
+  return isHashed ? HashTableSize(HASHTAB(x)) : FrameSize(FRAME(x));
+}
+
+int FrameSize(SEXP frame) {
+  int count = 0;
+
+  for(SEXP cur = frame; cur != R_NilValue; cur = CDR(cur)) {
+    if (CAR(cur) != R_UnboundValue)
+      count++;
+  }
+  return count;
+}
+
+int HashTableSize(SEXP table) {
+  int count = 0;
+  int n = Rf_length(table);
+  for (int i = 0; i < n; ++i)
+    count += FrameSize(VECTOR_ELT(table, i));
+  return count;
+}
+```
