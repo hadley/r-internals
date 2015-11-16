@@ -6,14 +6,28 @@ You might wonder what all the `PROTECT()` calls do. They tell R that the object 
 
 You also need to make sure that every protected object is unprotected. `UNPROTECT()` takes a single integer argument, `n`, and unprotects the last n objects that were protected. The number of protects and unprotects must match. If not, R will warn about a "stack imbalance in .Call".  Other specialised forms of protection are needed in some circumstances: 
 
-* `UNPROTECT_PTR()` unprotects the object pointed to by the `SEXP`s. 
+* `UNPROTECT_PTR()` unprotects the object pointed to by the `SEXP`,
 
 * `PROTECT_WITH_INDEX()` saves an index of the protection location that can 
   be used to replace the protected value using `REPROTECT()`. 
   
 Consult the R externals section on [garbage collection](http://cran.r-project.org/doc/manuals/R-exts.html#Garbage-Collection) for more details.
 
+## How PROTECT works
+
+Objects protected by `PROTECT()` are placed on a protection stack (internally called `R_PPStack`), which itself is just an array of `SEXP`s. A protection index, called `R_PPStackTop`, denotes the top of the protection stack. When `UNPROTECT()`ing a (number) of objects, the stack top is decremented, and so all `SEXP`s 'overflowing' the `R_PPStack` are considered unprotected and hence eligible for garbage collection.
+
+Note that this implies that `PROTECT_WITH_INDEX()` and `REPROTECT()` are merely APIs for modifying elements within the protection stack. `UNPROTECT_PTR()` performs a search (from the top of the stack) to find the element to unprotect.
+
+## Using PROTECT
+
 Properly protecting the R objects you allocate is extremely important! Improper protection leads to difficulty diagnosing errors, typically segfaults, but other corruption is possible as well. In general, if you allocate a new R object, you must `PROTECT` it.
+
+### R_PreserveObject, R_ReleaseObject
+
+The primary structure that R uses for protecting objects is the so-called `R_PreciousList`, which is just a pairlist of `SEXP`s. The aforementioned `R_PPStack` is part of this `R_PreciousList` (and hence is the mechanism by which those `SEXP`s become protected). `R_PreserveObject()` and `R_ReleaseObject()` are mechanisms for inserting and removing `SEXP`s from this precious list.
+
+These functions need to be used with care: because `R_ReleaseObject()` will perform a recursive search for the object to protect, if many `SEXP`s are inserted and later removed in the same order, this can cause performance regressions. See [this dplyr issue](https://github.com/hadley/dplyr/issues/1396) for an interesting manifestation of this problem.
 
 ```cpp
 #define NEWSXP      30    /* fresh node created in new page */
