@@ -244,7 +244,9 @@ Rboolean Rf_isNumeric(SEXP); // INTSXP (but not factor), REALSXP, CPLXSXP
 
 __NB__: these are not always consistent with their R equivalents. For example, `Rf_isVectorAtomic(R_NilValue)` is false, but `is.atomic(NULL)` is true; `Rf_isNewList(R_NilValue)` is true; but `is.list(NULL)` is false. Because of this confusion, I recommend writing your own wrapper around `TYPEOF(x)`.
 
+__NB__: Be careful when checking whether whether an R object is an integer vector. Internally, `factor`s are also `INTSXP`s so `TYPEOF(x) == INTSXP` would accept both vanilla integer vectors and factors. (Prefer using `Rf_isInteger()` and `Rf_isFactor()` for these cases.)
 
+__NB__: It is somewhat strange that `Rf_isNewList()` returns `TRUE` for `R_NilValue`, given that `R_NilValue` is just an empty pairlist (ie, `NULL` and `pairlist()` are identical).
 
 # Variants
 
