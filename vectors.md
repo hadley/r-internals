@@ -242,7 +242,7 @@ Rboolean Rf_isNumber(SEXP); // INTSXP (but not factor), LGLSXP, REALSXP, CPLXSXP
 Rboolean Rf_isNumeric(SEXP); // INTSXP (but not factor), REALSXP, CPLXSXP
 ```
 
-__NB__: these are not always consistent with their R equivalents. For example, `Rf_isVectorAtomic(R_NilValue)` is false, but `is.atomic(x)` is true; `Rf_isNewList(R_NilValue)` is true; but `is.list(NULL)` is false. Because of this confusion, I recommend writing your own wrapper around `TYPEOF(x)`.
+__NB__: these are not always consistent with their R equivalents. For example, `Rf_isVectorAtomic(R_NilValue)` is false, but `is.atomic(NULL)` is true; `Rf_isNewList(R_NilValue)` is true; but `is.list(NULL)` is false. Because of this confusion, I recommend writing your own wrapper around `TYPEOF(x)`.
 
 
 
