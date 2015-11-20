@@ -47,15 +47,15 @@ SEXP Rf_eval(SEXP expression, SEXP environment);
 // Not sure what advantages are over Rf_eval.
 // [[SEXP creator]]
 SEXP R_forceAndCall(SEXP expression, int n, SEXP environment);
+```
 
-/* Protected evaluation
- *
- * Use these to evaluate R expressions in a stand-alone context,
- * free of existing handlers, and to ensure that any errors produced
- * during evaluation don't cause a longjmp to a separate context.
- *
- * R_tryEval and R_tryEvalSilent both call R_ToplevelExec under the hood.
- */
+### Protected evaluation
+
+Use these to evaluate R expressions in a stand-alone context ensuring that any errors produced during evaluation don't cause a longjmp to a separate context.
+
+Note that these functions ignore all existing condition handlers so R functions like `supressWarnings()`, `tryCatch()`, will no longer work.
+
+```cpp
 // [[SEXP creator]]
 // On error, returns NULL and sets contents of pOutError to 1
 SEXP R_tryEval(SEXP expression, SEXP environment, int* pOutError);
@@ -63,12 +63,18 @@ SEXP R_tryEval(SEXP expression, SEXP environment, int* pOutError);
 // [[SEXP creator]]
 // same as R_tryEval, but doesn't print error messages
 SEXP R_tryEvalSilent(SEXP expression, SEXP environment, int* pOutError);
+```
 
+Both `R_tryEval()` and `R_tryEvalSilent`() call R_ToplevelExec under the hood:
+
+```cpp
 // [[SEXP creator]]
 // @param fun C function to call after context setup. Passed *data
 Rboolean R_ToplevelExec(void (*fun)(void *), void *data);
+```
 
 
+```cppp
 // You can access text of error with
 const char *R_curErrorBuf();
 
