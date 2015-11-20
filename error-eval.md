@@ -74,7 +74,7 @@ Rboolean R_ToplevelExec(void (*fun)(void *), void *data);
 ```
 
 
-```cppp
+```cpp
 // You can access text of error with
 const char *R_curErrorBuf();
 
