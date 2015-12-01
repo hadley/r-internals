@@ -279,7 +279,7 @@ SEXP Rf_arraySubscript(int, SEXP, SEXP, SEXP (*)(SEXP,SEXP),SEXP (*)(S EXP, int)
 Matrices are a special case of arrays; those with 2 dimensions:
 
 ```cpp
-SEXP Rf_allocMatrix(SEXPTYPE type, int nrow, int nrow);
+SEXP Rf_allocMatrix(SEXPTYPE type, int nrow, int ncol);
 Rboolean Rf_isMatrix(SEXP);
 SEXP Rf_GetColNames(SEXP x);
 SEXP Rf_GetRowNames(SEXP x);
