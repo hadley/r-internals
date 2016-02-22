@@ -13,6 +13,10 @@ SEXP Rf_install(const char *);
 SEXP Rf_installChar(SEXP);
 ```
 
+## Mising symbol
+
+`R_MissingArg` represents the missing/empty symbol, i.e. the second argument in this call `f(x, )`.
+
 ## Predefined symbols
 
 A number of symbols are so commonly used, they're predefined and exported:
