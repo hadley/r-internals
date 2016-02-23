@@ -101,18 +101,13 @@ int  (MISSING)(SEXP x);
 void (SET_MISSING)(SEXP x, int v);
 ```
 
-
 ## Dots (`DOTSXP`)
 
+Represents the `...` structure in R. Easiest to get to with `findVar(R_DotsSymbol, env)` or similar. Is usually a pair list, but will have value `R_MissingArg` if there are no arguments.
 
 ## Null (`NILSXP`)
 
-Singleton value. Often used as generic zero length vector.
-
-```cpp
-Rboolean Rf_isNull(SEXP s);
-LibExtern SEXP R_NilValue; 
-```
+There is a single value with type `NILSXP`: `R_NilValue`.  This corresponds to `NULL` in R, and is often used as generic zero length vector.
 
 ## Attributes
 
