@@ -56,13 +56,7 @@ SEXP Rf_allocFormalsList6(SEXP x1, SEXP x2, SEXP x3, SEXP x4, SEXP x5, SEXP x6);
 ```cpp
 SEXP Rf_PairToVectorList(SEXP x);
 SEXP Rf_VectorToPairList(SEXP x);
-SEXP Rf_listAppend(SEXP, SEXP);
-```
-
-You can also create an empty pairlist of set size:
-
-```cpp
-SEXP Rf_allocList(int n); 
+SEXP Rf_listAppend(SEXP source, SEXP target);
 ```
 
 ## Accessors
@@ -87,8 +81,6 @@ SEXP SETCADDR(SEXP x, SEXP y);
 SEXP SETCADDDR(SEXP x, SEXP y);
 SEXP SETCAD4R(SEXP e, SEXP y);
 
-SEXP Rf_nthcdr(SEXP, int);
-
 void SET_TAG(SEXP x, SEXP y);
 SEXP (TAG)(SEXP e);
 
@@ -100,6 +92,17 @@ SEXP CONS_NR(SEXP a, SEXP b);
 int  (MISSING)(SEXP x);
 void (SET_MISSING)(SEXP x, int v);
 ```
+
+### Pretending it's a vector
+
+Some functions allow you to work with a pair list as if it's a vector:
+
+```cpp
+SEXP Rf_allocList(int n);   # create new pairlist of specified length 
+SEXP Rf_nthcdr(SEXP, int);  # access nth element
+```
+
+If you use these it's easy to get O(n^2) behaviour, but for the usual size of pairlists, this is unlikely to cause a performance bottleneck.
 
 ## Dots (`DOTSXP`)
 
