@@ -56,7 +56,7 @@ SEXP Rf_allocFormalsList6(SEXP x1, SEXP x2, SEXP x3, SEXP x4, SEXP x5, SEXP x6);
 ```cpp
 SEXP Rf_PairToVectorList(SEXP x);
 SEXP Rf_VectorToPairList(SEXP x);
-SEXP  Rf_listAppend(SEXP, SEXP);
+SEXP Rf_listAppend(SEXP, SEXP);
 ```
 
 You can also create an empty pairlist of set size:
