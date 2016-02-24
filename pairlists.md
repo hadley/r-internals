@@ -1,20 +1,31 @@
 # Pairlists (`LISTSXP`, `DOTSXP` & `LANGSXP`)
 
 Pairlists are linked lists used for calls, unevaluated arguments, attributes, and in `...`. 
+
 ```cpp
 Rboolean Rf_isPairList(SEXP); // LISTSXP
 Rboolean Rf_isLanguage(SEXP); // LANGSXP
 Rboolean Rf_isList(SEXP);     // LISTSXP, NILSXP
 ```
 
-Pairlists are always terminated with `R_NilValue`. To loop over all elements of a pairlist, use this template:
+The terminology of pairlist comes from LISPs "dotted pairs" which is a way of describing "CONS" cells. A CONS cell is a pair of pointers:
+
+* "CAR" (contents of address register) points to an object
+* "CDR" (contents of decrement register) points to the next element in the list.
+  The CDR of the last element is `R_NilValue`. 
+
+Graphically, this looks like:
+
+![](diagrams/pairlists.png)
+
+To loop over all elements of a pairlist, use this template:
 
 ```cpp
 int length(SEXP s) {
-  SEXP el;
   int i = 0;
   
-  for(SEXP nxt = x; nxt != R_NilValue; el = CAR(nxt), nxt = CDR(nxt)) {
+  for(SEXP cons = x; cons != R_NilValue; cons = CDR(nxt) {
+    SEXP el = CAR(cons);
     i++;
   }
   
@@ -30,7 +41,7 @@ SEXP Rf_lcons(SEXP a, SEXP b)  // calls
 
 The `CDR` of the final value msut be `R_NilValue`. 
 
-There are helpers for 5-6 arguments:
+There are helpers for 5-6 arguments. These automatically add the terminating `R_NilValue`.
 
 ```cpp
 SEXP Rf_list1(SEXP x1);
@@ -62,6 +73,8 @@ SEXP Rf_listAppend(SEXP source, SEXP target);
 ## Accessors
 
 Unlike lists (`VECSXP`s), pairlists (`LISTSXP`s) have no way to index into an arbitrary location. Instead, R provides a set of helper functions that navigate along a linked list. The basic helpers are `CAR()`, which extracts the first element of the list, and `CDR()`, which extracts the rest of the list. These can be composed to get `CAAR()`, `CDAR()`, `CADDR()`, `CADDDR()`, and so on. Corresponding to the getters, R provides setters `SETCAR()`, `SETCDR()`, etc.
+
+![](diagrams/pairlist-names.png)
 
 ```cpp
 SEXP CAR(SEXP e);
