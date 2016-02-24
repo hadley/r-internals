@@ -24,11 +24,11 @@ int length(SEXP s) {
 ## Creation
 
 ```cpp
-#define CONS(a, b) cons((a), (b))  /* data lists */
-#define LCONS(a, b) lcons((a), (b))  /* language lists */
+SEXP Rf_cons(SEXP a, SEXP b)   // function arguments
+SEXP Rf_lcons(SEXP a, SEXP b)  // calls
 ```
 
-Must end with `R_NilValue`. 
+The `CDR` of the final value msut be `R_NilValue`. 
 
 There are helpers for 5-6 arguments:
 
