@@ -58,6 +58,8 @@ A number of symbols are so commonly used, they're predefined and exported:
 ## Internals
 
 ```cpp
+// The value of the symbol, as a CHARSXP
+// Use CHAR(PRINTNAME(x)) to get the name as a const char*
 SEXP (PRINTNAME)(SEXP x);
 void SET_PRINTNAME(SEXP x, SEXP v);
 
