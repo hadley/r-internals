@@ -92,8 +92,7 @@ int R_nchar(SEXP string, nchar_type type_,
 // Return a copy of a string using memory from R_alloc. Memory free on gc
 char* Rf_acopy_string(const char *);
 
-// Render any R object as a string (utils.c)
-// Returns a CHARSXP
+// Render some R objects to a CHARSXP (utils.c)
 // [[SEXP creator]]
 SEXP Rf_asChar(SEXP x); 
 
