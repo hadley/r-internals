@@ -133,7 +133,6 @@ SEXP R_FixupRHS(SEXP x, SEXP y);
 
 #define IndexWidth    Rf_IndexWidth
 
-const char *R_ExpandFileName(const char *);
 #define setIVector    Rf_setIVector
 void	setIVector(int*, int, int);
 #define setRVector    Rf_setRVector

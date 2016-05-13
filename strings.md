@@ -102,3 +102,11 @@ Rboolean Rf_NonNullStringMatch(SEXP s, SEXP t);
 
 const char *Rf_reEnc(const char *x, cetype_t ce_in, cetype_t ce_out, int subst);
 ```
+
+### Paths
+
+``` cp
+// Expand a pathes with ~ to a full paths. 
+// This is necessary for most C apis.
+const char *R_ExpandFileName(const char *);
+```
