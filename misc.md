@@ -94,12 +94,6 @@ void Rf_setSVector(SEXP*, int, SEXP);
 void Rf_setVar(SEXP, SEXP, SEXP);
 SEXP Rf_substitute(SEXP,SEXP);
 
-SEXPTYPE Rf_str2type(const char *);
-const char * Rf_type2char(SEXPTYPE);
-SEXP Rf_type2rstr(SEXPTYPE);
-SEXP Rf_type2str(SEXPTYPE);
-SEXP Rf_type2str_nowarn(SEXPTYPE);
-
 /* Shutdown actions */
 void R_dot_Last(void);		/* in main.c */
 void R_RunExitFinalizers(void);	/* in memory.c */

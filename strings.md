@@ -110,3 +110,15 @@ const char *Rf_reEnc(const char *x, cetype_t ce_in, cetype_t ce_out, int subst);
 // This is necessary for most C apis.
 const char *R_ExpandFileName(const char *);
 ```
+
+### Types
+
+You can convert `SEXPTYPE`s to and from C strings with:
+
+```R
+SEXPTYPE Rf_str2type(const char *);
+const char * Rf_type2char(SEXPTYPE); // C string
+SEXP Rf_type2rstr(SEXPTYPE);         // STRSXP
+SEXP Rf_type2str(SEXPTYPE);          // CHARSXP
+SEXP Rf_type2str_nowarn(SEXPTYPE);
+```
