@@ -36,7 +36,18 @@ SEXP Rf_mkCharLenCE(const char* x, int n, cetype_t encoding);
 
 (Typically these calls don't need to be protected as they are immediately assigned into a `STRSXP`.)
 
+```cpp
+// Makes STRSXP from CHARSXP
+// [[SEXP creator]]
+SEXP Rf_ScalarString(SEXP);
+// Makes STRSXP from C string
+// [[SEXP creator]]
+SEXP Rf_mkString(const char*);
+```
+
 If you need to re-encode strings from another encoding, use R's wrapper around iconv found in `R_ext/Riconv.h`. It provides cross-platform `Riconv_open()` and `Riconv`. It's usually best to convert to UTF-8.
+
+Note that most modern C libraries encode strings as UTF-8. This means you should typically use `Rf_mkCharCE()` or `Rf_mkCharLenCE()`, and avoid the other string creation methods including `Rf_mkString()`
 
 ## Convert to C string
 
