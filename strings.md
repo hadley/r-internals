@@ -47,6 +47,8 @@ SEXP Rf_mkString(const char*);
 
 If you need to re-encode strings from another encoding, use R's wrapper around iconv found in `R_ext/Riconv.h`. It provides cross-platform `Riconv_open()` and `Riconv`. It's usually best to convert to UTF-8.
 
+Note that these calls will crash R if passed a `NULL`. It is your responsibility to check for that and return the correct value (typically `""` or `NA_STRING`).
+
 Note that most modern C libraries encode strings as UTF-8. This means you should typically use `Rf_mkCharCE()` or `Rf_mkCharLenCE()`, and avoid the other string creation methods including `Rf_mkString()`
 
 ## Convert to C string
