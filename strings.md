@@ -73,7 +73,9 @@ const char* Rf_translateChar0(SEXP x);
 const char* Rf_translateCharUTF8(SEXP x);
 ```
 
-__NB__: if re-encoding is necessary, the `char*` will be allocated by `R_alloc()` and will be automatically freed gc. If you want to save across calls, make a copy.
+Most modern C APIs use UTF-8, so you almost always want `Rf_translateCharUTF8()`.
+
+__NB__: if re-encoding is necessary, the `char*` will be allocated by `R_alloc()` and will be automatically freed on gc. If you want to save across calls to C, make a copy.
 
 ## Special values
 
