@@ -16,6 +16,10 @@ Environments are commonly called `rho` in the sources.
 
 `symbol` should be a `SYMSXP`; `environment` should be an `ENVSXP`.
 
+### Get values
+
+Note that retrieving an variable from an environment may cause an allocation because it might be an active binding.
+
 ```cpp
 // Look up symbol in environment, following up enclosing envs
 SEXP Rf_findVar(SEXP symbol, SEXP environment);
@@ -30,18 +34,26 @@ SEXP Rf_findVarInFrame3(SEXP env, SEXP symbol, Rboolean doGet);
 
 // Shortcut from findVarInFrame3(rho, symbol, TRUE)
 SEXP Rf_findVarInFrame(SEXP env, SEXP symbol);
+```
 
+### Set values
+
+```cpp
 // Define value
 void Rf_defineVar(SEXP symbol, SEXP value, SEXP env);
 
+// Copy variables from (VECSXP) unless already present in to
+void Rf_addMissingVarsToNewEnv(SEXP to, SEXP from);
+```
+
+### Check for presence
+
+```cpp
 // Returns character vector
 SEXP R_lsInternal3(SEXP env, Rboolean all_names, Rboolean sorted);
 
 // Shorthand for R_lsInternal3(env, all, TRUE)
 SEXP R_lsInternal(SEXP, Rboolean);
-
-// Copy variables from (VECSXP) unless already present in to
-void Rf_addMissingVarsToNewEnv(SEXP to, SEXP from);
 ```
 
 ## Miscellaneous
