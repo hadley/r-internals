@@ -197,6 +197,7 @@ Integer, logical, and character vectors have special sentinels for missing value
 ```cpp
 #define NA_LOGICAL	R_NaInt
 #define NA_INTEGER	R_NaInt
+#define NA_STRING	R_NaString
 int	 R_NaInt;	    /* NA_INTEGER:= INT_MIN currently */
 ```
 
