@@ -83,8 +83,6 @@ void Rf_gsetVar(SEXP, SEXP, SEXP);
 bSEXP Rf_installS3Signature(const char *, const char *);
 Rboolean Rf_isFree(SEXP);
 Rboolean Rf_isUnsorted(SEXP, Rboolean);
-SEXP Rf_match(SEXP, SEXP, int);
-SEXP Rf_matchE(SEXP, SEXP, int, SEXP);
 SEXP Rf_namesgets(SEXP, SEXP);
 Rboolean Rf_pmatch(SEXP, SEXP, Rboolean);
 Rboolean Rf_psmatch(const char *, const char *, Rboolean);
@@ -93,6 +91,13 @@ void Rf_readS3VarsFromFrame(SEXP, SEXP*, SEXP*, SEXP*, SEXP*, SEXP*, SEXP*);
 void Rf_setSVector(SEXP*, int, SEXP);
 void Rf_setVar(SEXP, SEXP, SEXP);
 SEXP Rf_substitute(SEXP,SEXP);
+
+// match vectors
+SEXP Rf_match(SEXP itable, SEXP ix, int no_match);
+SEXP Rf_matchE(SEXP itable, SEXP ix, int no_match, SEXP env);
+
+// env is used to look up as.character when translating POSIXlt
+// seems unlikely you'd ever need to use this variant
 
 /* Shutdown actions */
 void R_dot_Last(void);		/* in main.c */
