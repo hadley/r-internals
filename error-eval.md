@@ -17,6 +17,9 @@ void  R_ShowMessage(const char *s);
 void Rprintf(const char *, ...);
 void REprintf(const char *, ...);
 
+// Print like print() would
+void Rf_PrintValue(SEXP);
+
 void R_FlushConsole(void);
 ```
 

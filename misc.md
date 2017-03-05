@@ -86,7 +86,6 @@ Rboolean Rf_isUnsorted(SEXP, Rboolean);
 SEXP Rf_namesgets(SEXP, SEXP);
 Rboolean Rf_pmatch(SEXP, SEXP, Rboolean);
 Rboolean Rf_psmatch(const char *, const char *, Rboolean);
-void Rf_PrintValue(SEXP);
 void Rf_readS3VarsFromFrame(SEXP, SEXP*, SEXP*, SEXP*, SEXP*, SEXP*, SEXP*);
 void Rf_setSVector(SEXP*, int, SEXP);
 void Rf_setVar(SEXP, SEXP, SEXP);
