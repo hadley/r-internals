@@ -133,4 +133,10 @@ SEXP Rf_setAttrib(SEXP x, SEXP symbol, SEXP value);
 
 // Copies attributes except names, dim, and dimnames
 void Rf_copyMostAttrib(SEXP source, SEXP target);
+
+// Get the pairlist containing the attributes
+SEXP (ATTRIB)(SEXP x);
+void SET_ATTRIB(SEXP x, SEXP v);
+void DUPLICATE_ATTRIB(SEXP to, SEXP from);
+void SHALLOW_DUPLICATE_ATTRIB(SEXP to, SEXP from);
 ```

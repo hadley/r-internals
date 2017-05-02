@@ -108,7 +108,6 @@ SEXP Rf_lazy_duplicate(SEXP);
 
 ```cpp
 /* General Cons Cell Attributes */
-SEXP (ATTRIB)(SEXP x);
 int  (OBJECT)(SEXP x);
 int  (MARK)(SEXP x);
 int  (TYPEOF)(SEXP x);
@@ -117,9 +116,6 @@ int  (REFCNT)(SEXP x);
 void (SET_OBJECT)(SEXP x, int v);
 void (SET_TYPEOF)(SEXP x, int v);
 void (SET_NAMED)(SEXP x, int v);
-void SET_ATTRIB(SEXP x, SEXP v);
-void DUPLICATE_ATTRIB(SEXP to, SEXP from);
-void SHALLOW_DUPLICATE_ATTRIB(SEXP to, SEXP from);
 
 int  (LEVELS)(SEXP x);
 int  (SETLEVELS)(SEXP x, int v);
