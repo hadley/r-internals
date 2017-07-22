@@ -46,6 +46,8 @@ void Rf_defineVar(SEXP symbol, SEXP value, SEXP env);
 void Rf_addMissingVarsToNewEnv(SEXP to, SEXP from);
 ```
 
+To remove a binding, set its value to `R_UnboundSymbol`.
+
 ### Check for presence
 
 ```cpp
