@@ -10,7 +10,7 @@ There are seven vector types in R:
 
 * Complex (`CPLXSXP`), contains `Rcomplex`.
 
-* String  (`STRINGSXP`), contains `CHARSXP`.
+* String  (`STRSXP`), contains `CHARSXP`.
 
 * Lists   (`VECSXP`), contains any other sexp. __Beware:__ Lists are `VECSXP`s
   not `LISTSXP`s. This is because early implementations of lists were Lisp-like 
