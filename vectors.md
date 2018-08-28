@@ -177,7 +177,7 @@ SEXP VECTOR_ELT(SEXP x, R_xlen_t i);
 SEXP SET_VECTOR_ELT(SEXP x, R_xlen_t i, SEXP v);
 ```
 
-(There is `STRING_PTR()` which is used in a hanful of places in the R source; `VECTOR_PTR()` is a deprecated interface that now throws an error.)
+(There is `STRING_PTR()` which is used in a handful of places in the R source; `VECTOR_PTR()` is a deprecated interface that now throws an error.)
 
 ### Scalars
 
