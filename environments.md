@@ -9,6 +9,7 @@ Rboolean Rf_isEnvironment(SEXP x); // (TYPEOF(x) == ENVSXP)
 * `R_BaseEnv`: The base environment; formerly R_NilValue
 * `R_BaseNamespace`: The (fake) namespace for base
 * `R_NamespaceRegistry`: Registry for registered namespaces
+* `R_GetCurrentEnv`: Retrieve the current environment `R (>= 3.6.0)`
 
 Environments are commonly called `rho` in the sources.
 
