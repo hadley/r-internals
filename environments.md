@@ -119,19 +119,20 @@ int  HASHVALUE(SEXP x);
 void SET_HASHVALUE(SEXP x, int v);
 ```
 
+// [R-Internals]: Hashing is principally designed for fast searching of
+// environments, which  are from time to time added to but rarely deleted from,
+// so items are not actually deleted but have their value set to R_UnboundValue.
+
+
 Code from lobstr should help me understand how they work:
 
 ```cpp
-int envlength(SEXP x) {
-  bool isHashed = HASHTAB(x) != R_NilValue;
-  return isHashed ? HashTableSize(HASHTAB(x)) : FrameSize(FRAME(x));
-}
-
 int FrameSize(SEXP frame) {
   int count = 0;
 
   for(SEXP cur = frame; cur != R_NilValue; cur = CDR(cur)) {
-    if (CAR(cur) != R_UnboundValue)
+    SEXP obj = CAR(cur)
+    if (obj != R_UnboundValue)
       count++;
   }
   return count;
@@ -143,5 +144,10 @@ int HashTableSize(SEXP table) {
   for (int i = 0; i < n; ++i)
     count += FrameSize(VECTOR_ELT(table, i));
   return count;
+}
+
+int envlength(SEXP x) {
+  bool isHashed = HASHTAB(x) != R_NilValue;
+  return isHashed ? HashTableSize(HASHTAB(x)) : FrameSize(FRAME(x));
 }
 ```
