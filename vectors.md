@@ -282,8 +282,9 @@ Matrices are a special case of arrays; those with 2 dimensions:
 ```cpp
 SEXP Rf_allocMatrix(SEXPTYPE type, int nrow, int ncol);
 Rboolean Rf_isMatrix(SEXP);
-SEXP Rf_GetColNames(SEXP x);
-SEXP Rf_GetRowNames(SEXP x);
+
+SEXP Rf_GetColNames(SEXP dimnames);
+SEXP Rf_GetRowNames(SEXP dimnames);
 
 // rl, cl are output parameters: row and col names as sexps
 // rownames and colnames are output parameters 
