@@ -89,7 +89,7 @@ const char *translateChar(SEXP x)
 The code would look like this:
 ```cpp
 const void *vmax = vmaxget();
-... // one or more calls to translateChar(), translateCharUTF8(), etc.
+... // one or more calls to Rf_translateChar(), Rf_translateCharUTF8(), etc.
 vmaxset(vmax);
 ```
 
