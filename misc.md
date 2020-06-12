@@ -110,13 +110,14 @@ int R_system(const char *);
 
 /* R_compute_identical:  C version of identical() function
 The third arg to R_compute_identical() consists of bitmapped flags for non-default options:
-currently the first 4 default to TRUE, so the flag is set for FALSE values:
+currently the first 4 and the 6th default to TRUE, so the flag is set for FALSE values:
 1 = !NUM_EQ
 2 = !SINGLE_NA
 4 = !ATTR_AS_SET
 8 = !IGNORE_BYTECODE
 16 = !IGNORE_ENV
-Default from R's default: 15
+32 = !IGNORE_SRCREF
+Default from R's default: 16 = (0 + 0 + 0 + 0 + 16 + 0)
 */
 Rboolean R_compute_identical(SEXP, SEXP, int);
 
