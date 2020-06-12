@@ -75,7 +75,24 @@ const char* Rf_translateCharUTF8(SEXP x);
 
 Most modern C APIs use UTF-8, so you almost always want `Rf_translateCharUTF8()`.
 
-__NB__: if re-encoding is necessary, the `char*` will be allocated by `R_alloc()` and will be automatically freed on gc. If you want to save across calls to C, make a copy.
+__NB__: if re-encoding is necessary, the `char*` will be allocated by `R_alloc()` and will be automatically freed at the end of the call to `.C`, `.Call`, or `.External`. If you want to save across calls to C, make a copy.
+
+If the memory is needed only for a short period of time or if you are making a large number of repeated calls that allocate memory, you may want to manage the deallocation explicitly. This is alluded to in the R source code with this comment (`src/main/sysutils.c`):
+```cpp
+/* This may return a R_alloc-ed result, so the caller has to manage the
+   R_alloc stack */
+const char *translateChar(SEXP x)
+{
+...
+```
+
+The code would look like this:
+```cpp
+const void *vmax = vmaxget();
+... // one or more calls to translateChar(), translateCharUTF8(), etc.
+vmaxset(vmax);
+```
+
 
 ## Special values
 
