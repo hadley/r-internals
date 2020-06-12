@@ -39,7 +39,7 @@ SEXP Rf_cons(SEXP a, SEXP b)   // function arguments
 SEXP Rf_lcons(SEXP a, SEXP b)  // calls
 ```
 
-The `CDR` of the final value msut be `R_NilValue`. 
+The `CDR` of the final value must be `R_NilValue`. 
 
 There are helpers for 5-6 arguments. These automatically add the terminating `R_NilValue`.
 
@@ -116,6 +116,33 @@ SEXP Rf_nthcdr(SEXP, int);  # access nth element
 ```
 
 If you use these it's easy to get O(n^2) behaviour, but for the usual size of pairlists, this is unlikely to cause a performance bottleneck.
+
+### Creating a call
+
+Pairlists are most commonly used for function calls. Calls to functions with 0 to 5 arguments can be created directly via `Rf_lang1()` to `Rf_lang6()`. If you have more than 5 arguments, or if you want to use named arguments, use the following template:
+```cpp
+// equivalent of:
+// fun(arg1 = a, arg2 = b, arg3 = c)
+PROTECT(call = Rf_allocVector(LANGSXP, 4)); // 4 = # of args + 1 
+SETCAR(call, fun); 
+  
+SEXP s = CDR(call);
+SETCAR(s, a);
+SET_TAG(s, Rf_install("arg1"));
+  
+s = CDR(s);
+SETCAR(s, b);
+SET_TAG(s, Rf_install("arg2"));
+  
+s = CDR(s);
+SETCAR(s, c);
+SET_TAG(s, Rf_install("arg3"));
+
+PROTECT(out = Rf_eval(call, env));
+...
+UNPROTECT(2);
+```
+
 
 ## Dots (`DOTSXP`)
 
