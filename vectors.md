@@ -241,7 +241,7 @@ Rboolean Rf_isInteger(SEXP);
 Rboolean Rf_isReal(SEXP s);
 Rboolean Rf_isComplex(SEXP s);
 Rboolean Rf_isString(SEXP s);
-Rboolean Rf_isExpression)(SEXP s);
+Rboolean Rf_isExpression(SEXP s);
 ```
 
 __NB__: there's no function to test for `RAWSXP` or `VECSXP`; you use must use `TYPEOF(x) == RAWSXP`, or `TYPEOF(x) == VECSXP`. `isList()` tests if the object is a pairlist.
