@@ -113,14 +113,28 @@ Alternatively you can coerce from an existing vector:
 SEXP Rf_coerceVector(SEXP x, SEXPTYPE newtype);
 ```
 
-There are two rarer variants:
+To create a named vector, use `Rf_mkNamed()`:
 
 ```cpp
 // Given a null-terminated array of const char*'s, create an element
 // of that length, and initialise a character vector of names
 // [[SEXP creator]]
 SEXP Rf_mkNamed(SEXPTYPE type, const char ** names);
+```
 
+For example, this template creates a list holding two objects `x` and `y` named `xname` and `yname`:
+
+```cpp
+  // array of names; note the null string
+  const char *names[] = {"xname", "yname", ""};
+  SEXP list = PROTECT(Rf_mkNamed(VECSXP, names));  // creates a list of length 2
+  SET_VECTOR_ELT(list, 0, x); // x and y are arbitrary SEXPs
+  SET_VECTOR_ELT(list, 1, y);
+  UNPROTECT(1);
+```
+
+Finally, you can use a custom allocator:
+```cpp
 // Create a vector with a custom memory allocator
 typedef void *(*custom_alloc_t)(R_allocator_t *allocator, size_t);
 typedef void  (*custom_free_t)(R_allocator_t *allocator, void *);
