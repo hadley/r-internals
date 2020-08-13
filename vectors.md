@@ -308,8 +308,8 @@ void Rf_GetMatrixDimnames(SEXP x, SEXP* rl, SEXP* cl,
 int Rf_ncols(SEXP x);
 int Rf_nrows(SEXP x);
 
-void Rf_copyMatrix(SEXP source, SEXP target, Rboolean byrow);
-void Rf_copyListMatrix(SEXP source, SEXP target, Rboolean byrow);
+void Rf_copyMatrix(SEXP destination, SEXP source, Rboolean byrow);
+void Rf_copyListMatrix(SEXP destination, SEXP source, Rboolean byrow);
 ```
 
 ### Factors
@@ -333,8 +333,8 @@ Rboolean Rf_isFrame(SEXP);
 ## Miscellaneous helpers
 
 ```cpp
-// Copies from source to target, recylcing as necessary.
-void Rf_copyVector(SEXP source, SEXP target);
+// Copies from source to destination, recylcing as necessary.
+void Rf_copyVector(SEXP destination, SEXP source);
 // use Rf_duplicate if you simply want to duplicate a vector
 
 // Extract tail of a STRSXP
