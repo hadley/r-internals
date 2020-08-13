@@ -333,7 +333,7 @@ Rboolean Rf_isFrame(SEXP);
 ## Miscellaneous helpers
 
 ```cpp
-// Copies from source to destination, recylcing as necessary.
+// Copies from source to destination, recycling as necessary.
 void Rf_copyVector(SEXP destination, SEXP source);
 // use Rf_duplicate if you simply want to duplicate a vector
 
