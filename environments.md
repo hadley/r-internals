@@ -10,8 +10,15 @@ Rboolean Rf_isEnvironment(SEXP x); // (TYPEOF(x) == ENVSXP)
 * `R_BaseNamespace`: The (fake) namespace for base
 * `R_NamespaceRegistry`: Registry for registered namespaces
 * `R_GetCurrentEnv`: Retrieve the current environment `R (>= 3.6.0)`
+* `R_NewEnv`: Create a new environment `R (>= 4.1.0)`
 
 Environments are commonly called `rho` in the sources.
+
+## Creation (R >= 4.1.0)
+
+``` cpp
+SEXP R_NewEnv(SEXP enclos, int hash, ins size);
+```
 
 ## Get and set objects in environment
 
