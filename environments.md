@@ -17,7 +17,7 @@ Environments are commonly called `rho` in the sources.
 ## Creation (R >= 4.1.0)
 
 ``` cpp
-SEXP R_NewEnv(SEXP enclos, int hash, ins size);
+SEXP R_NewEnv(SEXP enclos, int hash, int size);
 ```
 
 ## Get and set objects in environment
