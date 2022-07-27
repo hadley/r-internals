@@ -39,7 +39,7 @@ typedef struct {
 
 ## Length
 
-After the SEXPTYPE, the most important property of a vector is it's length. Historically, R vectors were limited to length $2 ^ 31 -  1$. Still most vectors are shorter than this, so you can use an `int` based interface:
+After the SEXPTYPE, the most important property of a vector is it's length. Historically, R vectors were limited to length $2 ^ {31} -  1$. Still most vectors are shorter than this, so you can use an `int` based interface:
 
 ```cpp
 typedef int R_len_t;
@@ -50,7 +50,7 @@ R_len_t Rf_length(SEXP x);
 SEXP Rf_lengthgets(SEXP x, R_len_t n);
 ```
 
-As of R 3.0.0, R vectors can have length up to $2 ^ 64 - 1$. If you want your code to be as general as possible, you should instead use the `R_xlen_t`based interface:
+As of R 3.0.0, R vectors can have length up to $2 ^ {64} - 1$. If you want your code to be as general as possible, you should instead use the `R_xlen_t`based interface:
 
 ```cpp
 // ptrdiff_t is the type of the result of subtracting two pointers, and
