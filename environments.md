@@ -117,7 +117,7 @@ void (SET_TRUELENGTH)(SEXP x, int v);
 ### Hash
 
 ```cpp
-SEXP HASHTAB(SEXP x);
+SEXP HASHTAB(SEXP x); // no longer part of the API you can use...
 void SET_HASHTAB(SEXP x, SEXP v);
 
 int  HASHASH(SEXP x);
