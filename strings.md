@@ -67,8 +67,6 @@ Three functions create `const char*` with the specified encoding:
 ```cpp
 // Translated to native encoding
 const char* Rf_translateChar(SEXP x);
-// Returns as is if bytes; otherwise translates to native encoding
-const char* Rf_translateChar0(SEXP x);
 // Translates to UTF8
 const char* Rf_translateCharUTF8(SEXP x);
 ```
