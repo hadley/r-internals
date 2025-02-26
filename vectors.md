@@ -237,7 +237,7 @@ A number of helpers let you test if an SEXP is of the given type:
 
 ```cpp
 Rboolean Rf_isLogical(SEXP s);
-Rboolean Rf_isInteger(SEXP);
+Rboolean Rf_isInteger(SEXP s);
 Rboolean Rf_isReal(SEXP s);
 Rboolean Rf_isComplex(SEXP s);
 Rboolean Rf_isString(SEXP s);
