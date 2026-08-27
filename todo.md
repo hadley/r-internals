@@ -3,23 +3,19 @@
 Derived from [plan.md](plan.md). Sequencing follows the plan: scaffold first,
 then Part I, Part II, Parts III–IV, coverage audit, then index/LLM outputs.
 
-## Phase 1 — Quarto scaffold and repo cleanup
+## Phase 1 — Quarto scaffold and repo cleanup ✔ (commit `0ddcd4e`)
 
-- [ ] Run `quarto create project book` and set up `_quarto.yml`
-  - [ ] `project: type: book` (HTML only), title "R's C API"
-  - [ ] `format: html`: stock theme, `code-copy: true`, `toc: true`, full-text search on
-  - [ ] C syntax highlighting (` ```c `, not ` ```cpp `)
-  - [ ] `repo-url` + `repo-actions: [edit, issue]` for per-page edit links
-  - [ ] No knitr/jupyter execution (chapters are pure markdown)
-- [ ] Move/rename existing `.md` chapters to `.qmd` per the chapter map (use `git mv` to preserve history)
-- [ ] Fix code fences to `c` in all converted chapters
-- [ ] Delete stale artifacts: `*.html` snapshots, `.DS_Store`, `.Rhistory`, `.Rproj.user`
-- [ ] Update `.gitignore`: `/_site`, `/.quarto`
-- [ ] Move `extract-r-api.R` to `tools/` and `r-api.md` to `sources/`; exclude `sources/` from rendering
-- [ ] Add `aliases:` on each page for old filenames (e.g. `gc-rc.html` → `protection.html`)
-- [ ] GitHub Action (`.github/workflows/publish.yml`): render + publish to gh-pages via `quarto-dev/quarto-actions`
-- [ ] Rewrite README.md: point at rendered site, describe repo layout + contribution workflow (including entry format spec)
-- [ ] Get the site live early with existing chapters lightly renamed
+- [x] Set up `_quarto.yml`: `project: type: book` (HTML only), title "R's C API", stock theme, `code-copy`, `toc`, search, `repo-url` + `repo-actions: [edit, issue]`, no code execution
+- [x] Move/rename existing `.md` chapters to `.qmd` per the chapter map (`git mv`, history preserved)
+- [x] Fix code fences to `c` in all converted chapters
+- [x] Delete stale artifacts: `*.html` snapshots, `.Rhistory`
+- [x] Update `.gitignore`: `/_site`, `/.quarto`, `.DS_Store`
+- [x] Move `extract-r-api.R` to `tools/` and `r-api.md` to `sources/` (not rendered)
+- [x] Add `aliases:` on renamed pages (`gc-rc.html` → `protection.html`, etc.)
+- [x] GitHub Action (`.github/workflows/publish.yml`): render + publish to gh-pages
+- [x] Rewrite README.md for the new layout + contribution workflow
+- [x] Site renders cleanly (`quarto render`, no warnings); placeholder stubs for all planned chapters
+- [ ] Push and verify the site goes live on gh-pages (needs a push to `main`)
 
 ## Phase 2 — Part I: Foundations (mostly new prose; adv-r chapter is the model)
 
