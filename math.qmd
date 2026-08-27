@@ -1,0 +1,7 @@
+# Mathematical functions (Rmath)
+
+::: {.callout-warning}
+Placeholder. Planned: distribution functions (d/p/q/r table), mathematical
+functions (bessel, gamma, beta, ...), numerical utilities (`R_pow`, `fmax2`,
+`imin2`), constants (`M_PI` etc.), standalone Rmath usage.
+:::

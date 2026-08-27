@@ -1,0 +1,15 @@
+# Introduction {.unnumbered}
+
+::: {.callout-warning}
+This chapter is a placeholder. Content planned: what this site is and its
+relationship to WRE / R Internals / Advanced R; audience and prerequisites;
+conventions used throughout (always `R_NO_REMAP` + `Rf_`/`R_` prefixes, C not
+C++, `.Call` only); the API status taxonomy (API / experimental / embedding /
+non-API) and what "don't use non-API" means in practice; which headers to
+include.
+:::
+
+Out of scope for this site: the `.C`/`.Fortran` interface as a recommended
+approach, embedding R / writing front-ends, the graphics engine API, and
+non-API entry points except where the [compliance appendix](A-compliance.qmd)
+maps them to replacements.

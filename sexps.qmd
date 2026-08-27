@@ -1,0 +1,9 @@
+# SEXPs
+
+::: {.callout-warning}
+Placeholder. Planned: the uniform object model; complete SEXPTYPE table;
+`TYPEOF()`; header/data layout at a conceptual level; attributes;
+copy-on-modify, `NAMED`/reference counting, and why you must not mutate
+inputs (`MAYBE_SHARED`, `Rf_duplicate`/`Rf_shallow_duplicate`); type testing
+philosophy.
+:::

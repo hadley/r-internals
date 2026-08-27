@@ -1,0 +1,7 @@
+# Memory allocation
+
+::: {.callout-warning}
+Placeholder. Planned: transient `R_alloc`/`vmaxget`/`vmaxset`;
+`R_Calloc`/`R_Realloc`/`R_Free` and cleanup-on-error obligations; alignment;
+when to prefer a `RAWSXP` instead.
+:::

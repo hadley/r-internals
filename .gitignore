@@ -2,3 +2,8 @@
 .Rhistory
 .RData
 *.html
+/_site/
+/.quarto/
+.DS_Store
+
+**/*.quarto_ipynb

@@ -4,7 +4,7 @@ A character vector (`STRSXP`) is effectively an array of pointers to `CHARSXP`s,
 
 Each `CHARSXP` has an encoding associated with it:
 
-```cpp
+```c
 typedef enum {
   CE_NATIVE = 0,
   CE_UTF8   = 1,
@@ -19,7 +19,7 @@ cetype_t Rf_getCharCE(SEXP);
 
 ## Creating from C strings
 
-```cpp
+```c
 // Use current encoding; null terminated string
 // [[SEXP creator]]
 SEXP Rf_mkChar(const char* x);
@@ -36,7 +36,7 @@ SEXP Rf_mkCharLenCE(const char* x, int n, cetype_t encoding);
 
 (Typically these calls don't need to be protected as they are immediately assigned into a `STRSXP`.)
 
-```cpp
+```c
 // Makes STRSXP from CHARSXP
 // [[SEXP creator]]
 SEXP Rf_ScalarString(SEXP);
@@ -55,7 +55,7 @@ Note that most modern C libraries encode strings as UTF-8. This means you should
 
 To access the underlying C-string stored in a CHARSXP, use `CHAR()`:
 
-```cpp
+```c
 const char* R_CHAR(SEXP x);
 #define CHAR(x) R_CHAR(x)
 ```
@@ -64,7 +64,7 @@ __NB__: To match the other vector accessor functions (`LOGICAL()`, `INTEGER()`, 
 
 Three functions create `const char*` with the specified encoding:
 
-```cpp
+```c
 // Translated to native encoding
 const char* Rf_translateChar(SEXP x);
 // Returns as is if bytes; otherwise translates to native encoding
@@ -79,7 +79,7 @@ __NB__: if re-encoding is necessary, the `char*` will be allocated by `R_alloc()
 
 ## Special values
 
-```cpp
+```c
 SEXP R_NaString; // Singleton CHARSXP
 #define NA_STRING R_NaString
 
@@ -99,7 +99,7 @@ Rboolean Rf_isValidStringF(SEXP);
 
 ## Helper functions
 
-```cpp
+```c
 typedef enum {Bytes, Chars, Width} nchar_type;
 int R_nchar(SEXP string, nchar_type type_,
   Rboolean allowNA, Rboolean keepNA, const char* msg_name);

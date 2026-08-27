@@ -1,0 +1,7 @@
+{
+  "permission": {
+    "edit": {
+      "*.yml": "allow"
+    }
+  }
+}

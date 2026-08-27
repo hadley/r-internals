@@ -1,0 +1,7 @@
+# Function index {.unnumbered}
+
+::: {.callout-warning}
+Placeholder. This page will be **generated** by `tools/build-index.R`:
+an alphabetical table of every documented entry point → chapter + anchor +
+status. Never hand-edit.
+:::

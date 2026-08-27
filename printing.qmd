@@ -1,0 +1,6 @@
+# Printing and messaging
+
+::: {.callout-warning}
+Placeholder. Planned: `Rprintf`/`REprintf`, `Rf_PrintValue`, `R_ShowMessage`,
+console flushing.
+:::
