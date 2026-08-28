@@ -1,0 +1,9 @@
+# Attributes
+
+::: {.callout-warning}
+Placeholder. Planned content:
+
+- `Rf_getAttrib`/`Rf_setAttrib` and the API-compliant helpers
+- names/dim/dimnames/class
+- The attribute-defined structures: matrices/arrays, factors, data frames
+:::

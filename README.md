@@ -1,45 +1,27 @@
-# R internals
+# R's C API
 
-This repo aims to provide some useful additional information about R's internal C API, or Rapi for short. This site draws heavily from Section 5 ("System and foreign language interfaces") of [Writing R extensions](http://cran.r-project.org/doc/manuals/R-exts.html), [R internals](https://cran.r-project.org/doc/manuals/r-release/R-ints.html), and inspection of R's source code to see how functions are used.
+A comprehensive, concise guide to R's C API for package authors, reflecting
+the post-R-4.5 API-compliance era (`R_NO_REMAP`, `Rf_`/`R_` prefixes, and the
+API / experimental / embedding / non-API classification).
 
-Here we focus on best practices and modern tools. To wit, we recommend that you use `R_NO_REMAP` so all API functions have the prefix `R_` or `Rf_`:
+This repo is a [Quarto book](https://quarto.org/docs/books/). Render it
+locally with:
 
-```c
-#define R_NO_REMAP
-#include <R.h>
-#include <Rinternals.h>
+```sh
+quarto render
 ```
 
-(Including `<Rinternals.h>` seems like bad form. However, it doesn't actually give you access to the "internal" internal API unless you set some additional flags. Instead it lets you access the "public" internal API, which is both necessary and safe. Yes, this is confusing.)
+## Repository layout
 
-## SEXPs
-
-At the C-level, all R objects are stored in a common datatype, the `SEXP`, or S-expression. A `SEXP` is a variant type, with subtypes or `SEXPTYPE`s for all R's data structures. This site roughly breaks Rapi into chapters based on the `SEXPTYPE` the functions work with:
-
-* [Vectors](vectors.md) cover the most important data structures: vectors.
-  This includes `LGLSXP`, `INTSXP`, `REALSXP`, `CPLXSXP`, `STRSXP`, `VECSXP`,
-  `RAWSXP`, and `EXPRSXP`.
-
-* [Strings](strings.md): Character vectors are a more complex object made of 
-  vector `CHARSXP`s.
-
-* [Environments](environments.md), or `ENVSXP`s.
-
-* [Functions](functions.md), including `CLOSXP`s and the rarer `BUILTINSXP`s,
-  `SPECIALSXP`s and `FUNSXPs`.
-
-* [Symbols](symbols.md), `SYMSXP`s.
-
-* [Pairlists](pairlists.md), including `LISTSXP`s and the related
-  `NILSXP`, `LANGSXP`, and `DOTSXP`. This chapter also includes a discussion
-  of attributes, which are powered by pair lists.
-
-* [External pointers](external-pointers.md), or `XPTRSXP`s.
-
-Other categories are:
-
-* [Evaluating code and handling errors](error-eval.md).
-* [Garbage collection and reference counting](gc-rc.md).
-* [Object oriented code](oo.md) (including `S4SXP`s).
-* [Other miscellaneous functions](misc.md).
-* [Serialisation](save-load.md).
+- `index.qmd`, `calling-c.qmd`, ... — one `.qmd` per chapter, organised into
+  Parts I–IV plus appendices (see `_quarto.yml`).
+- `diagrams/` — images used by chapters.
+- `tools/` — maintenance scripts:
+  - `extract-r-api.R` regenerates `sources/r-api.md` (WRE chapter 6) so we
+    can re-diff against future WRE releases.
+  - `build-index.R` (planned) parses the standardised entries to produce the
+    function index, `functions.json`, and a coverage report.
+  - `llms.R` (planned) produces `llms.txt`, `llms-full.txt`, and per-page
+    markdown copies post-render.
+- `sources/` — raw mined material (e.g. `r-api.md`). **Not rendered**; treat
+  as source to rewrite, not copy.

@@ -1,0 +1,12 @@
+# Calling C from R
+
+::: {.callout-warning}
+Placeholder. Planned content:
+
+- `.Call` and `.External`
+- Routine registration: `R_registerRoutines`, `R_CallMethodDef`, `useDynLib`
+- The contract your C function signs up to: main thread only, may longjmp on
+  error, arguments are borrowed references, inputs must not be modified
+- Minimal package skeleton plus how to iterate quickly (cpp11/Rcpp mention,
+  `callme`-style workflow)
+:::

@@ -1,0 +1,13 @@
+# SEXPs
+
+::: {.callout-warning}
+Placeholder. Planned content:
+
+- The uniform object model; complete SEXPTYPE table (with which chapter
+  covers each)
+- `TYPEOF()`; the header/data layout at a conceptual level
+- Attributes exist on (almost) every object
+- Copy-on-modify, `NAMED`/reference counting, and why you must not mutate
+  inputs (`MAYBE_SHARED`, `Rf_duplicate`/`Rf_shallow_duplicate`)
+- Type testing philosophy (prefer `TYPEOF(x) == ...`)
+:::

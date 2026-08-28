@@ -1,0 +1,19 @@
+# Introduction {.unnumbered}
+
+::: {.callout-warning}
+This chapter is a placeholder. Planned content:
+
+- What this site is; relationship to WRE / R Internals / Advanced R
+- Audience and prerequisites
+- Conventions used throughout: always `R_NO_REMAP` + `Rf_`/`R_` prefixes,
+  C not C++, `.Call` only
+- The API status taxonomy (API / experimental / embedding / non-API) and
+  what "don't use non-API" means in practice (`R CMD check` NOTEs, CRAN
+  policy)
+- Which headers to include and why `<Rinternals.h>` is fine
+:::
+
+Out of scope for this site: the `.C`/`.Fortran` interface as a recommended
+approach, embedding R / writing front-ends, the graphics engine API, and
+non-API entry points except where the [compliance appendix](compliance.qmd)
+maps them to replacements.

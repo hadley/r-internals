@@ -14,7 +14,7 @@ There are seven vector types in R:
 
 * Lists   (`VECSXP`), contains any other sexp. __Beware:__ Lists are `VECSXP`s
   not `LISTSXP`s. This is because early implementations of lists were Lisp-like 
-  linked lists, which are now called as "[pairlists](pairlists.md)".
+  linked lists, which are now called as "[pairlists](pairlists.qmd)".
 
 * Raw     (`RAWSXP`), contains `Rbyte`.
 
@@ -23,7 +23,7 @@ There are seven vector types in R:
 
 Three of those vectors are built on top of simple types defined by R:
 
-```cpp
+```c
 typedef unsigned char Rbyte;
 
 typedef enum { 
@@ -41,7 +41,7 @@ typedef struct {
 
 After the SEXPTYPE, the most important property of a vector is it's length. Historically, R vectors were limited to length $2 ^ {31} -  1$. Still most vectors are shorter than this, so you can use an `int` based interface:
 
-```cpp
+```c
 typedef int R_len_t;
 // Get the length of a vector
 R_len_t Rf_length(SEXP x);
@@ -52,7 +52,7 @@ SEXP Rf_lengthgets(SEXP x, R_len_t n);
 
 As of R 3.0.0, R vectors can have length up to $2 ^ {64} - 1$. If you want your code to be as general as possible, you should instead use the `R_xlen_t`based interface:
 
-```cpp
+```c
 // ptrdiff_t is the type of the result of subtracting two pointers, and
 // is usually 8 bytes (like a double)
 typedef ptrdiff_t R_xlen_t;
@@ -62,7 +62,7 @@ SEXP Rf_xlengthgets(SEXP x, R_xlen_t n);
 
 These functions also have uppercase variants - in base R code these are implemented as macros for efficiency.
 
-```cpp
+```c
 int  LENGTH(SEXP x);
 void SETLENGTH(SEXP x, int v);
 R_xlen_t XLENGTH(SEXP x);
@@ -73,13 +73,13 @@ int IS_LONG_VEC(SEXP x);
 
 The most common way to create a new vector is with `Rf_allocVector()`:
 
-```cpp
+```c
 // [[SEXP creator]]
 SEXP Rf_allocVector(SEXPTYPE type, R_xlen_t n);
 ```
 If you want to create a vector of length 1 from the corresponding C type, use:
 
-```cpp
+```c
 // [[SEXP creator]]
 SEXP Rf_ScalarLogical(int x);
 
@@ -107,7 +107,7 @@ SEXP Rf_mkString(const char*);
 
 Alternatively you can coerce from an existing vector:
 
-```cpp
+```c
 // [[SEXP creator]]
 // Error: if can't coerce between TYPEOF(x) and newtype.
 SEXP Rf_coerceVector(SEXP x, SEXPTYPE newtype);
@@ -115,7 +115,7 @@ SEXP Rf_coerceVector(SEXP x, SEXPTYPE newtype);
 
 To create a named vector, use `Rf_mkNamed()`:
 
-```cpp
+```c
 // Given a null-terminated array of const char*'s, create an element
 // of that length, and initialise a character vector of names
 // [[SEXP creator]]
@@ -124,7 +124,7 @@ SEXP Rf_mkNamed(SEXPTYPE type, const char ** names);
 
 For example, this template creates a list holding two objects `x` and `y` named `xname` and `yname`:
 
-```cpp
+```c
   // array of names; note the null string
   const char *names[] = {"xname", "yname", ""};
   SEXP list = PROTECT(Rf_mkNamed(VECSXP, names));  // creates a list of length 2
@@ -134,7 +134,7 @@ For example, this template creates a list holding two objects `x` and `y` named 
 ```
 
 Finally, you can use a custom allocator:
-```cpp
+```c
 // Create a vector with a custom memory allocator
 typedef void *(*custom_alloc_t)(R_allocator_t *allocator, size_t);
 typedef void  (*custom_free_t)(R_allocator_t *allocator, void *);
@@ -152,7 +152,7 @@ SEXP Rf_allocVector3(SEXPTYPE type, R_xlen_t type, R_allocator_t* allocator);
 
 The simple types are wrappers around an array of C values, so you get and set by using a helper that returns a pointer:
 
-```cpp
+```c
 int*      LOGICAL(SEXP x);
 int*      INTEGER(SEXP x);
 double*   REAL(SEXP x);
@@ -164,7 +164,7 @@ __NB__: these functions are all upper case and don't start with `Rf_`.
 
 When working with longer vectors, there's typically a performance advantage to saving the index and reusing. For example, instead of:
 
-```cpp
+```c
 for (int i = 0; i < n; ++i) {
   INTEGER(x)[i] = INTEGER(x)[i] * 2;
 }
@@ -172,7 +172,7 @@ for (int i = 0; i < n; ++i) {
 
 Do:
 
-```cpp
+```c
 int* px = INTEGER(x);
 for (int i = 0; i < n; ++i) {
   px[i] = px[i] * 2;
@@ -181,7 +181,7 @@ for (int i = 0; i < n; ++i) {
 
 Strings and lists don't map to simple C structs, so instead have a pair of functions to get and set values.
 
-```cpp
+```c
 // Returns a CHARSXP
 SEXP STRING_ELT(SEXP x, R_xlen_t i);
 void SET_STRING_ELT(SEXP x, R_xlen_t i, SEXP v);
@@ -197,7 +197,7 @@ SEXP SET_VECTOR_ELT(SEXP x, R_xlen_t i, SEXP v);
 
 There are a few helpers that extract the first value, coercing the vector as necessary:
 
-```cpp
+```c
 int Rf_asLogical(SEXP x);
 int Rf_asInteger(SEXP x);
 double Rf_asReal(SEXP x);
@@ -208,7 +208,7 @@ Rcomplex Rf_asComplex(SEXP x);
 
 Integer, logical, and character vectors have special sentinels for missing values: 
 
-```cpp
+```c
 #define NA_LOGICAL	R_NaInt
 #define NA_INTEGER	R_NaInt
 #define NA_STRING	R_NaString
@@ -217,7 +217,7 @@ int	 R_NaInt;	    /* NA_INTEGER:= INT_MIN currently */
 
 Missing values are somewhat more complicated for `REALSXP` because there is an existing protocol for missing values defined by the floating point standard ([IEEE 754](http://en.wikipedia.org/wiki/IEEE_floating_point)). In doubles, an `NA` is `NaN` with a special bit pattern (the lowest word is 1954, the year Ross Ihaka was born), and there are other special values for positive and negative infinity. Use `ISNA()`, `ISNAN()`, and `!R_FINITE()` macros to check for missing, NaN, or non-finite values. Use the constants `NA_REAL`, `R_NaN`, `R_PosInf`, and `R_NegInf` to set those values.
 
-```cpp
+```c
 // Provided for cross-platform safety
 double R_NaN;
 double R_PosInf;
@@ -235,7 +235,7 @@ int R_finite(double);	 // not NA, NaN, Inf, or -Inf
 
 A number of helpers let you test if an SEXP is of the given type:
 
-```cpp
+```c
 Rboolean Rf_isLogical(SEXP s);
 Rboolean Rf_isInteger(SEXP);
 Rboolean Rf_isReal(SEXP s);
@@ -271,7 +271,7 @@ The R API provides some support for the various data structures built on top of 
 
 Arrays are vectors with a dim attribute:
 
-```cpp
+```c
 Rboolean Rf_isArray(SEXP x);
 
 SEXP Rf_alloc3DArray(SEXPTYPE type, int, int, int);
@@ -293,7 +293,7 @@ SEXP Rf_arraySubscript(int, SEXP, SEXP, SEXP (*)(SEXP,SEXP),SEXP (*)(S EXP, int)
 
 Matrices are a special case of arrays; those with 2 dimensions:
 
-```cpp
+```c
 SEXP Rf_allocMatrix(SEXPTYPE type, int nrow, int ncol);
 Rboolean Rf_isMatrix(SEXP);
 
@@ -314,7 +314,7 @@ void Rf_copyListMatrix(SEXP source, SEXP target, Rboolean byrow);
 
 ### Factors
 
-```cpp
+```c
 Rboolean Rf_isFactor(SEXP);
 int	 Rf_nlevels(SEXP);
 Rboolean Rf_isOrdered(SEXP);
@@ -326,13 +326,13 @@ SEXP Rf_asCharacterFactor(SEXP x);
 
 ### Data frame
 
-```cpp
+```c
 Rboolean Rf_isFrame(SEXP);
 ```
 
 ## Miscellaneous helpers
 
-```cpp
+```c
 // Copies from source to target, recylcing as necessary.
 void Rf_copyVector(SEXP source, SEXP target);
 // use Rf_duplicate if you simply want to duplicate a vector
@@ -344,7 +344,7 @@ SEXP Rf_stringSuffix(SEXP string, int fromIndex);
 
 A couple of macros aid in testing if an object is a "scalar" (a vector of length 1):
 
-```cpp
+```c
 #define IS_SCALAR(x, type) (TYPEOF(x) == (type) && XLENGTH(x) == 1)
 #define IS_SIMPLE_SCALAR(x, type) (IS_SCALAR(x, type) && ATTRIB(x) == R_NilValue)
 

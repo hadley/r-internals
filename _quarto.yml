@@ -1,0 +1,55 @@
+project:
+  type: book
+  output-dir: _site
+
+book:
+  title: "R's C API"
+  author: "Hadley Wickham"
+  repo-url: https://github.com/hadley/r-internals
+  repo-actions: [edit, issue]
+  search: true
+  chapters:
+    - index.qmd
+    - part: "Part I — Foundations"
+      chapters:
+        - calling-c.qmd
+        - sexps.qmd
+        - protection.qmd
+        - memory.qmd
+    - part: "Part II — Objects"
+      chapters:
+        - vectors.qmd
+        - strings.qmd
+        - attributes.qmd
+        - environments.qmd
+        - symbols.qmd
+        - pairlists.qmd
+        - functions.qmd
+        - external-pointers.qmd
+        - oo.qmd
+    - part: "Part III — The engine"
+      chapters:
+        - evaluation.qmd
+        - errors.qmd
+        - printing.qmd
+        - serialisation.qmd
+    - part: "Part IV — Utilities"
+      chapters:
+        - rng.qmd
+        - math.qmd
+        - numerical.qmd
+        - utilities.qmd
+        - r-version.qmd
+    - part: "Appendices"
+      chapters:
+        - compliance.qmd
+        - function-index.qmd
+
+format:
+  html:
+    theme: cosmo
+    code-copy: true
+    toc: true
+
+execute:
+  enabled: false

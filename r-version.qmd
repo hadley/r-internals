@@ -1,4 +1,8 @@
-## Other header files
+---
+aliases: [other-headers.html]
+---
+
+# R version
 
 ### `Rversion.h`
 

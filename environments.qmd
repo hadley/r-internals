@@ -1,6 +1,6 @@
-# Environments (`ENVSXP`)
+# Environments
 
-```cpp
+```c
 Rboolean Rf_isEnvironment(SEXP x); // (TYPEOF(x) == ENVSXP)
 ```
 
@@ -28,7 +28,7 @@ SEXP R_NewEnv(SEXP enclos, int hash, int size);
 
 Note that retrieving an variable from an environment may cause an allocation because it might be an active binding.
 
-```cpp
+```c
 // Look up symbol in environment, following up enclosing envs
 SEXP Rf_findVar(SEXP symbol, SEXP environment);
 
@@ -46,7 +46,7 @@ SEXP Rf_findVarInFrame(SEXP env, SEXP symbol);
 
 ### Set values
 
-```cpp
+```c
 // Define value
 void Rf_defineVar(SEXP symbol, SEXP value, SEXP env);
 
@@ -58,7 +58,7 @@ To remove a binding, set its value to `R_UnboundSymbol`.
 
 ### Check for presence
 
-```cpp
+```c
 // Returns character vector
 SEXP R_lsInternal3(SEXP env, Rboolean all_names, Rboolean sorted);
 
@@ -68,7 +68,7 @@ SEXP R_lsInternal(SEXP, Rboolean);
 
 ## Miscellaneous
 
-```cpp
+```c
 Rboolean R_IsPackageEnv(SEXP rho);
 SEXP R_PackageEnvName(SEXP rho);
 SEXP R_FindPackageEnv(SEXP info);
@@ -88,7 +88,7 @@ Rboolean R_envHasNoSpecialSymbols(SEXP);
 
 ## Internals
 
-```cpp
+```c
 SEXP FRAME(SEXP x);
 void SET_FRAME(SEXP x, SEXP v);
 
@@ -108,7 +108,7 @@ void SET_ENVFLAGS(SEXP x, int v);
 > slots in use.
 > --- R-internals
 
-```cpp
+```c
 int  (TRUELENGTH)(SEXP x);
 R_xlen_t  (XTRUELENGTH)(SEXP x);
 void (SET_TRUELENGTH)(SEXP x, int v);
@@ -116,7 +116,7 @@ void (SET_TRUELENGTH)(SEXP x, int v);
 
 ### Hash
 
-```cpp
+```c
 SEXP HASHTAB(SEXP x);
 void SET_HASHTAB(SEXP x, SEXP v);
 
@@ -134,7 +134,7 @@ void SET_HASHVALUE(SEXP x, int v);
 
 Code from lobstr should help me understand how they work:
 
-```cpp
+```c
 int FrameSize(SEXP frame) {
   int count = 0;
 

@@ -1,3 +1,7 @@
+---
+aliases: [gc-rc.html]
+---
+
 # Garbage collection and reference counting
 
 ## GC
@@ -29,7 +33,7 @@ The primary structure that R uses for protecting objects is the so-called `R_Pre
 
 These functions need to be used with care: because `R_ReleaseObject()` will perform a recursive search for the object to protect, if many `SEXP`s are inserted and later removed in the same order, this can cause performance regressions. See [this dplyr issue](https://github.com/hadley/dplyr/issues/1396) for an interesting manifestation of this problem.
 
-```cpp
+```c
 #define NEWSXP      30    /* fresh node created in new page */
 #define FREESXP     31    /* node released by GC */
 
@@ -64,14 +68,14 @@ Rboolean R_cycle_detected(SEXP s, SEXP child);
 
 ## Memory size
 
-```cpp
+```c
 void*	vmaxget(void);
 void	vmaxset(const void *);
 ```
 
 ## Manual memory management
 
-```cpp
+```c
 char*	R_alloc(size_t, int);
 long double *R_allocLD(size_t nelem);
 char*	S_alloc(long, int);
@@ -83,7 +87,7 @@ char*	S_realloc(char *, long, long, int);
 You must be very careful when modifying function inputs. If you're working with lists, use `shallow_duplicate()` to make a shallow copy; `duplicate()` will also copy every element in the list.
 
 
-```cpp
+```c
 #define MAYBE_SHARED(x) (NAMED(x) > 1)
 #define NO_REFERENCES(x) (NAMED(x) == 0)
 #define MARK_NOT_MUTABLE(x) SET_NAMED(x, NAMEDMAX)
@@ -98,7 +102,7 @@ getter from setter calls */
 
 ### Efficient copying
 
-```cpp
+```c
 SEXP Rf_duplicate(SEXP);
 SEXP Rf_shallow_duplicate(SEXP);
 SEXP Rf_lazy_duplicate(SEXP);
@@ -106,7 +110,7 @@ SEXP Rf_lazy_duplicate(SEXP);
 
 ### Internals
 
-```cpp
+```c
 /* General Cons Cell Attributes */
 int  (OBJECT)(SEXP x);
 int  (MARK)(SEXP x);

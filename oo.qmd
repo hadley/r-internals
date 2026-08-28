@@ -2,13 +2,13 @@
 
 `ANYSXP` is used internal in S4 class definitions to flag that any SEXP is ok.
 
-```cpp
+```c
 Rboolean (Rf_isObject)(SEXP s);
 ```
 
 ## S3
 
-```cpp
+```c
 Rboolean Rf_inherits(SEXP, const char *);
 SEXP Rf_S3Class(SEXP);
 int Rf_isBasicClass(const char *);
@@ -17,13 +17,13 @@ SEXP Rf_classgets(SEXP, SEXP);
 
 ## S4 (`S4SXP`)
 
-```cpp
+```c
 Rboolean Rf_isS4(SEXP);
 SEXP Rf_asS4(SEXP, Rboolean, int);
 SEXP Rf_allocS4Object(void);
 ```
 
-```cpp
+```c
 /* S3-S4 class (inheritance), attrib.c */
 SEXP R_S4_extends(SEXP klass, SEXP useTable);
 
@@ -42,7 +42,7 @@ int R_check_class_etc      (SEXP x, const char **valid);
 
 ### Internals
 
-```cpp
+```c
 int (IS_S4_OBJECT)(SEXP x);
 void (SET_S4_OBJECT)(SEXP x);
 void (UNSET_S4_OBJECT)(SEXP x);
@@ -50,7 +50,7 @@ void (UNSET_S4_OBJECT)(SEXP x);
 
 ### Slots
 
-```cpp
+```c
 SEXP R_do_slot(SEXP obj, SEXP name);
 SEXP R_do_slot_assign(SEXP obj, SEXP name, SEXP value);
 int R_has_slot(SEXP obj, SEXP name);

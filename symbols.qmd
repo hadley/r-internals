@@ -1,6 +1,6 @@
-# Symbols (`SYMSXP`)
+# Symbols
 
-```cpp
+```c
 Rboolean Rf_isSymbol(SEXP s);
 ```
 
@@ -8,12 +8,12 @@ Rboolean Rf_isSymbol(SEXP s);
 
 If symbol exists, return it; otherwise create it. `SYMSXP`s don't need to be protected because symbols are not currently reclaimed by the garbage collector. If you are using a symbol many times, it may be worth caching it to avoid repeated lookups.
 
-```cpp
+```c
 SEXP Rf_install(const char *);
 SEXP Rf_installChar(SEXP);
 ```
 
-## Mising symbol
+## Missing symbol
 
 `R_MissingArg` represents the missing/empty symbol, i.e. the second argument in this call `f(x, )`.
 
@@ -52,12 +52,12 @@ A number of symbols are so commonly used, they're predefined and exported:
 * `R_SortListSymbol`: "sort.list"
 * `R_SourceSymbol`: "source"
 * `R_SpecSymbol`: "spec"
-* `R_TripleColonSymbol`:  ":::"
+* `R_TripleColonSymbol`:  `":::"`
 * `R_TspSymbol`: "tsp"
 
 ## Internals
 
-```cpp
+```c
 // The value of the symbol, as a CHARSXP
 // Use CHAR(PRINTNAME(x)) to get the name as a const char*
 SEXP (PRINTNAME)(SEXP x);

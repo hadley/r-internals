@@ -1,6 +1,6 @@
-# External pointers (`EXTPTRSXP`)
+# External pointers
 
-```cpp
+```c
 SEXP R_MakeExternalPtr(void *p, SEXP tag, SEXP prot);
 void *R_ExternalPtrAddr(SEXP s);
 SEXP R_ExternalPtrTag(SEXP s);
@@ -13,7 +13,7 @@ void R_SetExternalPtrProtected(SEXP s, SEXP p);
 
 ## Finalization
 
-```cpp
+```c
 typedef void (*R_CFinalizer_t)(SEXP);
 void R_RegisterFinalizer(SEXP s, SEXP fun);
 void R_RegisterCFinalizer(SEXP s, R_CFinalizer_t fun);
@@ -24,7 +24,7 @@ void R_RunPendingFinalizers(void);
 
 ## Internals
 
-```cpp
+```c
 #define EXTPTR_PTR(x)	CAR(x)
 #define EXTPTR_PROT(x)	CDR(x)
 #define EXTPTR_TAG(x)	TAG(x)

@@ -1,8 +1,8 @@
-# Pairlists (`LISTSXP`, `DOTSXP` & `LANGSXP`)
+# Pairlists
 
 Pairlists are linked lists used for calls, unevaluated arguments, attributes, and in `...`. 
 
-```cpp
+```c
 Rboolean Rf_isPairList(SEXP); // LISTSXP
 Rboolean Rf_isLanguage(SEXP); // LANGSXP
 Rboolean Rf_isList(SEXP);     // LISTSXP, NILSXP
@@ -20,7 +20,7 @@ Graphically, this looks like:
 
 To loop over all elements of a pairlist, use this template:
 
-```cpp
+```c
 int length(SEXP s) {
   int i = 0;
   
@@ -34,7 +34,7 @@ int length(SEXP s) {
 ```
 ## Creation
 
-```cpp
+```c
 SEXP Rf_cons(SEXP a, SEXP b)   // function arguments
 SEXP Rf_lcons(SEXP a, SEXP b)  // calls
 ```
@@ -43,7 +43,7 @@ The `CDR` of the final value must be `R_NilValue`.
 
 There are helpers for 5-6 arguments. These automatically add the terminating `R_NilValue`.
 
-```cpp
+```c
 SEXP Rf_list1(SEXP x1);
 SEXP Rf_list2(SEXP x1, SEXP x2);
 SEXP Rf_list3(SEXP x1, SEXP x2, SEXP x3);
@@ -64,7 +64,7 @@ SEXP Rf_allocFormalsList5(SEXP x1, SEXP x2, SEXP x3, SEXP x4, SEXP x5);
 SEXP Rf_allocFormalsList6(SEXP x1, SEXP x2, SEXP x3, SEXP x4, SEXP x5, SEXP x6);
 ```
 
-```cpp
+```c
 SEXP Rf_PairToVectorList(SEXP x);
 SEXP Rf_VectorToPairList(SEXP x);
 SEXP Rf_listAppend(SEXP source, SEXP target);
@@ -76,7 +76,7 @@ Unlike lists (`VECSXP`s), pairlists (`LISTSXP`s) have no way to index into an ar
 
 ![](diagrams/pairlist-names.png)
 
-```cpp
+```c
 SEXP CAR(SEXP e);
 SEXP CDR(SEXP e);
 SEXP CAAR(SEXP e);
@@ -110,7 +110,7 @@ void (SET_MISSING)(SEXP x, int v);
 
 Some functions allow you to work with a pair list as if it's a vector:
 
-```cpp
+```c
 SEXP Rf_allocList(int n);   # create new pairlist of specified length 
 SEXP Rf_nthcdr(SEXP, int);  # access nth element
 ```
@@ -120,7 +120,7 @@ If you use these it's easy to get O(n^2) behaviour, but for the usual size of pa
 ### Creating a call
 
 Pairlists are most commonly used for function calls. Calls to functions with 0 to 5 arguments can be created directly via `Rf_lang1()` to `Rf_lang6()`. However, these functions do not allow for named arguments. If you need named arguments, use the following template:
-```cpp
+```c
 // equivalent of:
 // fun(arg1 = a, arg2 = b, arg3 = c)
 SEXP call = PROTECT(Rf_allocVector(LANGSXP, 4)); // 4 = # of args + 1 
@@ -154,7 +154,7 @@ There is a single value with type `NILSXP`: `R_NilValue`.  This corresponds to `
 
 ## Attributes
 
-```cpp
+```c
 SEXP Rf_getAttrib(SEXP x, SEXP symbol);
 SEXP Rf_setAttrib(SEXP x, SEXP symbol, SEXP value);
 
