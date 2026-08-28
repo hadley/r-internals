@@ -234,7 +234,7 @@
   family: Rf_GetOption1
   summary: Retrieve the value of an R option.
   signature: |
-    SEXP Rf_GetOption(SEXP, SEXP); /* pre-2.13.0 compatibility */
+    SEXP Rf_GetOption(SEXP, SEXP);
     SEXP Rf_GetOption1(SEXP);
   status: api
   header: Rinternals.h
@@ -242,8 +242,7 @@
   errors: never
   r_equivalent: getOption()
   notes: |
-    `Rf_GetOption()` is kept for pre-2.13.0 compatibility; use
-    `Rf_GetOption1()`.
+    Use `Rf_GetOption1()`; `Rf_GetOption()` is kept for compatibility.
   see_also: Rf_GetOptionDigits
   chapter: utilities
   section: Misc

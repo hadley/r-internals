@@ -14,7 +14,7 @@
     x: any vector.
   notes: |
     `Rf_xlength()` uses `R_xlen_t` and supports long vectors (length up to
-    2^64 - 1, since R 3.0.0); `Rf_length()` is limited to `int` (2^31 - 1).
+    2^64 - 1); `Rf_length()` is limited to `int` (2^31 - 1).
     Also works on pairlists, where it is O(n).
   see_also:
     - Rf_lengthgets
@@ -36,8 +36,7 @@
     x: a vector.
     n: the new length.
   notes: |
-    `Rf_xlengthgets()` is the `R_xlen_t`-based variant for long vectors
-    (since R 3.0.0).
+    `Rf_xlengthgets()` is the `R_xlen_t`-based variant for long vectors.
   see_also:
     - Rf_xlength
     - SETLENGTH
@@ -95,12 +94,10 @@
   header: Rinternals.h
   protect: n/a
   errors: never
-  since: R 3.0.0
   args:
     x: any vector.
   notes: |
-    True when a vector's length exceeds the `int`-based limit of 2^31 - 1
-    (long vectors have been supported since R 3.0.0).
+    True when a vector's length exceeds the `int`-based limit of 2^31 - 1.
   see_also: Rf_xlength
   chapter: vectors
   section: Length
@@ -210,7 +207,6 @@
   header: Rinternals.h
   protect: result
   errors: can-throw
-  since: R 3.4.0
   notes: |
     Like `Rf_allocVector()`, but memory for the data payload comes from
     `allocator`; pass `NULL` for plain `Rf_allocVector()` behaviour. Rarely

@@ -80,10 +80,9 @@
   header: Rinternals.h
   protect: result
   errors: can-throw
-  since: R 4.1.0
   see_also: []
   chapter: environments
-  section: Creation (R >= 4.1.0)
+  section: Creation
 - name: Rf_findVar
   family: []
   summary: Find the value bound to a symbol in an environment and its enclosing environments.
@@ -206,7 +205,6 @@
   header: Rinternals.h
   protect: not-needed
   errors: never
-  since: R 3.6.0
   r_equivalent: environment()
   notes: |
     Not part of the API; call `environment()` at the R level and pass the
