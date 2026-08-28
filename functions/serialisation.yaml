@@ -1,7 +1,8 @@
 ---
 - name: R_XDR_DOUBLE_SIZE
   family: R_XDR_INTEGER_SIZE
-  summary: Specify the byte sizes of doubles and integers in XDR serialisation format.
+  summary: >-
+    Specify the byte sizes of doubles and integers in XDR serialisation format.
   signature: |
     #define R_XDR_DOUBLE_SIZE 8
     #define R_XDR_INTEGER_SIZE 4
@@ -68,30 +69,11 @@
   see_also: []
   chapter: serialisation
   section: Persistence streams
-- name: R_InitConnOutPStream
-  family: R_InitConnInPStream
-  summary: Initialise a persistence stream that reads from or writes to a connection.
-  signature: |
-    void R_InitConnOutPStream(R_outpstream_t stream, Rconnection con,
-      R_pstream_format_t type, int version,
-      SEXP (*phook)(SEXP, SEXP), SEXP pdata);
-    void R_InitConnInPStream(R_inpstream_t stream,  Rconnection con,
-      R_pstream_format_t type,
-      SEXP (*phook)(SEXP, SEXP), SEXP pdata);
-  status: non-api
-  header: Rinternals.h
-  protect: n/a
-  errors: can-throw
-  notes: |
-    The connection interface is not available to packages. Define
-    `NEED_CONNECTION_PSTREAMS` before including `Rinternals.h` to get the
-    opaque `Rconnection` pointer type.
-  see_also: []
-  chapter: serialisation
-  section: Persistence streams
 - name: R_Serialize
   family: R_Unserialize
-  summary: "Serialise an R object to an output stream, or unserialise it from an input stream."
+  summary: >-
+    Serialise an R object to an output stream, or unserialise it from an input
+    stream.
   signature: |
     void R_Serialize(SEXP s, R_outpstream_t ops);
     SEXP R_Unserialize(R_inpstream_t ips);
@@ -106,16 +88,3 @@
   see_also: []
   chapter: serialisation
   section: Serialising objects
-- name: R_RestoreHashCount
-  family: []
-  summary: Restore the hash count of a hashed environment after unserialisation.
-  signature: |
-    void R_RestoreHashCount(SEXP rho);
-  status: non-api
-  header: Rinternals.h
-  protect: n/a
-  errors: never
-  see_also: []
-  chapter: serialisation
-  section: Serialising objects
-...

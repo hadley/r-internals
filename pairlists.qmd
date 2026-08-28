@@ -2,29 +2,29 @@
 
 {{< include _setup.qmd >}}
 
-Pairlists are linked lists used for calls, unevaluated arguments, attributes, and in `...`. 
+Pairlists (`LISTSXP`) are linked lists used for calls, unevaluated
+arguments, [attributes](attributes.qmd), and `...`. The name comes from Lisp's "dotted
+pairs": each CONS cell is a pair of pointers:
 
-The terminology of pairlist comes from LISPs "dotted pairs" which is a way of describing "CONS" cells. A CONS cell is a pair of pointers:
+* `CAR` (contents of address register) points to the element.
+* `CDR` (contents of decrement register) points to the next cell. The `CDR`
+  of the last cell is `R_NilValue`.
 
-* "CAR" (contents of address register) points to an object
-* "CDR" (contents of decrement register) points to the next element in the list.
-  The CDR of the last element is `R_NilValue`. 
-
-Graphically, this looks like:
+Graphically:
 
 ![](diagrams/pairlists.png)
 
-To loop over all elements of a pairlist, use this template:
+To loop over a pairlist, use this template:
 
 ```c
-int length(SEXP s) {
+int pairlist_length(SEXP x) {
   int i = 0;
-  
-  for(SEXP cons = x; cons != R_NilValue; cons = CDR(nxt) {
+
+  for (SEXP cons = x; cons != R_NilValue; cons = CDR(cons)) {
     SEXP el = CAR(cons);
     i++;
   }
-  
+
   return i;
 }
 ```
@@ -39,17 +39,23 @@ render_entries("pairlists", "Test")
 
 ## Creation
 
+The `CDR` of the final cell must be `R_NilValue`; the `Rf_list1()`–`Rf_list5()`
+helpers add the terminator for you.
+
 ```{r}
 #| results: asis
 #| echo: false
 render_entries("pairlists", "Creation")
 ```
 
-The `CDR` of the final value must be `R_NilValue`. 
-
-There are helpers for 5-6 arguments. These automatically add the terminating `R_NilValue`.
-
 ## Accessors
+
+Unlike lists (`VECSXP`), pairlists can't be indexed directly. Instead you
+navigate with `CAR()` (the first element) and `CDR()` (the rest of the
+list), composed into `CAAR()`, `CADDR()`, and so on, with matching setters
+`SETCAR()`, `SETCDR()`, etc.
+
+![](diagrams/pairlist-names.png)
 
 ```{r}
 #| results: asis
@@ -57,11 +63,11 @@ There are helpers for 5-6 arguments. These automatically add the terminating `R_
 render_entries("pairlists", "Accessors")
 ```
 
-Unlike lists (`VECSXP`s), pairlists (`LISTSXP`s) have no way to index into an arbitrary location. Instead, R provides a set of helper functions that navigate along a linked list. The basic helpers are `CAR()`, which extracts the first element of the list, and `CDR()`, which extracts the rest of the list. These can be composed to get `CAAR()`, `CDAR()`, `CADDR()`, `CADDDR()`, and so on. Corresponding to the getters, R provides setters `SETCAR()`, `SETCDR()`, etc.
-
-![](diagrams/pairlist-names.png)
-
 ### Pretending it's a vector
+
+A few functions let you treat a pairlist like a vector. These make it easy
+to write $O(n^2)$ code, but pairlists are usually short enough that it
+doesn't matter.
 
 ```{r}
 #| results: asis
@@ -69,27 +75,25 @@ Unlike lists (`VECSXP`s), pairlists (`LISTSXP`s) have no way to index into an ar
 render_entries("pairlists", "Pretending it's a vector")
 ```
 
-Some functions allow you to work with a pair list as if it's a vector:
-
-If you use these it's easy to get O(n^2) behaviour, but for the usual size of pairlists, this is unlikely to cause a performance bottleneck.
-
 ### Creating a call
 
-Pairlists are most commonly used for function calls. Calls to functions with 0 to 5 arguments can be created directly via `Rf_lang1()` to `Rf_lang6()`. However, these functions do not allow for named arguments. If you need named arguments, use the following template:
+Pairlists are most commonly used to build function calls. Calls with 0 to 5
+unnamed arguments can be created directly with `Rf_lang1()` to `Rf_lang6()`.
+For named arguments, build the call and set tags yourself:
+
 ```c
-// equivalent of:
-// fun(arg1 = a, arg2 = b, arg3 = c)
-SEXP call = PROTECT(Rf_allocVector(LANGSXP, 4)); // 4 = # of args + 1 
-SETCAR(call, fun); 
-  
+// equivalent of: fun(arg1 = a, arg2 = b, arg3 = c)
+SEXP call = PROTECT(Rf_allocVector(LANGSXP, 4)); // 4 = # of args + 1
+SETCAR(call, fun);
+
 SEXP s = CDR(call);
 SETCAR(s, a);
 SET_TAG(s, Rf_install("arg1"));
-  
+
 s = CDR(s);
 SETCAR(s, b);
 SET_TAG(s, Rf_install("arg2"));
-  
+
 s = CDR(s);
 SETCAR(s, c);
 SET_TAG(s, Rf_install("arg3"));
@@ -99,12 +103,14 @@ SEXP out = PROTECT(Rf_eval(call, env));
 UNPROTECT(2);
 ```
 
-
 ## Dots (`DOTSXP`)
 
-Represents the `...` structure in R. Easiest to get to with `findVar(R_DotsSymbol, env)` or similar. Is usually a pair list, but will have value `R_MissingArg` if there are no arguments.
+`DOTSXP` represents the `...` structure inside a function. Retrieve it with
+`Rf_findVar(R_DotsSymbol, env)` or similar. It's usually a pairlist, but is
+`R_MissingArg` when there are no `...` arguments.
 
 ## Null (`NILSXP`)
 
-There is a single value with type `NILSXP`: `R_NilValue`.  This corresponds to `NULL` in R, and is often used as generic zero length vector.
-
+There is a single value of type `NILSXP`: `R_NilValue`. It corresponds to
+`NULL` in R and is often used as a generic zero-length vector — and as the
+terminator of every pairlist.

@@ -23,7 +23,8 @@
   section: Length
 - name: Rf_lengthgets
   family: Rf_xlengthgets
-  summary: Set the length of a vector by creating a new vector of extended length.
+  summary: >-
+    Set the length of a vector by creating a new vector of extended length.
   signature: |
     SEXP Rf_lengthgets(SEXP x, R_len_t n);
     SEXP Rf_xlengthgets(SEXP x, R_xlen_t n);
@@ -63,29 +64,6 @@
     - SETLENGTH
   chapter: vectors
   section: Length
-- name: SETLENGTH
-  family: []
-  summary: Set the length of a vector in place.
-  signature: |
-    void SETLENGTH(SEXP x, int v);
-  status: non-api
-  replacement: Rf_lengthgets
-  header: Rinternals.h
-  protect: n/a
-  errors: can-throw
-  r_equivalent: length<-
-  args:
-    x: a vector.
-    v: the new length.
-  notes: |
-    Uppercase, macro variant of `Rf_lengthgets()`. For resizable (growable)
-    vectors, see `R_allocResizableVector()` and `R_resizeVector()` (R 4.6.0).
-    `SETLENGTH()` errors if applied to an ALTREP vector.
-  see_also:
-    - Rf_lengthgets
-    - LENGTH
-  chapter: vectors
-  section: Length
 - name: IS_LONG_VEC
   family: []
   summary: Test whether a vector is a long vector.
@@ -113,8 +91,10 @@
   errors: can-throw
   r_equivalent: vector()
   args:
-    type: "any vector `SEXPTYPE` (`LGLSXP`, `INTSXP`, `REALSXP`, `CPLXSXP`, `STRSXP`, `VECSXP`, `RAWSXP`, `EXPRSXP`)."
-    n: "number of elements; `R_xlen_t` supports long vectors on 64-bit platforms."
+    type: >-
+      any vector `SEXPTYPE` (`LGLSXP`, `INTSXP`, `REALSXP`, `CPLXSXP`, `STRSXP`,
+      `VECSXP`, `RAWSXP`, `EXPRSXP`).
+    n: number of elements; `R_xlen_t` supports long vectors on 64-bit platforms.
   notes: |
     Atomic vector contents are uninitialised; `VECSXP`/`EXPRSXP` elements are
     `R_NilValue` and `STRSXP` elements are `""`. Attributes are unset.
@@ -167,7 +147,7 @@
   r_equivalent: as.vector()
   args:
     x: a vector.
-    newtype: "the `SEXPTYPE` to coerce to."
+    newtype: the `SEXPTYPE` to coerce to.
   notes: |
     Errors if it can't coerce between `TYPEOF(x)` and `newtype`.
   see_also:
@@ -186,8 +166,8 @@
   errors: can-throw
   r_equivalent: setNames()
   args:
-    type: "any vector `SEXPTYPE`."
-    names: "a null-terminated array of `const char*` names."
+    type: any vector `SEXPTYPE`.
+    names: a null-terminated array of `const char*` names.
   notes: |
     The vector's length matches the number of names supplied, and its names
     attribute is set from them.
@@ -260,9 +240,9 @@
   protect: not-needed
   errors: can-throw
   args:
-    x: "a `STRSXP`."
+    x: a `STRSXP`.
     i: zero-based element index.
-    v: "the `CHARSXP` to set."
+    v: the `CHARSXP` to set.
   notes: |
     `STRING_ELT()` returns a `CHARSXP`, not an ordinary `SEXP` value; strings
     use a pair of accessor functions rather than a plain C array.
@@ -282,7 +262,7 @@
   protect: not-needed
   errors: can-throw
   args:
-    x: "a `VECSXP`."
+    x: a `VECSXP`.
     i: zero-based element index.
     v: the value to set.
   notes: |
@@ -293,48 +273,13 @@
     - VECTOR_PTR
   chapter: vectors
   section: Get and set values
-- name: STRING_PTR
-  family: []
-  summary: Get a pointer to the elements of a character vector.
-  signature: |
-    SEXP* STRING_PTR(SEXP x);
-  status: non-api
-  replacement: STRING_PTR_RO
-  header: Rinternals.h
-  protect: n/a
-  errors: never
-  args:
-    x: "a `STRSXP`."
-  notes: |
-    A writable pointer to character vector data can violate the memory
-    manager's integrity assumptions and is not supported; use
-    `STRING_PTR_RO()` instead.
-  see_also: STRING_ELT
-  chapter: vectors
-  section: Get and set values
-- name: VECTOR_PTR
-  family: []
-  summary: Get a pointer to the elements of a list.
-  signature: |
-    SEXP* VECTOR_PTR(SEXP x);
-  status: non-api
-  replacement: VECTOR_ELT
-  header: Rinternals.h
-  protect: not-needed
-  errors: can-throw
-  args:
-    x: "a `VECSXP`."
-  notes: |
-    A deprecated interface that now throws an error.
-  see_also: VECTOR_ELT
-  chapter: vectors
-  section: Get and set values
 - name: Rf_asLogical
   family:
     - Rf_asInteger
     - Rf_asReal
     - Rf_asComplex
-  summary: "Extract the first value of a vector as a C type, coercing as necessary."
+  summary: >-
+    Extract the first value of a vector as a C type, coercing as necessary.
   signature: |
     int Rf_asLogical(SEXP x);
     int Rf_asInteger(SEXP x);
@@ -354,7 +299,7 @@
   family:
     - NA_INTEGER
     - NA_STRING
-  summary: "Represent missing logical, integer, and character values."
+  summary: Represent missing logical, integer, and character values.
   signature: |
     #define NA_LOGICAL R_NaInt
     #define NA_INTEGER R_NaInt
@@ -403,7 +348,7 @@
   header: R_ext/Arith.h
   protect: n/a
   errors: never
-  r_equivalent: "NaN"
+  r_equivalent: NaN
   notes: |
     Use these constants, together with `NA_REAL`, for cross-platform-safe
     NaN, infinite, and missing values.
@@ -416,7 +361,7 @@
   family:
     - ISNAN
     - R_FINITE
-  summary: "Check a double for missing, NaN, or non-finite values."
+  summary: Check a double for missing, NaN, or non-finite values.
   signature: |
     int ISNA(double x);
     int ISNAN(double x);
@@ -440,7 +385,7 @@
   family:
     - R_IsNaN
     - R_finite
-  summary: "Check a double for missing, NaN, or non-finite values."
+  summary: Check a double for missing, NaN, or non-finite values.
   signature: |
     int R_IsNA(double);
     int R_IsNaN(double);
@@ -523,7 +468,7 @@
   section: Test
 - name: Rf_copyVector
   family: []
-  summary: "Copy from one vector to another, recycling as necessary."
+  summary: Copy from one vector to another, recycling as necessary.
   signature: |
     void Rf_copyVector(SEXP source, SEXP target);
   status: api
@@ -550,14 +495,15 @@
   errors: can-throw
   r_equivalent: substring()
   args:
-    string: "a `STRSXP`."
+    string: a `STRSXP`.
     fromIndex: the index to start the suffix from.
   see_also: []
   chapter: vectors
   section: Miscellaneous helpers
 - name: IS_SCALAR
   family: IS_SIMPLE_SCALAR
-  summary: Test if an object is a scalar (a vector of length 1) of the given type.
+  summary: >-
+    Test if an object is a scalar (a vector of length 1) of the given type.
   signature: |
     #define IS_SCALAR(x, type) (TYPEOF(x) == (type) && XLENGTH(x) == 1)
     #define IS_SIMPLE_SCALAR(x, type) (IS_SCALAR(x, type) && ATTRIB(x) == R_NilValue)
@@ -567,7 +513,7 @@
   errors: never
   args:
     x: any SEXP.
-    type: "a `SEXPTYPE`."
+    type: a `SEXPTYPE`.
   notes: |
     `IS_SIMPLE_SCALAR()` additionally requires that the object has no
     attributes.
@@ -603,10 +549,9 @@
   r_equivalent: duplicated()
   args:
     x: a vector.
-    from_last: "if `TRUE`, search from the last element."
+    from_last: if `TRUE`, search from the last element.
   notes: |
     Returns an `LGLSXP` the same length as `x`.
   see_also: []
   chapter: vectors
   section: Miscellaneous helpers
-...

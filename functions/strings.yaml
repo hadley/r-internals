@@ -180,19 +180,6 @@
   see_also: R_BlankString
   chapter: strings
   section: Special values
-- name: Rf_StringFalse
-  family: Rf_StringTrue
-  summary: Check whether a C string represents false or true.
-  signature: |
-    Rboolean Rf_StringFalse(const char *);
-    Rboolean Rf_StringTrue(const char *);
-  status: non-api
-  header: R_ext/Utils.h
-  protect: n/a
-  errors: never
-  see_also: []
-  chapter: strings
-  section: Special values
 - name: Rf_isValidString
   family: Rf_isValidStringF
   summary: Check whether a STRSXP holds at least one valid string.
@@ -212,7 +199,8 @@
   section: Special values
 - name: R_nchar
   family: []
-  summary: "Compute the length of a string in bytes, characters, or display width."
+  summary: >-
+    Compute the length of a string in bytes, characters, or display width.
   signature: |
     typedef enum {Bytes, Chars, Width} nchar_type;
     int R_nchar(SEXP string, nchar_type type_,
@@ -271,8 +259,9 @@
 - name: Rf_reEnc
   family: []
   summary: Re-encode a C string from one encoding to another.
-  signature: |
-    const char *Rf_reEnc(const char *x, cetype_t ce_in, cetype_t ce_out, int subst);
+  signature: >
+    const char *Rf_reEnc(const char *x, cetype_t ce_in, cetype_t ce_out, int
+    subst);
   status: api
   header: Rinternals.h
   protect: n/a
@@ -330,4 +319,3 @@
   see_also: Rf_str2type
   chapter: strings
   section: Types
-...

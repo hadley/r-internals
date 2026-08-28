@@ -34,7 +34,8 @@
     - R_SetExternalPtrAddr
     - R_SetExternalPtrTag
     - R_SetExternalPtrProtected
-  summary: "Get and set the address, tag, and protected fields of an external pointer."
+  summary: >-
+    Get and set the address, tag, and protected fields of an external pointer.
   signature: |
     void *R_ExternalPtrAddr(SEXP s);
     SEXP R_ExternalPtrTag(SEXP s);
@@ -54,7 +55,8 @@
     - R_RegisterFinalizer
     - R_RegisterFinalizerEx
     - R_RegisterCFinalizerEx
-  summary: Register a finalizer to run when an external pointer is garbage collected.
+  summary: >-
+    Register a finalizer to run when an external pointer is garbage collected.
   signature: |
     void R_RegisterFinalizer(SEXP s, SEXP fun);
     void R_RegisterCFinalizer(SEXP s, R_CFinalizer_t fun);
@@ -83,27 +85,6 @@
   see_also: []
   chapter: external-pointers
   section: Finalization
-- name: EXTPTR_PTR
-  family:
-    - EXTPTR_PROT
-    - EXTPTR_TAG
-  summary: Access the fields of an external pointer directly.
-  signature: |
-    #define EXTPTR_PTR(x)	CAR(x)
-    #define EXTPTR_PROT(x)	CDR(x)
-    #define EXTPTR_TAG(x)	TAG(x)
-  status: non-api
-  replacement: R_ExternalPtrAddr
-  header: Rinternals.h
-  protect: not-needed
-  errors: never
-  notes: |
-    Read the fields directly from the underlying cons cell. Use
-    `R_ExternalPtrAddr()`, `R_ExternalPtrProtected()`, and
-    `R_ExternalPtrTag()` instead.
-  see_also: R_ExternalPtrAddr
-  chapter: external-pointers
-  section: Internals
 - name: R_MakeWeakRef
   family: R_MakeWeakRefC
   summary: Create a weak reference.
@@ -145,4 +126,3 @@
   see_also: []
   chapter: external-pointers
   section: Weak references
-...

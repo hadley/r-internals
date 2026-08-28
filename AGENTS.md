@@ -12,6 +12,13 @@ This repo is a Quarto book documenting R's C API for package authors. See
 - Always use `R_NO_REMAP` conventions: `Rf_`/`R_` prefixed names.
 - `.Call` only; never recommend `.C`/`.Fortran`.
 - Fortran interop is not covered.
+- Never document non-API (or embedding-only) entry points in the rendered
+  chapters. Records with `status: non-api`/`embedding` live only in
+  `functions/compliance.yaml` (parked for the compliance appendix); if a
+  chapter section loses all its records this way, remove the section.
+- No prose may follow a `render_entries()` chunk within a section: the
+  generated entries end with headings, so trailing text would appear to
+  belong to the last entry. Put prose before the chunk or into YAML `notes`.
 - When a chapter's content is drawn closely from a mined WRE section (see
   `sources/`), add a backlink at the top of each subsection to the matching
   WRE subsection on the CRAN page (e.g.

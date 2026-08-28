@@ -2,6 +2,12 @@
 
 {{< include _setup.qmd >}}
 
+An external pointer (`EXTPTRSXP`) wraps a C `void*` so it can be passed
+through R code. R treats the pointer as opaque; you use it to manage C-side
+resources (handles, connections, data structures) that outlive a single
+`.Call`. Because R can't see what the pointer owns, you register a
+finalizer to release the resource when the SEXP is garbage collected.
+
 ## Create and access
 
 ```{r}
@@ -11,6 +17,8 @@ render_entries("external-pointers", "Create and access")
 ```
 
 ## Finalization
+
+A finalizer has the signature:
 
 ```c
 typedef void (*R_CFinalizer_t)(SEXP);
@@ -24,17 +32,11 @@ render_entries("external-pointers", "Finalization")
 
 ## Weak references
 
-
+Weak references (`WEAKREFXP`) reference an object without keeping it alive;
+they're used with finalizers to run code when an object is collected.
 
 ```{r}
 #| results: asis
 #| echo: false
 render_entries("external-pointers", "Weak references")
 ```
-
-## Internals
-
-```{r}
-#| results: asis
-#| echo: false
-render_entries("external-pointers", "Internals")

@@ -101,15 +101,15 @@ Now that everything is machine-readable, fix the data — prose still untouched.
 - [x] `memory.qmd` — transient vs user-controlled allocation, alignment, RAWSXP alternative; `R_alloc`/`S_alloc`/`vmaxget` records moved from `functions/protection.yaml` to new `functions/memory.yaml`, and `R_Calloc`/`R_Realloc`/`R_Free` record added (one Phase 7 gap closed early)
 - [x] Conventions applied: non-API records (`R_cycle_detected`, `UNPROTECT_PTR`, `IS_GETTER_CALL`) moved out of Part I chapters into `functions/compliance.yaml` (parked for Phase 8, not rendered); no prose blocks after `render_entries()` chunks — prose goes before the chunk or into YAML `notes`
 
-## Phase 6 — Chapter prose revisions (Part II)
+## Phase 6 — Chapter prose revisions (Part II) ✔
 
 Brief conceptual prose around the generated entries; reorganise sections to
 match the final `chapter`/`section` assignments from Phase 4.
 
-- [ ] `vectors.qmd` — move arrays/matrices/factors/data-frames prose to `attributes.qmd`
-- [ ] `strings.qmd` — string pool, encodings, translation, re-encoding via `Riconv` (§6.12)
-- [ ] `attributes.qmd` — attribute-defined structures: matrices/arrays, factors, data frames
-- [ ] `environments.qmd`, `symbols.qmd`, `pairlists.qmd`, `functions.qmd`, `external-pointers.qmd`, `oo.qmd` — brief intros + task-oriented section headings
+- [x] `vectors.qmd` — arrays/matrices/factors/data-frames prose already moved in Phase 4; fixed stale `Rboolean` claim (LGLSXP data is `int`), typos, and moved prose before chunks
+- [x] `strings.qmd` — string pool, encodings, translation, re-encoding via `Riconv` (§6.12); WRE backlinks added (verified anchors `Querying-CHARSXP-encoding-1`, `Re_002dencoding-1`)
+- [x] `attributes.qmd` — attribute-defined structures: matrices/arrays, factors, data frames
+- [x] `environments.qmd`, `symbols.qmd`, `pairlists.qmd`, `functions.qmd`, `external-pointers.qmd`, `oo.qmd` — brief intros + task-oriented section headings; removed duplicated hand-written lists (predefined symbols, environment bullets) and lobstr scratch code; fixed broken pairlist loop template
 
 ## Phase 7 — Parts III–IV (reorganise r-api.md content into `functions/*.yaml` records)
 

@@ -2,6 +2,12 @@
 
 {{< include _setup.qmd >}}
 
+A symbol (`SYMSXP`) is a name, like `x` or `+`. Symbols are interned:
+there is exactly one `SYMSXP` per name, stored in a global table, so two
+symbols are equal iff they are the same pointer. Because they're never
+garbage collected, symbols don't need protection, and if you use one
+repeatedly it's worth caching the result of `Rf_install()`.
+
 ## Test
 
 ```{r}
@@ -12,7 +18,8 @@ render_entries("symbols", "Test")
 
 ## Create
 
-If symbol exists, return it; otherwise create it. `SYMSXP`s don't need to be protected because symbols are not currently reclaimed by the garbage collector. If you are using a symbol many times, it may be worth caching it to avoid repeated lookups.
+`Rf_install()` returns the existing symbol for a name, or creates it if it
+doesn't exist yet.
 
 ```{r}
 #| results: asis
@@ -22,7 +29,8 @@ render_entries("symbols", "Create")
 
 ## Missing symbol
 
-`R_MissingArg` represents the missing/empty symbol, i.e. the second argument in this call `f(x, )`.
+`R_MissingArg` represents the missing/empty symbol, i.e. the second
+argument in the call `f(x, )`.
 
 ```{r}
 #| results: asis
@@ -32,52 +40,12 @@ render_entries("symbols", "Missing symbol")
 
 ## Predefined symbols
 
-A number of symbols are so commonly used, they're predefined and exported:
-
-* `R_dot_defined`: ".defined"
-* `R_dot_Method`: ".Method"
-* `R_dot_packageName`:  ".packageName"
-* `R_dot_target`: ".target"
-* `R_BaseSymbol`: "base"
-* `R_BraceSymbol`: "{"
-* `R_Bracket2Symbol`: "[["
-* `R_BracketSymbol`: "["
-* `R_ClassSymbol`: "class"
-* `R_DeviceSymbol`: ".Device"
-* `R_DimNamesSymbol`: "dimnames"
-* `R_DimSymbol`: "dim"
-* `R_DollarSymbol`: "$"
-* `R_DotsSymbol`: "..."
-* `R_DoubleColonSymbol`:  "::"
-* `R_DropSymbol`: "drop"
-* `R_LastvalueSymbol`: ".Last.value"
-* `R_LevelsSymbol`: "levels"
-* `R_ModeSymbol`: "mode"
-* `R_NaRmSymbol`: "na.rm"
-* `R_NameSymbol`: "name"
-* `R_NamesSymbol`: "names"
-* `R_NamespaceEnvSymbol`:  ".\_\_NAMESPACE\_\_."
-* `R_PackageSymbol`: "package"
-* `R_PreviousSymbol`: "previous"
-* `R_QuoteSymbol`: "quote"
-* `R_RowNamesSymbol`: "row.names"
-* `R_SeedsSymbol`: ".Random.seed"
-* `R_SortListSymbol`: "sort.list"
-* `R_SourceSymbol`: "source"
-* `R_SpecSymbol`: "spec"
-* `R_TripleColonSymbol`:  `":::"`
-* `R_TspSymbol`: "tsp"
+A number of symbols are so commonly used that they're predefined and
+exported as global constants — use these instead of calling `Rf_install()`
+yourself.
 
 ```{r}
 #| results: asis
 #| echo: false
 render_entries("symbols", "Predefined symbols")
-```
-
-## Internals
-
-```{r}
-#| results: asis
-#| echo: false
-render_entries("symbols", "Internals")
 ```

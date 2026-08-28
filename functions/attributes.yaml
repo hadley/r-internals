@@ -9,6 +9,11 @@
   header: Rinternals.h
   protect: not-needed
   errors: can-throw
+  notes: |
+    `Rf_getAttrib()` normally returns a borrowed reference, but there is one
+    exception: retrieving `row.names` from a data frame expands the compact
+    `c(NA_integer_, -n)` form into a newly allocated vector, which must be
+    protected.
   see_also:
     - Rf_copyMostAttrib
     - ATTRIB
@@ -16,7 +21,9 @@
   section: Get and set
 - name: Rf_copyMostAttrib
   family: []
-  summary: "Copy attributes, except names, dim, and dimnames, from one object to another."
+  summary: >-
+    Copy attributes, except names, dim, and dimnames, from one object to
+    another.
   signature: |
     void Rf_copyMostAttrib(SEXP source, SEXP target);
   status: api
@@ -28,32 +35,10 @@
     - DUPLICATE_ATTRIB
   chapter: attributes
   section: Get and set
-- name: ATTRIB
-  family: SET_ATTRIB
-  summary: "Get or set the pairlist containing an object's attributes."
-  signature: |
-    SEXP ATTRIB(SEXP x);
-    void SET_ATTRIB(SEXP x, SEXP v);
-  status: non-api
-  replacement: Rf_getAttrib
-  header: Rinternals.h
-  protect: not-needed
-  errors: never
-  notes: |
-    Not part of the API, since it exposes the internal linked-list
-    representation of attributes. Use `Rf_getAttrib()`/`Rf_setAttrib()` for
-    individual attributes, `DUPLICATE_ATTRIB()`/`SHALLOW_DUPLICATE_ATTRIB()`
-    to copy attributes between objects, `CLEAR_ATTRIB()` (R 4.5.0) to remove
-    all attributes, `ANY_ATTRIB()` (R 4.5.0) to test for any attributes, and
-    `R_mapAttrib()` (R 4.6.0) to iterate over attributes.
-  see_also:
-    - Rf_getAttrib
-    - DUPLICATE_ATTRIB
-  chapter: attributes
-  section: Get and set
 - name: DUPLICATE_ATTRIB
   family: SHALLOW_DUPLICATE_ATTRIB
-  summary: Copy attributes from one object to another when duplicating an object.
+  summary: >-
+    Copy attributes from one object to another when duplicating an object.
   signature: |
     void DUPLICATE_ATTRIB(SEXP to, SEXP from);
     void SHALLOW_DUPLICATE_ATTRIB(SEXP to, SEXP from);
@@ -95,7 +80,7 @@
   errors: can-throw
   r_equivalent: array()
   args:
-    type: "any vector `SEXPTYPE`."
+    type: any vector `SEXPTYPE`.
     dims: an integer vector of dimensions.
   see_also:
     - Rf_allocMatrix
@@ -154,8 +139,9 @@
 - name: Rf_arraySubscript
   family: []
   summary: Compute the vector offset corresponding to an array subscript.
-  signature: |
-    SEXP Rf_arraySubscript(int, SEXP, SEXP, SEXP (*)(SEXP,SEXP), SEXP (*)(SEXP, int), SEXP);
+  signature: >
+    SEXP Rf_arraySubscript(int, SEXP, SEXP, SEXP (*)(SEXP,SEXP), SEXP (*)(SEXP,
+    int), SEXP);
   status: api
   header: Rinternals.h
   protect: result
@@ -174,7 +160,7 @@
   errors: can-throw
   r_equivalent: matrix()
   args:
-    type: "any vector `SEXPTYPE`."
+    type: any vector `SEXPTYPE`.
     nrow: number of rows.
     ncol: number of columns.
   notes: |
@@ -264,7 +250,7 @@
   args:
     source: the matrix to copy from.
     target: the matrix to copy to.
-    byrow: "if `TRUE`, copy by rows."
+    byrow: if `TRUE`, copy by rows.
   see_also: Rf_copyVector
   chapter: attributes
   section: Matrices
@@ -272,7 +258,7 @@
   family:
     - Rf_isOrdered
     - Rf_isUnordered
-  summary: "Test if an object is a factor, or an ordered or unordered factor."
+  summary: Test if an object is a factor, or an ordered or unordered factor.
   signature: |
     Rboolean Rf_isFactor(SEXP x);
     Rboolean Rf_isOrdered(SEXP x);
@@ -319,22 +305,3 @@
   see_also: Rf_isFactor
   chapter: attributes
   section: Factors
-- name: Rf_isFrame
-  family: []
-  summary: Test if an object is a data frame.
-  signature: |
-    Rboolean Rf_isFrame(SEXP x);
-  status: non-api
-  replacement: Rf_isDataFrame
-  header: Rinternals.h
-  protect: n/a
-  errors: never
-  r_equivalent: is.data.frame()
-  args:
-    x: any SEXP.
-  notes: |
-    Prefer `Rf_isDataFrame()` (added in R 4.5.0) in new code.
-  see_also: []
-  chapter: attributes
-  section: Data frames
-...

@@ -2,9 +2,17 @@
 
 {{< include _setup.qmd >}}
 
-The R API provides some support for the various data structures built on top of vectors.
+Almost every SEXP can carry attributes: named metadata stored as a
+[pairlist](pairlists.qmd) hanging off the object (though you should treat
+them as an opaque map and use the accessors below). Attributes are what
+turn bare vectors into R's richer data structures — a matrix is a vector with a `dim` attribute, a
+factor is an integer vector with `levels` and `class`, and a data frame is
+a list with `names`, `row.names`, and `class`.
 
 ## Get and set
+
+Attributes are stored as a tagged pairlist, but you should treat them as an
+opaque map from symbol to value and use the accessors below.
 
 ```{r}
 #| results: asis
@@ -14,15 +22,21 @@ render_entries("attributes", "Get and set")
 
 ## Arrays
 
+An array is an atomic vector with a `dim` attribute: an integer vector
+giving the size of each dimension. Elements are stored in column-major
+order (the first dimension varies fastest), so the flat data pointer from
+`REAL()` etc. needs no rearrangement.
+
 ```{r}
 #| results: asis
 #| echo: false
 render_entries("attributes", "Arrays")
 ```
 
-Arrays are vectors with a dim attribute:
-
 ## Matrices
+
+A matrix is an array with exactly two dimensions. R provides a few
+matrix-specific conveniences:
 
 ```{r}
 #| results: asis
@@ -30,9 +44,12 @@ Arrays are vectors with a dim attribute:
 render_entries("attributes", "Matrices")
 ```
 
-Matrices are a special case of arrays; those with 2 dimensions:
-
 ## Factors
+
+A factor is an integer vector of 1-based codes with a `levels` character
+vector and class `"factor"`. `NA_INTEGER` codes represent missing values.
+Because factors are `INTSXP` internally, `TYPEOF(x) == INTSXP` alone can't
+distinguish them from plain integer vectors.
 
 ```{r}
 #| results: asis
@@ -42,9 +59,23 @@ render_entries("attributes", "Factors")
 
 ## Data frames
 
-```{r}
-#| results: asis
-#| echo: false
-render_entries("attributes", "Data frames")
-```
+A data frame is a `VECSXP` of equal-length columns with `names`,
+`row.names`, and class `"data.frame"`. The C API offers almost no support —
+you build and manipulate them as plain lists with attributes.
 
+The `row.names` attribute is special. It must be a character or integer
+vector with one entry per row, but the default sequence `1:n` is stored in
+a compact form: the length-2 integer vector `c(NA_integer_, -n)`.
+`Rf_getAttrib(df, R_RowNamesSymbol)` expands this for you, returning a
+freshly allocated length-`n` vector (an ALTREP compact sequence in recent
+R). This makes it a rare case where `Rf_getAttrib()` allocates, so you must
+`PROTECT` the result. When constructing a data frame in C you can set the
+compact form yourself:
+
+```c
+SEXP rn = PROTECT(Rf_allocVector(INTSXP, 2));
+INTEGER(rn)[0] = NA_INTEGER;
+INTEGER(rn)[1] = -n;  // n rows
+Rf_setAttrib(df, R_RowNamesSymbol, rn);
+UNPROTECT(1);
+```

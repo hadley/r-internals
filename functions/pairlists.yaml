@@ -3,7 +3,7 @@
   family:
     - Rf_isLanguage
     - Rf_isList
-  summary: "Test whether an object is a pairlist, a call, or a pairlist-or-NULL."
+  summary: Test whether an object is a pairlist, a call, or a pairlist-or-NULL.
   signature: |
     Rboolean Rf_isPairList(SEXP x); // LISTSXP
     Rboolean Rf_isLanguage(SEXP x); // LANGSXP
@@ -106,7 +106,7 @@
   section: Creation
 - name: Rf_PairToVectorList
   family: Rf_VectorToPairList
-  summary: "Convert a pairlist to a list vector, or a list vector to a pairlist."
+  summary: Convert a pairlist to a list vector, or a list vector to a pairlist.
   signature: |
     SEXP Rf_PairToVectorList(SEXP x);
     SEXP Rf_VectorToPairList(SEXP x);
@@ -209,21 +209,6 @@
   see_also: CAR
   chapter: pairlists
   section: Accessors
-- name: CONS_NR
-  family: []
-  summary: Create a CONS cell with no reference counting.
-  signature: |
-    SEXP CONS_NR(SEXP a, SEXP b);
-  status: non-api
-  replacement: Rf_cons
-  header: Rinternals.h
-  protect: result
-  errors: can-throw
-  notes: |
-    CONS with no-refcounting?
-  see_also: Rf_cons
-  chapter: pairlists
-  section: Accessors
 - name: MISSING
   family: SET_MISSING
   summary: Get or set whether an element of a call is missing.
@@ -258,7 +243,7 @@
     - Rf_nthcdr
     - Rf_lcons
   chapter: pairlists
-  section: "Pretending it's a vector"
+  section: Pretending it's a vector
 - name: Rf_nthcdr
   family: []
   summary: Access the nth element of a pairlist.
@@ -276,5 +261,4 @@
     - Rf_allocList
     - CDR
   chapter: pairlists
-  section: "Pretending it's a vector"
-...
+  section: Pretending it's a vector

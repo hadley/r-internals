@@ -2,11 +2,18 @@
 
 {{< include _setup.qmd >}}
 
-A character vector (`STRSXP`) is effectively an array of pointers to `CHARSXP`s, which are stored in a global string pool. This design allows individual `CHARSXP`'s to be shared between multiple character vectors, reducing memory usage. 
+A character vector (`STRSXP`) is an array of pointers to `CHARSXP`s, and
+every `CHARSXP` lives in a global string pool. This means each distinct
+string is stored only once, however many character vectors reference it —
+and it means you should never modify the contents of a `CHARSXP`.
 
 ## Encodings
 
-Each `CHARSXP` has an encoding associated with it:
+Each `CHARSXP` carries an encoding flag. R assumes strings are in the
+native encoding unless marked otherwise; UTF-8 is the safe default for new
+code. See also [Querying CHARSXP
+encoding](https://cran.r-project.org/doc/manuals/R-exts.html#Querying-CHARSXP-encoding-1)
+in Writing R Extensions.
 
 ```{r}
 #| results: asis
@@ -16,54 +23,55 @@ render_entries("strings", "Encodings")
 
 ## Creating from C strings
 
+These calls create `CHARSXP`s (or length-1 `STRSXP`s) from C strings.
+Typically they don't need protection because the result is immediately
+assigned into a `STRSXP`.
+
+They will crash R if passed `NULL`; check for it yourself and substitute
+`""` or `NA_STRING` as appropriate.
+
+Most modern C libraries produce UTF-8, so you should typically use
+`Rf_mkCharCE()` or `Rf_mkCharLenCE()` with `CE_UTF8`, and avoid the
+native-encoding creation functions, including `Rf_mkString()`.
+
+To re-encode strings from another encoding, use R's wrapper around iconv
+in `R_ext/Riconv.h`, which provides cross-platform `Riconv_open()` and
+`Riconv()`. It's usually best to convert to UTF-8. See
+[Re-encoding](https://cran.r-project.org/doc/manuals/R-exts.html#Re_002dencoding-1)
+in Writing R Extensions.
+
 ```{r}
 #| results: asis
 #| echo: false
 render_entries("strings", "Creating from C strings")
 ```
 
-(Typically these calls don't need to be protected as they are immediately assigned into a `STRSXP`.)
-
-If you need to re-encode strings from another encoding, use R's wrapper around iconv found in `R_ext/Riconv.h`. It provides cross-platform `Riconv_open()` and `Riconv`. It's usually best to convert to UTF-8.
-
-Note that these calls will crash R if passed a `NULL`. It is your responsibility to check for that and return the correct value (typically `""` or `NA_STRING`).
-
-Note that most modern C libraries encode strings as UTF-8. This means you should typically use `Rf_mkCharCE()` or `Rf_mkCharLenCE()`, and avoid the other string creation methods including `Rf_mkString()`
-
 ## Convert to C string
 
-To access the underlying C-string stored in a CHARSXP, use `CHAR()`:
+To access the C string stored in a `CHARSXP`, use `CHAR()`. (To match the
+other vector accessors like `INTEGER()`, this is typically called via the
+`Rf_`-less name.)
+
+The `Rf_translateChar*` functions return a `const char*` in the specified
+encoding; most modern C APIs use UTF-8, so you almost always want
+`Rf_translateCharUTF8()`.
+
+If re-encoding is necessary, the returned `char*` is allocated with
+`R_alloc()` and freed automatically at the end of the `.Call`; if you need
+it across calls, make a copy. If you make many translating calls in a loop,
+free the transient memory explicitly with `vmaxget()`/`vmaxset()`:
+
+```c
+const void *vmax = vmaxget();
+... // one or more calls to Rf_translateCharUTF8(), etc.
+vmaxset(vmax);
+```
 
 ```{r}
 #| results: asis
 #| echo: false
 render_entries("strings", "Convert to C string")
 ```
-
-__NB__: To match the other vector accessor functions (`LOGICAL()`, `INTEGER()`, ...), this is typically called as `CHAR()`.
-
-Three functions create `const char*` with the specified encoding.
-
-Most modern C APIs use UTF-8, so you almost always want `Rf_translateCharUTF8()`.
-
-__NB__: if re-encoding is necessary, the `char*` will be allocated by `R_alloc()` and will be automatically freed at the end of the call to `.C`, `.Call`, or `.External`. If you want to save across calls to C, make a copy.
-
-If the memory is needed only for a short period of time or if you are making a large number of repeated calls that allocate memory, you may want to manage the deallocation explicitly. This is alluded to in the R source code with this comment (`src/main/sysutils.c`):
-```c
-/* This may return a R_alloc-ed result, so the caller has to manage the
-   R_alloc stack */
-const char *translateChar(SEXP x)
-{
-...
-```
-
-The code would look like this:
-```c
-const void *vmax = vmaxget();
-... // one or more calls to Rf_translateChar(), Rf_translateCharUTF8(), etc.
-vmaxset(vmax);
-```
-
 
 ## Special values
 
@@ -91,7 +99,7 @@ render_entries("strings", "Paths")
 
 ### Types
 
-You can convert `SEXPTYPE`s to and from C strings with:
+You can convert `SEXPTYPE`s to and from C strings:
 
 ```{r}
 #| results: asis

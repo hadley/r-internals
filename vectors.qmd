@@ -2,36 +2,25 @@
 
 {{< include _setup.qmd >}}
 
-There are seven vector types in R:
+R has six atomic vector types, plus two vector types whose elements are
+themselves SEXPs:
 
-* Logical (`LGLSXP`), contains `Rboolean`.
+* Logical (`LGLSXP`): `int`, using `0`/`1` for false/true and `NA_LOGICAL`
+  for missing.
+* Integer (`INTSXP`): `int`, with `NA_INTEGER` for missing.
+* Double (`REALSXP`): `double`.
+* Complex (`CPLXSXP`): `Rcomplex`.
+* Raw (`RAWSXP`): `Rbyte`.
+* String (`STRSXP`): elements are `CHARSXP`s; see [Strings](strings.qmd).
+* List (`VECSXP`): elements are arbitrary SEXPs. Beware: lists are
+  `VECSXP`s, not `LISTSXP`s — early R lists were Lisp-like linked lists,
+  which survive as [pairlists](pairlists.qmd).
+* Expression (`EXPRSXP`): like a list, but intended to hold language objects.
 
-* Integer (`INTSXP`), contains `int`.
-
-* Double  (`REALSXP`), contains `double`.
-
-* Complex (`CPLXSXP`), contains `Rcomplex`.
-
-* String  (`STRSXP`), contains `CHARSXP`.
-
-* Lists   (`VECSXP`), contains any other sexp. __Beware:__ Lists are `VECSXP`s
-  not `LISTSXP`s. This is because early implementations of lists were Lisp-like 
-  linked lists, which are now called as "[pairlists](pairlists.qmd)".
-
-* Raw     (`RAWSXP`), contains `Rbyte`.
-
-* Expression (`EXPRSXP`), contains `LANGSXP`, `SYMSXP` or a vector 
-  (except for a list).
-
-Three of those vectors are built on top of simple types defined by R:
+Two supporting C types:
 
 ```c
 typedef unsigned char Rbyte;
-
-typedef enum { 
-  FALSE = 0, 
-  TRUE 
-} Rboolean;
 
 typedef struct {
   double r;
@@ -41,61 +30,67 @@ typedef struct {
 
 ## Length
 
+After the SEXPTYPE, the most important property of a vector is its length.
+There are two length types:
+
+```c
+typedef int R_len_t;          // limited to 2^31 - 1
+typedef ptrdiff_t R_xlen_t;   // 64-bit on all supported platforms
+```
+
+New code should always use `R_xlen_t` for vector lengths and indices. It
+costs nothing on 64-bit platforms, and the alternative fails badly: an
+`int` length silently overflows if a user passes a vector longer than
+$2^{31}-1$. Reserve `int` for things that are inherently small, like the
+number of arguments to a call. You'll still need occasional casts where
+older parts of the API take or return `int`.
+
+Vectors also carry a hidden "truelength" field used for over-allocation:
+since R 3.4.0, assigning past the end of a vector grows the allocation by
+~5% and records the capacity in truelength, so repeated appends can extend
+the vector in place. The experimental resizable-vector API
+(`R_allocResizableVector()`/`R_resizeVector()`) builds on the same
+mechanism.
+
 ```{r}
 #| results: asis
 #| echo: false
 render_entries("vectors", "Length")
 ```
 
-
-After the SEXPTYPE, the most important property of a vector is it's length. Historically, R vectors were limited to length $2 ^ {31} -  1$. Still most vectors are shorter than this, so you can use an `int` based interface:
-
-```c
-typedef int R_len_t;
-```
-
-R vectors can have length up to $2 ^ {64} - 1$. If you want your code to be as general as possible, you should instead use the `R_xlen_t`based interface:
-
-```c
-// ptrdiff_t is the type of the result of subtracting two pointers, and
-// is usually 8 bytes (like a double)
-typedef ptrdiff_t R_xlen_t;
-```
-
-These functions also have uppercase variants - in base R code these are implemented as macros for efficiency.
-
 ## Create
 
-```{r}
-#| results: asis
-#| echo: false
-render_entries("vectors", "Create")
-```
+The most common way to create a new vector is `Rf_allocVector()`. As with
+all SEXP creation functions, you must `PROTECT()` the result unless you
+immediately assign it into an already-protected object. Alternatively, you
+can coerce an existing vector with `Rf_coerceVector()`.
 
-
-The most common way to create a new vector is with `Rf_allocVector()`.
-If you want to create a vector of length 1 from the corresponding C type, use the scalar helpers.
-
-(Note, as with all SEXP creation functions you must `Rf_protect()` the result of any of these calls unless you're immediately assigning it into an already protected object)
-
-Alternatively you can coerce from an existing vector with `Rf_coerceVector()`.
-
-To create a named vector, use `Rf_mkNamed()`.
-
-For example, this template creates a list holding two objects `x` and `y` named `xname` and `yname`:
+To create a vector of length 1 from a C value, use the scalar helpers —
+they're shorter and clearer than allocating and assigning separately:
 
 ```c
-  // array of names; note the null string
-  const char *names[] = {"xname", "yname", ""};
-  SEXP list = PROTECT(Rf_mkNamed(VECSXP, names));  // creates a list of length 2
-  SET_VECTOR_ELT(list, 0, x); // x and y are arbitrary SEXPs
-  SET_VECTOR_ELT(list, 1, y);
-  UNPROTECT(1);
+SEXP x = PROTECT(Rf_ScalarReal(3.14));
+// equivalent to:
+// SEXP x = PROTECT(Rf_allocVector(REALSXP, 1));
+// REAL(x)[0] = 3.14;
+UNPROTECT(1);
 ```
 
-Finally, you can use a custom allocator:
+`Rf_mkNamed()` creates a named vector in one call. This template creates a
+list holding two objects `x` and `y` named `xname` and `yname`:
+
 ```c
-// Create a vector with a custom memory allocator
+// array of names; note the terminating empty string
+const char *names[] = {"xname", "yname", ""};
+SEXP list = PROTECT(Rf_mkNamed(VECSXP, names));  // creates a list of length 2
+SET_VECTOR_ELT(list, 0, x); // x and y are arbitrary SEXPs
+SET_VECTOR_ELT(list, 1, y);
+UNPROTECT(1);
+```
+
+Finally, `Rf_allocVector3()` lets you supply a custom allocator:
+
+```c
 typedef void *(*custom_alloc_t)(R_allocator_t *allocator, size_t);
 typedef void  (*custom_free_t)(R_allocator_t *allocator, void *);
 typedef struct R_allocator {
@@ -106,7 +101,41 @@ typedef struct R_allocator {
 } R_allocator_t;
 ```
 
+```{r}
+#| results: asis
+#| echo: false
+render_entries("vectors", "Create")
+```
+
 ## Get and set values
+
+The atomic types wrap a C array, so you get and set values through a helper
+that returns a pointer to the underlying data. These helpers are all
+uppercase and don't start with `Rf_`.
+
+When working with longer vectors, cache the pointer instead of calling the
+accessor on every iteration. Instead of:
+
+```c
+for (R_xlen_t i = 0; i < n; ++i) {
+  INTEGER(x)[i] = INTEGER(x)[i] * 2;
+}
+```
+
+do:
+
+```c
+int* px = INTEGER(x);
+for (R_xlen_t i = 0; i < n; ++i) {
+  px[i] = px[i] * 2;
+}
+```
+
+Strings and lists don't map to simple C arrays, so they have paired
+get/set functions (`STRING_ELT()`/`SET_STRING_ELT()`,
+`VECTOR_ELT()`/`SET_VECTOR_ELT()`). (`STRING_PTR()` exists but is used only
+in a handful of places in R itself; `VECTOR_PTR()` is a deprecated
+interface that now throws an error.)
 
 ```{r}
 #| results: asis
@@ -114,32 +143,9 @@ typedef struct R_allocator {
 render_entries("vectors", "Get and set values")
 ```
 
-The simple types are wrappers around an array of C values, so you get and set by using a helper that returns a pointer:
-
-__NB__: these functions are all upper case and don't start with `Rf_`.
-
-When working with longer vectors, there's typically a performance advantage to saving the index and reusing. For example, instead of:
-
-```c
-for (int i = 0; i < n; ++i) {
-  INTEGER(x)[i] = INTEGER(x)[i] * 2;
-}
-```
-
-Do:
-
-```c
-int* px = INTEGER(x);
-for (int i = 0; i < n; ++i) {
-  px[i] = px[i] * 2;
-}
-```
-
-Strings and lists don't map to simple C structs, so instead have a pair of functions to get and set values.
-
-(There is `STRING_PTR()` which is used in a handful of places in the R source; `VECTOR_PTR()` is a deprecated interface that now throws an error.)
-
 ### Scalars
+
+A few helpers extract the first value of a vector, coercing as necessary:
 
 ```{r}
 #| results: asis
@@ -147,9 +153,21 @@ Strings and lists don't map to simple C structs, so instead have a pair of funct
 render_entries("vectors", "Scalars")
 ```
 
-There are a few helpers that extract the first value, coercing the vector as necessary:
-
 ### Special values
+
+Integer, logical, and character vectors use sentinel values for missing
+data (`NA_INTEGER`, `NA_LOGICAL`, `NA_STRING`). `NA_INTEGER` is `INT_MIN`,
+the smallest representable `int` — which means R integer vectors cannot
+store that value, and negating or taking the absolute value of `NA_INTEGER`
+overflows.
+
+Missing values are more complicated for `REALSXP` because doubles already
+have a missing-value protocol defined by the floating-point standard
+([IEEE 754](http://en.wikipedia.org/wiki/IEEE_floating_point)). An `NA` is
+a `NaN` with a special bit pattern (the lowest word is 1954, the year Ross
+Ihaka was born), and there are distinct values for positive and negative
+infinity. Test with the `ISNA()`, `ISNAN()`, and `!R_FINITE()` macros; set
+with the constants `NA_REAL`, `R_NaN`, `R_PosInf`, and `R_NegInf`.
 
 ```{r}
 #| results: asis
@@ -157,11 +175,18 @@ There are a few helpers that extract the first value, coercing the vector as nec
 render_entries("vectors", "Special values")
 ```
 
-Integer, logical, and character vectors have special sentinels for missing values. 
-
-Missing values are somewhat more complicated for `REALSXP` because there is an existing protocol for missing values defined by the floating point standard ([IEEE 754](http://en.wikipedia.org/wiki/IEEE_floating_point)). In doubles, an `NA` is `NaN` with a special bit pattern (the lowest word is 1954, the year Ross Ihaka was born), and there are other special values for positive and negative infinity. Use `ISNA()`, `ISNAN()`, and `!R_FINITE()` macros to check for missing, NaN, or non-finite values. Use the constants `NA_REAL`, `R_NaN`, `R_PosInf`, and `R_NegInf` to set those values.
-
 ## Test
+
+A number of helpers test whether a SEXP has a given type. There's no
+`Rf_isRaw()` or `Rf_isList()` for `RAWSXP`/`VECSXP`; use
+`TYPEOF(x) == RAWSXP` or `TYPEOF(x) == VECSXP`. (`Rf_isList()` tests for a
+pairlist.)
+
+These tests are not always consistent with their R equivalents. For
+example, `Rf_isVectorAtomic(R_NilValue)` is false but `is.atomic(NULL)` is
+true; `Rf_isNewList(R_NilValue)` is true but `is.list(NULL)` is false.
+Because of this confusion, prefer writing your own wrappers around
+`TYPEOF(x)`.
 
 ```{r}
 #| results: asis
@@ -169,24 +194,13 @@ Missing values are somewhat more complicated for `REALSXP` because there is an e
 render_entries("vectors", "Test")
 ```
 
-A number of helpers let you test if an SEXP is of the given type:
-
-__NB__: there's no function to test for `RAWSXP` or `VECSXP`; you use must use `TYPEOF(x) == RAWSXP`, or `TYPEOF(x) == VECSXP`. `isList()` tests if the object is a pairlist.
-
-A handful of functions test for frequently used combinations of variable types:
-
-__NB__: these are not always consistent with their R equivalents. For example, `Rf_isVectorAtomic(R_NilValue)` is false, but `is.atomic(NULL)` is true; `Rf_isNewList(R_NilValue)` is true; but `is.list(NULL)` is false. Because of this confusion, I recommend writing your own wrapper around `TYPEOF(x)`.
-
-__NB__: Be careful when checking whether whether an R object is an integer vector. Internally, `factor`s are also `INTSXP`s so `TYPEOF(x) == INTSXP` would accept both vanilla integer vectors and factors. (Prefer using `Rf_isInteger()` and `Rf_isFactor()` for these cases.)
-
-__NB__: It is somewhat strange that `Rf_isNewList()` returns `TRUE` for `R_NilValue`, given that `R_NilValue` is just an empty pairlist (ie, `NULL` and `pairlist()` are identical).
-
 ## Miscellaneous helpers
+
+A couple of macros test whether an object is a "scalar" (a vector of
+length 1):
 
 ```{r}
 #| results: asis
 #| echo: false
 render_entries("vectors", "Miscellaneous helpers")
 ```
-
-A couple of macros aid in testing if an object is a "scalar" (a vector of length 1):

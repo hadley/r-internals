@@ -54,8 +54,9 @@
   header: Rinternals.h
   protect: n/a
   errors: can-throw
-  notes: |
-    Basic classes are the built-in pseudo-classes (e.g. `"numeric"`, `"matrix"`) known to the methods package.
+  notes: >
+    Basic classes are the built-in pseudo-classes (e.g. `"numeric"`, `"matrix"`)
+    known to the methods package.
   see_also: []
   chapter: oo
   section: S3
@@ -86,7 +87,7 @@
     Returns non-zero for objects of type `S4SXP`.
   see_also: []
   chapter: oo
-  section: "S4 (`S4SXP`)"
+  section: S4 (`S4SXP`)
 - name: Rf_asS4
   family: []
   summary: Set or unset the S4 flag on an object.
@@ -98,7 +99,7 @@
   errors: can-throw
   see_also: []
   chapter: oo
-  section: "S4 (`S4SXP`)"
+  section: S4 (`S4SXP`)
 - name: Rf_allocS4Object
   family: []
   summary: Allocate a new S4 object.
@@ -112,7 +113,7 @@
     Allocates a bare S4 object (type `S4SXP`) with the S4 flag set.
   see_also: []
   chapter: oo
-  section: "S4 (`S4SXP`)"
+  section: S4 (`S4SXP`)
 - name: R_S4_extends
   family: R_extends
   summary: Query S4 class inheritance (extends) relationships.
@@ -130,7 +131,7 @@
     `env`.
   see_also: []
   chapter: oo
-  section: "S4 (`S4SXP`)"
+  section: S4 (`S4SXP`)
 - name: R_do_MAKE_CLASS
   family: []
   summary: Create a new S4 class definition.
@@ -143,7 +144,7 @@
   r_equivalent: setClass()
   see_also: []
   chapter: oo
-  section: "S4 (`S4SXP`)"
+  section: S4 (`S4SXP`)
 - name: R_getClassDef
   family: R_getClassDef_R
   summary: Retrieve an S4 class definition by name.
@@ -160,7 +161,7 @@
     string.
   see_also: []
   chapter: oo
-  section: "S4 (`S4SXP`)"
+  section: S4 (`S4SXP`)
 - name: R_has_methods_attached
   family: []
   summary: Test whether methods are currently attached.
@@ -172,7 +173,7 @@
   errors: never
   see_also: []
   chapter: oo
-  section: "S4 (`S4SXP`)"
+  section: S4 (`S4SXP`)
 - name: R_isVirtualClass
   family: []
   summary: Test whether an S4 class definition describes a virtual class.
@@ -184,7 +185,7 @@
   errors: can-throw
   see_also: []
   chapter: oo
-  section: "S4 (`S4SXP`)"
+  section: S4 (`S4SXP`)
 - name: R_do_new_object
   family: []
   summary: Create a new object from an S4 class definition.
@@ -197,10 +198,10 @@
   r_equivalent: new()
   see_also: []
   chapter: oo
-  section: "S4 (`S4SXP`)"
+  section: S4 (`S4SXP`)
 - name: R_check_class_and_super
   family: R_check_class_etc
-  summary: "Check an object against a set of valid classes, a C-level `is()`."
+  summary: Check an object against a set of valid classes, a C-level `is()`.
   signature: |
     int R_check_class_and_super(SEXP x, const char **valid, SEXP rho);
     int R_check_class_etc(SEXP x, const char **valid);
@@ -215,32 +216,12 @@
     environment argument.
   see_also: []
   chapter: oo
-  section: "S4 (`S4SXP`)"
-- name: IS_S4_OBJECT
-  family:
-    - SET_S4_OBJECT
-    - UNSET_S4_OBJECT
-  summary: "Test, set, or clear the S4 object flag on a SEXP."
-  signature: |
-    int (IS_S4_OBJECT)(SEXP x);
-    void (SET_S4_OBJECT)(SEXP x);
-    void (UNSET_S4_OBJECT)(SEXP x);
-  status: non-api
-  replacement: Rf_isS4
-  header: Rinternals.h
-  protect: n/a
-  errors: never
-  r_equivalent: isS4()
-  notes: |
-    Low-level access to the S4 object flag.
-  see_also: Rf_isS4
-  chapter: oo
-  section: Internals
+  section: S4 (`S4SXP`)
 - name: R_do_slot
   family:
     - R_do_slot_assign
     - R_has_slot
-  summary: "Get, assign, or test for the presence of an S4 slot."
+  summary: Get, assign, or test for the presence of an S4 slot.
   signature: |
     SEXP R_do_slot(SEXP obj, SEXP name);
     SEXP R_do_slot_assign(SEXP obj, SEXP name, SEXP value);
@@ -256,4 +237,3 @@
   see_also: []
   chapter: oo
   section: Slots
-...

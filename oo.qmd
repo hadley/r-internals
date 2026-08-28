@@ -2,7 +2,10 @@
 
 {{< include _setup.qmd >}}
 
-`ANYSXP` is used internal in S4 class definitions to flag that any SEXP is ok.
+At the C level, R's object systems are thin: S3 is just a `class` attribute
+plus conventions for dispatch, and S4 adds a bit on the object header
+(making it an `S4SXP`) plus slot attributes. (`ANYSXP` is used internally
+in S4 class definitions to flag that any SEXP is acceptable.)
 
 ## Object testing
 
@@ -26,14 +29,6 @@ render_entries("oo", "S3")
 #| results: asis
 #| echo: false
 render_entries("oo", "S4 (`S4SXP`)")
-```
-
-### Internals
-
-```{r}
-#| results: asis
-#| echo: false
-render_entries("oo", "Internals")
 ```
 
 ### Slots

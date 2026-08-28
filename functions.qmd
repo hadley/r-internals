@@ -2,9 +2,12 @@
 
 {{< include _setup.qmd >}}
 
-## Testing functions
+R has three function types: closures (`CLOSXP`, functions written in R),
+builtins (`BUILTINSXP`), and specials (`SPECIALSXP`, both implemented in
+C). They differ in how arguments are evaluated: builtins evaluate their
+arguments before the call, specials don't. 
 
-`FUNSXP` is an abstract union type.
+## Testing functions
 
 ```{r}
 #| results: asis
@@ -12,15 +15,11 @@
 render_entries("functions", "Testing functions")
 ```
 
-## Internals
-
-```{r}
-#| results: asis
-#| echo: false
-render_entries("functions", "Internals")
-```
-
 ## Promises (`PROMSXP`)
+
+A promise bundles an unevaluated expression with the environment it should
+be evaluated in; it's how R implements lazy evaluation of function
+arguments.
 
 ```{r}
 #| results: asis

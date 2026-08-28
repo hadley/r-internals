@@ -2,15 +2,11 @@
 
 {{< include _setup.qmd >}}
 
-* `R_GlobalEnv`: The "global" environment
-* `R_EmptyEnv`: An empty environment at the root of the environment tree
-* `R_BaseEnv`: The base environment; formerly R_NilValue
-* `R_BaseNamespace`: The (fake) namespace for base
-* `R_NamespaceRegistry`: Registry for registered namespaces
-* `R_GetCurrentEnv`: Retrieve the current environment
-* `R_NewEnv`: Create a new environment
-
-Environments are commonly called `rho` in the sources.
+An environment (`ENVSXP`) is a set of bindings from symbols to values, plus
+a pointer to a parent (enclosing) environment. Lookup walks the parent
+chain until it finds a binding or reaches the empty environment. Small
+environments store bindings as a pairlist (the frame); larger ones use a
+hash table. In R's own source, environments are conventionally named `rho`.
 
 ## Predefined environments
 
@@ -30,11 +26,13 @@ render_entries("environments", "Creation")
 
 ## Get and set objects in environment
 
-`symbol` should be a `SYMSXP`; `environment` should be an `ENVSXP`.
+In these functions, `symbol` should be a `SYMSXP` and `environment` an
+`ENVSXP`.
 
 ### Get values
 
-Note that retrieving an variable from an environment may cause an allocation because it might be an active binding.
+Retrieving a variable from an environment can allocate, because the binding
+might be an active binding or a promise that needs forcing.
 
 ```{r}
 #| results: asis
@@ -44,13 +42,13 @@ render_entries("environments", "Get values")
 
 ### Set values
 
+To remove a binding, set its value to `R_UnboundValue`.
+
 ```{r}
 #| results: asis
 #| echo: false
 render_entries("environments", "Set values")
 ```
-
-To remove a binding, set its value to `R_UnboundSymbol`.
 
 ### Check for presence
 
@@ -66,68 +64,4 @@ render_entries("environments", "Check for presence")
 #| results: asis
 #| echo: false
 render_entries("environments", "Miscellaneous")
-```
-
-## Internals
-
-```{r}
-#| results: asis
-#| echo: false
-render_entries("environments", "Internals")
-```
-
-### Truelength
-
-> This is almost unused. The only current use is for hash tables of 
-> environments (VECSXPs), where length is the size of the table and 
-> truelength is the number of primary slots in use, and for the reference 
-> hash tables in serialization (VECSXPs), where truelength is the number of 
-> slots in use.
-> --- R-internals
-
-```{r}
-#| results: asis
-#| echo: false
-render_entries("environments", "Truelength")
-```
-
-### Hash
-
-```{r}
-#| results: asis
-#| echo: false
-render_entries("environments", "Hash")
-```
-
-// [R-Internals]: Hashing is principally designed for fast searching of
-// environments, which  are from time to time added to but rarely deleted from,
-// so items are not actually deleted but have their value set to R_UnboundValue.
-
-
-Code from lobstr should help me understand how they work:
-
-```c
-int FrameSize(SEXP frame) {
-  int count = 0;
-
-  for(SEXP cur = frame; cur != R_NilValue; cur = CDR(cur)) {
-    SEXP obj = CAR(cur)
-    if (obj != R_UnboundValue)
-      count++;
-  }
-  return count;
-}
-
-int HashTableSize(SEXP table) {
-  int count = 0;
-  int n = Rf_length(table);
-  for (int i = 0; i < n; ++i)
-    count += FrameSize(VECTOR_ELT(table, i));
-  return count;
-}
-
-int envlength(SEXP x) {
-  bool isHashed = HASHTAB(x) != R_NilValue;
-  return isHashed ? HashTableSize(HASHTAB(x)) : FrameSize(FRAME(x));
-}
 ```

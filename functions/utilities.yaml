@@ -1,69 +1,4 @@
 ---
-- name: BCODE_CODE
-  family:
-    - BCODE_CONSTS
-    - BCODE_EXPR
-    - isByteCode
-  summary: Access the components of a byte-code object.
-  signature: |
-    #define BCODE_CODE(x)   CAR(x)
-    #define BCODE_CONSTS(x) CDR(x)
-    #define BCODE_EXPR(x)   TAG(x)
-    #define isByteCode(x)   (TYPEOF(x)==BCODESXP)
-  status: non-api
-  header: none (internal)
-  protect: not-needed
-  errors: never
-  see_also: []
-  chapter: utilities
-  section: "Byte code (`BCODESXP`)"
-- name: R_initialize_bcode
-  family: []
-  summary: Initialize the byte-code engine.
-  signature: |
-    void R_initialize_bcode(void);
-  status: non-api
-  header: none (internal)
-  protect: n/a
-  errors: can-throw
-  see_also: []
-  chapter: utilities
-  section: "Byte code (`BCODESXP`)"
-- name: R_bcEncode
-  family: R_bcDecode
-  summary: Encode or decode a byte-code object.
-  signature: |
-    SEXP R_bcEncode(SEXP);
-    SEXP R_bcDecode(SEXP);
-  status: non-api
-  header: none (internal)
-  protect: result
-  errors: can-throw
-  see_also: []
-  chapter: utilities
-  section: "Byte code (`BCODESXP`)"
-- name: R_PromiseExpr
-  family:
-    - R_ClosureExpr
-    - PREXPR
-    - BODY_EXPR
-  summary: Get the unevaluated expression of a promise or the body expression of a closure.
-  signature: |
-    SEXP R_PromiseExpr(SEXP);
-    SEXP R_ClosureExpr(SEXP);
-    #define PREXPR(e) R_PromiseExpr(e)
-    #define BODY_EXPR(e) R_ClosureExpr(e)
-  status: non-api
-  header: Rinternals.h
-  protect: not-needed
-  errors: never
-  notes: |
-    `R_PromiseExpr()` is not part of the API; use the binding access API
-    added in R 4.6.0 (e.g. `R_DelayedBindingExpression()`) to inspect
-    promise bindings.
-  see_also: []
-  chapter: utilities
-  section: "Byte code (`BCODESXP`)"
 - name: R_qsort
   family:
     - R_qsort_I
@@ -92,7 +27,7 @@
   family:
     - R_rsort
     - R_csort
-  summary: "Sort an int, double, or complex array in place."
+  summary: Sort an int, double, or complex array in place.
   signature: |
     void R_isort(int*, int);
     void R_rsort(double*, int);
@@ -107,7 +42,7 @@
   section: Sorting
 - name: rsort_with_index
   family: []
-  summary: "Sort a double array in place, reordering an index array alongside."
+  summary: Sort a double array in place, reordering an index array alongside.
   signature: |
     void rsort_with_index(double *, int *, int);
   status: api
@@ -119,7 +54,8 @@
   section: Sorting
 - name: revsort
   family: []
-  summary: "Sort a double array in reverse order, reordering an index array alongside."
+  summary: >-
+    Sort a double array in reverse order, reordering an index array alongside.
   signature: |
     void revsort(double*, int*, int);
   status: api
@@ -133,7 +69,8 @@
   family:
     - rPsort
     - cPsort
-  summary: "Partially sort an int, double, or complex array around the k-th element."
+  summary: >-
+    Partially sort an int, double, or complex array around the k-th element.
   signature: |
     void iPsort(int*,    int, int);
     void rPsort(double*, int, int);
@@ -163,23 +100,6 @@
   see_also: R_qsort
   chapter: utilities
   section: Sorting
-- name: Rf_allocSExp
-  family: []
-  summary: Allocate a non-vector SEXP of the given type.
-  signature: |
-    SEXP Rf_allocSExp(SEXPTYPE);
-  status: non-api
-  header: Rinternals.h
-  protect: result
-  errors: can-throw
-  notes: |
-    Not part of the API, as it exposes internal structure that might need to
-    change. Use an appropriate constructor instead: `R_NewEnv()` for
-    environments, `R_mkClosure()` for closures (added in R 4.5.0), or
-    `Rf_allocLang()` for call expressions (added in R 4.4.1).
-  see_also: R_NewEnv
-  chapter: utilities
-  section: Misc
 - name: Rf_any_duplicated
   family: Rf_any_duplicated3
   summary: Find the position of the first duplicated element of a vector.
@@ -191,42 +111,6 @@
   protect: n/a
   errors: can-throw
   r_equivalent: anyDuplicated()
-  see_also: []
-  chapter: utilities
-  section: Misc
-- name: Rf_applyClosure
-  family: []
-  summary: Apply a closure to a list of arguments.
-  signature: |
-    SEXP Rf_applyClosure(SEXP, SEXP, SEXP, SEXP, SEXP);
-  status: non-api
-  header: none (internal)
-  protect: result
-  errors: can-throw
-  see_also: []
-  chapter: utilities
-  section: Misc
-- name: Rf_countContexts
-  family: []
-  summary: Count evaluation contexts on the context stack.
-  signature: |
-    int Rf_countContexts(int, int);
-  status: non-api
-  header: none (internal)
-  protect: n/a
-  errors: never
-  see_also: []
-  chapter: utilities
-  section: Misc
-- name: Rf_CreateTag
-  family: []
-  summary: Create the tag for a pairlist element.
-  signature: |
-    SEXP Rf_CreateTag(SEXP);
-  status: non-api
-  header: none (internal)
-  protect: not-needed
-  errors: can-throw
   see_also: []
   chapter: utilities
   section: Misc
@@ -274,30 +158,6 @@
   see_also: []
   chapter: utilities
   section: Misc
-- name: Rf_installS3Signature
-  family: []
-  summary: Install the signature string for an S3 method.
-  signature: |
-    SEXP Rf_installS3Signature(const char *, const char *);
-  status: non-api
-  header: none (internal)
-  protect: not-needed
-  errors: can-throw
-  see_also: []
-  chapter: utilities
-  section: Misc
-- name: Rf_isFree
-  family: []
-  summary: Test whether a symbol has no value binding.
-  signature: |
-    Rboolean Rf_isFree(SEXP);
-  status: non-api
-  header: none (internal)
-  protect: n/a
-  errors: never
-  see_also: []
-  chapter: utilities
-  section: Misc
 - name: Rf_isUnsorted
   family: []
   summary: Test whether a vector may be unsorted.
@@ -340,30 +200,6 @@
   see_also: Rf_match
   chapter: utilities
   section: Misc
-- name: Rf_readS3VarsFromFrame
-  family: []
-  summary: "Read the S3 dispatch variables from a method's evaluation frame."
-  signature: |
-    void Rf_readS3VarsFromFrame(SEXP, SEXP*, SEXP*, SEXP*, SEXP*, SEXP*, SEXP*);
-  status: non-api
-  header: none (internal)
-  protect: n/a
-  errors: can-throw
-  see_also: []
-  chapter: utilities
-  section: Misc
-- name: Rf_setSVector
-  family: []
-  summary: Set an element of a C array of SEXPs.
-  signature: |
-    void Rf_setSVector(SEXP*, int, SEXP);
-  status: non-api
-  header: none (internal)
-  protect: n/a
-  errors: never
-  see_also: []
-  chapter: utilities
-  section: Misc
 - name: Rf_substitute
   family: []
   summary: Substitute values for variables in an expression.
@@ -392,23 +228,6 @@
     In `Rf_matchE()`, `env` is used to look up `as.character` when
     translating `POSIXlt`; rarely needed directly.
   see_also: Rf_pmatch
-  chapter: utilities
-  section: Misc
-- name: R_dot_Last
-  family: R_RunExitFinalizers
-  summary: Run shutdown actions when R exits.
-  signature: |
-    void R_dot_Last(void);
-    void R_RunExitFinalizers(void);
-  status: embedding
-  header: Rinternals.h
-  protect: n/a
-  errors: can-throw
-  notes: |
-    Shutdown actions: `R_dot_Last()` runs the `.Last()` function (in
-    main.c); `R_RunExitFinalizers()` runs finalizers registered for exit
-    (in memory.c).
-  see_also: []
   chapter: utilities
   section: Misc
 - name: R_popen
@@ -461,7 +280,7 @@
   section: Misc
 - name: Rf_elt
   family: Rf_lastElt
-  summary: "Get an element of a pairlist by index, or the last element."
+  summary: Get an element of a pairlist by index, or the last element.
   signature: |
     SEXP Rf_elt(SEXP, int);
     SEXP Rf_lastElt(SEXP);
@@ -521,18 +340,6 @@
   see_also: []
   chapter: utilities
   section: Misc
-- name: R_FixupRHS
-  family: []
-  summary: Fix up the right-hand side value of a complex assignment.
-  signature: |
-    SEXP R_FixupRHS(SEXP x, SEXP y);
-  status: non-api
-  header: none (internal)
-  protect: result
-  errors: can-throw
-  see_also: []
-  chapter: utilities
-  section: Misc
 - name: IndexWidth
   family: []
   summary: Compute the character width needed to print a vector index.
@@ -543,21 +350,6 @@
   protect: n/a
   errors: never
   see_also: []
-  chapter: utilities
-  section: Misc
-- name: setIVector
-  family: setRVector
-  summary: Fill an int or double array with a constant value.
-  signature: |
-    #define setIVector    Rf_setIVector
-    void setIVector(int*, int, int);
-    #define setRVector    Rf_setRVector
-    void setRVector(double*, int, double);
-  status: non-api
-  header: R_ext/Utils.h
-  protect: n/a
-  errors: never
-  see_also: Rf_setSVector
   chapter: utilities
   section: Misc
 - name: R_atof
@@ -623,7 +415,7 @@
     int findInterval(double *xt, int n, double x,
       Rboolean rightmost_closed,  Rboolean all_inside, int ilo,
       int *mflag);
-    
+
     void find_interv_vec(double *xt, int *n, double *x,   int *nx,
       int *rightmost_closed, int *all_inside, int *indx);
   status: api
@@ -639,8 +431,9 @@
 - name: R_max_col
   family: []
   summary: Find the column position of the maximum in each row of a matrix.
-  signature: |
-    void R_max_col(double *matrix, int *nr, int *nc, int *maxes, int *ties_meth);
+  signature: >
+    void R_max_col(double *matrix, int *nr, int *nc, int *maxes, int
+    *ties_meth);
   status: api
   header: R_ext/Utils.h
   protect: n/a
@@ -651,4 +444,3 @@
   see_also: []
   chapter: utilities
   section: Misc
-...
