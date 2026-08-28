@@ -143,7 +143,13 @@ match the final `chapter`/`section` assignments from Phase 4.
 - [ ] `math.qmd` — Rmath: distribution functions (d/p/q/r table), mathematical functions (bessel, gamma, beta...), numerical utilities (`R_pow`, `fmax2`, `imin2`, `expm1`-style helpers), constants (`M_PI` etc.), standalone Rmath (§6.20 folded in)
 - [ ] `numerical.qmd` — optimization (§6.8), integration (§6.9), linear algebra / BLAS / LAPACK headers and `FCONE` (§6.11), `findInterval`, `R_max_col`
 - [ ] `utilities.qmd` — sorting/ordering (`R_qsort`, `R_orderVector`), matching (`Rf_match`, `Rf_pmatch`), `R_compute_identical`, `Rf_duplicated`/`Rf_any_duplicated`, options (`Rf_GetOption1`), numeric parsing (`R_atof`/`R_strtod`), paths/tempfiles (`R_ExpandFileName`, `R_tmpnam2`), platform info (§6.17)
-- [ ] Fill the 46 gaps found in the Phase 3.5 r-api.md diff (listed above) as records in the appropriate chapters — includes the §6.23 replacement functions that lack records (`R_getVar` family, `R_ClosureFormals/Body/Env`, `STRING_PTR_RO`, `R_getAttributes` family, `R_nrow`/`R_ncol`, R 4.6.0 binding/dots API, etc.); give each a `since:` field when introduced in R 4.2+
+- [ ] Fill the 46 gaps found in the Phase 3.5 r-api.md diff as records in the appropriate chapters (give each a `since:` field when introduced in R 4.2+):
+  - Memory (→ `memory.qmd`): `R_Calloc`, `R_Realloc`, `R_Free`
+  - Routine registration (→ `calling-c.qmd`): `R_registerRoutines`, `R_useDynamicSymbols`
+  - RNG/math/numerical (→ `rng.qmd`, `math.qmd`, `numerical.qmd`): `R_unif_index`, `R_pow`, `Rf_rmultinom`, `Rdqagi`, `Rdqags`, `R_init_stats`
+  - Conditions/unwind (→ `errors.qmd`): `R_UnwindProtect`, `R_ContinueUnwind`, `R_MakeUnwindCont`, `R_withCallingErrorHandler`, `R_tryCatch`, `R_tryCatchError`
+  - Modern §6.23 API (→ Part II chapters): `R_getVar` family, `R_mkClosure`, `R_ClosureEnv`, `R_ClosureFormals`, `R_ClosureBody`, `Rf_allocLang`, `Rf_isDataFrame`, `STRING_PTR_RO`, `R_getAttributes` family, `R_nrow`/`R_ncol`, `R_Dots*` (6), binding functions (`R_GetBindingType`, `R_MakeDelayedBinding`, `R_MakeForcedBinding`, `R_MakeMissingBinding`, `R_DelayedBinding*`, `R_DotDelayed*`, `R_ForcedBindingExpression`, `R_findDotsEnv`), `R_envSymbols`, `R_ParentEnv`, `R_class`, `R_mapAttrib`
+  - Experimental resizable vectors (→ `vectors.qmd`): `R_allocResizableVector`, `R_duplicateAsResizable`, `R_resizeVector`, `SET_GROWABLE_BIT`
 - [x] `r-version.qmd` — R version: `Rversion.h` and version-check macros (renamed from other-headers.md; moved to Part IV)
 
 ## Phase 8 — Appendices
