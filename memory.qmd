@@ -40,7 +40,7 @@ render_entries("memory", "Transient allocation")
 
 ## User-controlled memory
 
-Follows [WRE §6.1.2, User-controlled memory](https://cran.r-project.org/doc/manuals/R-exts.html#User_002dcontrolled-memory-1)
+Follows [WRE §6.1.2, User-controlled memory](https://cran.r-project.org/doc/manuals/R-exts.html#User_002dcontrolled-memory)
 closely.
 
 `R_Calloc()`/`R_Realloc()`/`R_Free()` are for memory that must outlive the
