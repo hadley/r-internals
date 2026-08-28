@@ -39,7 +39,7 @@ typedef struct {
 
 ## Length
 
-After the SEXPTYPE, the most important property of a vector is it's length. Historically, R vectors were limited to length $2 ^ 31 -  1$. Still most vectors are shorter than this, so you can use an `int` based interface:
+After the SEXPTYPE, the most important property of a vector is it's length. Historically, R vectors were limited to length $2 ^ {31} -  1$. Still most vectors are shorter than this, so you can use an `int` based interface:
 
 ```c
 typedef int R_len_t;
@@ -50,7 +50,7 @@ R_len_t Rf_length(SEXP x);
 SEXP Rf_lengthgets(SEXP x, R_len_t n);
 ```
 
-As of R 3.0.0, R vectors can have length up to $2 ^ 64 - 1$. If you want your code to be as general as possible, you should instead use the `R_xlen_t`based interface:
+As of R 3.0.0, R vectors can have length up to $2 ^ {64} - 1$. If you want your code to be as general as possible, you should instead use the `R_xlen_t`based interface:
 
 ```c
 // ptrdiff_t is the type of the result of subtracting two pointers, and
@@ -113,14 +113,28 @@ Alternatively you can coerce from an existing vector:
 SEXP Rf_coerceVector(SEXP x, SEXPTYPE newtype);
 ```
 
-There are two rarer variants:
+To create a named vector, use `Rf_mkNamed()`:
 
 ```c
 // Given a null-terminated array of const char*'s, create an element
 // of that length, and initialise a character vector of names
 // [[SEXP creator]]
 SEXP Rf_mkNamed(SEXPTYPE type, const char ** names);
+```
 
+For example, this template creates a list holding two objects `x` and `y` named `xname` and `yname`:
+
+```cpp
+  // array of names; note the null string
+  const char *names[] = {"xname", "yname", ""};
+  SEXP list = PROTECT(Rf_mkNamed(VECSXP, names));  // creates a list of length 2
+  SET_VECTOR_ELT(list, 0, x); // x and y are arbitrary SEXPs
+  SET_VECTOR_ELT(list, 1, y);
+  UNPROTECT(1);
+```
+
+Finally, you can use a custom allocator:
+```cpp
 // Create a vector with a custom memory allocator
 typedef void *(*custom_alloc_t)(R_allocator_t *allocator, size_t);
 typedef void  (*custom_free_t)(R_allocator_t *allocator, void *);
@@ -227,7 +241,7 @@ Rboolean Rf_isInteger(SEXP);
 Rboolean Rf_isReal(SEXP s);
 Rboolean Rf_isComplex(SEXP s);
 Rboolean Rf_isString(SEXP s);
-Rboolean Rf_isExpression)(SEXP s);
+Rboolean Rf_isExpression(SEXP s);
 ```
 
 __NB__: there's no function to test for `RAWSXP` or `VECSXP`; you use must use `TYPEOF(x) == RAWSXP`, or `TYPEOF(x) == VECSXP`. `isList()` tests if the object is a pairlist.
