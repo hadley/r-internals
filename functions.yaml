@@ -88,8 +88,8 @@
   summary: Access the registry of registered namespaces.
   signature: |
     SEXP R_NamespaceRegistry;
-  status: api
-  replacement: ~
+  status: non-api
+  replacement: R_getRegisteredNamespace
   header: Rinternals.h
   protect: n/a
   errors: never
@@ -97,7 +97,8 @@
   r_equivalent: ~
   args: ~
   notes: |
-    Registry for registered namespaces.
+    Registry for registered namespaces. This variable is not part of the API;
+    use `R_getRegisteredNamespace()` to find a registered namespace.
   example: ~
   see_also: []
   chapter: environments
@@ -127,8 +128,8 @@
   summary: Find the value bound to a symbol in an environment and its enclosing environments.
   signature: |
     SEXP Rf_findVar(SEXP symbol, SEXP environment);
-  status: api
-  replacement: ~
+  status: non-api
+  replacement: R_getVar
   header: Rinternals.h
   protect: result
   errors: can-throw
@@ -138,7 +139,8 @@
   notes: |
     Looks up `symbol` in `environment`, following up enclosing environments.
     Retrieving a variable from an environment may cause an allocation because
-    it might be an active binding.
+    it might be an active binding. Too low level to be part of the API;
+    prefer `R_getVar()` or `R_getVarEx()` (added in R 4.5.0) in new code.
   example: ~
   see_also: [Rf_findFun, Rf_findVarInFrame3]
   chapter: environments
@@ -170,8 +172,8 @@
   signature: |
     SEXP Rf_findVarInFrame3(SEXP env, SEXP symbol, Rboolean doGet);
     SEXP Rf_findVarInFrame(SEXP env, SEXP symbol);
-  status: api
-  replacement: ~
+  status: non-api
+  replacement: R_getVar
   header: Rinternals.h
   protect: result
   errors: can-throw
@@ -182,6 +184,9 @@
   notes: |
     Looks in a single environment. Returns `R_UnboundValue` if not found.
     `Rf_findVarInFrame()` is a shortcut for `Rf_findVarInFrame3(rho, symbol, TRUE)`.
+    Too low level to be part of the API; the `R_getVar()` family added in
+    R 4.5.0 is the recommended interface: use `R_getVar()` or `R_getVarEx()`
+    to retrieve a value and `R_existsVarInFrame()` to test for existence.
   example: ~
   see_also: [Rf_findVar]
   chapter: environments
@@ -243,7 +248,8 @@
   args: ~
   notes: |
     Returns a character vector. `R_lsInternal(env, all)` is shorthand for
-    `R_lsInternal3(env, all, TRUE)`.
+    `R_lsInternal3(env, all, TRUE)`. `R_lsInternal()` is not part of the
+    API; prefer `R_lsInternal3()` in new code.
   example: ~
   see_also: []
   chapter: environments
@@ -274,15 +280,17 @@
   summary: Retrieve the current environment.
   signature: |
     SEXP R_GetCurrentEnv(void);
-  status: api
+  status: non-api
   replacement: ~
   header: Rinternals.h
   protect: not-needed
   errors: never
   since: R 3.6.0
-  r_equivalent: ~
+  r_equivalent: environment()
   args: ~
-  notes: ~
+  notes: |
+    Not part of the API; call `environment()` at the R level and pass the
+    result as an argument to your C function.
   example: ~
   see_also: []
   chapter: environments
@@ -461,9 +469,11 @@
   since: ~
   r_equivalent: ~
   args: ~
-  notes: ~
+  notes: |
+    `SET_FRAME()` is not part of the API; create environments with the
+    constructor `R_NewEnv()` instead of mutating an environment's frame.
   example: ~
-  see_also: [ENCLOS, HASHTAB]
+  see_also: [ENCLOS, HASHTAB, R_NewEnv]
   chapter: environments
   section: Internals
 
@@ -474,16 +484,19 @@
     SEXP ENCLOS(SEXP x);
     void SET_ENCLOS(SEXP x, SEXP v);
   status: non-api
-  replacement: ~
+  replacement: R_ParentEnv
   header: Rinternals.h
   protect: not-needed
   errors: never
   since: ~
   r_equivalent: ~
   args: ~
-  notes: ~
+  notes: |
+    Use `R_ParentEnv()` (added in R 4.5.0) instead of `ENCLOS()`. To choose
+    the enclosing environment of a new environment, use the constructor
+    `R_NewEnv()` rather than `SET_ENCLOS()`.
   example: ~
-  see_also: [FRAME]
+  see_also: [FRAME, R_NewEnv]
   chapter: environments
   section: Internals
 
@@ -494,16 +507,17 @@
     int ENVFLAGS(SEXP x);
     void SET_ENVFLAGS(SEXP x, int v);
   status: non-api
-  replacement: ~
+  replacement: R_EnvironmentIsLocked
   header: Rinternals.h
   protect: not-needed
   errors: never
   since: ~
   r_equivalent: ~
   args: ~
-  notes: ~
+  notes: |
+    Use `R_EnvironmentIsLocked()` and `R_LockEnvironment()` instead.
   example: ~
-  see_also: []
+  see_also: [R_LockEnvironment]
   chapter: environments
   section: Internals
 
@@ -551,6 +565,8 @@
     Hashing is principally designed for fast searching of environments, which
     are from time to time added to but rarely deleted from, so items are not
     actually deleted but have their value set to `R_UnboundValue`. --- R-Internals
+    `SET_HASHTAB()` is not part of the API; create hash-based environments
+    with the constructor `R_NewEnv()` instead.
   example: ~
   see_also: [HASHASH, HASHVALUE]
   chapter: environments
@@ -1006,9 +1022,11 @@
   args: ~
   notes: |
     Internal macros that read the pointer, protected, and tag fields of an
-    external pointer directly from the underlying cons cell.
+    external pointer directly from the underlying cons cell. Use
+    `R_ExternalPtrAddr()`, `R_ExternalPtrProtected()`, and
+    `R_ExternalPtrTag()` instead.
   example: ~
-  see_also: []
+  see_also: [R_ExternalPtrAddr]
   chapter: external-pointers
   section: Internals
 
@@ -1041,7 +1059,7 @@
     SEXP (BODY)(SEXP x);
     SEXP (CLOENV)(SEXP x);
   status: non-api
-  replacement: ~
+  replacement: R_ClosureFormals
   header: Rinternals.h
   protect: not-needed
   errors: never
@@ -1049,9 +1067,11 @@
   r_equivalent: formals()
   args: ~
   notes: |
-    Accessors for the components of a closure (`CLOSXP`).
+    Accessors for the components of a closure (`CLOSXP`). Use
+    `R_ClosureFormals()`, `R_ClosureBody()`, and `R_ClosureEnv()` (added in
+    R 4.5.0) instead.
   example: ~
-  see_also: []
+  see_also: [R_ClosureBody, R_ClosureEnv]
   chapter: functions
   section: Internals
 
@@ -1063,7 +1083,7 @@
     void SET_BODY(SEXP x, SEXP v);
     void SET_CLOENV(SEXP x, SEXP v);
   status: non-api
-  replacement: ~
+  replacement: R_mkClosure
   header: Rinternals.h
   protect: not-needed
   errors: never
@@ -1071,7 +1091,9 @@
   r_equivalent: "formals<-()"
   args: ~
   notes: |
-    Setters for the components of a closure (`CLOSXP`).
+    Setters for the components of a closure (`CLOSXP`). Use the constructor
+    `R_mkClosure()` (added in R 4.5.0) to create a closure instead of
+    allocating and mutating one.
   example: ~
   see_also: []
   chapter: functions
@@ -1157,9 +1179,12 @@
   r_equivalent: ~
   args: ~
   notes: |
-    Accessors for the components of a promise (`PROMSXP`).
+    Accessors for the components of a promise (`PROMSXP`). Use the binding
+    access API added in R 4.6.0 instead: `R_GetBindingType()`,
+    `R_ForcedBindingExpression()`, `R_DelayedBindingExpression()`, and
+    `R_DelayedBindingEnvironment()`.
   example: ~
-  see_also: []
+  see_also: [R_GetBindingType]
   chapter: functions
   section: Promises (`PROMSXP`)
 
@@ -1201,9 +1226,11 @@
   r_equivalent: ~
   args: ~
   notes: |
-    Setters for the components of a promise (`PROMSXP`).
+    Setters for the components of a promise (`PROMSXP`). Use the binding
+    access API added in R 4.6.0 instead: `R_MakeForcedBinding()`,
+    `R_MakeDelayedBinding()`, and `R_MakeMissingBinding()`.
   example: ~
-  see_also: []
+  see_also: [R_MakeDelayedBinding]
   chapter: functions
   section: Promises (`PROMSXP`)
 
@@ -1559,7 +1586,7 @@
     void (SET_S4_OBJECT)(SEXP x);
     void (UNSET_S4_OBJECT)(SEXP x);
   status: non-api
-  replacement: ~
+  replacement: Rf_isS4
   header: Rinternals.h
   protect: n/a
   errors: never
@@ -1568,8 +1595,9 @@
   args: ~
   notes: |
     Low-level access to the S4 object flag; listed under internals by the chapter.
+    Use `Rf_isS4()` to test whether an object is an S4 object.
   example: ~
-  see_also: []
+  see_also: [Rf_isS4]
   chapter: oo
   section: Internals
 
@@ -1884,9 +1912,12 @@
   notes: |
     Works with a pairlist as if it's a vector. It's easy to get O(n^2)
     behaviour, but for the usual size of pairlists this is unlikely to cause
-    a performance bottleneck.
+    a performance bottleneck. To create a call expression, use
+    `Rf_allocLang()` (added in R 4.4.1) or `Rf_lcons()` rather than
+    `Rf_allocList()` plus `SET_TYPEOF()`, which will not be available to
+    packages in the future.
   example: ~
-  see_also: [Rf_nthcdr]
+  see_also: [Rf_nthcdr, Rf_lcons]
   chapter: pairlists
   section: Pretending it's a vector
 
@@ -1957,17 +1988,25 @@
   signature: |
     SEXP ATTRIB(SEXP x);
     void SET_ATTRIB(SEXP x, SEXP v);
-  status: api
-  replacement: ~
+  status: non-api
+  replacement: Rf_getAttrib
   header: Rinternals.h
   protect: not-needed
   errors: never
   since: ~
   r_equivalent: ~
   args: ~
-  notes: ~
+  notes: |
+    Not part of the API, as these reveal the internal linked-list
+    representation of attributes. Use `Rf_getAttrib()` and `Rf_setAttrib()`
+    for individual attributes, `DUPLICATE_ATTRIB()` or
+    `SHALLOW_DUPLICATE_ATTRIB()` to copy attributes between objects,
+    `CLEAR_ATTRIB()` (added in R 4.5.0) to remove all attributes,
+    `ANY_ATTRIB()` (added in R 4.5.0) to test whether any attributes are
+    present, and `R_mapAttrib()` (added in R 4.6.0) to iterate over
+    attributes.
   example: ~
-  see_also: [Rf_getAttrib]
+  see_also: [Rf_getAttrib, DUPLICATE_ATTRIB]
   chapter: attributes
   section: Get and set
 
@@ -2283,9 +2322,13 @@
   args: ~
   notes: |
     General cons cell attributes: the object flag, GC mark, type, named
-    count, reference count, and general-purpose levels.
+    count, reference count, and general-purpose levels. `OBJECT()` and
+    `SET_OBJECT()` are not part of the API; prefer `Rf_isObject()` and
+    `Rf_setAttrib()` (or `CLEAR_ATTRIB()`, added in R 4.5.0) in new code.
+    `SET_TYPEOF()` will also not be available to packages in the future;
+    use a constructor such as `Rf_allocLang()` (added in R 4.4.1) instead.
   example: ~
-  see_also: []
+  see_also: [Rf_isObject, Rf_getAttrib]
   chapter: protection
   section: Internals
 
@@ -3777,7 +3820,7 @@
     SEXP R_ClosureExpr(SEXP);
     #define PREXPR(e) R_PromiseExpr(e)
     #define BODY_EXPR(e) R_ClosureExpr(e)
-  status: api
+  status: non-api
   replacement: ~
   header: Rinternals.h
   protect: not-needed
@@ -3785,7 +3828,10 @@
   since: ~
   r_equivalent: ~
   args: ~
-  notes: ~
+  notes: |
+    `R_PromiseExpr()` is not part of the API; use the binding access API
+    added in R 4.6.0 (e.g. `R_DelayedBindingExpression()`) to inspect
+    promise bindings.
   example: ~
   see_also: []
   chapter: utilities
@@ -3986,7 +4032,7 @@
   summary: Allocate a non-vector SEXP of the given type.
   signature: |
     SEXP Rf_allocSExp(SEXPTYPE);
-  status: api
+  status: non-api
   replacement: ~
   header: Rinternals.h
   protect: result
@@ -3994,9 +4040,13 @@
   since: ~
   r_equivalent: ~
   args: ~
-  notes: ~
+  notes: |
+    Not part of the API, as it exposes internal structure that might need to
+    change. Use an appropriate constructor instead: `R_NewEnv()` for
+    environments, `R_mkClosure()` for closures (added in R 4.5.0), or
+    `Rf_allocLang()` for call expressions (added in R 4.4.1).
   example: ~
-  see_also: []
+  see_also: [R_NewEnv]
   chapter: utilities
   section: Misc
 
@@ -4779,7 +4829,9 @@
     v: the new length.
   notes: |
     Uppercase variant of `Rf_lengthgets()`; in base R code these uppercase
-    variants are implemented as macros for efficiency.
+    variants are implemented as macros for efficiency. For resizable
+    (growable) vectors, R 4.6.0 adds `R_resizeVector()`; see
+    `R_allocResizableVector()`.
   example: ~
   see_also: [Rf_lengthgets, LENGTH]
   chapter: vectors
@@ -5020,8 +5072,8 @@
   summary: Get a pointer to the elements of a character vector.
   signature: |
     SEXP* STRING_PTR(SEXP x);
-  status: api
-  replacement: ~
+  status: non-api
+  replacement: STRING_PTR_RO
   header: Rinternals.h
   protect: not-needed
   errors: never
@@ -5030,7 +5082,10 @@
   args:
     x: a `STRSXP`.
   notes: |
-    Used in a handful of places in the R source.
+    Used in a handful of places in the R source. Obtaining a writable
+    pointer to character vector data can violate the memory manager's
+    integrity assumptions and is not supported; use `STRING_PTR_RO()`
+    instead.
   example: ~
   see_also: [STRING_ELT]
   chapter: vectors
@@ -5592,8 +5647,8 @@
   summary: Test if an object is a data frame.
   signature: |
     Rboolean Rf_isFrame(SEXP x);
-  status: api
-  replacement: ~
+  status: non-api
+  replacement: Rf_isDataFrame
   header: Rinternals.h
   protect: not-needed
   errors: never
@@ -5601,7 +5656,8 @@
   r_equivalent: is.data.frame()
   args:
     x: any SEXP.
-  notes: ~
+  notes: |
+    Prefer `Rf_isDataFrame()` (added in R 4.5.0) in new code.
   example: ~
   see_also: []
   chapter: attributes

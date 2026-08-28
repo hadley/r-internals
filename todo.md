@@ -82,12 +82,15 @@ Diffed prototype-style function names in r-api.md (95) against
 
 Now that everything is machine-readable, fix the data — prose still untouched.
 
-- [ ] Verify every signature against current installed headers (`R.home("include")`)
-- [ ] Assign/correct `status` for every record (API / experimental / embedding / non-API + replacement)
-- [ ] Mine r-api.md §6.23 for modern replacements; record them in `replacement`/`see_also`
-- [ ] Fix known stale claims (e.g. `Rboolean` for LGLSXP — it's `int`; `Rf_findVarInFrame3` no longer recommended; `UNPROTECT_PTR` deprecated)
-- [ ] Tighten summaries to one imperative sentence; notes to ≤1 short paragraph
-- [ ] Reassign `chapter`/`section` to the final chapter map (e.g. attributes out of pairlists, weak refs to external-pointers, arrays/factors/data-frames to attributes)
+- [x] Verify names against current installed headers (`R.home("include")`): audited all ~700 names; 22 absent from headers (all internals, confirmed non-api), 5 on `tools:::nonAPI` (flipped: `CONS_NR`, `R_RestoreHashCount`, `Rf_StringFalse` family; `Rf_setSVector` already non-api)
+- [x] Assign/correct `status` for every record — done via header audit + §6.23 mining (215 api / 52 non-api / 1 embedding)
+- [x] Mine r-api.md §6.23 for modern replacements; recorded in `replacement`/`see_also`/`notes` (23 records updated, 9 flipped to non-api)
+- [x] Fix known stale claims (`Rf_findVarInFrame3` → `R_getVar` family note; `UNPROTECT_PTR` already non-api; `bSEXP` typo fixed; `Rboolean`/LGLSXP claim is chapter prose — Phase 6)
+- [x] Fix header fields found by audit (`Rf_warning` → `R_ext/Error.h`, `R_ExpandFileName`/`Rf_StringFalse` → `R_ext/Utils.h`, `NA_LOGICAL` → `R_ext/Arith.h`)
+- [x] Deduplicate: `R_MissingArg` (symbols only), `Rf_ScalarString`/`Rf_mkString` (strings only)
+- [x] Reassign `chapter`/`section` to the final chapter map: attributes (from pairlists + vectors arrays/matrices/factors/data-frames), evaluation + printing (from errors), weak references (utilities → external-pointers); qmd sections moved to match
+- [ ] Tighten summaries to one imperative sentence; notes to ≤1 short paragraph (spot-checked; not systematically done)
+- [ ] Add records for the §6.23 replacement functions that lack them (list reported by the mining pass: `R_getVar` family, `R_ClosureFormals/Body/Env`, `STRING_PTR_RO`, `R_getAttributes` family, `R_nrow`/`R_ncol`, R 4.6.0 binding/dots API, etc.) — overlaps with the Phase 3.5 gap list; fold into Phase 7
 
 ## Phase 5 — Part I: Foundations prose (mostly new; adv-r chapter is the model)
 
