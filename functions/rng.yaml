@@ -1,0 +1,67 @@
+---
+- name: GetRNGstate
+  family: PutRNGstate
+  summary: Read in (or create) `.Random.seed` before generating variates, and write it back after.
+  signature: |
+    void GetRNGstate(void);
+    void PutRNGstate(void);
+  status: api
+  header: R_ext/Random.h
+  protect: n/a
+  errors: can-throw
+  notes: |
+    Every use of R's RNG from C must be bracketed by these calls:
+    `GetRNGstate()` reads (or lazily creates) `.Random.seed`, and
+    `PutRNGstate()` writes the updated state back so R-level code sees the
+    stream advance. They can allocate when the seed doesn't yet exist.
+    These names are never remapped.
+  example: |
+    GetRNGstate();
+    double u = unif_rand();
+    PutRNGstate();
+  see_also: [unif_rand]
+  chapter: rng
+  section: Random number generation
+- name: unif_rand
+  family:
+    - norm_rand
+    - exp_rand
+  summary: Draw one uniform, standard normal, or unit exponential variate.
+  signature: |
+    double unif_rand(void);
+    double norm_rand(void);
+    double exp_rand(void);
+  status: api
+  header: R_ext/Random.h
+  protect: n/a
+  errors: never
+  notes: |
+    Must be called between `GetRNGstate()` and `PutRNGstate()`. The
+    generator kind and seed are chosen at the R level (`RNGkind()`,
+    `set.seed()`); there is no C API to select them. For other
+    distributions, use the `r*` functions from `Rmath.h` (see
+    [Mathematical functions](math.qmd)) — they need the same bracketing.
+    These names are never remapped.
+  see_also: [GetRNGstate, R_unif_index]
+  chapter: rng
+  section: Random number generation
+- name: R_unif_index
+  family: []
+  summary: Draw a uniform index in `[0, n)` for random sampling.
+  signature: |
+    double R_unif_index(double n);
+  status: api
+  header: R_ext/Random.h
+  protect: n/a
+  errors: never
+  args:
+    n: upper bound (exclusive) on the returned index.
+  notes: |
+    Returns a `double` in `[0, n)`; truncate to `int` or `R_xlen_t` to get
+    an index. Uses the sampling algorithm selected by R's
+    `sample.kind` option, so results match R-level `sample.int()`. Must be
+    called between `GetRNGstate()` and `PutRNGstate()`.
+  see_also: [unif_rand]
+  chapter: rng
+  section: Random number generation
+...

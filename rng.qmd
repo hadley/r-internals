@@ -1,9 +1,24 @@
 # Random number generation
 
-::: {.callout-warning}
-Placeholder. Planned content:
+{{< include _setup.qmd >}}
 
-- `GetRNGstate`/`PutRNGstate`
-- `unif_rand` family, `R_unif_index`
-- Relationship to `.Random.seed`
-:::
+R's RNG is private to R: from C you draw from R's stream, you don't create
+your own. The stream state lives in the `.Random.seed` variable in the
+global environment, so every use from C must be bracketed by
+`GetRNGstate()` (read the state in, creating it if needed) and
+`PutRNGstate()` (write it back). Skip the bracket and your draws won't
+advance R's stream — repeated calls return the same values, and
+`set.seed()` at the R level won't make your code reproducible.
+
+There is no C API to choose the generator or set the seed; if you need
+that, evaluate calls to `RNGkind()`/`set.seed()` (see
+[Evaluation](evaluation.qmd)). For distributions beyond uniform, normal,
+and exponential, use the `r*` functions from `Rmath.h` (see
+[Mathematical functions](math.qmd)) — they draw from the same stream and
+need the same bracketing.
+
+```{r}
+#| results: asis
+#| echo: false
+render_entries("rng", "Random number generation")
+```
