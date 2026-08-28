@@ -1,0 +1,25 @@
+---
+- name: R_registerRoutines
+  family: R_useDynamicSymbols
+  summary: Register a package's native routines and restrict dynamic symbol lookup.
+  signature: |
+    int R_registerRoutines(DllInfo *info, const R_CMethodDef * const croutines,
+                           const R_CallMethodDef * const callRoutines,
+                           const R_FortranMethodDef * const fortranRoutines,
+                           const R_ExternalMethodDef * const externalRoutines);
+    Rboolean R_useDynamicSymbols(DllInfo *info, Rboolean value);
+  status: api
+  header: R_ext/Rdynload.h
+  protect: n/a
+  errors: never
+  args:
+    info: passed to your `R_init_<pkgname>()` initializer.
+    callRoutines: "NULL-terminated array of `R_CallMethodDef` entries: name, function pointer cast to `DL_FUNC`, argument count."
+    value: "`FALSE` hides unregistered symbols, so routines can only be reached via registration."
+  notes: |
+    Call from `R_init_<pkgname>()`. Generate the registration boilerplate
+    with `tools::package_native_routine_registration_skeleton("src")`.
+  see_also: []
+  chapter: calling-c
+  section: Routine registration
+...

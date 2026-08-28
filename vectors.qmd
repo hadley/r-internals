@@ -107,6 +107,19 @@ typedef struct R_allocator {
 render_entries("vectors", "Create")
 ```
 
+## Resizable vectors
+
+R 4.6.0 added an **experimental** API for vectors that can grow in place:
+allocate with a maximum length, then resize without copying. This
+replaces the non-API `SETLENGTH()`/`SET_TRUELENGTH()` idiom; the
+interface may change in future R releases.
+
+```{r}
+#| results: asis
+#| echo: false
+render_entries("vectors", "Resizable vectors")
+```
+
 ## Get and set values
 
 The atomic types wrap a C array, so you get and set values through a helper

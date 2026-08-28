@@ -716,4 +716,33 @@
   see_also: [STRING_ELT]
   chapter: vectors
   section: Get and set values
+- name: R_allocResizableVector
+  family:
+    - R_duplicateAsResizable
+    - R_resizeVector
+    - R_isResizable
+    - R_maxLength
+  summary: Create and resize vectors that can grow in place.
+  signature: |
+    SEXP R_allocResizableVector(SEXPTYPE type, R_xlen_t maxlen);
+    SEXP R_duplicateAsResizable(SEXP x);
+    void R_resizeVector(SEXP x, R_xlen_t newlen);
+    bool R_isResizable(SEXP x);
+    R_xlen_t R_maxLength(SEXP x);
+  status: experimental
+  header: Rinternals.h
+  protect: result
+  errors: can-throw
+  since: 4.6.0
+  args:
+    maxlen: maximum length the vector can grow to.
+    newlen: new length, at most `maxlen`.
+  notes: |
+    A resizable vector allocates `maxlen` up front and can be resized in
+    place with `R_resizeVector()` — the API replacement for the non-API
+    `SETLENGTH()`/`SET_TRUELENGTH()` idiom. Experimental: the interface
+    may change in future R releases.
+  see_also: [Rf_allocVector]
+  chapter: vectors
+  section: Resizable vectors
 ...
