@@ -1,0 +1,236 @@
+- name: Rf_isFunction
+  family: [Rf_isPrimitive]
+  summary: Test whether an object is a function or a primitive function.
+  signature: |
+    Rboolean Rf_isFunction(SEXP);
+    Rboolean Rf_isPrimitive(SEXP);
+  status: api
+  replacement: ~
+  header: Rinternals.h
+  protect: not-needed
+  errors: never
+  since: ~
+  r_equivalent: is.function()
+  args: ~
+  notes: |
+    `FUNSXP` is an abstract union type.
+  example: ~
+  see_also: []
+  chapter: functions
+  section: Testing functions
+
+- name: FORMALS
+  family: [BODY, CLOENV]
+  summary: Access the formal arguments, body, or environment of a closure.
+  signature: |
+    SEXP (FORMALS)(SEXP x);
+    SEXP (BODY)(SEXP x);
+    SEXP (CLOENV)(SEXP x);
+  status: non-api
+  replacement: ~
+  header: Rinternals.h
+  protect: not-needed
+  errors: never
+  since: ~
+  r_equivalent: formals()
+  args: ~
+  notes: |
+    Accessors for the components of a closure (`CLOSXP`).
+  example: ~
+  see_also: []
+  chapter: functions
+  section: Internals
+
+- name: SET_FORMALS
+  family: [SET_BODY, SET_CLOENV]
+  summary: Set the formal arguments, body, or environment of a closure.
+  signature: |
+    void SET_FORMALS(SEXP x, SEXP v);
+    void SET_BODY(SEXP x, SEXP v);
+    void SET_CLOENV(SEXP x, SEXP v);
+  status: non-api
+  replacement: ~
+  header: Rinternals.h
+  protect: not-needed
+  errors: never
+  since: ~
+  r_equivalent: "formals<-()"
+  args: ~
+  notes: |
+    Setters for the components of a closure (`CLOSXP`).
+  example: ~
+  see_also: []
+  chapter: functions
+  section: Internals
+
+- name: RDEBUG
+  family: [RSTEP, RTRACE]
+  summary: Query the debug, step, or trace flags of a closure.
+  signature: |
+    int  (RDEBUG)(SEXP x);
+    int  (RSTEP)(SEXP x);
+    int  (RTRACE)(SEXP x);
+  status: non-api
+  replacement: ~
+  header: Rinternals.h
+  protect: not-needed
+  errors: never
+  since: ~
+  r_equivalent: ~
+  args: ~
+  notes: |
+    Internal macros for querying closure debugging flags.
+  example: ~
+  see_also: []
+  chapter: functions
+  section: Internals
+
+- name: SET_RDEBUG
+  family: [SET_RSTEP, SET_RTRACE]
+  summary: Set the debug, step, or trace flags of a closure.
+  signature: |
+    void (SET_RDEBUG)(SEXP x, int v);
+    void (SET_RSTEP)(SEXP x, int v);
+    void (SET_RTRACE)(SEXP x, int v);
+  status: non-api
+  replacement: ~
+  header: Rinternals.h
+  protect: not-needed
+  errors: never
+  since: ~
+  r_equivalent: ~
+  args: ~
+  notes: |
+    Internal macros for setting closure debugging flags.
+  example: ~
+  see_also: []
+  chapter: functions
+  section: Internals
+
+- name: R_UnboundValue
+  family: [R_MissingArg]
+  summary: Access the unbound-value and missing-argument marker constants.
+  signature: |
+    LibExtern SEXP	R_UnboundValue;	    /* Unbound marker */
+    LibExtern SEXP	R_MissingArg;	    /* Missing argument marker */
+  status: api
+  replacement: ~
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  since: ~
+  r_equivalent: ~
+  args: ~
+  notes: |
+    Marker constants: `R_UnboundValue` is the unbound marker and `R_MissingArg` is the missing argument marker.
+  example: ~
+  see_also: []
+  chapter: functions
+  section: Promises (`PROMSXP`)
+
+- name: PRCODE
+  family: [PRENV, PRVALUE]
+  summary: Access the code, environment, or value of a promise.
+  signature: |
+    SEXP (PRCODE)(SEXP x);
+    SEXP (PRENV)(SEXP x);
+    SEXP (PRVALUE)(SEXP x);
+  status: non-api
+  replacement: ~
+  header: Rinternals.h
+  protect: not-needed
+  errors: never
+  since: ~
+  r_equivalent: ~
+  args: ~
+  notes: |
+    Accessors for the components of a promise (`PROMSXP`).
+  example: ~
+  see_also: []
+  chapter: functions
+  section: Promises (`PROMSXP`)
+
+- name: PRSEEN
+  family: [SET_PRSEEN]
+  summary: Query or set the seen flag of a promise.
+  signature: |
+    int  (PRSEEN)(SEXP x);
+    void (SET_PRSEEN)(SEXP x, int v);
+    void SET_PRSEEN(SEXP x, int v);
+  status: non-api
+  replacement: ~
+  header: Rinternals.h
+  protect: not-needed
+  errors: never
+  since: ~
+  r_equivalent: ~
+  args: ~
+  notes: |
+    Accessors for the seen flag of a promise (`PROMSXP`), used to detect recursive promise evaluation.
+  example: ~
+  see_also: []
+  chapter: functions
+  section: Promises (`PROMSXP`)
+
+- name: SET_PRENV
+  family: [SET_PRVALUE, SET_PRCODE]
+  summary: Set the environment, value, or code of a promise.
+  signature: |
+    void SET_PRENV(SEXP x, SEXP v);
+    void SET_PRVALUE(SEXP x, SEXP v);
+    void SET_PRCODE(SEXP x, SEXP v);
+  status: non-api
+  replacement: ~
+  header: Rinternals.h
+  protect: not-needed
+  errors: never
+  since: ~
+  r_equivalent: ~
+  args: ~
+  notes: |
+    Setters for the components of a promise (`PROMSXP`).
+  example: ~
+  see_also: []
+  chapter: functions
+  section: Promises (`PROMSXP`)
+
+- name: R_Srcref
+  family: []
+  summary: Access the current srcref, for debuggers.
+  signature: |
+    LibExtern SEXP	R_Srcref;           /* Current srcref, for debuggers */
+  status: api
+  replacement: ~
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  since: ~
+  r_equivalent: ~
+  args: ~
+  notes: |
+    The current srcref, for debuggers.
+  example: ~
+  see_also: []
+  chapter: functions
+  section: Srcrefs
+
+- name: R_GetCurrentSrcref
+  family: [R_GetSrcFilename]
+  summary: Get the current srcref or the source filename of a srcref.
+  signature: |
+    SEXP R_GetCurrentSrcref(int);
+    SEXP R_GetSrcFilename(SEXP);
+  status: api
+  replacement: ~
+  header: Rinternals.h
+  protect: result
+  errors: never
+  since: ~
+  r_equivalent: ~
+  args: ~
+  notes: |
+    `R_GetCurrentSrcref` returns the current srcref and `R_GetSrcFilename` returns the source filename for a srcref.
+  example: ~
+  see_also: []
+  chapter: functions
+  section: Srcrefs

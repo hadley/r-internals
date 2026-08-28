@@ -1,0 +1,773 @@
+- name: Rf_isSymbol
+  family: []
+  summary: Test whether an object is a symbol.
+  signature: |
+    Rboolean Rf_isSymbol(SEXP s);
+  status: api
+  replacement: ~
+  header: Rinternals.h
+  protect: not-needed
+  errors: never
+  since: ~
+  r_equivalent: is.symbol()
+  args: ~
+  notes: ~
+  example: ~
+  see_also: []
+  chapter: symbols
+  section: Test
+
+- name: Rf_install
+  family: [Rf_installChar]
+  summary: Create the symbol for a name, returning the existing symbol if already present.
+  signature: |
+    SEXP Rf_install(const char *);
+    SEXP Rf_installChar(SEXP);
+  status: api
+  replacement: ~
+  header: Rinternals.h
+  protect: not-needed
+  errors: can-throw
+  since: ~
+  r_equivalent: as.name()
+  args: ~
+  notes: |
+    If symbol exists, return it; otherwise create it. `SYMSXP`s don't need to
+    be protected because symbols are not currently reclaimed by the garbage
+    collector. If you are using a symbol many times, it may be worth caching
+    it to avoid repeated lookups.
+  example: ~
+  see_also: []
+  chapter: symbols
+  section: Create
+
+- name: R_MissingArg
+  family: []
+  summary: Access the missing/empty symbol.
+  signature: |
+    SEXP R_MissingArg;
+  status: api
+  replacement: ~
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  since: ~
+  r_equivalent: ~
+  args: ~
+  notes: |
+    `R_MissingArg` represents the missing/empty symbol, i.e. the second
+    argument in this call `f(x, )`.
+  example: ~
+  see_also: []
+  chapter: symbols
+  section: Missing symbol
+
+- name: R_dot_defined
+  family: []
+  summary: 'Access the predefined symbol for ".defined".'
+  signature: |
+    SEXP R_dot_defined;
+  status: api
+  replacement: ~
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  since: ~
+  r_equivalent: ~
+  args: ~
+  notes: ~
+  example: ~
+  see_also: []
+  chapter: symbols
+  section: Predefined symbols
+
+- name: R_dot_Method
+  family: []
+  summary: 'Access the predefined symbol for ".Method".'
+  signature: |
+    SEXP R_dot_Method;
+  status: api
+  replacement: ~
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  since: ~
+  r_equivalent: ~
+  args: ~
+  notes: ~
+  example: ~
+  see_also: []
+  chapter: symbols
+  section: Predefined symbols
+
+- name: R_dot_packageName
+  family: []
+  summary: 'Access the predefined symbol for ".packageName".'
+  signature: |
+    SEXP R_dot_packageName;
+  status: api
+  replacement: ~
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  since: ~
+  r_equivalent: ~
+  args: ~
+  notes: ~
+  example: ~
+  see_also: []
+  chapter: symbols
+  section: Predefined symbols
+
+- name: R_dot_target
+  family: []
+  summary: 'Access the predefined symbol for ".target".'
+  signature: |
+    SEXP R_dot_target;
+  status: api
+  replacement: ~
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  since: ~
+  r_equivalent: ~
+  args: ~
+  notes: ~
+  example: ~
+  see_also: []
+  chapter: symbols
+  section: Predefined symbols
+
+- name: R_BaseSymbol
+  family: []
+  summary: 'Access the predefined symbol for "base".'
+  signature: |
+    SEXP R_BaseSymbol;
+  status: api
+  replacement: ~
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  since: ~
+  r_equivalent: ~
+  args: ~
+  notes: ~
+  example: ~
+  see_also: []
+  chapter: symbols
+  section: Predefined symbols
+
+- name: R_BraceSymbol
+  family: []
+  summary: 'Access the predefined symbol for "{".'
+  signature: |
+    SEXP R_BraceSymbol;
+  status: api
+  replacement: ~
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  since: ~
+  r_equivalent: ~
+  args: ~
+  notes: ~
+  example: ~
+  see_also: []
+  chapter: symbols
+  section: Predefined symbols
+
+- name: R_Bracket2Symbol
+  family: []
+  summary: 'Access the predefined symbol for "[[".'
+  signature: |
+    SEXP R_Bracket2Symbol;
+  status: api
+  replacement: ~
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  since: ~
+  r_equivalent: ~
+  args: ~
+  notes: ~
+  example: ~
+  see_also: []
+  chapter: symbols
+  section: Predefined symbols
+
+- name: R_BracketSymbol
+  family: []
+  summary: 'Access the predefined symbol for "[".'
+  signature: |
+    SEXP R_BracketSymbol;
+  status: api
+  replacement: ~
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  since: ~
+  r_equivalent: ~
+  args: ~
+  notes: ~
+  example: ~
+  see_also: []
+  chapter: symbols
+  section: Predefined symbols
+
+- name: R_ClassSymbol
+  family: []
+  summary: 'Access the predefined symbol for "class".'
+  signature: |
+    SEXP R_ClassSymbol;
+  status: api
+  replacement: ~
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  since: ~
+  r_equivalent: ~
+  args: ~
+  notes: ~
+  example: ~
+  see_also: []
+  chapter: symbols
+  section: Predefined symbols
+
+- name: R_DeviceSymbol
+  family: []
+  summary: 'Access the predefined symbol for ".Device".'
+  signature: |
+    SEXP R_DeviceSymbol;
+  status: api
+  replacement: ~
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  since: ~
+  r_equivalent: ~
+  args: ~
+  notes: ~
+  example: ~
+  see_also: []
+  chapter: symbols
+  section: Predefined symbols
+
+- name: R_DimNamesSymbol
+  family: []
+  summary: 'Access the predefined symbol for "dimnames".'
+  signature: |
+    SEXP R_DimNamesSymbol;
+  status: api
+  replacement: ~
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  since: ~
+  r_equivalent: ~
+  args: ~
+  notes: ~
+  example: ~
+  see_also: []
+  chapter: symbols
+  section: Predefined symbols
+
+- name: R_DimSymbol
+  family: []
+  summary: 'Access the predefined symbol for "dim".'
+  signature: |
+    SEXP R_DimSymbol;
+  status: api
+  replacement: ~
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  since: ~
+  r_equivalent: ~
+  args: ~
+  notes: ~
+  example: ~
+  see_also: []
+  chapter: symbols
+  section: Predefined symbols
+
+- name: R_DollarSymbol
+  family: []
+  summary: 'Access the predefined symbol for "$".'
+  signature: |
+    SEXP R_DollarSymbol;
+  status: api
+  replacement: ~
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  since: ~
+  r_equivalent: ~
+  args: ~
+  notes: ~
+  example: ~
+  see_also: []
+  chapter: symbols
+  section: Predefined symbols
+
+- name: R_DotsSymbol
+  family: []
+  summary: 'Access the predefined symbol for "...".'
+  signature: |
+    SEXP R_DotsSymbol;
+  status: api
+  replacement: ~
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  since: ~
+  r_equivalent: ~
+  args: ~
+  notes: ~
+  example: ~
+  see_also: []
+  chapter: symbols
+  section: Predefined symbols
+
+- name: R_DoubleColonSymbol
+  family: []
+  summary: 'Access the predefined symbol for "::".'
+  signature: |
+    SEXP R_DoubleColonSymbol;
+  status: api
+  replacement: ~
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  since: ~
+  r_equivalent: ~
+  args: ~
+  notes: ~
+  example: ~
+  see_also: []
+  chapter: symbols
+  section: Predefined symbols
+
+- name: R_DropSymbol
+  family: []
+  summary: 'Access the predefined symbol for "drop".'
+  signature: |
+    SEXP R_DropSymbol;
+  status: api
+  replacement: ~
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  since: ~
+  r_equivalent: ~
+  args: ~
+  notes: ~
+  example: ~
+  see_also: []
+  chapter: symbols
+  section: Predefined symbols
+
+- name: R_LastvalueSymbol
+  family: []
+  summary: 'Access the predefined symbol for ".Last.value".'
+  signature: |
+    SEXP R_LastvalueSymbol;
+  status: api
+  replacement: ~
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  since: ~
+  r_equivalent: ~
+  args: ~
+  notes: ~
+  example: ~
+  see_also: []
+  chapter: symbols
+  section: Predefined symbols
+
+- name: R_LevelsSymbol
+  family: []
+  summary: 'Access the predefined symbol for "levels".'
+  signature: |
+    SEXP R_LevelsSymbol;
+  status: api
+  replacement: ~
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  since: ~
+  r_equivalent: ~
+  args: ~
+  notes: ~
+  example: ~
+  see_also: []
+  chapter: symbols
+  section: Predefined symbols
+
+- name: R_ModeSymbol
+  family: []
+  summary: 'Access the predefined symbol for "mode".'
+  signature: |
+    SEXP R_ModeSymbol;
+  status: api
+  replacement: ~
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  since: ~
+  r_equivalent: ~
+  args: ~
+  notes: ~
+  example: ~
+  see_also: []
+  chapter: symbols
+  section: Predefined symbols
+
+- name: R_NaRmSymbol
+  family: []
+  summary: 'Access the predefined symbol for "na.rm".'
+  signature: |
+    SEXP R_NaRmSymbol;
+  status: api
+  replacement: ~
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  since: ~
+  r_equivalent: ~
+  args: ~
+  notes: ~
+  example: ~
+  see_also: []
+  chapter: symbols
+  section: Predefined symbols
+
+- name: R_NameSymbol
+  family: []
+  summary: 'Access the predefined symbol for "name".'
+  signature: |
+    SEXP R_NameSymbol;
+  status: api
+  replacement: ~
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  since: ~
+  r_equivalent: ~
+  args: ~
+  notes: ~
+  example: ~
+  see_also: []
+  chapter: symbols
+  section: Predefined symbols
+
+- name: R_NamesSymbol
+  family: []
+  summary: 'Access the predefined symbol for "names".'
+  signature: |
+    SEXP R_NamesSymbol;
+  status: api
+  replacement: ~
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  since: ~
+  r_equivalent: ~
+  args: ~
+  notes: ~
+  example: ~
+  see_also: []
+  chapter: symbols
+  section: Predefined symbols
+
+- name: R_NamespaceEnvSymbol
+  family: []
+  summary: 'Access the predefined symbol for ".__NAMESPACE__.".'
+  signature: |
+    SEXP R_NamespaceEnvSymbol;
+  status: api
+  replacement: ~
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  since: ~
+  r_equivalent: ~
+  args: ~
+  notes: ~
+  example: ~
+  see_also: []
+  chapter: symbols
+  section: Predefined symbols
+
+- name: R_PackageSymbol
+  family: []
+  summary: 'Access the predefined symbol for "package".'
+  signature: |
+    SEXP R_PackageSymbol;
+  status: api
+  replacement: ~
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  since: ~
+  r_equivalent: ~
+  args: ~
+  notes: ~
+  example: ~
+  see_also: []
+  chapter: symbols
+  section: Predefined symbols
+
+- name: R_PreviousSymbol
+  family: []
+  summary: 'Access the predefined symbol for "previous".'
+  signature: |
+    SEXP R_PreviousSymbol;
+  status: api
+  replacement: ~
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  since: ~
+  r_equivalent: ~
+  args: ~
+  notes: ~
+  example: ~
+  see_also: []
+  chapter: symbols
+  section: Predefined symbols
+
+- name: R_QuoteSymbol
+  family: []
+  summary: 'Access the predefined symbol for "quote".'
+  signature: |
+    SEXP R_QuoteSymbol;
+  status: api
+  replacement: ~
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  since: ~
+  r_equivalent: ~
+  args: ~
+  notes: ~
+  example: ~
+  see_also: []
+  chapter: symbols
+  section: Predefined symbols
+
+- name: R_RowNamesSymbol
+  family: []
+  summary: 'Access the predefined symbol for "row.names".'
+  signature: |
+    SEXP R_RowNamesSymbol;
+  status: api
+  replacement: ~
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  since: ~
+  r_equivalent: ~
+  args: ~
+  notes: ~
+  example: ~
+  see_also: []
+  chapter: symbols
+  section: Predefined symbols
+
+- name: R_SeedsSymbol
+  family: []
+  summary: 'Access the predefined symbol for ".Random.seed".'
+  signature: |
+    SEXP R_SeedsSymbol;
+  status: api
+  replacement: ~
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  since: ~
+  r_equivalent: ~
+  args: ~
+  notes: ~
+  example: ~
+  see_also: []
+  chapter: symbols
+  section: Predefined symbols
+
+- name: R_SortListSymbol
+  family: []
+  summary: 'Access the predefined symbol for "sort.list".'
+  signature: |
+    SEXP R_SortListSymbol;
+  status: api
+  replacement: ~
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  since: ~
+  r_equivalent: ~
+  args: ~
+  notes: ~
+  example: ~
+  see_also: []
+  chapter: symbols
+  section: Predefined symbols
+
+- name: R_SourceSymbol
+  family: []
+  summary: 'Access the predefined symbol for "source".'
+  signature: |
+    SEXP R_SourceSymbol;
+  status: api
+  replacement: ~
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  since: ~
+  r_equivalent: ~
+  args: ~
+  notes: ~
+  example: ~
+  see_also: []
+  chapter: symbols
+  section: Predefined symbols
+
+- name: R_SpecSymbol
+  family: []
+  summary: 'Access the predefined symbol for "spec".'
+  signature: |
+    SEXP R_SpecSymbol;
+  status: api
+  replacement: ~
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  since: ~
+  r_equivalent: ~
+  args: ~
+  notes: ~
+  example: ~
+  see_also: []
+  chapter: symbols
+  section: Predefined symbols
+
+- name: R_TripleColonSymbol
+  family: []
+  summary: Access the predefined symbol for `":::"`.
+  signature: |
+    SEXP R_TripleColonSymbol;
+  status: api
+  replacement: ~
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  since: ~
+  r_equivalent: ~
+  args: ~
+  notes: ~
+  example: ~
+  see_also: []
+  chapter: symbols
+  section: Predefined symbols
+
+- name: R_TspSymbol
+  family: []
+  summary: 'Access the predefined symbol for "tsp".'
+  signature: |
+    SEXP R_TspSymbol;
+  status: api
+  replacement: ~
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  since: ~
+  r_equivalent: ~
+  args: ~
+  notes: ~
+  example: ~
+  see_also: []
+  chapter: symbols
+  section: Predefined symbols
+
+- name: PRINTNAME
+  family: [SET_PRINTNAME]
+  summary: Get or set the print name of a symbol.
+  signature: |
+    SEXP (PRINTNAME)(SEXP x);
+    void SET_PRINTNAME(SEXP x, SEXP v);
+  status: non-api
+  replacement: ~
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  since: ~
+  r_equivalent: ~
+  args: ~
+  notes: |
+    The value of the symbol, as a CHARSXP. Use `CHAR(PRINTNAME(x))` to get
+    the name as a `const char*`.
+  example: ~
+  see_also: []
+  chapter: symbols
+  section: Internals
+
+- name: SYMVALUE
+  family: [SET_SYMVALUE]
+  summary: Get or set the value of a symbol.
+  signature: |
+    SEXP (SYMVALUE)(SEXP x);
+    void SET_SYMVALUE(SEXP x, SEXP v);
+  status: non-api
+  replacement: ~
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  since: ~
+  r_equivalent: ~
+  args: ~
+  notes: ~
+  example: ~
+  see_also: []
+  chapter: symbols
+  section: Internals
+
+- name: INTERNAL
+  family: [SET_INTERNAL]
+  summary: Get or set the internal function a symbol points to.
+  signature: |
+    SEXP (INTERNAL)(SEXP x);
+    void SET_INTERNAL(SEXP x, SEXP v);
+  status: non-api
+  replacement: ~
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  since: ~
+  r_equivalent: ~
+  args: ~
+  notes: ~
+  example: ~
+  see_also: []
+  chapter: symbols
+  section: Internals
+
+- name: DDVAL
+  family: [SET_DDVAL, Rf_installDDVAL]
+  summary: Get or set a symbol's `...` index, or install the symbol for a `...` element.
+  signature: |
+    int  (DDVAL)(SEXP x);
+    void (SET_DDVAL)(SEXP x, int v);
+    SEXP Rf_installDDVAL(int i);
+  status: non-api
+  replacement: ~
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  since: ~
+  r_equivalent: ~
+  args: ~
+  notes: ~
+  example: ~
+  see_also: []
+  chapter: symbols
+  section: Internals

@@ -37,21 +37,33 @@ definition in the existing chapters into `functions.yaml` records and replace
 each with an asis chunk call. Don't fix stale claims, don't touch surrounding
 prose; park text that doesn't fit the schema in `notes`.
 
-- [ ] `vectors.qmd` — extract defs (creation, access, coercion, tests, scalars, missing values); replace with `render_entries()` calls; remove the Phase-2 demo duplication
-- [ ] `strings.qmd` — extract defs (CHARSXP, encodings, creating/reading strings)
-- [ ] `attributes.qmd` — extract defs (currently buried in pairlists.qmd: `Rf_getAttrib`/`Rf_setAttrib`, names/dim/dimnames/class)
-- [ ] `environments.qmd` — extract defs (bindings, creation, locking, namespaces)
-- [ ] `symbols.qmd` — extract defs (`Rf_install` & friends, predefined symbols)
-- [ ] `pairlists.qmd` — extract defs (CAR/CDR, call construction, `...`)
-- [ ] `functions.qmd` — extract defs (closures, builtins/specials, promises)
-- [ ] `external-pointers.qmd` — extract defs (external pointers, finalizers, weak references)
-- [ ] `oo.qmd` — extract defs (`Rf_isObject`, S3/S4 helpers)
-- [ ] `error-eval.qmd` — extract defs (evaluation, errors, printing) into records destined for `evaluation`/`errors`/`printing` chapters
-- [ ] `save-load.qmd` — extract defs (serialisation)
-- [ ] `misc.qmd` — extract defs (sorting, matching, utilities, weak refs → external-pointers)
-- [ ] `r-version.qmd` — extract defs (version macros)
-- [ ] Every extracted record gets `chapter`/`section` matching its current location (reorganisation comes later)
-- [ ] Whole book renders cleanly with all entries generated from YAML
+All chapters extracted (268 records in `functions.yaml`, assembled from
+per-chapter fragments in `sources/fragments/`):
+
+- [x] `vectors.qmd` — 44 records (creation, access, coercion, tests, scalars, missing values); seed records superseded
+- [x] `strings.qmd` — 20 records (CHARSXP, encodings, creating/reading strings)
+- [x] `pairlists.qmd` — 18 records including the attributes material (`Rf_getAttrib`/`Rf_setAttrib`, ATTRIB family)
+- [x] `environments.qmd` — 29 records (bindings, creation, locking, namespaces, internals)
+- [x] `symbols.qmd` — 40 records (`Rf_install`, 33 predefined symbols, internals)
+- [x] `functions.qmd` — 11 records (closures, promises, srcrefs)
+- [x] `external-pointers.qmd` — 6 records (external pointers, finalizers)
+- [x] `oo.qmd` — 17 records (`Rf_isObject`, S3/S4 helpers)
+- [x] `errors.qmd` — 13 records (errors/warnings/printing, evaluation, protected evaluation)
+- [x] `serialisation.qmd` — 7 records (pstreams, XDR)
+- [x] `utilities.qmd` — 48 records (sorting, matching, misc; weak refs and bytecode included)
+- [x] `protection.qmd` — 13 records + existing PROTECT seed
+- [x] `r-version.qmd` — 1 record (version macros)
+- [x] Every extracted record has `chapter`/`section` matching its current location (reorganisation is Phase 4)
+- [x] Whole book renders cleanly with all entries generated from YAML
+
+Known issues parked for Phase 4 (reported by extraction agents):
+
+- Some statuses are best guesses; several agents verified against installed R 4.4 headers, others defaulted to `api`
+- `bSEXP` typo in `Rf_installS3Signature` signature kept verbatim (real type: `SEXP`)
+- `Rf_mkString`/`Rf_ScalarString` documented in both vectors and strings fragments — pick one home
+- `R_MissingArg` documented in both symbols and functions fragments — pick one home
+- `errors`/`protect` fields are educated guesses in many records
+- Stray trailing space in rendered output (`cat()` default `sep`) in render-entries.R
 
 ## Phase 4 — Clean up `functions.yaml` in place
 

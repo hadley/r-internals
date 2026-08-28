@@ -1,21 +1,34 @@
 # Symbols
 
-```c
-Rboolean Rf_isSymbol(SEXP s);
+{{< include _setup.qmd >}}
+
+## Test
+
+```{r}
+#| results: asis
+#| echo: false
+render_entries("symbols", "Test")
 ```
 
 ## Create
 
 If symbol exists, return it; otherwise create it. `SYMSXP`s don't need to be protected because symbols are not currently reclaimed by the garbage collector. If you are using a symbol many times, it may be worth caching it to avoid repeated lookups.
 
-```c
-SEXP Rf_install(const char *);
-SEXP Rf_installChar(SEXP);
+```{r}
+#| results: asis
+#| echo: false
+render_entries("symbols", "Create")
 ```
 
 ## Missing symbol
 
 `R_MissingArg` represents the missing/empty symbol, i.e. the second argument in this call `f(x, )`.
+
+```{r}
+#| results: asis
+#| echo: false
+render_entries("symbols", "Missing symbol")
+```
 
 ## Predefined symbols
 
@@ -55,21 +68,16 @@ A number of symbols are so commonly used, they're predefined and exported:
 * `R_TripleColonSymbol`:  `":::"`
 * `R_TspSymbol`: "tsp"
 
+```{r}
+#| results: asis
+#| echo: false
+render_entries("symbols", "Predefined symbols")
+```
+
 ## Internals
 
-```c
-// The value of the symbol, as a CHARSXP
-// Use CHAR(PRINTNAME(x)) to get the name as a const char*
-SEXP (PRINTNAME)(SEXP x);
-void SET_PRINTNAME(SEXP x, SEXP v);
-
-SEXP (SYMVALUE)(SEXP x);
-void SET_SYMVALUE(SEXP x, SEXP v);
-
-SEXP (INTERNAL)(SEXP x);
-void SET_INTERNAL(SEXP x, SEXP v);
-
-int  (DDVAL)(SEXP x);
-void (SET_DDVAL)(SEXP x, int v);
-SEXP Rf_installDDVAL(int i);
+```{r}
+#| results: asis
+#| echo: false
+render_entries("symbols", "Internals")
 ```

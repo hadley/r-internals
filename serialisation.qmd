@@ -4,16 +4,19 @@ aliases: [save-load.html]
 
 # Serialisation
 
+{{< include _setup.qmd >}}
+
+## XDR encoding
+
+```{r}
+#| results: asis
+#| echo: false
+render_entries("serialisation", "XDR encoding")
+```
+
+## Persistence streams
+
 ```c
-/* Save/Load Interface */
-#define R_XDR_DOUBLE_SIZE 8
-#define R_XDR_INTEGER_SIZE 4
-
-void R_XDREncodeDouble(double d, void *buf);
-double R_XDRDecodeDouble(void *buf);
-void R_XDREncodeInteger(int i, void *buf);
-int R_XDRDecodeInteger(void *buf);
-
 typedef void *R_pstream_data_t;
 
 typedef enum {
@@ -44,43 +47,29 @@ struct R_inpstream_st {
   SEXP (*InPersistHookFunc)(SEXP, SEXP);
   SEXP InPersistHookData;
 };
+```
 
-void R_InitInPStream(R_inpstream_t stream, R_pstream_data_t data,
-  R_pstream_format_t type,
-  int (*inchar)(R_inpstream_t),
-  void (*inbytes)(R_inpstream_t, void *, int),
-  SEXP (*phook)(SEXP, SEXP), SEXP pdata);
-void R_InitOutPStream(R_outpstream_t stream, R_pstream_data_t data,
-  R_pstream_format_t type, int version,
-  void (*outchar)(R_outpstream_t, int),
-  void (*outbytes)(R_outpstream_t, void *, int),
-  SEXP (*phook)(SEXP, SEXP), SEXP pdata);
+```{r}
+#| results: asis
+#| echo: false
+render_entries("serialisation", "Persistence streams")
+```
 
-void R_InitFileInPStream(R_inpstream_t stream, FILE *fp,
-  R_pstream_format_t type,
-  SEXP (*phook)(SEXP, SEXP), SEXP pdata);
-void R_InitFileOutPStream(R_outpstream_t stream, FILE *fp,
-  R_pstream_format_t type, int version,
-  SEXP (*phook)(SEXP, SEXP), SEXP pdata);
+The connection interface is not available to packages. To allow limited use of connection pointers, defining `NEED_CONNECTION_PSTREAMS` before including `Rinternals.h` defines the opaque pointer type:
 
+```c
 #ifdef NEED_CONNECTION_PSTREAMS
-/* The connection interface is not available to packages.  To
-allow limited use of connection pointers this defines the opaque
-pointer type. */
 #ifndef HAVE_RCONNECTION_TYPEDEF
 typedef struct Rconn  *Rconnection;
 #define HAVE_RCONNECTION_TYPEDEF
 #endif
-void R_InitConnOutPStream(R_outpstream_t stream, Rconnection con,
-  R_pstream_format_t type, int version,
-  SEXP (*phook)(SEXP, SEXP), SEXP pdata);
-void R_InitConnInPStream(R_inpstream_t stream,  Rconnection con,
-  R_pstream_format_t type,
-  SEXP (*phook)(SEXP, SEXP), SEXP pdata);
 #endif
+```
 
-void R_Serialize(SEXP s, R_outpstream_t ops);
-SEXP R_Unserialize(R_inpstream_t ips);
+## Serialising objects
 
-void R_RestoreHashCount(SEXP rho);
+```{r}
+#| results: asis
+#| echo: false
+render_entries("serialisation", "Serialising objects")
 ```

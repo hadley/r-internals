@@ -1,8 +1,6 @@
 # Environments
 
-```c
-Rboolean Rf_isEnvironment(SEXP x); // (TYPEOF(x) == ENVSXP)
-```
+{{< include _setup.qmd >}}
 
 * `R_GlobalEnv`: The "global" environment
 * `R_EmptyEnv`: An empty environment at the root of the environment tree
@@ -14,10 +12,20 @@ Rboolean Rf_isEnvironment(SEXP x); // (TYPEOF(x) == ENVSXP)
 
 Environments are commonly called `rho` in the sources.
 
+## Predefined environments
+
+```{r}
+#| results: asis
+#| echo: false
+render_entries("environments", "Predefined environments")
+```
+
 ## Creation (R >= 4.1.0)
 
-``` cpp
-SEXP R_NewEnv(SEXP enclos, int hash, int size);
+```{r}
+#| results: asis
+#| echo: false
+render_entries("environments", "Creation (R >= 4.1.0)")
 ```
 
 ## Get and set objects in environment
@@ -28,75 +36,44 @@ SEXP R_NewEnv(SEXP enclos, int hash, int size);
 
 Note that retrieving an variable from an environment may cause an allocation because it might be an active binding.
 
-```c
-// Look up symbol in environment, following up enclosing envs
-SEXP Rf_findVar(SEXP symbol, SEXP environment);
-
-// Look up symbol in environment, ignoring non-functions
-SEXP Rf_findFun(SEXP symbol, SEXP environment);
-
-// Look in single environment
-// Returns R_UnboundValue if not found
-// doGet: if TRUE, returns value; if FALSE just checks for presence
-SEXP Rf_findVarInFrame3(SEXP env, SEXP symbol, Rboolean doGet);
-
-// Shortcut from findVarInFrame3(rho, symbol, TRUE)
-SEXP Rf_findVarInFrame(SEXP env, SEXP symbol);
+```{r}
+#| results: asis
+#| echo: false
+render_entries("environments", "Get values")
 ```
 
 ### Set values
 
-```c
-// Define value
-void Rf_defineVar(SEXP symbol, SEXP value, SEXP env);
-
-// Copy variables from (VECSXP) unless already present in to
-void Rf_addMissingVarsToNewEnv(SEXP to, SEXP from);
+```{r}
+#| results: asis
+#| echo: false
+render_entries("environments", "Set values")
 ```
 
 To remove a binding, set its value to `R_UnboundSymbol`.
 
 ### Check for presence
 
-```c
-// Returns character vector
-SEXP R_lsInternal3(SEXP env, Rboolean all_names, Rboolean sorted);
-
-// Shorthand for R_lsInternal3(env, all, TRUE)
-SEXP R_lsInternal(SEXP, Rboolean);
+```{r}
+#| results: asis
+#| echo: false
+render_entries("environments", "Check for presence")
 ```
 
 ## Miscellaneous
 
-```c
-Rboolean R_IsPackageEnv(SEXP rho);
-SEXP R_PackageEnvName(SEXP rho);
-SEXP R_FindPackageEnv(SEXP info);
-Rboolean R_IsNamespaceEnv(SEXP rho);
-SEXP R_NamespaceEnvSpec(SEXP rho);
-SEXP R_FindNamespace(SEXP info);
-void R_LockEnvironment(SEXP env, Rboolean bindings);
-Rboolean R_EnvironmentIsLocked(SEXP env);
-void R_LockBinding(SEXP sym, SEXP env);
-void R_unLockBinding(SEXP sym, SEXP env);
-void R_MakeActiveBinding(SEXP sym, SEXP fun, SEXP env);
-Rboolean R_BindingIsLocked(SEXP sym, SEXP env);
-Rboolean R_BindingIsActive(SEXP sym, SEXP env);
-Rboolean R_HasFancyBindings(SEXP rho);
-Rboolean R_envHasNoSpecialSymbols(SEXP);
+```{r}
+#| results: asis
+#| echo: false
+render_entries("environments", "Miscellaneous")
 ```
 
 ## Internals
 
-```c
-SEXP FRAME(SEXP x);
-void SET_FRAME(SEXP x, SEXP v);
-
-SEXP ENCLOS(SEXP x);
-void SET_ENCLOS(SEXP x, SEXP v);
-
-int  ENVFLAGS(SEXP x);
-void SET_ENVFLAGS(SEXP x, int v);
+```{r}
+#| results: asis
+#| echo: false
+render_entries("environments", "Internals")
 ```
 
 ### Truelength
@@ -108,23 +85,18 @@ void SET_ENVFLAGS(SEXP x, int v);
 > slots in use.
 > --- R-internals
 
-```c
-int  (TRUELENGTH)(SEXP x);
-R_xlen_t  (XTRUELENGTH)(SEXP x);
-void (SET_TRUELENGTH)(SEXP x, int v);
+```{r}
+#| results: asis
+#| echo: false
+render_entries("environments", "Truelength")
 ```
 
 ### Hash
 
-```c
-SEXP HASHTAB(SEXP x);
-void SET_HASHTAB(SEXP x, SEXP v);
-
-int  HASHASH(SEXP x);
-void SET_HASHASH(SEXP x, int v);
-
-int  HASHVALUE(SEXP x);
-void SET_HASHVALUE(SEXP x, int v);
+```{r}
+#| results: asis
+#| echo: false
+render_entries("environments", "Hash")
 ```
 
 // [R-Internals]: Hashing is principally designed for fast searching of
