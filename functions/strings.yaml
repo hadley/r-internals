@@ -269,21 +269,6 @@
   see_also: cetype_t
   chapter: strings
   section: Helper functions
-- name: R_ExpandFileName
-  family: []
-  summary: Expand a path containing ~ to a full path.
-  signature: |
-    const char *R_ExpandFileName(const char *);
-  status: api
-  header: R_ext/Utils.h
-  protect: n/a
-  errors: never
-  r_equivalent: path.expand()
-  notes: |
-    Needed because most C APIs don't understand `~`.
-  see_also: []
-  chapter: strings
-  section: Paths
 - name: Rf_str2type
   family: []
   summary: Convert a C string to a SEXPTYPE.

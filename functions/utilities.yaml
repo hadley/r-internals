@@ -113,7 +113,7 @@
   r_equivalent: anyDuplicated()
   see_also: []
   chapter: utilities
-  section: Misc
+  section: Matching and testing
 - name: Rf_GetOption
   family: Rf_GetOption1
   summary: Retrieve the value of an R option.
@@ -129,7 +129,7 @@
     Use `Rf_GetOption1()`; `Rf_GetOption()` is kept for compatibility.
   see_also: Rf_GetOptionDigits
   chapter: utilities
-  section: Misc
+  section: Options
 - name: Rf_GetOptionDigits
   family: Rf_GetOptionWidth
   summary: Retrieve the digits or width option.
@@ -143,7 +143,7 @@
   r_equivalent: getOption()
   see_also: Rf_GetOption
   chapter: utilities
-  section: Misc
+  section: Options
 - name: Rf_setVar
   family: Rf_gsetVar
   summary: Assign a value to a symbol in an environment.
@@ -170,7 +170,7 @@
   r_equivalent: is.unsorted()
   see_also: []
   chapter: utilities
-  section: Misc
+  section: Matching and testing
 - name: Rf_namesgets
   family: []
   summary: Set the names of a vector.
@@ -199,7 +199,7 @@
     `Rf_psmatch()` is the variant for C strings.
   see_also: Rf_match
   chapter: utilities
-  section: Misc
+  section: Matching and testing
 - name: Rf_substitute
   family: []
   summary: Substitute values for variables in an expression.
@@ -229,7 +229,7 @@
     translating `POSIXlt`; rarely needed directly.
   see_also: Rf_pmatch
   chapter: utilities
-  section: Misc
+  section: Matching and testing
 - name: R_popen
   family: R_system
   summary: Open a pipe or run a command in a shell.
@@ -247,7 +247,7 @@
     `R_popen()` is only available when `HAVE_POPEN` is defined.
   see_also: []
   chapter: utilities
-  section: Misc
+  section: Files and system
 - name: R_compute_identical
   family: []
   summary: Test whether two objects are identical.
@@ -265,7 +265,7 @@
     32 = !IGNORE_SRCREF. R's `identical()` default corresponds to 16.
   see_also: []
   chapter: utilities
-  section: Misc
+  section: Matching and testing
 - name: Rf_conformable
   family: []
   summary: Test whether two objects have conformable dimensions.
@@ -339,7 +339,7 @@
   errors: can-throw
   see_also: []
   chapter: utilities
-  section: Misc
+  section: Matching and testing
 - name: IndexWidth
   family: []
   summary: Compute the character width needed to print a vector index.
@@ -368,19 +368,74 @@
     and to accept "NA".
   see_also: []
   chapter: utilities
-  section: Misc
+  section: Numeric parsing
 - name: R_tmpnam
-  family: R_tmpnam2
+  family:
+    - R_tmpnam2
+    - R_free_tmpnam
   summary: Create a name for a temporary file.
   signature: |
     char *R_tmpnam(const char *prefix, const char *tempdir);
     char *R_tmpnam2(const char *prefix, const char *tempdir, const char *fileext);
+    void R_free_tmpnam(char *name);
   status: api
   header: R_ext/Utils.h
   protect: n/a
   errors: can-throw
+  notes: |
+    The returned string is dynamically allocated; free it with
+    `R_free_tmpnam()` (not `free()`). A `NULL` prefix or extension is
+    replaced by `""`.
   r_equivalent: tempfile()
   see_also: []
   chapter: utilities
-  section: Misc
+  section: Files and system
 ...
+- name: acopy_string
+  family: []
+  summary: Copy a string into R_alloc-allocated memory.
+  signature: |
+    const char *acopy_string(const char *in);
+  status: api
+  header: R_ext/Utils.h
+  protect: n/a
+  errors: can-throw
+  notes: |
+    The copy uses transient `R_alloc()` memory, so it is freed
+    automatically when your `.Call` entry point returns.
+  see_also: [R_alloc]
+  chapter: utilities
+  section: Numeric parsing
+- name: Rf_duplicated
+  family: []
+  summary: Identify duplicated elements of a vector.
+  signature: |
+    SEXP Rf_duplicated(SEXP x, Rboolean from_last);
+  status: api
+  header: Rinternals.h
+  protect: result
+  errors: can-throw
+  r_equivalent: duplicated()
+  args:
+    x: a vector.
+    from_last: if `TRUE`, search from the last element.
+  notes: |
+    Returns an `LGLSXP` the same length as `x`.
+  see_also: []
+  chapter: utilities
+  section: Matching and testing
+- name: R_ExpandFileName
+  family: []
+  summary: Expand a path containing ~ to a full path.
+  signature: |
+    const char *R_ExpandFileName(const char *);
+  status: api
+  header: R_ext/Utils.h
+  protect: n/a
+  errors: never
+  r_equivalent: path.expand()
+  notes: |
+    Needed because most C APIs don't understand `~`.
+  see_also: []
+  chapter: utilities
+  section: Files and system

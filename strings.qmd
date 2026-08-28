@@ -89,14 +89,6 @@ render_entries("strings", "Special values")
 render_entries("strings", "Helper functions")
 ```
 
-### Paths
-
-```{r}
-#| results: asis
-#| echo: false
-render_entries("strings", "Paths")
-```
-
 ### Types
 
 You can convert `SEXPTYPE`s to and from C strings:

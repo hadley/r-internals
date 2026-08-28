@@ -6,7 +6,20 @@ aliases: [misc.html]
 
 {{< include _setup.qmd >}}
 
-## Sorting
+Assorted entry points that don't fit elsewhere: sorting, matching,
+options, parsing, and file paths. Most are declared in `R_ext/Utils.h`
+(included by `<R.h>`); the vector-operating ones are in `Rinternals.h`.
+
+## Sorting and ordering
+
+Follows [WRE §6.10, Utility functions](https://cran.r-project.org/doc/manuals/R-exts.html#Utility-functions-1)
+closely.
+
+Two families: the `R_*sort` functions sort C arrays in place (the
+`R_qsort*` variants use 1-based `i:j` ranges and don't handle `NA`;
+`R_isort`/`R_rsort`/`R_csort` sort `NA`s last), while `R_orderVector()`
+computes an ordering permutation of R vectors, like `order()` — note it
+returns 0-based indices. None of the in-place sorts are stable.
 
 ```{r}
 #| results: asis
@@ -14,7 +27,59 @@ aliases: [misc.html]
 render_entries("utilities", "Sorting")
 ```
 
-## Misc
+## Matching and testing
+
+Vector-level operations equivalent to `match()`, `pmatch()`,
+`duplicated()`, `identical()`, and `is.unsorted()`.
+
+```{r}
+#| results: asis
+#| echo: false
+render_entries("utilities", "Matching and testing")
+```
+
+## Options
+
+```{r}
+#| results: asis
+#| echo: false
+render_entries("utilities", "Options")
+```
+
+## Numeric parsing
+
+`R_atof()`/`R_strtod()` exist because the C library equivalents are
+locale-dependent: R's versions always use `.` as the decimal point and
+recognise `"NA"`.
+
+```{r}
+#| results: asis
+#| echo: false
+render_entries("utilities", "Numeric parsing")
+```
+
+## Files and system
+
+```{r}
+#| results: asis
+#| echo: false
+render_entries("utilities", "Files and system")
+```
+
+## Platform information
+
+Follows [WRE §6.17, Platform and version information](https://cran.r-project.org/doc/manuals/R-exts.html#Platform-and-version-information-1)
+closely.
+
+A few macros help write platform-aware code: `USING_R` confirms the code
+is being compiled for R, and `Rconfig.h` (included by `<R.h>`) defines
+platform macros such as `WORDS_BIGENDIAN` — but note these describe the
+compiler that built R, not necessarily yours. For compile-time R version
+checks (`R_VERSION`, `R_Version()`), see [R version](r-version.qmd). If
+you use `alloca`, define it portably via `Rconfig.h`'s `HAVE_ALLOCA_H`
+as shown in WRE §6.17.
+
+## Miscellaneous
 
 ```{r}
 #| results: asis

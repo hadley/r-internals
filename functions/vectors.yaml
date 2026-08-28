@@ -537,21 +537,3 @@
   see_also: []
   chapter: vectors
   section: Miscellaneous helpers
-- name: Rf_duplicated
-  family: []
-  summary: Identify duplicated elements of a vector.
-  signature: |
-    SEXP Rf_duplicated(SEXP x, Rboolean from_last);
-  status: api
-  header: Rinternals.h
-  protect: result
-  errors: can-throw
-  r_equivalent: duplicated()
-  args:
-    x: a vector.
-    from_last: if `TRUE`, search from the last element.
-  notes: |
-    Returns an `LGLSXP` the same length as `x`.
-  see_also: []
-  chapter: vectors
-  section: Miscellaneous helpers
