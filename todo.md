@@ -113,22 +113,20 @@ match the final `chapter`/`section` assignments from Phase 4.
 
 ## Phase 7 — Parts III–IV (reorganise r-api.md content into `functions/*.yaml` records)
 
-- [ ] `evaluation.qmd` — `Rf_eval`, `R_tryEval`/`R_tryEvalSilent`, `R_forceAndCall`, `Rf_applyClosure`; building and evaluating calls end-to-end (worked example)
-- [ ] `errors.qmd` — signalling (`Rf_error`, `Rf_warning`, `*call` variants); longjmp problem and C++/resource safety; condition handling and cleanup (§6.13: `R_UnwindProtect`, `R_withCallingErrorHandler`, `R_MakeUnwindCont`); interrupts (§6.14, `R_CheckUserInterrupt`); C stack checking (§6.15)
-- [ ] `printing.qmd` — `Rprintf`/`REprintf`, `Rf_PrintValue`, `R_ShowMessage`, console flushing (short chapter)
-- [ ] `serialisation.qmd` — public (un)serialisation, custom pstreams (§6.16), XDR helpers
-- [ ] `rng.qmd` — `GetRNGstate`/`PutRNGstate`, `unif_rand` family, `R_unif_index`; relationship to `.Random.seed`
-- [ ] `math.qmd` — Rmath: distribution functions (d/p/q/r table), mathematical functions (bessel, gamma, beta...), numerical utilities (`R_pow`, `fmax2`, `imin2`, `expm1`-style helpers), constants (`M_PI` etc.), standalone Rmath (§6.20 folded in)
-- [ ] `numerical.qmd` — optimization (§6.8), integration (§6.9), linear algebra / BLAS / LAPACK headers and `FCONE` (§6.11), `findInterval`, `R_max_col`
-- [ ] `utilities.qmd` — sorting/ordering (`R_qsort`, `R_orderVector`), matching (`Rf_match`, `Rf_pmatch`), `R_compute_identical`, `Rf_duplicated`/`Rf_any_duplicated`, options (`Rf_GetOption1`), numeric parsing (`R_atof`/`R_strtod`), paths/tempfiles (`R_ExpandFileName`, `R_tmpnam2`), platform info (§6.17)
-- [ ] Fill the 46 gaps found in the Phase 3.5 r-api.md diff as records in the appropriate chapters (give each a `since:` field when introduced in R 4.2+):
-  - Memory (→ `memory.qmd`): `R_Calloc`, `R_Realloc`, `R_Free`
-  - Routine registration (→ `calling-c.qmd`): `R_registerRoutines`, `R_useDynamicSymbols`
-  - RNG/math/numerical (→ `rng.qmd`, `math.qmd`, `numerical.qmd`): `R_unif_index`, `R_pow`, `Rf_rmultinom`, `Rdqagi`, `Rdqags`, `R_init_stats`
-  - Conditions/unwind (→ `errors.qmd`): `R_UnwindProtect`, `R_ContinueUnwind`, `R_MakeUnwindCont`, `R_withCallingErrorHandler`, `R_tryCatch`, `R_tryCatchError`
-  - Modern §6.23 API (→ Part II chapters): `R_getVar` family, `R_mkClosure`, `R_ClosureEnv`, `R_ClosureFormals`, `R_ClosureBody`, `Rf_allocLang`, `Rf_isDataFrame`, `STRING_PTR_RO`, `R_getAttributes` family, `R_nrow`/`R_ncol`, `R_Dots*` (6), binding functions (`R_GetBindingType`, `R_MakeDelayedBinding`, `R_MakeForcedBinding`, `R_MakeMissingBinding`, `R_DelayedBinding*`, `R_DotDelayed*`, `R_ForcedBindingExpression`, `R_findDotsEnv`), `R_envSymbols`, `R_ParentEnv`, `R_class`, `R_mapAttrib`
-  - Experimental resizable vectors (→ `vectors.qmd`): `R_allocResizableVector`, `R_duplicateAsResizable`, `R_resizeVector`, `SET_GROWABLE_BIT`
+Split into small chunks, one chapter (or record batch) at a time:
+
+- [ ] 7a. `evaluation.qmd` — prose around existing records (`Rf_eval`, `R_tryEval`/`R_tryEvalSilent`, `R_forceAndCall`, `Rf_applyClosure`); building and evaluating calls end-to-end (worked example)
+- [ ] 7b. `errors.qmd` — signalling prose; longjmp problem and C++/resource safety; new records for §6.13 condition handling/cleanup (`R_UnwindProtect`, `R_ContinueUnwind`, `R_MakeUnwindCont`, `R_withCallingErrorHandler`, `R_tryCatch`, `R_tryCatchError`); interrupts (§6.14, `R_CheckUserInterrupt`); C stack checking (§6.15)
+- [ ] 7c. `printing.qmd` — short prose around existing records (`Rprintf`/`REprintf`, `Rf_PrintValue`, `R_ShowMessage`, `R_FlushConsole`)
+- [ ] 7d. `serialisation.qmd` — prose polish; custom pstreams (§6.16), XDR helpers
+- [ ] 7e. `rng.qmd` — new records + prose: `GetRNGstate`/`PutRNGstate`, `unif_rand` family, `R_unif_index`; relationship to `.Random.seed`
+- [ ] 7f. `math.qmd` — new records + prose: distribution functions (d/p/q/r table), mathematical functions (bessel, gamma, beta...), numerical utilities (`R_pow`, `fmax2`, `imin2`, ...), constants (`M_PI` etc.), standalone Rmath (§6.20 folded in)
+- [ ] 7g. `numerical.qmd` — new records + prose: optimization (§6.8), integration (§6.9: `Rdqagi`, `Rdqags`, `R_init_stats`), linear algebra / BLAS / LAPACK headers and `FCONE` (§6.11), `findInterval`, `R_max_col`
+- [ ] 7h. `utilities.qmd` — reorganise into sections + prose: sorting/ordering, matching, `R_compute_identical`, duplicated, options, numeric parsing, paths/tempfiles, platform info (§6.17)
+- [ ] 7i. Gap records → Part II chapters (modern §6.23 API, each with `since:` when 4.2+): `R_getVar` family, `R_mkClosure`, `R_ClosureEnv`, `R_ClosureFormals`, `R_ClosureBody`, `Rf_allocLang`, `Rf_isDataFrame`, `STRING_PTR_RO`, `R_getAttributes` family, `R_nrow`/`R_ncol`, `R_Dots*` (6), binding functions (`R_GetBindingType`, `R_MakeDelayedBinding`, `R_MakeForcedBinding`, `R_MakeMissingBinding`, `R_DelayedBinding*`, `R_DotDelayed*`, `R_ForcedBindingExpression`, `R_findDotsEnv`), `R_envSymbols`, `R_ParentEnv`, `R_class`, `R_mapAttrib`
+- [ ] 7j. Gap records → misc: `R_registerRoutines`/`R_useDynamicSymbols` (calling-c); experimental resizable vectors `R_allocResizableVector`, `R_duplicateAsResizable`, `R_resizeVector`, `SET_GROWABLE_BIT` (vectors)
 - [x] `r-version.qmd` — R version: `Rversion.h` and version-check macros (renamed from other-headers.md; moved to Part IV)
+- [x] Memory gap records (`R_Calloc`, `R_Realloc`, `R_Free`) — done in Phase 5
 
 ## Phase 8 — Appendices
 

@@ -2,7 +2,38 @@
 
 {{< include _setup.qmd >}}
 
+Evaluating R code from C is how you call back into R: apply a function,
+access a method, or run user-supplied expressions. There is no public
+"apply this closure to these arguments" entry point (`Rf_applyClosure()`
+is internal); instead you build a call — a `LANGSXP` pairlist, see
+[Pairlists, calls, and `...`](pairlists.qmd) — and evaluate it with
+`Rf_eval()`.
+
+Evaluation can do anything R code can do: allocate, signal errors, and
+longjmp. Treat every `Rf_eval()` as a potential non-local return and
+protect accordingly.
+
 ## Evaluation
+
+Follows [WRE §5.11, Evaluating R expressions from C](https://cran.r-project.org/doc/manuals/R-exts.html#Evaluating-R-expressions-from-C)
+closely.
+
+A typical use looks up a function and calls it with C-constructed
+arguments:
+
+```c
+SEXP call = PROTECT(Rf_lang2(Rf_install("sqrt"), x));
+SEXP result = PROTECT(Rf_eval(call, R_GlobalEnv));
+/* ... */
+UNPROTECT(2);
+```
+
+For more than a couple of arguments, build the call with
+`Rf_allocList()` + `SET_TYPEOF(..., LANGSXP)` or `Rf_cons()` rather than
+deeply nesting `Rf_lang*()` calls. Evaluate in the environment that gives
+the call the right scope: `R_GlobalEnv` for user-visible semantics, a
+namespace environment for calling a package's internals, or
+`R_BaseEnv`/`R_BaseNamespace` for base functions.
 
 ```{r}
 #| results: asis
@@ -12,14 +43,18 @@ render_entries("evaluation", "Evaluation")
 
 ## Protected evaluation
 
+`Rf_eval()` longjmps on error, abandoning your C function mid-flight. If
+you need to keep control after a failure — to report the error yourself,
+retry, or clean up and continue — evaluate in a context that catches the
+error instead. These functions ignore all existing condition handlers, so
+R-level `tryCatch()` and `suppressWarnings()` have no effect on the
+protected evaluation.
+
+For richer control — running cleanup code on unwind, or installing
+condition handlers — see [Errors and conditions](errors.qmd).
+
 ```{r}
 #| results: asis
 #| echo: false
 render_entries("evaluation", "Protected evaluation")
 ```
-
-Use these to evaluate R expressions in a stand-alone context ensuring that any errors produced during evaluation don't cause a longjmp to a separate context.
-
-Note that these functions ignore all existing condition handlers so R functions like `supressWarnings()`, `tryCatch()`, will no longer work.
-
-Both `R_tryEval()` and `R_tryEvalSilent`() call R_ToplevelExec under the hood:
