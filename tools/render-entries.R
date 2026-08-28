@@ -94,7 +94,14 @@ render_entries <- function(chapter, section, dir = "functions") {
   entries <- read_functions(dir)
   keep <- vapply(
     entries,
-    function(e) identical(e$chapter, chapter) && identical(e$section, section),
+    function(e) {
+      # non-API/embedding records are parked for the compliance appendix
+      # and must never render in regular chapters
+      if (!identical(e$chapter, "compliance") && e$status %in% c("non-api", "embedding")) {
+        stop("Non-API record '", e$name, "' must live in functions/compliance.yaml")
+      }
+      identical(e$chapter, chapter) && identical(e$section, section)
+    },
     logical(1)
   )
   if (!any(keep)) {

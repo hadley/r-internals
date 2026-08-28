@@ -131,10 +131,10 @@ Split into small chunks, one chapter (or record batch) at a time:
 
 ## Phase 8 — Appendices
 
-- [ ] `compliance.qmd` — Migrating to API compliance: non-API → API replacement tables and recipes (§6.23), backports, how to check a package (`R CMD check`, `tools::checkFF`-era tooling). Table-heavy; generate tables from `functions/*.yaml` where possible
+- [x] `compliance.qmd` — Migrating to API compliance: checking a package (`R CMD check`, `tools::checkFF`), non-API → API replacement table generated from `functions/compliance.yaml` (replacement links resolved to the chapter documenting them), recipes for common idioms (environments, call expressions, closures, CHARSXP encoding, attributes, variable bindings; WRE §6.23 backlinks), backports block (§6.23.9), and a reference rendering of all 53 parked non-API records
 - [x] ~~`B-fortran.qmd`~~ — Fortran interop dropped from scope
 - [x] ~~`C-headers.qmd`~~ — header-map appendix dropped; other-headers.md renamed to `r-version.qmd` and moved to Part IV
-- [ ] Handle internals-only material (`SET_ENVFLAGS`, `HASHTAB`, `BCODESXP` internals, `SETLENGTH`, etc.): records get `status: non-api` and render into clearly-marked "Internals — non-API, do not use in packages" call-outs, or are cut
+- [x] Handle internals-only material (`SET_ENVFLAGS`, `HASHTAB`, `BCODESXP` internals, `SETLENGTH`, etc.): records have `status: non-api`, live only in `functions/compliance.yaml`, and render in compliance.qmd under a "not part of the API" warning; `render_entries()` errors if a non-API record is assigned to a regular chapter
 
 ## Phase 9 — Tooling, coverage audit, and generated outputs
 

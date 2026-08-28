@@ -10,7 +10,7 @@
   errors: never
   see_also: []
   chapter: compliance
-  section: Internals
+  section: Internal entry points
 - name: UNPROTECT_PTR
   family: Rf_unprotect_ptr
   summary: Unprotect a specific object by pointer.
@@ -27,7 +27,7 @@
     matching entry, rather than assuming it is the most recent one.
   see_also: PROTECT
   chapter: compliance
-  section: Internals
+  section: Internal entry points
 - name: IS_GETTER_CALL
   family: []
   summary: Test whether a call is a getter call in complex assignment support.
@@ -42,7 +42,7 @@
     assignment support.
   see_also: []
   chapter: compliance
-  section: Internals
+  section: Internal entry points
 - name: ATTRIB
   family: SET_ATTRIB
   summary: Get or set the pairlist containing an object's attributes.
@@ -65,7 +65,7 @@
     - Rf_getAttrib
     - DUPLICATE_ATTRIB
   chapter: compliance
-  section: Get and set
+  section: Attributes and objects
 - name: Rf_isFrame
   family: []
   summary: Test if an object is a data frame.
@@ -83,7 +83,7 @@
     Prefer `Rf_isDataFrame()` (added in R 4.5.0) in new code.
   see_also: []
   chapter: compliance
-  section: Data frames
+  section: Attributes and objects
 - name: R_NamespaceRegistry
   family: []
   summary: Access the registry of registered namespaces.
@@ -99,7 +99,7 @@
     registered namespace.
   see_also: []
   chapter: compliance
-  section: Predefined environments
+  section: Environments
 - name: Rf_findVar
   family: []
   summary: >-
@@ -120,7 +120,7 @@
     - Rf_findFun
     - Rf_findVarInFrame3
   chapter: compliance
-  section: Get values
+  section: Environments
 - name: Rf_findVarInFrame3
   family: Rf_findVarInFrame
   summary: >-
@@ -143,7 +143,7 @@
     retrieve a value and `R_existsVarInFrame()` to test for existence.
   see_also: Rf_findVar
   chapter: compliance
-  section: Get values
+  section: Environments
 - name: Rf_addMissingVarsToNewEnv
   family: []
   summary: Copy variables into a new environment unless already present.
@@ -157,7 +157,7 @@
     Copies variables from `from` (a `VECSXP`) unless already present in `to`.
   see_also: []
   chapter: compliance
-  section: Set values
+  section: Environments
 - name: R_GetCurrentEnv
   family: []
   summary: Retrieve the current environment.
@@ -173,7 +173,7 @@
     result as an argument to your C function.
   see_also: []
   chapter: compliance
-  section: Miscellaneous
+  section: Environments
 - name: R_envHasNoSpecialSymbols
   family: []
   summary: Test whether an environment has no special symbols.
@@ -185,7 +185,7 @@
   errors: never
   see_also: []
   chapter: compliance
-  section: Miscellaneous
+  section: Environments
 - name: FRAME
   family: SET_FRAME
   summary: Get or set the frame of an environment.
@@ -204,7 +204,7 @@
     - HASHTAB
     - R_NewEnv
   chapter: compliance
-  section: Internals
+  section: Environments
 - name: ENCLOS
   family: SET_ENCLOS
   summary: Get or set an environment's enclosing environment.
@@ -224,7 +224,7 @@
     - FRAME
     - R_NewEnv
   chapter: compliance
-  section: Internals
+  section: Environments
 - name: ENVFLAGS
   family: SET_ENVFLAGS
   summary: Get or set the flags of an environment.
@@ -240,7 +240,7 @@
     Use `R_EnvironmentIsLocked()` and `R_LockEnvironment()` instead.
   see_also: R_LockEnvironment
   chapter: compliance
-  section: Internals
+  section: Environments
 - name: TRUELENGTH
   family:
     - XTRUELENGTH
@@ -261,7 +261,7 @@
     truelength is the number of slots in use.
   see_also: []
   chapter: compliance
-  section: Truelength
+  section: Environments
 - name: HASHTAB
   family: SET_HASHTAB
   summary: Get or set the hash table of an environment.
@@ -282,7 +282,7 @@
     - HASHASH
     - HASHVALUE
   chapter: compliance
-  section: Hash
+  section: Environments
 - name: HASHASH
   family: SET_HASHASH
   summary: Get or set the hash flag of an environment.
@@ -295,7 +295,7 @@
   errors: never
   see_also: HASHTAB
   chapter: compliance
-  section: Hash
+  section: Environments
 - name: HASHVALUE
   family: SET_HASHVALUE
   summary: Get or set the hash value of an environment.
@@ -308,7 +308,7 @@
   errors: never
   see_also: HASHTAB
   chapter: compliance
-  section: Hash
+  section: Environments
 - name: EXTPTR_PTR
   family:
     - EXTPTR_PROT
@@ -329,7 +329,7 @@
     `R_ExternalPtrTag()` instead.
   see_also: R_ExternalPtrAddr
   chapter: compliance
-  section: Internals
+  section: External pointers
 - name: FORMALS
   family:
     - BODY
@@ -352,7 +352,7 @@
     - R_ClosureBody
     - R_ClosureEnv
   chapter: compliance
-  section: Internals
+  section: Closures and promises
 - name: SET_FORMALS
   family:
     - SET_BODY
@@ -373,7 +373,7 @@
     a closure over allocating and mutating one.
   see_also: []
   chapter: compliance
-  section: Internals
+  section: Closures and promises
 - name: RDEBUG
   family:
     - RSTEP
@@ -391,7 +391,7 @@
     Internal macros for querying closure debugging flags.
   see_also: []
   chapter: compliance
-  section: Internals
+  section: Closures and promises
 - name: SET_RDEBUG
   family:
     - SET_RSTEP
@@ -409,7 +409,7 @@
     Internal macros for setting closure debugging flags.
   see_also: []
   chapter: compliance
-  section: Internals
+  section: Closures and promises
 - name: PRCODE
   family:
     - PRENV
@@ -429,7 +429,7 @@
     `R_DelayedBindingEnvironment()`.
   see_also: R_GetBindingType
   chapter: compliance
-  section: Promises (`PROMSXP`)
+  section: Closures and promises
 - name: PRSEEN
   family: SET_PRSEEN
   summary: Query or set the seen flag of a promise.
@@ -445,7 +445,7 @@
     Used to detect recursive promise evaluation.
   see_also: []
   chapter: compliance
-  section: Promises (`PROMSXP`)
+  section: Closures and promises
 - name: SET_PRENV
   family:
     - SET_PRVALUE
@@ -464,7 +464,7 @@
     `R_MakeDelayedBinding()`, and `R_MakeMissingBinding()`.
   see_also: R_MakeDelayedBinding
   chapter: compliance
-  section: Promises (`PROMSXP`)
+  section: Closures and promises
 - name: IS_S4_OBJECT
   family:
     - SET_S4_OBJECT
@@ -484,7 +484,7 @@
     Low-level access to the S4 object flag.
   see_also: Rf_isS4
   chapter: compliance
-  section: Internals
+  section: Attributes and objects
 - name: CONS_NR
   family: []
   summary: Create a CONS cell with no reference counting.
@@ -499,7 +499,7 @@
     CONS with no-refcounting?
   see_also: Rf_cons
   chapter: compliance
-  section: Accessors
+  section: Pairlists
 - name: R_InitConnOutPStream
   family: R_InitConnInPStream
   summary: >-
@@ -521,7 +521,7 @@
     opaque `Rconnection` pointer type.
   see_also: []
   chapter: compliance
-  section: Persistence streams
+  section: Serialisation
 - name: R_RestoreHashCount
   family: []
   summary: Restore the hash count of a hashed environment after unserialisation.
@@ -533,7 +533,7 @@
   errors: never
   see_also: []
   chapter: compliance
-  section: Serialising objects
+  section: Serialisation
 - name: Rf_StringFalse
   family: Rf_StringTrue
   summary: Check whether a C string represents false or true.
@@ -546,7 +546,7 @@
   errors: never
   see_also: []
   chapter: compliance
-  section: Special values
+  section: Vectors and strings
 - name: PRINTNAME
   family: SET_PRINTNAME
   summary: Get or set the print name of a symbol.
@@ -562,7 +562,7 @@
     the name as a `const char*`.
   see_also: []
   chapter: compliance
-  section: Internals
+  section: Symbols
 - name: SYMVALUE
   family: SET_SYMVALUE
   summary: Get or set the value of a symbol.
@@ -575,7 +575,7 @@
   errors: never
   see_also: []
   chapter: compliance
-  section: Internals
+  section: Symbols
 - name: INTERNAL
   family: SET_INTERNAL
   summary: Get or set the internal function a symbol points to.
@@ -588,7 +588,7 @@
   errors: never
   see_also: []
   chapter: compliance
-  section: Internals
+  section: Symbols
 - name: DDVAL
   family:
     - SET_DDVAL
@@ -606,7 +606,7 @@
   errors: can-throw
   see_also: []
   chapter: compliance
-  section: Internals
+  section: Symbols
 - name: BCODE_CODE
   family:
     - BCODE_CONSTS
@@ -624,7 +624,7 @@
   errors: never
   see_also: []
   chapter: compliance
-  section: Byte code (`BCODESXP`)
+  section: Byte code
 - name: R_initialize_bcode
   family: []
   summary: Initialize the byte-code engine.
@@ -636,7 +636,7 @@
   errors: can-throw
   see_also: []
   chapter: compliance
-  section: Byte code (`BCODESXP`)
+  section: Byte code
 - name: R_bcEncode
   family: R_bcDecode
   summary: Encode or decode a byte-code object.
@@ -649,7 +649,7 @@
   errors: can-throw
   see_also: []
   chapter: compliance
-  section: Byte code (`BCODESXP`)
+  section: Byte code
 - name: R_PromiseExpr
   family:
     - R_ClosureExpr
@@ -673,7 +673,7 @@
     promise bindings.
   see_also: []
   chapter: compliance
-  section: Byte code (`BCODESXP`)
+  section: Closures and promises
 - name: Rf_allocSExp
   family: []
   summary: Allocate a non-vector SEXP of the given type.
@@ -690,7 +690,7 @@
     `Rf_allocLang()` for call expressions (added in R 4.4.1).
   see_also: R_NewEnv
   chapter: compliance
-  section: Misc
+  section: Internal entry points
 - name: Rf_applyClosure
   family: []
   summary: Apply a closure to a list of arguments.
@@ -702,7 +702,7 @@
   errors: can-throw
   see_also: []
   chapter: compliance
-  section: Misc
+  section: Internal entry points
 - name: Rf_countContexts
   family: []
   summary: Count evaluation contexts on the context stack.
@@ -714,7 +714,7 @@
   errors: never
   see_also: []
   chapter: compliance
-  section: Misc
+  section: Internal entry points
 - name: Rf_CreateTag
   family: []
   summary: Create the tag for a pairlist element.
@@ -726,7 +726,7 @@
   errors: can-throw
   see_also: []
   chapter: compliance
-  section: Misc
+  section: Internal entry points
 - name: Rf_installS3Signature
   family: []
   summary: Install the signature string for an S3 method.
@@ -738,7 +738,7 @@
   errors: can-throw
   see_also: []
   chapter: compliance
-  section: Misc
+  section: Internal entry points
 - name: Rf_isFree
   family: []
   summary: Test whether a symbol has no value binding.
@@ -750,7 +750,7 @@
   errors: never
   see_also: []
   chapter: compliance
-  section: Misc
+  section: Internal entry points
 - name: Rf_readS3VarsFromFrame
   family: []
   summary: Read the S3 dispatch variables from a method's evaluation frame.
@@ -762,7 +762,7 @@
   errors: can-throw
   see_also: []
   chapter: compliance
-  section: Misc
+  section: Internal entry points
 - name: Rf_setSVector
   family: []
   summary: Set an element of a C array of SEXPs.
@@ -774,7 +774,7 @@
   errors: never
   see_also: []
   chapter: compliance
-  section: Misc
+  section: Internal entry points
 - name: R_dot_Last
   family: R_RunExitFinalizers
   summary: Run shutdown actions when R exits.
@@ -791,7 +791,7 @@
     (in memory.c).
   see_also: []
   chapter: compliance
-  section: Misc
+  section: Internal entry points
 - name: R_FixupRHS
   family: []
   summary: Fix up the right-hand side value of a complex assignment.
@@ -803,7 +803,7 @@
   errors: can-throw
   see_also: []
   chapter: compliance
-  section: Misc
+  section: Internal entry points
 - name: setIVector
   family: setRVector
   summary: Fill an int or double array with a constant value.
@@ -818,7 +818,7 @@
   errors: never
   see_also: Rf_setSVector
   chapter: compliance
-  section: Misc
+  section: Internal entry points
 - name: SETLENGTH
   family: []
   summary: Set the length of a vector in place.
@@ -841,7 +841,7 @@
     - Rf_lengthgets
     - LENGTH
   chapter: compliance
-  section: Length
+  section: Vectors and strings
 - name: STRING_PTR
   family: []
   summary: Get a pointer to the elements of a character vector.
@@ -860,7 +860,7 @@
     `STRING_PTR_RO()` instead.
   see_also: STRING_ELT
   chapter: compliance
-  section: Get and set values
+  section: Vectors and strings
 - name: VECTOR_PTR
   family: []
   summary: Get a pointer to the elements of a list.
@@ -877,4 +877,4 @@
     A deprecated interface that now throws an error.
   see_also: VECTOR_ELT
   chapter: compliance
-  section: Get and set values
+  section: Vectors and strings
