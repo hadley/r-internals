@@ -1,0 +1,372 @@
+---
+- name: dnorm
+  family:
+    - pnorm
+    - qnorm
+    - rnorm
+  summary: Density, CDF, quantile, and random generation for a distribution.
+  signature: |
+    double dnorm(double x, double mu, double sigma, int give_log);
+    double pnorm(double x, double mu, double sigma, int lower_tail, int give_log);
+    double qnorm(double p, double mu, double sigma, int lower_tail, int log_p);
+    double rnorm(double mu, double sigma);
+  status: api
+  header: Rmath.h
+  protect: n/a
+  errors: never
+  r_equivalent: dnorm()
+  args:
+    give_log: return the result on the log scale.
+    lower_tail: use the lower (left) tail; set to 0 for the upper tail.
+    log_p: "`p` is supplied on the log scale."
+  notes: |
+    Shown for the normal distribution; every distribution in the table
+    above follows the same argument pattern with its own parameters. The
+    cumulative hazard is `-pdist(t, ..., 0, 1)`. The `r*` functions draw
+    from R's RNG stream and must be bracketed by
+    `GetRNGstate()`/`PutRNGstate()` (see [Random number
+    generation](rng.qmd)). With `R_NO_REMAP_RMATH` defined, the normal
+    names become `Rf_dnorm4`, `Rf_pnorm5`, `Rf_qnorm5`.
+  see_also: [Rf_rmultinom]
+  chapter: math
+  section: Distribution functions
+- name: dnbinom_mu
+  family:
+    - pnbinom_mu
+    - qnbinom_mu
+    - rnbinom_mu
+  summary: Negative binomial distribution in the alternative (size, mu) parametrization.
+  signature: |
+    double dnbinom_mu(double x, double size, double mu, int give_log);
+    double pnbinom_mu(double x, double size, double mu, int lower_tail, int give_log);
+    double qnbinom_mu(double p, double size, double mu, int lower_tail, int log_p);
+    double rnbinom_mu(double size, double mu);
+  status: api
+  header: Rmath.h
+  protect: n/a
+  errors: never
+  r_equivalent: dnbinom()
+  see_also: [dnorm]
+  chapter: math
+  section: Distribution functions
+- name: dbinom_raw
+  family: dpois_raw
+  summary: Binomial and Poisson mass functions that vary continuously in x.
+  signature: |
+    double dbinom_raw(double x, double n, double p, double q, int give_log);
+    double dpois_raw(double x, double lambda, int give_log);
+  status: api
+  header: Rmath.h
+  protect: n/a
+  errors: never
+  notes: |
+    Unlike `dbinom()`/`dpois()`, these return nonzero values for
+    non-integer `x`. `dbinom_raw()` takes both `p` and `q = 1 - p`, which
+    is more accurate when one is close to 1.
+  see_also: [dnorm]
+  chapter: math
+  section: Distribution functions
+- name: Rf_rmultinom
+  family: []
+  summary: Generate one multinomial random vector.
+  signature: |
+    void Rf_rmultinom(int n, double* prob, int K, int* rN);
+  status: api
+  header: Rmath.h
+  protect: n/a
+  errors: never
+  r_equivalent: rmultinom()
+  args:
+    n: number of trials; the counts in `rN` sum to `n`.
+    prob: "length-`K` vector of probabilities, summing to 1."
+    rN: "output: length-`K` integer array filled with the counts."
+  notes: |
+    Must be bracketed by `GetRNGstate()`/`PutRNGstate()`.
+  see_also: [dnorm, GetRNGstate]
+  chapter: math
+  section: Distribution functions
+- name: wilcox_free
+  family: signrank_free
+  summary: Free memory cached by the Wilcoxon distribution functions.
+  signature: |
+    void wilcox_free(void);
+    void signrank_free(void);
+  status: api
+  header: Rmath.h
+  protect: n/a
+  errors: never
+  since: 4.2.0
+  notes: |
+    Call after any use of `dwilcox`/`pwilcox`/`qwilcox` (or the
+    `signrank` equivalents). Declared in `Rmath.h` only from R 4.2.0; for
+    earlier versions declare `extern void wilcox_free(void);` yourself.
+    These names are never remapped.
+  see_also: [dnorm]
+  chapter: math
+  section: Distribution functions
+- name: gammafn
+  family:
+    - lgammafn
+    - digamma
+    - trigamma
+    - tetragamma
+    - pentagamma
+    - psigamma
+  summary: Gamma function, its log, and derivatives of the digamma function.
+  signature: |
+    double gammafn(double x);
+    double lgammafn(double x);
+    double digamma(double x);
+    double trigamma(double x);
+    double tetragamma(double x);
+    double pentagamma(double x);
+    double psigamma(double x, double deriv);
+  status: api
+  header: Rmath.h
+  protect: n/a
+  errors: never
+  r_equivalent: gamma()
+  notes: |
+    `digamma(x)` is `psigamma(x, 0)`, `trigamma(x)` is `psigamma(x, 1)`,
+    and so on. When you need several derivatives at once, the underlying
+    workhorse `dpsifn()` computes a whole sequence in one call; see
+    `src/nmath/polygamma.c` in the R sources.
+  see_also: [beta]
+  chapter: math
+  section: Mathematical functions
+- name: beta
+  family: lbeta
+  summary: Beta function and its natural logarithm.
+  signature: |
+    double beta(double a, double b);
+    double lbeta(double a, double b);
+  status: api
+  header: Rmath.h
+  protect: n/a
+  errors: never
+  r_equivalent: beta()
+  see_also: [gammafn]
+  chapter: math
+  section: Mathematical functions
+- name: choose
+  family: lchoose
+  summary: Binomial coefficient and its log, generalized to real n.
+  signature: |
+    double choose(double n, double k);
+    double lchoose(double n, double k);
+  status: api
+  header: Rmath.h
+  protect: n/a
+  errors: never
+  r_equivalent: choose()
+  notes: |
+    `k` is rounded to the nearest integer (with a warning if needed).
+  see_also: [gammafn]
+  chapter: math
+  section: Mathematical functions
+- name: bessel_i
+  family:
+    - bessel_j
+    - bessel_k
+    - bessel_y
+  summary: Bessel functions I, J, K, and Y of fractional order.
+  signature: |
+    double bessel_i(double x, double nu, double expo);
+    double bessel_j(double x, double nu);
+    double bessel_k(double x, double nu, double expo);
+    double bessel_y(double x, double nu);
+  status: api
+  header: Rmath.h
+  protect: n/a
+  errors: never
+  r_equivalent: besselI()
+  args:
+    nu: order of the Bessel function.
+    expo: "for `bessel_i`/`bessel_k` only: 1 for unscaled, 2 to return `exp(-x) * I(x, nu)` or `exp(x) * K(x, nu)` (avoids overflow)."
+  see_also: []
+  chapter: math
+  section: Mathematical functions
+- name: R_pow
+  family:
+    - R_pow_di
+    - pow1p
+  summary: Exponentiation with R's edge-case semantics.
+  signature: |
+    double R_pow(double x, double y);
+    double R_pow_di(double x, int i);
+    double pow1p(double x, double y);
+  status: api
+  header: Rmath.h
+  protect: n/a
+  errors: never
+  notes: |
+    Unlike C's `pow()`, these give the same result as R's `^` when `x` or
+    `y` is 0, missing, infinite, or `NaN`. `pow1p(x, y)` computes
+    `(1 + x)^y` accurately for small `|x|`.
+  see_also: []
+  chapter: math
+  section: Numerical utilities
+- name: log1pmx
+  family:
+    - log1pexp
+    - log1mexp
+    - lgamma1p
+  summary: Accurate log computations in numerically delicate regions.
+  signature: |
+    double log1pmx(double x);
+    double log1pexp(double x);
+    double log1mexp(double x);
+    double lgamma1p(double x);
+  status: api
+  header: Rmath.h
+  protect: n/a
+  errors: never
+  notes: |
+    Respectively `log(1 + x) - x` (accurate for small `|x|`),
+    `log(1 + exp(x))` (accurate for large `x`), `log(1 - exp(-x))`, and
+    `log(gamma(x + 1))` (accurate for `0 < x < 0.5`). Prefer these over
+    composing the naive expressions.
+  see_also: [logspace_add]
+  chapter: math
+  section: Numerical utilities
+- name: cospi
+  family:
+    - sinpi
+    - Rtanpi
+    - tanpi
+  summary: Trigonometric functions of pi * x, accurate at (half-)integer x.
+  signature: |
+    double cospi(double x);
+    double sinpi(double x);
+    double Rtanpi(double x);
+    double tanpi(double x);
+  status: api
+  header: Rmath.h
+  protect: n/a
+  errors: never
+  r_equivalent: cospi()
+  notes: |
+    Prefer `Rtanpi()` over `tanpi()`: `Rtanpi()` is always R's own
+    implementation (exactly ±1 at quarter integers, `NaN` at half
+    integers), while `tanpi()` may be the platform's, with
+    platform-dependent behaviour at half and quarter integers.
+  see_also: []
+  chapter: math
+  section: Numerical utilities
+- name: logspace_add
+  family:
+    - logspace_sub
+    - logspace_sum
+  summary: Add, subtract, or sum values given on the log scale.
+  signature: |
+    double logspace_add(double logx, double logy);
+    double logspace_sub(double logx, double logy);
+    double logspace_sum(const double* logx, int n);
+  status: api
+  header: Rmath.h
+  protect: n/a
+  errors: never
+  notes: |
+    Compute `log(exp(logx) + exp(logy))` etc. without overflow or
+    unnecessary loss of accuracy — the building blocks for working in
+    log-space.
+  see_also: [log1pmx]
+  chapter: math
+  section: Numerical utilities
+- name: fmax2
+  family:
+    - fmin2
+    - imax2
+    - imin2
+  summary: Maximum and minimum of two doubles or ints.
+  signature: |
+    double fmax2(double x, double y);
+    double fmin2(double x, double y);
+    int imax2(int x, int y);
+    int imin2(int x, int y);
+  status: api
+  header: Rmath.h
+  protect: n/a
+  errors: never
+  notes: |
+    Unlike C99's `fmax()`/`fmin()`, these return `NaN` when either
+    argument is `NaN`.
+  see_also: []
+  chapter: math
+  section: Numerical utilities
+- name: sign
+  family: fsign
+  summary: Signum function and transfer of sign.
+  signature: |
+    double sign(double x);
+    double fsign(double x, double y);
+  status: api
+  header: Rmath.h
+  protect: n/a
+  errors: never
+  r_equivalent: sign()
+  notes: |
+    `sign()` returns 1, 0, −1, or `NaN` for `NaN`. `fsign(x, y)` is
+    `|x| * sign(y)`.
+  see_also: []
+  chapter: math
+  section: Numerical utilities
+- name: fround
+  family:
+    - fprec
+    - ftrunc
+  summary: Rounding used by R's round() and signif().
+  signature: |
+    double fround(double x, double digits);
+    double fprec(double x, double digits);
+    double ftrunc(double x);
+  status: api
+  header: Rmath.h
+  protect: n/a
+  errors: never
+  notes: |
+    `fround()` rounds to `digits` decimal places (as `round()`);
+    `fprec()` rounds to `digits` significant digits (as `signif()`);
+    `ftrunc()` truncates toward zero.
+  see_also: []
+  chapter: math
+  section: Numerical utilities
+- name: M_PI
+  family:
+    - M_E
+    - M_LOG2E
+    - M_LOG10E
+    - M_LN2
+    - M_LN10
+    - M_PI_2
+    - M_PI_4
+    - M_1_PI
+    - M_2_PI
+    - M_2_SQRTPI
+    - M_SQRT2
+    - M_SQRT1_2
+    - M_SQRT_3
+    - M_SQRT_32
+    - M_LOG10_2
+    - M_2PI
+    - M_SQRT_PI
+    - M_1_SQRT_2PI
+    - M_SQRT_2dPI
+    - M_LN_SQRT_PI
+    - M_LN_SQRT_2PI
+    - M_LN_SQRT_PId2
+  summary: Mathematical constants defined to at least 30 digits.
+  signature: |
+    #define M_PI 3.14159265358979323846264338327950288
+  status: api
+  header: Rmath.h
+  protect: n/a
+  errors: never
+  notes: |
+    See the table above for the full set. The S-compatibility constant
+    `PI` is defunct; use `M_PI`. `R_ext/Constants.h` additionally
+    includes `float.h`/`cfloat` for `DBL_MAX` and friends.
+  see_also: []
+  chapter: math
+  section: Mathematical constants
+...

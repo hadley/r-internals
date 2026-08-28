@@ -16,6 +16,9 @@ This repo is a Quarto book documenting R's C API for package authors. See
   chapters. Records with `status: non-api`/`embedding` live only in
   `functions/compliance.yaml` (parked for the compliance appendix); if a
   chapter section loses all its records this way, remove the section.
+- To verify a WRE backlink anchor, grep the local `sources/r-api.md` (its
+  headings carry the mined `<a href="#anchor">` ids) — do **not** curl the
+  CRAN page.
 - No prose may follow a `render_entries()` chunk within a section: the
   generated entries end with headings, so trailing text would appear to
   belong to the last entry. Put prose before the chunk or into YAML `notes`.

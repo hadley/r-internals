@@ -1,11 +1,117 @@
 # Mathematical functions (Rmath)
 
-::: {.callout-warning}
-Placeholder. Planned content:
+{{< include _setup.qmd >}}
 
-- Distribution functions (d/p/q/r table)
-- Mathematical functions (bessel, gamma, beta, ...)
-- Numerical utilities (`R_pow`, `fmax2`, `imin2`, `expm1`-style helpers)
-- Constants (`M_PI` etc.)
-- Standalone Rmath usage
-:::
+`Rmath.h` gives C code access to the routines behind R's mathematical and
+statistical functions: distribution functions, special functions, and
+numerical utilities, all with R's edge-case semantics (missing values,
+`NaN`, infinities). The header has its own remapping scheme: define
+`R_NO_REMAP_RMATH` and most names need an `Rf_` prefix — see the header
+for which. We show the canonical (remapped) names below.
+
+## Distribution functions
+
+Follows [WRE §6.7.1, Distribution functions](https://cran.r-project.org/doc/manuals/R-exts.html#Distribution-functions-1)
+closely.
+
+Every distribution provides up to four entry points: `d` (density/mass),
+`p` (CDF), `q` (quantile), and `r` (random generation). The table gives
+the base name — prefix with `d`/`p`/`q`/`r` — and the
+distribution-specific arguments, which come between the `x`/`p` argument
+and the trailing `lower_tail`/`log_p` flags.
+
+| Distribution | Base name | Parameters |
+|---|---|---|
+| beta | `beta` | `a`, `b` |
+| non-central beta | `nbeta` | `a`, `b`, `ncp` |
+| binomial | `binom` | `n`, `p` |
+| Cauchy | `cauchy` | `location`, `scale` |
+| chi-squared | `chisq` | `df` |
+| non-central chi-squared | `nchisq` | `df`, `ncp` |
+| exponential | `exp` | `scale` (not `rate`!) |
+| F | `f` | `n1`, `n2` |
+| non-central F | `nf` | `n1`, `n2`, `ncp` |
+| gamma | `gamma` | `shape`, `scale` |
+| geometric | `geom` | `p` |
+| hypergeometric | `hyper` | `NR`, `NB`, `n` |
+| logistic | `logis` | `location`, `scale` |
+| lognormal | `lnorm` | `logmean`, `logsd` |
+| negative binomial | `nbinom` | `size`, `prob` |
+| normal | `norm` | `mu`, `sigma` |
+| Poisson | `pois` | `lambda` |
+| Student's t | `t` | `n` |
+| non-central t | `nt` | `df`, `delta` |
+| Studentized range | `tukey` | `rr`, `cc`, `df` (p/q only) |
+| uniform | `unif` | `a`, `b` |
+| Weibull | `weibull` | `shape`, `scale` |
+| Wilcoxon rank sum | `wilcox` | `m`, `n` |
+| Wilcoxon signed rank | `signrank` | `n` |
+
+The non-central distributions have no `r` functions, and `tukey` has only
+`p` and `q`. Note that the exponential and gamma distributions are
+parametrized by `scale`, not `rate`.
+
+```{r}
+#| results: asis
+#| echo: false
+render_entries("math", "Distribution functions")
+```
+
+## Mathematical functions
+
+Follows [WRE §6.7.2, Mathematical functions](https://cran.r-project.org/doc/manuals/R-exts.html#Mathematical-functions-1)
+closely.
+
+```{r}
+#| results: asis
+#| echo: false
+render_entries("math", "Mathematical functions")
+```
+
+## Numerical utilities
+
+Follows [WRE §6.7.3, Numerical utilities](https://cran.r-project.org/doc/manuals/R-exts.html#Numerical-Utilities-1)
+closely.
+
+Some of these (`log1p`, `expm1`, `cospi`, `sinpi`, `tanpi`) may be
+provided by the platform's `math.h` instead of `Rmath.h`; under C++,
+`math.h` is not included by `Rmath.h`, so declare them yourself or define
+`__STDC_WANT_IEC_60559_FUNCS_EXT__` before the first inclusion.
+
+```{r}
+#| results: asis
+#| echo: false
+render_entries("math", "Numerical utilities")
+```
+
+## Mathematical constants
+
+Follows [WRE §6.7.4, Mathematical constants](https://cran.r-project.org/doc/manuals/R-exts.html#Mathematical-constants-1)
+closely.
+
+| Name | Value | Name | Value |
+|---|---|---|---|
+| `M_E` | e | `M_SQRT2` | √2 |
+| `M_LOG2E` | log2(e) | `M_SQRT1_2` | 1/√2 |
+| `M_LOG10E` | log10(e) | `M_SQRT_3` | √3 |
+| `M_LN2` | ln 2 | `M_SQRT_32` | √32 |
+| `M_LN10` | ln 10 | `M_LOG10_2` | log10(2) |
+| `M_PI` | π | `M_2PI` | 2π |
+| `M_PI_2` | π/2 | `M_SQRT_PI` | √π |
+| `M_PI_4` | π/4 | `M_1_SQRT_2PI` | 1/√(2π) |
+| `M_1_PI` | 1/π | `M_SQRT_2dPI` | √(2/π) |
+| `M_2_PI` | 2/π | `M_LN_SQRT_PI` | ln √π |
+| `M_2_SQRTPI` | 2/√π | `M_LN_SQRT_2PI` | ln √(2π) |
+| | | `M_LN_SQRT_PId2` | ln √(π/2) |
+
+## Standalone Rmath
+
+Follows [WRE §6.20, Using these functions in your own C code](https://cran.r-project.org/doc/manuals/R-exts.html#Using-these-functions-in-your-own-C-code)
+closely.
+
+Everything in this chapter is also available outside R: the same code
+builds as a standalone library, `libRmath`, for use in programs that
+don't link to R at all (define `MATHLIB_STANDALONE` when using it). The
+library isn't built by default; see [The standalone Rmath
+library](https://cran.r-project.org/doc/manuals/R-admin.html#The-standalone-Rmath-library)
+in R Installation and Administration.
