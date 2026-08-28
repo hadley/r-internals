@@ -7,3 +7,6 @@
 .DS_Store
 
 **/*.quarto_ipynb
+
+# Downloaded R source (fetched on demand, never committed)
+/sources/r-*/

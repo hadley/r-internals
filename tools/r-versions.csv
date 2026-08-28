@@ -1,0 +1,11 @@
+# Commit SHAs for R minor releases in https://github.com/r-devel/r-svn
+# (the mirror has no release tags, so SHAs are recorded here).
+# Each SHA is the branch point for that release: the parent of the
+# "go to X.(Y+1).0 devel" commit on main. Patch releases are ignored
+# (they don't change the C API).
+version,sha
+4.2.0,23cd363ddd6d465a27d3d60910c17b97b52fbe8b
+4.3.0,a097df94e5bd62e92e33294f5939c0a2c5b98b47
+4.4.0,723222cb66265a7fc3426ed7db4fe283294b8c85
+4.5.0,bd244aae362bffbb21e1eb5e19b49e8d42f4c05f
+4.6.0,55de745dba7d3f3ec45ecc46d9b488c46ed52eea
