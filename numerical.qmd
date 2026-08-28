@@ -1,10 +1,80 @@
 # Numerical methods
 
-::: {.callout-warning}
-Placeholder. Planned content:
+{{< include _setup.qmd >}}
 
-- Optimization
-- Integration
-- Linear algebra: BLAS / LAPACK headers and `FCONE`
-- `findInterval`, `R_max_col`
-:::
+R exposes the C and Fortran code behind `optim()`, `integrate()`, and its
+linear algebra routines, so package code can run the same algorithms
+without going back through R. For pure scalar mathematics
+(distributions, special functions), see
+[Mathematical functions](math.qmd).
+
+## Optimization
+
+Follows [WRE §6.8, Optimization](https://cran.r-project.org/doc/manuals/R-exts.html#Optimization-1)
+closely.
+
+All five minimizers take the objective as a C callback, and some take a
+gradient callback:
+
+```c
+typedef double optimfn(int n, double *par, void *ex);
+typedef void optimgr(int n, double *par, double *gr, void *ex);
+```
+
+`ex` is an opaque pointer passed straight through to your callback — use
+it to carry auxiliary data (including a `SEXP`, if you protect it
+elsewhere). If you don't have an analytic gradient, you must
+finite-difference yourself; no helper is provided.
+
+```{r}
+#| results: asis
+#| echo: false
+render_entries("numerical", "Optimization")
+```
+
+## Integration
+
+Follows [WRE §6.9, Integration](https://cran.r-project.org/doc/manuals/R-exts.html#Integration-1)
+closely.
+
+The integrand is a *vectorized* callback — it receives `n` points in `x`
+and must overwrite them with the function values:
+
+```c
+typedef void integr_fn(double *x, int n, void *ex);
+```
+
+In the current QUADPACK-based implementation `n` is always 15 or 21.
+
+```{r}
+#| results: asis
+#| echo: false
+render_entries("numerical", "Integration")
+```
+
+## Linear algebra
+
+Follows [WRE §6.11, Linear algebra](https://cran.r-project.org/doc/manuals/R-exts.html#Linear-algebra-1)
+closely.
+
+For numerical linear algebra, call the BLAS/LAPACK routines that R itself
+is built on: declarations are in `R_ext/BLAS.h` and `R_ext/LAPACK.h` (the
+older `R_ext/Linpack.h` also exists). These are Fortran calling
+conventions — all arguments are pointers, and character arguments need a
+hidden length argument, which the `FCONE` macro (defined by these
+headers) appends portably. This set of routines is not formally API but
+changes rarely.
+
+```{r}
+#| results: asis
+#| echo: false
+render_entries("numerical", "Linear algebra")
+```
+
+## Miscellaneous
+
+```{r}
+#| results: asis
+#| echo: false
+render_entries("numerical", "Miscellaneous")
+```
