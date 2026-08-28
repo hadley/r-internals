@@ -3,6 +3,7 @@ name: Render and publish
 on:
   push:
     branches: [main, master]
+  pull_request:
   workflow_dispatch:
 
 permissions:
@@ -21,7 +22,9 @@ jobs:
 
       - uses: quarto-dev/quarto-actions/render@v2
 
+      # Publish only from the default branch, not PRs
       - uses: quarto-dev/quarto-actions/publish@v2
+        if: github.event_name != 'pull_request'
         with:
           target: gh-pages
         env:
