@@ -2,7 +2,13 @@
 
 {{< include _setup.qmd >}}
 
-## Printing
+
+Never call `printf()` or `fputs(..., stdout)` from package code: the
+output bypasses R's console, so it is invisible in GUIs, ignores
+`sink()` redirection, and is lost on cluster nodes. Use `Rprintf()` (and
+friends) for output, `R_ShowMessage()` for `message()`-style
+notifications, and `Rf_PrintValue()` to inspect an arbitrary `SEXP`
+while debugging.
 
 ```{r}
 #| results: asis

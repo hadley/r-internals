@@ -13,16 +13,26 @@
   chapter: printing
   section: Printing
 - name: Rprintf
-  family: REprintf
-  summary: Print to stdout or stderr.
+  family:
+    - REprintf
+    - Rvprintf
+    - REvprintf
+  summary: Print to R's output or error stream.
   signature: |
     void Rprintf(const char *, ...);
     void REprintf(const char *, ...);
+    void Rvprintf(const char *, R_VA_LIST);
+    void REvprintf(const char *, R_VA_LIST);
   status: api
   header: R_ext/Print.h
   protect: n/a
   errors: never
   r_equivalent: cat()
+  notes: |
+    Unlike `printf()`, output goes to R's console: it respects `sink()`
+    redirection and appears in GUIs and on cluster nodes. Write complete
+    lines (ending in `\n`) before returning to R. The `v` variants take a
+    `va_list`; in C++ code they require C++11 or `R_USE_C99_IN_CXX`.
   see_also: []
   chapter: printing
   section: Printing
