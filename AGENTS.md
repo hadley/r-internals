@@ -12,6 +12,12 @@ This repo is a Quarto book documenting R's C API for package authors. See
 - Always use `R_NO_REMAP` conventions: `Rf_`/`R_` prefixed names.
 - `.Call` only; never recommend `.C`/`.Fortran`.
 - Fortran interop is not covered.
+- When a chapter's content is drawn closely from a mined WRE section (see
+  `sources/`), add a backlink at the top of each subsection to the matching
+  WRE subsection on the CRAN page (e.g.
+  `https://cran.r-project.org/doc/manuals/R-exts.html#Transient-storage-allocation-1`),
+  not just once for the whole chapter — verify each anchor resolves before
+  adding it.
 
 ## Layout
 
