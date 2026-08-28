@@ -16,14 +16,6 @@ aliases: [misc.html]
 render_entries("utilities", "Byte code (`BCODESXP`)")
 ```
 
-### Weak references (`WEAKREFSXP`)
-
-```{r}
-#| results: asis
-#| echo: false
-render_entries("utilities", "Weak references (`WEAKREFSXP`)")
-```
-
 
 ## Sorting
 

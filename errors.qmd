@@ -2,7 +2,7 @@
 aliases: [error-eval.html]
 ---
 
-# Errors and evaluation
+# Errors
 
 {{< include _setup.qmd >}}
 
@@ -20,24 +20,3 @@ Two macros eliminate compiler warnings about non-void functions that don't retur
 (`Rf_error` will `longjmp` and so any code following will not be executed; however,
 most compilers do not detect this when providing warnings)
 
-## Evaluation
-
-```{r}
-#| results: asis
-#| echo: false
-render_entries("errors", "Evaluation")
-```
-
-### Protected evaluation
-
-```{r}
-#| results: asis
-#| echo: false
-render_entries("errors", "Protected evaluation")
-```
-
-Use these to evaluate R expressions in a stand-alone context ensuring that any errors produced during evaluation don't cause a longjmp to a separate context.
-
-Note that these functions ignore all existing condition handlers so R functions like `supressWarnings()`, `tryCatch()`, will no longer work.
-
-Both `R_tryEval()` and `R_tryEvalSilent`() call R_ToplevelExec under the hood:

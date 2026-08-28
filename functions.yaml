@@ -626,7 +626,7 @@
     void Rf_warningcall_immediate(SEXP call, const char*, ...);
   status: api
   replacement: ~
-  header: Rinternals.h
+  header: R_ext/Error.h
   protect: n/a
   errors: can-throw
   since: ~
@@ -654,8 +654,8 @@
   notes: ~
   example: ~
   see_also: []
-  chapter: errors
-  section: Errors, warnings, and printing
+  chapter: printing
+  section: Printing
 
 - name: Rprintf
   family: [REprintf]
@@ -674,8 +674,8 @@
   notes: ~
   example: ~
   see_also: []
-  chapter: errors
-  section: Errors, warnings, and printing
+  chapter: printing
+  section: Printing
 
 - name: Rf_PrintValue
   family: []
@@ -693,8 +693,8 @@
   notes: ~
   example: ~
   see_also: []
-  chapter: errors
-  section: Errors, warnings, and printing
+  chapter: printing
+  section: Printing
 
 - name: R_FlushConsole
   family: []
@@ -712,8 +712,8 @@
   notes: ~
   example: ~
   see_also: []
-  chapter: errors
-  section: Errors, warnings, and printing
+  chapter: printing
+  section: Printing
 
 - name: error_return
   family: [errorcall_return]
@@ -760,7 +760,7 @@
     Expression can be anything - non-language objects are returned as is.
   example: ~
   see_also: []
-  chapter: errors
+  chapter: evaluation
   section: Evaluation
 
 - name: R_forceAndCall
@@ -782,7 +782,7 @@
     advantages are over `Rf_eval`.
   example: ~
   see_also: [Rf_eval]
-  chapter: errors
+  chapter: evaluation
   section: Evaluation
 
 - name: R_tryEval
@@ -809,7 +809,7 @@
     will no longer work.
   example: ~
   see_also: [R_ToplevelExec]
-  chapter: errors
+  chapter: evaluation
   section: Protected evaluation
 
 - name: R_ToplevelExec
@@ -830,7 +830,7 @@
     Both `R_tryEval()` and `R_tryEvalSilent()` call `R_ToplevelExec` under the hood.
   example: ~
   see_also: [R_tryEval]
-  chapter: errors
+  chapter: evaluation
   section: Protected evaluation
 
 - name: R_curErrorBuf
@@ -849,7 +849,7 @@
   notes: ~
   example: ~
   see_also: []
-  chapter: errors
+  chapter: evaluation
   section: Protected evaluation
 
 - name: R_ExecWithCleanup
@@ -873,7 +873,7 @@
     Not used anywhere in R source.
   example: ~
   see_also: [R_ToplevelExec]
-  chapter: errors
+  chapter: evaluation
   section: Protected evaluation
 
 - name: R_MakeExternalPtr
@@ -1122,11 +1122,10 @@
   section: Internals
 
 - name: R_UnboundValue
-  family: [R_MissingArg]
-  summary: Access the unbound-value and missing-argument marker constants.
+  family: []
+  summary: Access the unbound-value marker constant.
   signature: |
     LibExtern SEXP	R_UnboundValue;	    /* Unbound marker */
-    LibExtern SEXP	R_MissingArg;	    /* Missing argument marker */
   status: api
   replacement: ~
   header: Rinternals.h
@@ -1136,9 +1135,9 @@
   r_equivalent: ~
   args: ~
   notes: |
-    Marker constants: `R_UnboundValue` is the unbound marker and `R_MissingArg` is the missing argument marker.
+    `R_UnboundValue` marks an unbound symbol or an unread promise value.
   example: ~
-  see_also: []
+  see_also: [R_MissingArg]
   chapter: functions
   section: Promises (`PROMSXP`)
 
@@ -1833,8 +1832,8 @@
   summary: Create a CONS cell with no reference counting.
   signature: |
     SEXP CONS_NR(SEXP a, SEXP b);
-  status: api
-  replacement: ~
+  status: non-api
+  replacement: Rf_cons
   header: Rinternals.h
   protect: result
   errors: can-throw
@@ -1930,8 +1929,8 @@
   notes: ~
   example: ~
   see_also: [Rf_copyMostAttrib, ATTRIB]
-  chapter: pairlists
-  section: Attributes
+  chapter: attributes
+  section: Get and set
 
 - name: Rf_copyMostAttrib
   family: []
@@ -1949,8 +1948,8 @@
   notes: ~
   example: ~
   see_also: [Rf_getAttrib, DUPLICATE_ATTRIB]
-  chapter: pairlists
-  section: Attributes
+  chapter: attributes
+  section: Get and set
 
 - name: ATTRIB
   family: [SET_ATTRIB]
@@ -1969,8 +1968,8 @@
   notes: ~
   example: ~
   see_also: [Rf_getAttrib]
-  chapter: pairlists
-  section: Attributes
+  chapter: attributes
+  section: Get and set
 
 - name: DUPLICATE_ATTRIB
   family: [SHALLOW_DUPLICATE_ATTRIB]
@@ -1989,8 +1988,8 @@
   notes: ~
   example: ~
   see_also: [Rf_copyMostAttrib]
-  chapter: pairlists
-  section: Attributes
+  chapter: attributes
+  section: Get and set
 
 - name: R_gc
   family: [R_gc_running]
@@ -2473,7 +2472,7 @@
   summary: Restore the hash count of a hashed environment after unserialisation.
   signature: |
     void R_RestoreHashCount(SEXP rho);
-  status: api
+  status: non-api
   replacement: ~
   header: Rinternals.h
   protect: n/a
@@ -2727,9 +2726,9 @@
   signature: |
     Rboolean Rf_StringFalse(const char *);
     Rboolean Rf_StringTrue(const char *);
-  status: api
+  status: non-api
   replacement: ~
-  header: Rinternals.h
+  header: R_ext/Utils.h
   protect: not-needed
   errors: never
   since: ~
@@ -2874,7 +2873,7 @@
     const char *R_ExpandFileName(const char *);
   status: api
   replacement: ~
-  header: Rinternals.h
+  header: R_ext/Utils.h
   protect: not-needed
   errors: can-throw
   since: ~
@@ -3811,8 +3810,8 @@
     takes a C finalizer (`R_CFinalizer_t`).
   example: ~
   see_also: []
-  chapter: utilities
-  section: 'Weak references (`WEAKREFSXP`)'
+  chapter: external-pointers
+  section: Weak references
 
 - name: R_WeakRefKey
   family: [R_WeakRefValue]
@@ -3831,8 +3830,8 @@
   notes: ~
   example: ~
   see_also: []
-  chapter: utilities
-  section: 'Weak references (`WEAKREFSXP`)'
+  chapter: external-pointers
+  section: Weak references
 
 - name: R_RunWeakRefFinalizer
   family: []
@@ -3850,8 +3849,8 @@
   notes: ~
   example: ~
   see_also: []
-  chapter: utilities
-  section: 'Weak references (`WEAKREFSXP`)'
+  chapter: external-pointers
+  section: Weak references
 
 - name: R_qsort
   family: [R_qsort_I, R_qsort_int, R_qsort_int_I]
@@ -4144,7 +4143,7 @@
   family: []
   summary: Install the signature string for an S3 method.
   signature: |
-    bSEXP Rf_installS3Signature(const char *, const char *);
+    SEXP Rf_installS3Signature(const char *, const char *);
   status: non-api
   replacement: ~
   header: none (internal)
@@ -4834,7 +4833,7 @@
   section: Create
 
 - name: Rf_ScalarLogical
-  family: [Rf_ScalarInteger, Rf_ScalarReal, Rf_ScalarComplex, Rf_ScalarRaw, Rf_ScalarString, Rf_mkString]
+  family: [Rf_ScalarInteger, Rf_ScalarReal, Rf_ScalarComplex, Rf_ScalarRaw]
   summary: Create a vector of length 1 from the corresponding C type.
   signature: |
     SEXP Rf_ScalarLogical(int x);
@@ -4842,8 +4841,6 @@
     SEXP Rf_ScalarReal(double x);
     SEXP Rf_ScalarComplex(Rcomplex x);
     SEXP Rf_ScalarRaw(Rbyte x);
-    SEXP Rf_ScalarString(SEXP x);
-    SEXP Rf_mkString(const char *str);
   status: api
   replacement: ~
   header: Rinternals.h
@@ -4852,15 +4849,14 @@
   since: ~
   r_equivalent: ~
   args:
-    x: the C value to wrap; a `CHARSXP` for `Rf_ScalarString()`.
-    str: a null-terminated C string.
+    x: the C value to wrap.
   notes: |
-    `Rf_ScalarString()` makes a `STRSXP` from a `CHARSXP`; `Rf_mkString()`
-    makes a `STRSXP` from a C string. As with all SEXP creation functions you
-    must `Rf_protect()` the result of any of these calls unless you're
-    immediately assigning it into an already protected object.
+    As with all SEXP creation functions you must `PROTECT()` the result of
+    any of these calls unless you're immediately assigning it into an
+    already protected object. For strings see [`Rf_ScalarString()`](#Rf_ScalarString)
+    and [`Rf_mkString()`](#Rf_mkString).
   example: ~
-  see_also: [Rf_allocVector]
+  see_also: [Rf_allocVector, Rf_ScalarString, Rf_mkString]
   chapter: vectors
   section: Create
 
@@ -5094,7 +5090,7 @@
     #define NA_STRING  R_NaString
   status: api
   replacement: ~
-  header: Rinternals.h
+  header: R_ext/Arith.h
   protect: n/a
   errors: never
   since: ~
@@ -5290,7 +5286,7 @@
     Arrays are vectors with a dim attribute.
   example: ~
   see_also: [Rf_allocArray, Rf_isMatrix]
-  chapter: vectors
+  chapter: attributes
   section: Arrays
 
 - name: Rf_allocArray
@@ -5312,7 +5308,7 @@
   notes: ~
   example: ~
   see_also: [Rf_allocMatrix, Rf_dimgets]
-  chapter: vectors
+  chapter: attributes
   section: Arrays
 
 - name: Rf_GetArrayDimnames
@@ -5332,7 +5328,7 @@
   notes: ~
   example: ~
   see_also: [Rf_dimgets]
-  chapter: vectors
+  chapter: attributes
   section: Arrays
 
 - name: Rf_dimgets
@@ -5354,7 +5350,7 @@
   notes: ~
   example: ~
   see_also: [Rf_GetArrayDimnames, Rf_DropDims]
-  chapter: vectors
+  chapter: attributes
   section: Arrays
 
 - name: Rf_DropDims
@@ -5374,7 +5370,7 @@
   notes: ~
   example: ~
   see_also: [Rf_dimgets]
-  chapter: vectors
+  chapter: attributes
   section: Arrays
 
 - name: Rf_arraySubscript
@@ -5393,7 +5389,7 @@
   notes: ~
   example: ~
   see_also: []
-  chapter: vectors
+  chapter: attributes
   section: Arrays
 
 - name: Rf_allocMatrix
@@ -5416,7 +5412,7 @@
     Matrices are a special case of arrays; those with 2 dimensions.
   example: ~
   see_also: [Rf_allocArray, Rf_ncols]
-  chapter: vectors
+  chapter: attributes
   section: Matrices
 
 - name: Rf_isMatrix
@@ -5436,7 +5432,7 @@
   notes: ~
   example: ~
   see_also: [Rf_isArray]
-  chapter: vectors
+  chapter: attributes
   section: Matrices
 
 - name: Rf_GetColNames
@@ -5457,7 +5453,7 @@
   notes: ~
   example: ~
   see_also: [Rf_GetMatrixDimnames]
-  chapter: vectors
+  chapter: attributes
   section: Matrices
 
 - name: Rf_GetMatrixDimnames
@@ -5482,7 +5478,7 @@
   notes: ~
   example: ~
   see_also: [Rf_GetColNames]
-  chapter: vectors
+  chapter: attributes
   section: Matrices
 
 - name: Rf_ncols
@@ -5503,7 +5499,7 @@
   notes: ~
   example: ~
   see_also: [Rf_allocMatrix]
-  chapter: vectors
+  chapter: attributes
   section: Matrices
 
 - name: Rf_copyMatrix
@@ -5526,7 +5522,7 @@
   notes: ~
   example: ~
   see_also: [Rf_copyVector]
-  chapter: vectors
+  chapter: attributes
   section: Matrices
 
 - name: Rf_isFactor
@@ -5548,7 +5544,7 @@
   notes: ~
   example: ~
   see_also: [Rf_nlevels, Rf_asCharacterFactor]
-  chapter: vectors
+  chapter: attributes
   section: Factors
 
 - name: Rf_nlevels
@@ -5568,7 +5564,7 @@
   notes: ~
   example: ~
   see_also: [Rf_isFactor]
-  chapter: vectors
+  chapter: attributes
   section: Factors
 
 - name: Rf_asCharacterFactor
@@ -5588,7 +5584,7 @@
   notes: ~
   example: ~
   see_also: [Rf_isFactor]
-  chapter: vectors
+  chapter: attributes
   section: Factors
 
 - name: Rf_isFrame
@@ -5608,8 +5604,8 @@
   notes: ~
   example: ~
   see_also: []
-  chapter: vectors
-  section: Data frame
+  chapter: attributes
+  section: Data frames
 
 - name: Rf_copyVector
   family: []

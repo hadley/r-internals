@@ -97,6 +97,6 @@ render_entries <- function(chapter, section, path = "functions.yaml") {
     return(invisible(""))
   }
   out <- vapply(entries[keep], render_entry, character(1))
-  cat(paste(out, collapse = "\n\n"), "\n")
+  cat(paste0(paste(out, collapse = "\n\n"), "\n"))
   invisible(out)
 }

@@ -181,46 +181,6 @@ __NB__: Be careful when checking whether whether an R object is an integer vecto
 
 __NB__: It is somewhat strange that `Rf_isNewList()` returns `TRUE` for `R_NilValue`, given that `R_NilValue` is just an empty pairlist (ie, `NULL` and `pairlist()` are identical).
 
-# Variants
-
-The R API provides some support for the various data structures built on top of vectors.
-
-## Arrays
-
-```{r}
-#| results: asis
-#| echo: false
-render_entries("vectors", "Arrays")
-```
-
-Arrays are vectors with a dim attribute:
-
-### Matrices
-
-```{r}
-#| results: asis
-#| echo: false
-render_entries("vectors", "Matrices")
-```
-
-Matrices are a special case of arrays; those with 2 dimensions:
-
-### Factors
-
-```{r}
-#| results: asis
-#| echo: false
-render_entries("vectors", "Factors")
-```
-
-### Data frame
-
-```{r}
-#| results: asis
-#| echo: false
-render_entries("vectors", "Data frame")
-```
-
 ## Miscellaneous helpers
 
 ```{r}

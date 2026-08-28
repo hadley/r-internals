@@ -108,10 +108,3 @@ Represents the `...` structure in R. Easiest to get to with `findVar(R_DotsSymbo
 
 There is a single value with type `NILSXP`: `R_NilValue`.  This corresponds to `NULL` in R, and is often used as generic zero length vector.
 
-## Attributes
-
-```{r}
-#| results: asis
-#| echo: false
-render_entries("pairlists", "Attributes")
-```

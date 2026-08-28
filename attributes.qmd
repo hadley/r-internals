@@ -1,9 +1,50 @@
 # Attributes
 
-::: {.callout-warning}
-Placeholder. Planned content:
+{{< include _setup.qmd >}}
 
-- `Rf_getAttrib`/`Rf_setAttrib` and the API-compliant helpers
-- names/dim/dimnames/class
-- The attribute-defined structures: matrices/arrays, factors, data frames
-:::
+The R API provides some support for the various data structures built on top of vectors.
+
+## Get and set
+
+```{r}
+#| results: asis
+#| echo: false
+render_entries("attributes", "Get and set")
+```
+
+## Arrays
+
+```{r}
+#| results: asis
+#| echo: false
+render_entries("attributes", "Arrays")
+```
+
+Arrays are vectors with a dim attribute:
+
+## Matrices
+
+```{r}
+#| results: asis
+#| echo: false
+render_entries("attributes", "Matrices")
+```
+
+Matrices are a special case of arrays; those with 2 dimensions:
+
+## Factors
+
+```{r}
+#| results: asis
+#| echo: false
+render_entries("attributes", "Factors")
+```
+
+## Data frames
+
+```{r}
+#| results: asis
+#| echo: false
+render_entries("attributes", "Data frames")
+```
+

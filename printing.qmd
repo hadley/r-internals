@@ -1,9 +1,11 @@
 # Printing and messaging
 
-::: {.callout-warning}
-Placeholder. Planned content:
+{{< include _setup.qmd >}}
 
-- `Rprintf`/`REprintf`
-- `Rf_PrintValue`, `R_ShowMessage`
-- Console flushing
-:::
+## Printing
+
+```{r}
+#| results: asis
+#| echo: false
+render_entries("printing", "Printing")
+```
