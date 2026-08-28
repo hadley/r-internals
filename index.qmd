@@ -13,6 +13,15 @@ This chapter is a placeholder. Planned content:
 - Which headers to include and why `<Rinternals.h>` is fine
 :::
 
+## Supported R versions
+
+Following the [tidyverse version policy](https://tidyverse.org/blog/2019/04/r-version-support/),
+this site documents the R C API as it exists in the current release,
+R-devel, and the four previous minor releases — currently R 4.2 through
+current. Behaviour specific to older R versions is not covered; if a
+function or pattern requires a version newer than R 4.2, the entry says so
+in its **Since** field.
+
 Out of scope for this site: the `.C`/`.Fortran` interface as a recommended
 approach, embedding R / writing front-ends, the graphics engine API, and
 non-API entry points except where the [compliance appendix](compliance.qmd)

@@ -53,6 +53,6 @@ format:
 
 execute:
   # knitr runs only for `results: asis` chunks that inject generated
-  # function entries from functions.yaml; C examples are never executed
+  # function entries from functions/*.yaml; C examples are never executed
   enabled: true
   echo: false

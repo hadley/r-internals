@@ -1,7 +1,7 @@
 # Todo: a comprehensive, concise guide to R's C API
 
 Derived from [plan.md](plan.md). Sequencing: scaffold ✔, metadata pipeline ✔,
-then assemble a clean `functions.yaml` from existing content, clean it up,
+then assemble a clean `functions/*.yaml` from existing content, clean it up,
 and only then revise prose and write new chapters.
 
 **Audience reminder:** experienced C programmers, new to R's API. Keep prose
@@ -23,22 +23,22 @@ brief; explain R-specific surprises, not C basics.
 
 ## Phase 2 — Function metadata pipeline ✔ (branch `function-metadata`)
 
-- [x] Define the `functions.yaml` schema (see plan.md: name, family, summary, signature, status, replacement, header, protect, errors, since, r_equivalent, args, notes, example, see_also, chapter, section)
-- [x] Seed `functions.yaml` with a handful of entries (`Rf_allocVector`, `Rf_allocVector3`, `Rf_xlength`/`Rf_length`, `PROTECT` family) as schema examples
-- [x] Write `tools/render-entries.R`: `render_entries(chapter, section)` reads `functions.yaml` and returns canonical markdown; chapters call it from `{r} results: asis` chunks (no splicing; generated text never lives in `.qmd` source)
+- [x] Define the `functions/*.yaml` schema (see plan.md: name, family, summary, signature, status, replacement, header, protect, errors, since, r_equivalent, args, notes, example, see_also, chapter, section)
+- [x] Seed `functions/*.yaml` with a handful of entries (`Rf_allocVector`, `Rf_allocVector3`, `Rf_xlength`/`Rf_length`, `PROTECT` family) as schema examples
+- [x] Write `tools/render-entries.R`: `render_entries(chapter, section)` reads `functions/*.yaml` and returns canonical markdown; chapters call it from `{r} results: asis` chunks (no splicing; generated text never lives in `.qmd` source)
 - [x] Wire up knitr so chapters can call `render_entries()` (`_setup.qmd` include + `execute: enabled: true` in `_quarto.yml`)
 - [x] Validate end-to-end on one chapter (`vectors.qmd` renders; anchors present in HTML)
 - [x] Use the yaml12 package (YAML 1.2) so bare keys like `n`/`y` stay strings — no quoting needed in `args:`
 
-## Phase 3 — Assemble a clean `functions.yaml` (extract existing definitions)
+## Phase 3 — Assemble a clean `functions/*.yaml` (extract existing definitions)
 
 Mechanical extraction, **not** a rewrite: move every hand-written function
-definition in the existing chapters into `functions.yaml` records and replace
+definition in the existing chapters into `functions/*.yaml` records and replace
 each with an asis chunk call. Don't fix stale claims, don't touch surrounding
 prose; park text that doesn't fit the schema in `notes`.
 
-All chapters extracted (268 records in `functions.yaml`, assembled from
-per-chapter fragments in `sources/fragments/`):
+All chapters extracted (268 records, one YAML file per chapter in
+`functions/<chapter>.yaml`):
 
 - [x] `vectors.qmd` — 44 records (creation, access, coercion, tests, scalars, missing values); seed records superseded
 - [x] `strings.qmd` — 20 records (CHARSXP, encodings, creating/reading strings)
@@ -56,19 +56,19 @@ per-chapter fragments in `sources/fragments/`):
 - [x] Every extracted record has `chapter`/`section` matching its current location (reorganisation is Phase 4)
 - [x] Whole book renders cleanly with all entries generated from YAML
 
-Known issues parked for Phase 4 (reported by extraction agents):
+Known issues from extraction, re-verified after Phase 4:
 
-- Some statuses are best guesses; several agents verified against installed R 4.4 headers, others defaulted to `api`
-- `bSEXP` typo in `Rf_installS3Signature` signature kept verbatim (real type: `SEXP`)
-- `Rf_mkString`/`Rf_ScalarString` documented in both vectors and strings fragments — pick one home
-- `R_MissingArg` documented in both symbols and functions fragments — pick one home
-- `errors`/`protect` fields are educated guesses in many records
-- Stray trailing space in rendered output (`cat()` default `sep`) in render-entries.R
+- [x] Statuses best guesses → fixed via header audit + §6.23 mining
+- [x] `bSEXP` typo in `Rf_installS3Signature` → fixed
+- [x] `Rf_mkString`/`Rf_ScalarString` duplication → record lives in strings.yaml only
+- [x] `R_MissingArg` duplication → record lives in symbols.yaml only
+- [x] Stray trailing space in rendered output → no longer reproducible (0/3733 lines)
+- [x] `errors`/`protect` fields are educated guesses in many records — audited all 268 records against R trunk sources; conventions: `protect: n/a` for non-SEXP returns, `errors: can-throw` only when a longjmp is reachable in correct documented usage (allocation, evaluation, coercion, documented error conditions), misuse-only defensive checks stay `never`
 
 ## Phase 3.5 — Verification against `sources/r-api.md` ✔
 
 Diffed prototype-style function names in r-api.md (95) against
-`functions.yaml` (268 records / ~700 names incl. families). 48 covered;
+`functions/*.yaml` (268 records / ~700 names incl. families). 48 covered;
 46 genuine gaps, mostly content for not-yet-written chapters (Phase 7):
 
 - Memory (→ `memory.qmd`): `R_Calloc`, `R_Realloc`, `R_Free`
@@ -78,7 +78,7 @@ Diffed prototype-style function names in r-api.md (95) against
 - Modern §6.23 API (→ Part II chapters): `R_mkClosure`, `R_ClosureEnv`, `R_ClosureFormals`, `Rf_allocLang`, `Rf_isDataFrame`, `R_Dots*` (6), binding functions (`R_GetBindingType`, `R_MakeDelayedBinding`, `R_MakeForcedBinding`, `R_MakeMissingBinding`, `R_DelayedBinding*`, `R_DotDelayed*`, `R_ForcedBindingExpression`, `R_findDotsEnv`), `R_envSymbols`, `R_ParentEnv`, `R_class`, `R_mapAttrib`
 - Experimental resizable vectors: `R_allocResizableVector`, `R_duplicateAsResizable`, `R_resizeVector`, `SET_GROWABLE_BIT`
 
-## Phase 4 — Clean up `functions.yaml` in place
+## Phase 4 — Clean up `functions/*.yaml` in place ✔ (branch `phase-4-tightening`)
 
 Now that everything is machine-readable, fix the data — prose still untouched.
 
@@ -89,8 +89,8 @@ Now that everything is machine-readable, fix the data — prose still untouched.
 - [x] Fix header fields found by audit (`Rf_warning` → `R_ext/Error.h`, `R_ExpandFileName`/`Rf_StringFalse` → `R_ext/Utils.h`, `NA_LOGICAL` → `R_ext/Arith.h`)
 - [x] Deduplicate: `R_MissingArg` (symbols only), `Rf_ScalarString`/`Rf_mkString` (strings only)
 - [x] Reassign `chapter`/`section` to the final chapter map: attributes (from pairlists + vectors arrays/matrices/factors/data-frames), evaluation + printing (from errors), weak references (utilities → external-pointers); qmd sections moved to match
-- [ ] Tighten summaries to one imperative sentence; notes to ≤1 short paragraph (spot-checked; not systematically done)
-- [ ] Add records for the §6.23 replacement functions that lack them (list reported by the mining pass: `R_getVar` family, `R_ClosureFormals/Body/Env`, `STRING_PTR_RO`, `R_getAttributes` family, `R_nrow`/`R_ncol`, R 4.6.0 binding/dots API, etc.) — overlaps with the Phase 3.5 gap list; fold into Phase 7
+- [x] Tighten summaries to one imperative sentence; notes to ≤1 short paragraph (done systematically across all 268 records, one `functions/<chapter>.yaml` file at a time)
+- [x] Re-add `since:` fields for APIs introduced in R 4.2 or later — audit found no existing record needs one (all 4.2+ APIs are Phase 7 gaps); new records added in Phase 7 must carry `since:` when introduced in 4.2+
 
 ## Phase 5 — Part I: Foundations prose (mostly new; adv-r chapter is the model)
 
@@ -133,7 +133,7 @@ match the final `chapter`/`section` assignments from Phase 4.
 - [ ] `attributes.qmd` — attribute-defined structures: matrices/arrays, factors, data frames
 - [ ] `environments.qmd`, `symbols.qmd`, `pairlists.qmd`, `functions.qmd`, `external-pointers.qmd`, `oo.qmd` — brief intros + task-oriented section headings
 
-## Phase 7 — Parts III–IV (reorganise r-api.md content into `functions.yaml` records)
+## Phase 7 — Parts III–IV (reorganise r-api.md content into `functions/*.yaml` records)
 
 - [ ] `evaluation.qmd` — `Rf_eval`, `R_tryEval`/`R_tryEvalSilent`, `R_forceAndCall`, `Rf_applyClosure`; building and evaluating calls end-to-end (worked example)
 - [ ] `errors.qmd` — signalling (`Rf_error`, `Rf_warning`, `*call` variants); longjmp problem and C++/resource safety; condition handling and cleanup (§6.13: `R_UnwindProtect`, `R_withCallingErrorHandler`, `R_MakeUnwindCont`); interrupts (§6.14, `R_CheckUserInterrupt`); C stack checking (§6.15)
@@ -143,22 +143,28 @@ match the final `chapter`/`section` assignments from Phase 4.
 - [ ] `math.qmd` — Rmath: distribution functions (d/p/q/r table), mathematical functions (bessel, gamma, beta...), numerical utilities (`R_pow`, `fmax2`, `imin2`, `expm1`-style helpers), constants (`M_PI` etc.), standalone Rmath (§6.20 folded in)
 - [ ] `numerical.qmd` — optimization (§6.8), integration (§6.9), linear algebra / BLAS / LAPACK headers and `FCONE` (§6.11), `findInterval`, `R_max_col`
 - [ ] `utilities.qmd` — sorting/ordering (`R_qsort`, `R_orderVector`), matching (`Rf_match`, `Rf_pmatch`), `R_compute_identical`, `Rf_duplicated`/`Rf_any_duplicated`, options (`Rf_GetOption1`), numeric parsing (`R_atof`/`R_strtod`), paths/tempfiles (`R_ExpandFileName`, `R_tmpnam2`), platform info (§6.17)
-- [ ] Fill the 46 gaps found in the Phase 3.5 r-api.md diff (listed above) as records in the appropriate chapters
+- [ ] Fill the 46 gaps found in the Phase 3.5 r-api.md diff as records in the appropriate chapters (give each a `since:` field when introduced in R 4.2+):
+  - Memory (→ `memory.qmd`): `R_Calloc`, `R_Realloc`, `R_Free`
+  - Routine registration (→ `calling-c.qmd`): `R_registerRoutines`, `R_useDynamicSymbols`
+  - RNG/math/numerical (→ `rng.qmd`, `math.qmd`, `numerical.qmd`): `R_unif_index`, `R_pow`, `Rf_rmultinom`, `Rdqagi`, `Rdqags`, `R_init_stats`
+  - Conditions/unwind (→ `errors.qmd`): `R_UnwindProtect`, `R_ContinueUnwind`, `R_MakeUnwindCont`, `R_withCallingErrorHandler`, `R_tryCatch`, `R_tryCatchError`
+  - Modern §6.23 API (→ Part II chapters): `R_getVar` family, `R_mkClosure`, `R_ClosureEnv`, `R_ClosureFormals`, `R_ClosureBody`, `Rf_allocLang`, `Rf_isDataFrame`, `STRING_PTR_RO`, `R_getAttributes` family, `R_nrow`/`R_ncol`, `R_Dots*` (6), binding functions (`R_GetBindingType`, `R_MakeDelayedBinding`, `R_MakeForcedBinding`, `R_MakeMissingBinding`, `R_DelayedBinding*`, `R_DotDelayed*`, `R_ForcedBindingExpression`, `R_findDotsEnv`), `R_envSymbols`, `R_ParentEnv`, `R_class`, `R_mapAttrib`
+  - Experimental resizable vectors (→ `vectors.qmd`): `R_allocResizableVector`, `R_duplicateAsResizable`, `R_resizeVector`, `SET_GROWABLE_BIT`
 - [x] `r-version.qmd` — R version: `Rversion.h` and version-check macros (renamed from other-headers.md; moved to Part IV)
 
 ## Phase 8 — Appendices
 
-- [ ] `compliance.qmd` — Migrating to API compliance: non-API → API replacement tables and recipes (§6.23), backports, how to check a package (`R CMD check`, `tools::checkFF`-era tooling). Table-heavy; generate tables from `functions.yaml` where possible
+- [ ] `compliance.qmd` — Migrating to API compliance: non-API → API replacement tables and recipes (§6.23), backports, how to check a package (`R CMD check`, `tools::checkFF`-era tooling). Table-heavy; generate tables from `functions/*.yaml` where possible
 - [x] ~~`B-fortran.qmd`~~ — Fortran interop dropped from scope
 - [x] ~~`C-headers.qmd`~~ — header-map appendix dropped; other-headers.md renamed to `r-version.qmd` and moved to Part IV
 - [ ] Handle internals-only material (`SET_ENVFLAGS`, `HASHTAB`, `BCODESXP` internals, `SETLENGTH`, etc.): records get `status: non-api` and render into clearly-marked "Internals — non-API, do not use in packages" call-outs, or are cut
 
 ## Phase 9 — Tooling, coverage audit, and generated outputs
 
-- [ ] `tools/build-index.R` — read `functions.yaml` → `function-index.qmd` data, `functions.json`, coverage report
+- [ ] `tools/build-index.R` — read `functions/*.yaml` → `function-index.qmd` data, `functions.json`, coverage report
   - [ ] Parse function names declared in installed headers (`R.home("include")`)
   - [ ] Use API-status metadata R publishes (WRE `@apifun` annotations / `tools:::funAPI()`)
-  - [ ] Diff against `functions.yaml`; emit report: undocumented API functions (gaps), records that no longer exist (rot), status mismatches
+  - [ ] Diff against `functions/*.yaml`; emit report: undocumented API functions (gaps), records that no longer exist (rot), status mismatches
   - [ ] Wire into CI: fail on rot, warn on gaps
 - [ ] Turn on the coverage audit; fill gaps until the API-status diff is clean
 - [ ] `tools/llms.R` — post-render: `llms.txt`, `llms-full.txt`, per-page `.md` copies
@@ -167,7 +173,7 @@ match the final `chapter`/`section` assignments from Phase 4.
 
 ## Cross-cutting (applies to every chapter)
 
-- [ ] Every documented entry point appears in exactly one record in `functions.yaml` (plus the generated index); closely-related functions share one record via `family:`
+- [ ] Every documented entry point appears in exactly one record in `functions/*.yaml` (plus the generated index); closely-related functions share one record via `family:`
 - [ ] Entry format is generated by `tools/render-entries.R` from the YAML schema (see plan.md); chapters inject entries via `results: asis` chunks, never hand-written entry text
 - [ ] Chapters are prose-plus-entries: brief conceptual prose (audience knows C — keep it short), then `##` task-oriented sections each with one asis chunk calling `render_entries()`
 - [ ] Verify every claim in migrated text against current R; assign a status to every existing entry or cut it

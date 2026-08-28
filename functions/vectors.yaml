@@ -1,0 +1,612 @@
+---
+- name: Rf_xlength
+  family: Rf_length
+  summary: Get the length of a vector.
+  signature: |
+    R_xlen_t Rf_xlength(SEXP x);
+    R_len_t Rf_length(SEXP x);
+  status: api
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  r_equivalent: length()
+  args:
+    x: any vector.
+  notes: |
+    `Rf_xlength()` uses `R_xlen_t` and supports long vectors (length up to
+    2^64 - 1); `Rf_length()` is limited to `int` (2^31 - 1).
+    Also works on pairlists, where it is O(n).
+  see_also:
+    - Rf_lengthgets
+    - LENGTH
+  chapter: vectors
+  section: Length
+- name: Rf_lengthgets
+  family: Rf_xlengthgets
+  summary: Set the length of a vector by creating a new vector of extended length.
+  signature: |
+    SEXP Rf_lengthgets(SEXP x, R_len_t n);
+    SEXP Rf_xlengthgets(SEXP x, R_xlen_t n);
+  status: api
+  header: Rinternals.h
+  protect: result
+  errors: can-throw
+  r_equivalent: length<-
+  args:
+    x: a vector.
+    n: the new length.
+  notes: |
+    `Rf_xlengthgets()` is the `R_xlen_t`-based variant for long vectors.
+  see_also:
+    - Rf_xlength
+    - SETLENGTH
+  chapter: vectors
+  section: Length
+- name: LENGTH
+  family: XLENGTH
+  summary: Get the length of a vector.
+  signature: |
+    int LENGTH(SEXP x);
+    R_xlen_t XLENGTH(SEXP x);
+  status: api
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  r_equivalent: length()
+  args:
+    x: any vector.
+  notes: |
+    Uppercase variants of `Rf_length()`/`Rf_xlength()`, implemented as
+    macros in base R for efficiency.
+  see_also:
+    - Rf_xlength
+    - SETLENGTH
+  chapter: vectors
+  section: Length
+- name: SETLENGTH
+  family: []
+  summary: Set the length of a vector in place.
+  signature: |
+    void SETLENGTH(SEXP x, int v);
+  status: non-api
+  replacement: Rf_lengthgets
+  header: Rinternals.h
+  protect: n/a
+  errors: can-throw
+  r_equivalent: length<-
+  args:
+    x: a vector.
+    v: the new length.
+  notes: |
+    Uppercase, macro variant of `Rf_lengthgets()`. For resizable (growable)
+    vectors, see `R_allocResizableVector()` and `R_resizeVector()` (R 4.6.0).
+    `SETLENGTH()` errors if applied to an ALTREP vector.
+  see_also:
+    - Rf_lengthgets
+    - LENGTH
+  chapter: vectors
+  section: Length
+- name: IS_LONG_VEC
+  family: []
+  summary: Test whether a vector is a long vector.
+  signature: |
+    int IS_LONG_VEC(SEXP x);
+  status: api
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  args:
+    x: any vector.
+  notes: |
+    True when a vector's length exceeds the `int`-based limit of 2^31 - 1.
+  see_also: Rf_xlength
+  chapter: vectors
+  section: Length
+- name: Rf_allocVector
+  family: []
+  summary: Create a new vector of the given type and length.
+  signature: |
+    SEXP Rf_allocVector(SEXPTYPE type, R_xlen_t n);
+  status: api
+  header: Rinternals.h
+  protect: result
+  errors: can-throw
+  r_equivalent: vector()
+  args:
+    type: "any vector `SEXPTYPE` (`LGLSXP`, `INTSXP`, `REALSXP`, `CPLXSXP`, `STRSXP`, `VECSXP`, `RAWSXP`, `EXPRSXP`)."
+    n: "number of elements; `R_xlen_t` supports long vectors on 64-bit platforms."
+  notes: |
+    Atomic vector contents are uninitialised; `VECSXP`/`EXPRSXP` elements are
+    `R_NilValue` and `STRSXP` elements are `""`. Attributes are unset.
+  example: |
+    SEXP out = PROTECT(Rf_allocVector(REALSXP, n));
+  see_also:
+    - Rf_allocVector3
+    - Rf_coerceVector
+  chapter: vectors
+  section: Create
+- name: Rf_ScalarLogical
+  family:
+    - Rf_ScalarInteger
+    - Rf_ScalarReal
+    - Rf_ScalarComplex
+    - Rf_ScalarRaw
+  summary: Create a vector of length 1 from the corresponding C type.
+  signature: |
+    SEXP Rf_ScalarLogical(int x);
+    SEXP Rf_ScalarInteger(int x);
+    SEXP Rf_ScalarReal(double x);
+    SEXP Rf_ScalarComplex(Rcomplex x);
+    SEXP Rf_ScalarRaw(Rbyte x);
+  status: api
+  header: Rinternals.h
+  protect: result
+  errors: can-throw
+  args:
+    x: the C value to wrap.
+  notes: |
+    For strings, use [`Rf_ScalarString()`](#Rf_ScalarString) or
+    [`Rf_mkString()`](#Rf_mkString) instead. `Rf_ScalarLogical()` returns cached
+    singletons and never allocates; the other `Rf_Scalar*()` variants always
+    allocate.
+  see_also:
+    - Rf_allocVector
+    - Rf_ScalarString
+    - Rf_mkString
+  chapter: vectors
+  section: Create
+- name: Rf_coerceVector
+  family: []
+  summary: Coerce an existing vector to a different type.
+  signature: |
+    SEXP Rf_coerceVector(SEXP x, SEXPTYPE newtype);
+  status: api
+  header: Rinternals.h
+  protect: result
+  errors: can-throw
+  r_equivalent: as.vector()
+  args:
+    x: a vector.
+    newtype: "the `SEXPTYPE` to coerce to."
+  notes: |
+    Errors if it can't coerce between `TYPEOF(x)` and `newtype`.
+  see_also:
+    - Rf_allocVector
+    - Rf_asLogical
+  chapter: vectors
+  section: Create
+- name: Rf_mkNamed
+  family: []
+  summary: Create a named vector of the given type.
+  signature: |
+    SEXP Rf_mkNamed(SEXPTYPE type, const char **names);
+  status: api
+  header: Rinternals.h
+  protect: result
+  errors: can-throw
+  r_equivalent: setNames()
+  args:
+    type: "any vector `SEXPTYPE`."
+    names: "a null-terminated array of `const char*` names."
+  notes: |
+    The vector's length matches the number of names supplied, and its names
+    attribute is set from them.
+  example: |
+    // array of names; note the null string
+    const char *names[] = {"xname", "yname", ""};
+    SEXP list = PROTECT(Rf_mkNamed(VECSXP, names));  // creates a list of length 2
+    SET_VECTOR_ELT(list, 0, x); // x and y are arbitrary SEXPs
+    SET_VECTOR_ELT(list, 1, y);
+    UNPROTECT(1);
+  see_also: Rf_allocVector
+  chapter: vectors
+  section: Create
+- name: Rf_allocVector3
+  family: []
+  summary: Create a new vector using a custom allocator.
+  signature: |
+    SEXP Rf_allocVector3(SEXPTYPE type, R_xlen_t n, R_allocator_t *allocator);
+  status: api
+  header: Rinternals.h
+  protect: result
+  errors: can-throw
+  notes: |
+    Like `Rf_allocVector()`, but memory for the data payload comes from
+    `allocator`; pass `NULL` for plain `Rf_allocVector()` behaviour. Rarely
+    needed in package code.
+  see_also: Rf_allocVector
+  chapter: vectors
+  section: Create
+- name: LOGICAL
+  family:
+    - INTEGER
+    - REAL
+    - COMPLEX
+    - RAW
+  summary: Get a pointer to the underlying C array of an atomic vector.
+  signature: |
+    int*      LOGICAL(SEXP x);
+    int*      INTEGER(SEXP x);
+    double*   REAL(SEXP x);
+    Rcomplex* COMPLEX(SEXP x);
+    Rbyte*    RAW(SEXP x);
+  status: api
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  args:
+    x: a vector of the corresponding type.
+  notes: |
+    For long vectors, cache the returned pointer and reuse it rather than
+    calling the accessor on every iteration.
+  example: |
+    int* px = INTEGER(x);
+    for (int i = 0; i < n; ++i) {
+      px[i] = px[i] * 2;
+    }
+  see_also:
+    - STRING_ELT
+    - VECTOR_ELT
+  chapter: vectors
+  section: Get and set values
+- name: STRING_ELT
+  family: SET_STRING_ELT
+  summary: Get or set a single element of a character vector.
+  signature: |
+    SEXP STRING_ELT(SEXP x, R_xlen_t i);
+    void SET_STRING_ELT(SEXP x, R_xlen_t i, SEXP v);
+  status: api
+  header: Rinternals.h
+  protect: not-needed
+  errors: can-throw
+  args:
+    x: "a `STRSXP`."
+    i: zero-based element index.
+    v: "the `CHARSXP` to set."
+  notes: |
+    `STRING_ELT()` returns a `CHARSXP`, not an ordinary `SEXP` value; strings
+    use a pair of accessor functions rather than a plain C array.
+  see_also:
+    - VECTOR_ELT
+    - STRING_PTR
+  chapter: vectors
+  section: Get and set values
+- name: VECTOR_ELT
+  family: SET_VECTOR_ELT
+  summary: Get or set a single element of a list.
+  signature: |
+    SEXP VECTOR_ELT(SEXP x, R_xlen_t i);
+    SEXP SET_VECTOR_ELT(SEXP x, R_xlen_t i, SEXP v);
+  status: api
+  header: Rinternals.h
+  protect: not-needed
+  errors: can-throw
+  args:
+    x: "a `VECSXP`."
+    i: zero-based element index.
+    v: the value to set.
+  notes: |
+    `VECTOR_ELT()` may return any `SEXPTYPE`; lists use a pair of accessor
+    functions rather than a plain C array.
+  see_also:
+    - STRING_ELT
+    - VECTOR_PTR
+  chapter: vectors
+  section: Get and set values
+- name: STRING_PTR
+  family: []
+  summary: Get a pointer to the elements of a character vector.
+  signature: |
+    SEXP* STRING_PTR(SEXP x);
+  status: non-api
+  replacement: STRING_PTR_RO
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  args:
+    x: "a `STRSXP`."
+  notes: |
+    A writable pointer to character vector data can violate the memory
+    manager's integrity assumptions and is not supported; use
+    `STRING_PTR_RO()` instead.
+  see_also: STRING_ELT
+  chapter: vectors
+  section: Get and set values
+- name: VECTOR_PTR
+  family: []
+  summary: Get a pointer to the elements of a list.
+  signature: |
+    SEXP* VECTOR_PTR(SEXP x);
+  status: non-api
+  replacement: VECTOR_ELT
+  header: Rinternals.h
+  protect: not-needed
+  errors: can-throw
+  args:
+    x: "a `VECSXP`."
+  notes: |
+    A deprecated interface that now throws an error.
+  see_also: VECTOR_ELT
+  chapter: vectors
+  section: Get and set values
+- name: Rf_asLogical
+  family:
+    - Rf_asInteger
+    - Rf_asReal
+    - Rf_asComplex
+  summary: "Extract the first value of a vector as a C type, coercing as necessary."
+  signature: |
+    int Rf_asLogical(SEXP x);
+    int Rf_asInteger(SEXP x);
+    double Rf_asReal(SEXP x);
+    Rcomplex Rf_asComplex(SEXP x);
+  status: api
+  header: Rinternals.h
+  protect: n/a
+  errors: can-throw
+  r_equivalent: as.logical()
+  args:
+    x: a vector.
+  see_also: Rf_coerceVector
+  chapter: vectors
+  section: Scalars
+- name: NA_LOGICAL
+  family:
+    - NA_INTEGER
+    - NA_STRING
+  summary: "Represent missing logical, integer, and character values."
+  signature: |
+    #define NA_LOGICAL R_NaInt
+    #define NA_INTEGER R_NaInt
+    #define NA_STRING  R_NaString
+  status: api
+  header: R_ext/Arith.h
+  protect: n/a
+  errors: never
+  r_equivalent: NA
+  notes: |
+    `NA_LOGICAL` and `NA_INTEGER` are both `R_NaInt` (currently `INT_MIN`);
+    `NA_STRING` is `R_NaString`.
+  see_also: NA_REAL
+  chapter: vectors
+  section: Special values
+- name: NA_REAL
+  family: R_NaReal
+  summary: Represent a missing double value.
+  signature: |
+    double R_NaReal;
+    #define NA_REAL R_NaReal
+  status: api
+  header: R_ext/Arith.h
+  protect: n/a
+  errors: never
+  r_equivalent: NA_real_
+  notes: |
+    Represented as an `NaN` with a specific bit pattern, per the IEEE 754
+    floating-point standard.
+  see_also:
+    - R_NaN
+    - ISNA
+    - NA_LOGICAL
+  chapter: vectors
+  section: Special values
+- name: R_NaN
+  family:
+    - R_PosInf
+    - R_NegInf
+  summary: Represent NaN and positive or negative infinity as doubles.
+  signature: |
+    double R_NaN;
+    double R_PosInf;
+    double R_NegInf;
+  status: api
+  header: R_ext/Arith.h
+  protect: n/a
+  errors: never
+  r_equivalent: "NaN"
+  notes: |
+    Use these constants, together with `NA_REAL`, for cross-platform-safe
+    NaN, infinite, and missing values.
+  see_also:
+    - NA_REAL
+    - ISNA
+  chapter: vectors
+  section: Special values
+- name: ISNA
+  family:
+    - ISNAN
+    - R_FINITE
+  summary: "Check a double for missing, NaN, or non-finite values."
+  signature: |
+    int ISNA(double x);
+    int ISNAN(double x);
+    int R_FINITE(double x);
+  status: api
+  header: R_ext/Arith.h
+  protect: n/a
+  errors: never
+  r_equivalent: is.na()
+  args:
+    x: the double to check.
+  notes: |
+    These are macros; `R_IsNA()`, `R_IsNaN()`, and `R_finite()` are the
+    equivalent functions. Check `!R_FINITE()` for non-finite values.
+  see_also:
+    - R_IsNA
+    - NA_REAL
+  chapter: vectors
+  section: Special values
+- name: R_IsNA
+  family:
+    - R_IsNaN
+    - R_finite
+  summary: "Check a double for missing, NaN, or non-finite values."
+  signature: |
+    int R_IsNA(double);
+    int R_IsNaN(double);
+    int R_finite(double);
+  status: api
+  header: R_ext/Arith.h
+  protect: n/a
+  errors: never
+  r_equivalent: is.finite()
+  notes: |
+    Function equivalents of the `ISNA()`, `ISNAN()`, and `R_FINITE()` macros.
+    `R_finite()` is false for `NA`, `NaN`, `Inf`, and `-Inf`.
+  see_also: ISNA
+  chapter: vectors
+  section: Special values
+- name: Rf_isLogical
+  family:
+    - Rf_isInteger
+    - Rf_isReal
+    - Rf_isComplex
+    - Rf_isString
+    - Rf_isExpression
+  summary: Test if an SEXP is a vector of the given type.
+  signature: |
+    Rboolean Rf_isLogical(SEXP s);
+    Rboolean Rf_isInteger(SEXP s);
+    Rboolean Rf_isReal(SEXP s);
+    Rboolean Rf_isComplex(SEXP s);
+    Rboolean Rf_isString(SEXP s);
+    Rboolean Rf_isExpression(SEXP s);
+  status: api
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  r_equivalent: is.logical()
+  args:
+    s: any SEXP.
+  notes: |
+    No function tests for `RAWSXP` or `VECSXP`; use `TYPEOF(x) == RAWSXP` or
+    `TYPEOF(x) == VECSXP` instead. Factors are also `INTSXP`s, so
+    `TYPEOF(x) == INTSXP` accepts both plain integer vectors and factors;
+    combine `Rf_isInteger()` with `Rf_isFactor()` to distinguish them.
+  see_also:
+    - Rf_isNewList
+    - Rf_isFactor
+  chapter: vectors
+  section: Test
+- name: Rf_isNewList
+  family:
+    - Rf_isVectorAtomic
+    - Rf_isVectorList
+    - Rf_isVector
+    - Rf_isNumber
+    - Rf_isNumeric
+  summary: Test for frequently used combinations of vector types.
+  signature: |
+    Rboolean Rf_isNewList(SEXP s);
+    Rboolean Rf_isVectorAtomic(SEXP s);
+    Rboolean Rf_isVectorList(SEXP s);
+    Rboolean Rf_isVector(SEXP s);
+    Rboolean Rf_isNumber(SEXP s);
+    Rboolean Rf_isNumeric(SEXP s);
+  status: api
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  args:
+    s: any SEXP.
+  notes: |
+    `Rf_isNewList()` matches `NILSXP`/`VECSXP`; `Rf_isVectorAtomic()` matches
+    `LGLSXP`/`INTSXP`/`REALSXP`/`CPLXSXP`/`STRSXP`/`RAWSXP`;
+    `Rf_isVectorList()` matches `LISTSXP`/`EXPRSXP`; `Rf_isVector()` is their
+    union; `Rf_isNumber()` and `Rf_isNumeric()` match `LGLSXP`/`REALSXP`/
+    `CPLXSXP` and non-factor `INTSXP`. Results can diverge from their R
+    equivalents: `Rf_isVectorAtomic(R_NilValue)` is false (`is.atomic(NULL)`
+    is true) while `Rf_isNewList(R_NilValue)` is true (`is.list(NULL)` is
+    false); consider writing your own wrapper around `TYPEOF(x)` instead.
+  see_also: Rf_isLogical
+  chapter: vectors
+  section: Test
+- name: Rf_copyVector
+  family: []
+  summary: "Copy from one vector to another, recycling as necessary."
+  signature: |
+    void Rf_copyVector(SEXP source, SEXP target);
+  status: api
+  header: Rinternals.h
+  protect: n/a
+  errors: can-throw
+  args:
+    source: the vector to copy from.
+    target: the vector to copy to.
+  notes: |
+    Use `Rf_duplicate()` instead if you just want to duplicate a vector
+    without recycling.
+  see_also: Rf_copyMatrix
+  chapter: vectors
+  section: Miscellaneous helpers
+- name: Rf_stringSuffix
+  family: []
+  summary: Extract the tail of a STRSXP.
+  signature: |
+    SEXP Rf_stringSuffix(SEXP string, int fromIndex);
+  status: api
+  header: Rinternals.h
+  protect: result
+  errors: can-throw
+  r_equivalent: substring()
+  args:
+    string: "a `STRSXP`."
+    fromIndex: the index to start the suffix from.
+  see_also: []
+  chapter: vectors
+  section: Miscellaneous helpers
+- name: IS_SCALAR
+  family: IS_SIMPLE_SCALAR
+  summary: Test if an object is a scalar (a vector of length 1) of the given type.
+  signature: |
+    #define IS_SCALAR(x, type) (TYPEOF(x) == (type) && XLENGTH(x) == 1)
+    #define IS_SIMPLE_SCALAR(x, type) (IS_SCALAR(x, type) && ATTRIB(x) == R_NilValue)
+  status: api
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  args:
+    x: any SEXP.
+    type: "a `SEXPTYPE`."
+  notes: |
+    `IS_SIMPLE_SCALAR()` additionally requires that the object has no
+    attributes.
+  see_also: []
+  chapter: vectors
+  section: Miscellaneous helpers
+- name: Rf_isVectorizable
+  family: []
+  summary: Test if a list can be converted into a vector.
+  signature: |
+    Rboolean Rf_isVectorizable(SEXP x);
+  status: api
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  args:
+    x: a list or pairlist.
+  notes: |
+    True when every element of the list or pairlist is a vector of length 0
+    or 1.
+  see_also: []
+  chapter: vectors
+  section: Miscellaneous helpers
+- name: Rf_duplicated
+  family: []
+  summary: Identify duplicated elements of a vector.
+  signature: |
+    SEXP Rf_duplicated(SEXP x, Rboolean from_last);
+  status: api
+  header: Rinternals.h
+  protect: result
+  errors: can-throw
+  r_equivalent: duplicated()
+  args:
+    x: a vector.
+    from_last: "if `TRUE`, search from the last element."
+  notes: |
+    Returns an `LGLSXP` the same length as `x`.
+  see_also: []
+  chapter: vectors
+  section: Miscellaneous helpers
+...

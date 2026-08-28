@@ -54,7 +54,7 @@ After the SEXPTYPE, the most important property of a vector is it's length. Hist
 typedef int R_len_t;
 ```
 
-As of R 3.0.0, R vectors can have length up to $2 ^ {64} - 1$. If you want your code to be as general as possible, you should instead use the `R_xlen_t`based interface:
+R vectors can have length up to $2 ^ {64} - 1$. If you want your code to be as general as possible, you should instead use the `R_xlen_t`based interface:
 
 ```c
 // ptrdiff_t is the type of the result of subtracting two pointers, and

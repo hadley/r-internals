@@ -1,0 +1,340 @@
+---
+- name: Rf_getAttrib
+  family: Rf_setAttrib
+  summary: Get or set the attribute associated with a symbol.
+  signature: |
+    SEXP Rf_getAttrib(SEXP x, SEXP symbol);
+    SEXP Rf_setAttrib(SEXP x, SEXP symbol, SEXP value);
+  status: api
+  header: Rinternals.h
+  protect: not-needed
+  errors: can-throw
+  see_also:
+    - Rf_copyMostAttrib
+    - ATTRIB
+  chapter: attributes
+  section: Get and set
+- name: Rf_copyMostAttrib
+  family: []
+  summary: "Copy attributes, except names, dim, and dimnames, from one object to another."
+  signature: |
+    void Rf_copyMostAttrib(SEXP source, SEXP target);
+  status: api
+  header: Rinternals.h
+  protect: n/a
+  errors: can-throw
+  see_also:
+    - Rf_getAttrib
+    - DUPLICATE_ATTRIB
+  chapter: attributes
+  section: Get and set
+- name: ATTRIB
+  family: SET_ATTRIB
+  summary: "Get or set the pairlist containing an object's attributes."
+  signature: |
+    SEXP ATTRIB(SEXP x);
+    void SET_ATTRIB(SEXP x, SEXP v);
+  status: non-api
+  replacement: Rf_getAttrib
+  header: Rinternals.h
+  protect: not-needed
+  errors: never
+  notes: |
+    Not part of the API, since it exposes the internal linked-list
+    representation of attributes. Use `Rf_getAttrib()`/`Rf_setAttrib()` for
+    individual attributes, `DUPLICATE_ATTRIB()`/`SHALLOW_DUPLICATE_ATTRIB()`
+    to copy attributes between objects, `CLEAR_ATTRIB()` (R 4.5.0) to remove
+    all attributes, `ANY_ATTRIB()` (R 4.5.0) to test for any attributes, and
+    `R_mapAttrib()` (R 4.6.0) to iterate over attributes.
+  see_also:
+    - Rf_getAttrib
+    - DUPLICATE_ATTRIB
+  chapter: attributes
+  section: Get and set
+- name: DUPLICATE_ATTRIB
+  family: SHALLOW_DUPLICATE_ATTRIB
+  summary: Copy attributes from one object to another when duplicating an object.
+  signature: |
+    void DUPLICATE_ATTRIB(SEXP to, SEXP from);
+    void SHALLOW_DUPLICATE_ATTRIB(SEXP to, SEXP from);
+  status: api
+  header: Rinternals.h
+  protect: n/a
+  errors: can-throw
+  see_also: Rf_copyMostAttrib
+  chapter: attributes
+  section: Get and set
+- name: Rf_isArray
+  family: []
+  summary: Test if an object is an array.
+  signature: |
+    Rboolean Rf_isArray(SEXP x);
+  status: api
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  r_equivalent: is.array()
+  args:
+    x: any SEXP.
+  notes: |
+    Arrays are vectors with a dim attribute.
+  see_also:
+    - Rf_allocArray
+    - Rf_isMatrix
+  chapter: attributes
+  section: Arrays
+- name: Rf_allocArray
+  family: Rf_alloc3DArray
+  summary: Create an array of the given type and dimensions.
+  signature: |
+    SEXP Rf_allocArray(SEXPTYPE type, SEXP dims);
+    SEXP Rf_alloc3DArray(SEXPTYPE type, int, int, int);
+  status: api
+  header: Rinternals.h
+  protect: result
+  errors: can-throw
+  r_equivalent: array()
+  args:
+    type: "any vector `SEXPTYPE`."
+    dims: an integer vector of dimensions.
+  see_also:
+    - Rf_allocMatrix
+    - Rf_dimgets
+  chapter: attributes
+  section: Arrays
+- name: Rf_GetArrayDimnames
+  family: []
+  summary: Get the dimnames of an array.
+  signature: |
+    SEXP Rf_GetArrayDimnames(SEXP x);
+  status: api
+  header: Rinternals.h
+  protect: not-needed
+  errors: never
+  r_equivalent: dimnames()
+  args:
+    x: an array.
+  see_also: Rf_dimgets
+  chapter: attributes
+  section: Arrays
+- name: Rf_dimgets
+  family: Rf_dimnamesgets
+  summary: Set the dim or dimnames attribute of an array.
+  signature: |
+    SEXP Rf_dimgets(SEXP x, SEXP v);
+    SEXP Rf_dimnamesgets(SEXP x, SEXP v);
+  status: api
+  header: Rinternals.h
+  protect: not-needed
+  errors: can-throw
+  r_equivalent: dim<-
+  args:
+    x: an array.
+    v: the new dim (an integer vector) or dimnames (a list).
+  see_also:
+    - Rf_GetArrayDimnames
+    - Rf_DropDims
+  chapter: attributes
+  section: Arrays
+- name: Rf_DropDims
+  family: []
+  summary: Drop the dim attribute of an array.
+  signature: |
+    SEXP Rf_DropDims(SEXP x);
+  status: api
+  header: Rinternals.h
+  protect: not-needed
+  errors: can-throw
+  r_equivalent: drop()
+  args:
+    x: an array.
+  see_also: Rf_dimgets
+  chapter: attributes
+  section: Arrays
+- name: Rf_arraySubscript
+  family: []
+  summary: Compute the vector offset corresponding to an array subscript.
+  signature: |
+    SEXP Rf_arraySubscript(int, SEXP, SEXP, SEXP (*)(SEXP,SEXP), SEXP (*)(SEXP, int), SEXP);
+  status: api
+  header: Rinternals.h
+  protect: result
+  errors: can-throw
+  see_also: []
+  chapter: attributes
+  section: Arrays
+- name: Rf_allocMatrix
+  family: []
+  summary: Create a matrix of the given type and dimensions.
+  signature: |
+    SEXP Rf_allocMatrix(SEXPTYPE type, int nrow, int ncol);
+  status: api
+  header: Rinternals.h
+  protect: result
+  errors: can-throw
+  r_equivalent: matrix()
+  args:
+    type: "any vector `SEXPTYPE`."
+    nrow: number of rows.
+    ncol: number of columns.
+  notes: |
+    Matrices are arrays with exactly 2 dimensions.
+  see_also:
+    - Rf_allocArray
+    - Rf_ncols
+  chapter: attributes
+  section: Matrices
+- name: Rf_isMatrix
+  family: []
+  summary: Test if an object is a matrix.
+  signature: |
+    Rboolean Rf_isMatrix(SEXP x);
+  status: api
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  r_equivalent: is.matrix()
+  args:
+    x: any SEXP.
+  see_also: Rf_isArray
+  chapter: attributes
+  section: Matrices
+- name: Rf_GetColNames
+  family: Rf_GetRowNames
+  summary: Get the column or row names from a dimnames object.
+  signature: |
+    SEXP Rf_GetColNames(SEXP dimnames);
+    SEXP Rf_GetRowNames(SEXP dimnames);
+  status: api
+  header: Rinternals.h
+  protect: not-needed
+  errors: never
+  r_equivalent: colnames()
+  args:
+    dimnames: a dimnames object.
+  see_also: Rf_GetMatrixDimnames
+  chapter: attributes
+  section: Matrices
+- name: Rf_GetMatrixDimnames
+  family: []
+  summary: Get the row and column names of a matrix through output parameters.
+  signature: |
+    void Rf_GetMatrixDimnames(SEXP x, SEXP* rl, SEXP* cl,
+      const char** rownames, const char** colnames);
+  status: api
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  r_equivalent: dimnames()
+  args:
+    x: a matrix.
+    rl: output parameter for the row names as a SEXP.
+    cl: output parameter for the column names as a SEXP.
+    rownames: output parameter for the row names as C strings.
+    colnames: output parameter for the column names as C strings.
+  see_also: Rf_GetColNames
+  chapter: attributes
+  section: Matrices
+- name: Rf_ncols
+  family: Rf_nrows
+  summary: Get the number of columns or rows of a matrix.
+  signature: |
+    int Rf_ncols(SEXP x);
+    int Rf_nrows(SEXP x);
+  status: api
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  r_equivalent: ncol()
+  args:
+    x: a matrix.
+  see_also: Rf_allocMatrix
+  chapter: attributes
+  section: Matrices
+- name: Rf_copyMatrix
+  family: Rf_copyListMatrix
+  summary: Copy the contents of one matrix into another.
+  signature: |
+    void Rf_copyMatrix(SEXP source, SEXP target, Rboolean byrow);
+    void Rf_copyListMatrix(SEXP source, SEXP target, Rboolean byrow);
+  status: api
+  header: Rinternals.h
+  protect: n/a
+  errors: can-throw
+  args:
+    source: the matrix to copy from.
+    target: the matrix to copy to.
+    byrow: "if `TRUE`, copy by rows."
+  see_also: Rf_copyVector
+  chapter: attributes
+  section: Matrices
+- name: Rf_isFactor
+  family:
+    - Rf_isOrdered
+    - Rf_isUnordered
+  summary: "Test if an object is a factor, or an ordered or unordered factor."
+  signature: |
+    Rboolean Rf_isFactor(SEXP x);
+    Rboolean Rf_isOrdered(SEXP x);
+    Rboolean Rf_isUnordered(SEXP x);
+  status: api
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  r_equivalent: is.factor()
+  args:
+    x: any SEXP.
+  see_also:
+    - Rf_nlevels
+    - Rf_asCharacterFactor
+  chapter: attributes
+  section: Factors
+- name: Rf_nlevels
+  family: []
+  summary: Get the number of levels of a factor.
+  signature: |
+    int Rf_nlevels(SEXP x);
+  status: api
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  r_equivalent: nlevels()
+  args:
+    x: a factor.
+  see_also: Rf_isFactor
+  chapter: attributes
+  section: Factors
+- name: Rf_asCharacterFactor
+  family: []
+  summary: Coerce a factor into a character vector.
+  signature: |
+    SEXP Rf_asCharacterFactor(SEXP x);
+  status: api
+  header: Rinternals.h
+  protect: result
+  errors: can-throw
+  r_equivalent: as.character()
+  args:
+    x: a factor.
+  see_also: Rf_isFactor
+  chapter: attributes
+  section: Factors
+- name: Rf_isFrame
+  family: []
+  summary: Test if an object is a data frame.
+  signature: |
+    Rboolean Rf_isFrame(SEXP x);
+  status: non-api
+  replacement: Rf_isDataFrame
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  r_equivalent: is.data.frame()
+  args:
+    x: any SEXP.
+  notes: |
+    Prefer `Rf_isDataFrame()` (added in R 4.5.0) in new code.
+  see_also: []
+  chapter: attributes
+  section: Data frames
+...

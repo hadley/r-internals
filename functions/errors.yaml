@@ -1,0 +1,57 @@
+---
+- name: Rf_error
+  family: Rf_errorcall
+  summary: "Signal an error, optionally including the call in the message."
+  signature: |
+    void Rf_error(const char* format, ...);
+    void Rf_errorcall(SEXP call, const char* format, ...);
+  status: api
+  header: Rinternals.h
+  protect: n/a
+  errors: can-throw
+  r_equivalent: stop()
+  notes: |
+    Use `Rf_errorcall(R_NilValue, ...)` to suppress display of the call.
+  see_also: []
+  chapter: errors
+  section: "Errors, warnings, and printing"
+- name: Rf_warning
+  family:
+    - Rf_warningcall
+    - Rf_warningcall_immediate
+  summary: "Signal a warning, optionally including the call or displaying it immediately."
+  signature: |
+    void Rf_warning(const char* format, ...);
+    void Rf_warningcall(SEXP call, const char*, ...);
+    void Rf_warningcall_immediate(SEXP call, const char*, ...);
+  status: api
+  header: R_ext/Error.h
+  protect: n/a
+  errors: can-throw
+  r_equivalent: warning()
+  see_also: []
+  chapter: errors
+  section: "Errors, warnings, and printing"
+- name: error_return
+  family: errorcall_return
+  summary: "Eliminate compiler warnings about non-void functions that don't return."
+  signature: |
+    #define error_return(msg) { \
+      Rf_error(msg); \
+      return R_NilValue; \
+    }
+    #define errorcall_return(cl,msg) { \
+      Rf_errorcall(cl, msg); \
+      return R_NilValue; \
+    }
+  status: api
+  header: Rinternals.h
+  protect: n/a
+  errors: can-throw
+  notes: |
+    `Rf_error` will `longjmp` and so any code following will not be executed;
+    however, most compilers do not detect this when providing warnings.
+  see_also: Rf_error
+  chapter: errors
+  section: "Errors, warnings, and printing"
+...

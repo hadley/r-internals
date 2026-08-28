@@ -1,0 +1,102 @@
+---
+- name: Rf_eval
+  family: []
+  summary: Evaluate an expression in an environment.
+  signature: |
+    SEXP Rf_eval(SEXP expression, SEXP environment);
+  status: api
+  header: Rinternals.h
+  protect: result
+  errors: can-throw
+  r_equivalent: eval()
+  notes: |
+    Expression can be anything - non-language objects are returned as is.
+  see_also: []
+  chapter: evaluation
+  section: Evaluation
+- name: R_forceAndCall
+  family: []
+  summary: Force promises in an expression and then call it.
+  signature: |
+    SEXP R_forceAndCall(SEXP expression, int n, SEXP environment);
+  status: api
+  header: Rinternals.h
+  protect: result
+  errors: can-throw
+  args:
+    n: The number of arguments to force.
+  notes: |
+    `n` is the number of leading arguments in the call to force before
+    evaluating.
+  see_also: Rf_eval
+  chapter: evaluation
+  section: Evaluation
+- name: R_tryEval
+  family: R_tryEvalSilent
+  summary: "Evaluate an R expression in a stand-alone context so errors don't longjmp."
+  signature: |
+    SEXP R_tryEval(SEXP expression, SEXP environment, int* pOutError);
+    SEXP R_tryEvalSilent(SEXP expression, SEXP environment, int* pOutError);
+  status: api
+  header: Rinternals.h
+  protect: result
+  errors: never
+  r_equivalent: try()
+  args:
+    pOutError: "On error, the function returns NULL and sets the contents of `pOutError` to 1."
+  notes: |
+    `R_tryEvalSilent()` behaves like `R_tryEval()` but suppresses printing
+    of error messages. Both ignore existing condition handlers, so R-level
+    `tryCatch()` and `suppressWarnings()` have no effect on the evaluation.
+  see_also: R_ToplevelExec
+  chapter: evaluation
+  section: Protected evaluation
+- name: R_ToplevelExec
+  family: []
+  summary: "Execute a C function in a top-level context, catching any errors."
+  signature: |
+    Rboolean R_ToplevelExec(void (*fun)(void *), void *data);
+  status: api
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  args:
+    fun: "C function to call after context setup. Passed `*data`."
+  notes: |
+    Both `R_tryEval()` and `R_tryEvalSilent()` call `R_ToplevelExec` under the hood.
+  see_also: R_tryEval
+  chapter: evaluation
+  section: Protected evaluation
+- name: R_curErrorBuf
+  family: []
+  summary: Access the text of the current error.
+  signature: |
+    const char *R_curErrorBuf();
+  status: api
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  r_equivalent: geterrmessage()
+  see_also: []
+  chapter: evaluation
+  section: Protected evaluation
+- name: R_ExecWithCleanup
+  family: []
+  summary: "Execute a C function in a protected context, with cleanup before teardown."
+  signature: |
+    SEXP R_ExecWithCleanup(SEXP (*fun)(void *), void *data,
+                           void (*cleanfun)(void *),
+                           void *cleandata);
+  status: api
+  header: Rinternals.h
+  protect: result
+  errors: can-throw
+  args:
+    fun: "C function to call after context setup. Passed `*data`."
+    cleanfun: "C function to call before context teardown. Passed `*data`."
+  notes: |
+    Not used anywhere in R source.
+  see_also: R_ToplevelExec
+  chapter: evaluation
+  section: Protected evaluation
+...

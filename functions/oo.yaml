@@ -1,0 +1,259 @@
+---
+- name: Rf_isObject
+  family: []
+  summary: Test whether an object is flagged as object-oriented.
+  signature: |
+    Rboolean (Rf_isObject)(SEXP s);
+  status: api
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  r_equivalent: is.object()
+  notes: |
+    Returns non-zero when the `OBJECT` bit is set on `s`, i.e. the object
+    carries a class attribute.
+  see_also: []
+  chapter: oo
+  section: Object testing
+- name: Rf_inherits
+  family: []
+  summary: Test whether an object inherits from a given class.
+  signature: |
+    Rboolean Rf_inherits(SEXP, const char *);
+  status: api
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  r_equivalent: inherits()
+  notes: |
+    Matches the given name against the object's class attribute.
+  see_also: []
+  chapter: oo
+  section: S3
+- name: Rf_S3Class
+  family: []
+  summary: Return the S3 class of an object.
+  signature: |
+    SEXP Rf_S3Class(SEXP);
+  status: api
+  header: Rinternals.h
+  protect: not-needed
+  errors: never
+  r_equivalent: class()
+  notes: |
+    Returns a character vector of class names.
+  see_also: []
+  chapter: oo
+  section: S3
+- name: Rf_isBasicClass
+  family: []
+  summary: Test whether a class name is one of the basic classes.
+  signature: |
+    int Rf_isBasicClass(const char *);
+  status: api
+  header: Rinternals.h
+  protect: n/a
+  errors: can-throw
+  notes: |
+    Basic classes are the built-in pseudo-classes (e.g. `"numeric"`, `"matrix"`) known to the methods package.
+  see_also: []
+  chapter: oo
+  section: S3
+- name: Rf_classgets
+  family: []
+  summary: Set the class attribute of an object.
+  signature: |
+    SEXP Rf_classgets(SEXP, SEXP);
+  status: api
+  header: Rinternals.h
+  protect: not-needed
+  errors: can-throw
+  r_equivalent: class<-()
+  see_also: []
+  chapter: oo
+  section: S3
+- name: Rf_isS4
+  family: []
+  summary: Test whether an object is an S4 object.
+  signature: |
+    Rboolean Rf_isS4(SEXP);
+  status: api
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  r_equivalent: isS4()
+  notes: |
+    Returns non-zero for objects of type `S4SXP`.
+  see_also: []
+  chapter: oo
+  section: "S4 (`S4SXP`)"
+- name: Rf_asS4
+  family: []
+  summary: Set or unset the S4 flag on an object.
+  signature: |
+    SEXP Rf_asS4(SEXP, Rboolean, int);
+  status: api
+  header: Rinternals.h
+  protect: result
+  errors: can-throw
+  see_also: []
+  chapter: oo
+  section: "S4 (`S4SXP`)"
+- name: Rf_allocS4Object
+  family: []
+  summary: Allocate a new S4 object.
+  signature: |
+    SEXP Rf_allocS4Object(void);
+  status: api
+  header: Rinternals.h
+  protect: result
+  errors: can-throw
+  notes: |
+    Allocates a bare S4 object (type `S4SXP`) with the S4 flag set.
+  see_also: []
+  chapter: oo
+  section: "S4 (`S4SXP`)"
+- name: R_S4_extends
+  family: R_extends
+  summary: Query S4 class inheritance (extends) relationships.
+  signature: |
+    SEXP R_S4_extends(SEXP klass, SEXP useTable);
+    Rboolean R_extends(SEXP class1, SEXP class2, SEXP env);
+  status: api
+  header: Rinternals.h
+  protect: result
+  errors: can-throw
+  r_equivalent: extends()
+  notes: |
+    `R_S4_extends()` returns the extends information for class `klass`;
+    `R_extends()` tests whether `class1` extends `class2` in environment
+    `env`.
+  see_also: []
+  chapter: oo
+  section: "S4 (`S4SXP`)"
+- name: R_do_MAKE_CLASS
+  family: []
+  summary: Create a new S4 class definition.
+  signature: |
+    SEXP R_do_MAKE_CLASS(const char *what);
+  status: api
+  header: Rinternals.h
+  protect: result
+  errors: can-throw
+  r_equivalent: setClass()
+  see_also: []
+  chapter: oo
+  section: "S4 (`S4SXP`)"
+- name: R_getClassDef
+  family: R_getClassDef_R
+  summary: Retrieve an S4 class definition by name.
+  signature: |
+    SEXP R_getClassDef(const char *what);
+    SEXP R_getClassDef_R(SEXP what);
+  status: api
+  header: Rinternals.h
+  protect: result
+  errors: can-throw
+  r_equivalent: getClassDef()
+  notes: |
+    `R_getClassDef_R()` takes the class name as a `SEXP` rather than a C
+    string.
+  see_also: []
+  chapter: oo
+  section: "S4 (`S4SXP`)"
+- name: R_has_methods_attached
+  family: []
+  summary: Test whether methods are currently attached.
+  signature: |
+    Rboolean R_has_methods_attached(void);
+  status: api
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  see_also: []
+  chapter: oo
+  section: "S4 (`S4SXP`)"
+- name: R_isVirtualClass
+  family: []
+  summary: Test whether an S4 class definition describes a virtual class.
+  signature: |
+    Rboolean R_isVirtualClass(SEXP class_def, SEXP env);
+  status: api
+  header: Rinternals.h
+  protect: n/a
+  errors: can-throw
+  see_also: []
+  chapter: oo
+  section: "S4 (`S4SXP`)"
+- name: R_do_new_object
+  family: []
+  summary: Create a new object from an S4 class definition.
+  signature: |
+    SEXP R_do_new_object(SEXP class_def);
+  status: api
+  header: Rinternals.h
+  protect: result
+  errors: can-throw
+  r_equivalent: new()
+  see_also: []
+  chapter: oo
+  section: "S4 (`S4SXP`)"
+- name: R_check_class_and_super
+  family: R_check_class_etc
+  summary: "Check an object against a set of valid classes, a C-level `is()`."
+  signature: |
+    int R_check_class_and_super(SEXP x, const char **valid, SEXP rho);
+    int R_check_class_etc(SEXP x, const char **valid);
+  status: api
+  header: Rinternals.h
+  protect: n/a
+  errors: can-throw
+  r_equivalent: is()
+  notes: |
+    Checks whether `x` matches or extends one of the classes in the
+    `NULL`-terminated array `valid`. `R_check_class_etc()` omits the
+    environment argument.
+  see_also: []
+  chapter: oo
+  section: "S4 (`S4SXP`)"
+- name: IS_S4_OBJECT
+  family:
+    - SET_S4_OBJECT
+    - UNSET_S4_OBJECT
+  summary: "Test, set, or clear the S4 object flag on a SEXP."
+  signature: |
+    int (IS_S4_OBJECT)(SEXP x);
+    void (SET_S4_OBJECT)(SEXP x);
+    void (UNSET_S4_OBJECT)(SEXP x);
+  status: non-api
+  replacement: Rf_isS4
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  r_equivalent: isS4()
+  notes: |
+    Low-level access to the S4 object flag.
+  see_also: Rf_isS4
+  chapter: oo
+  section: Internals
+- name: R_do_slot
+  family:
+    - R_do_slot_assign
+    - R_has_slot
+  summary: "Get, assign, or test for the presence of an S4 slot."
+  signature: |
+    SEXP R_do_slot(SEXP obj, SEXP name);
+    SEXP R_do_slot_assign(SEXP obj, SEXP name, SEXP value);
+    int R_has_slot(SEXP obj, SEXP name);
+  status: api
+  header: Rinternals.h
+  protect: result
+  errors: can-throw
+  r_equivalent: slot()
+  notes: |
+    `R_do_slot()` extracts a slot, `R_do_slot_assign()` assigns it, and
+    `R_has_slot()` tests for its presence.
+  see_also: []
+  chapter: oo
+  section: Slots
+...

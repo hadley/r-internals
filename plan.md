@@ -163,10 +163,11 @@ into clearly-marked "Internals — non-API, do not use in packages" call-out
 boxes within the relevant chapter, or is cut. Every retained entry gets an
 explicit status so we never again blur API and non-API.
 
-## Function metadata: `functions.yaml` + generated entries
+## Function metadata: `functions/*.yaml` + generated entries
 
 Function documentation is **data-driven**. The single source of truth for
-per-function metadata is `functions.yaml` at the repo root — one record per
+per-function metadata is the `functions/` directory — one YAML file per
+chapter (`functions/<chapter>.yaml`), one record per
 documented entry point (or family of closely-related entry points, e.g.
 `Rf_lang1`–`Rf_lang6`). An R function in `tools/` reads the YAML and returns
 the canonical markdown entries; chapters call it from knitr `asis` chunks,
@@ -182,12 +183,12 @@ hand-edited in the `.qmd` source.
   signature: |
     SEXP Rf_allocVector(SEXPTYPE type, R_xlen_t n);
   status: api                 # api | experimental | embedding | non-api
-  replacement: ~              # for non-api: name of preferred alternative
+  # replacement: omit unless non-api; name of preferred alternative
   header: Rinternals.h
   protect: result             # result | not needed | n/a (+ note, e.g. "can allocate")
   errors: can-throw           # can-throw | never
-  since: ~                    # R version when it matters for portability
-  r_equivalent: vector()      # closest R-level function, or ~
+  # since: omit unless it matters for portability; R version
+  r_equivalent: vector()      # closest R-level function; omit if none
   args:                       # only when non-obvious from the signature
     type: any vector `SEXPTYPE` (`LGLSXP`, ..., `VECSXP`, `RAWSXP`, `EXPRSXP`).
     n: number of elements.
@@ -262,7 +263,7 @@ prose (kept short — the audience knows C), then `##` task-oriented sections
 asis chunk call.
 
 Because the metadata is machine-readable YAML, the index, llms.txt, and
-coverage audit all read `functions.yaml` directly instead of parsing
+coverage audit all read `functions/*.yaml` directly instead of parsing
 markdown.
 
 ## Quarto conversion
@@ -272,15 +273,16 @@ Layout:
 ```
 _quarto.yml
 index.qmd, calling-c.qmd, ...           # chapters as above
-functions.yaml                          # machine-readable metadata for every
-                                        #   documented entry point (source of truth)
+functions/<chapter>.yaml                # machine-readable metadata for every
+                                        #   documented entry point (source of truth),
+                                        #   one file per chapter
 diagrams/                               # existing pngs (+ regenerate as needed)
 tools/
   extract-r-api.R                       # moved; regenerates sources/r-api.md
   render-entries.R                      # render_entries(chapter, section):
-                                        #   functions.yaml -> markdown, called
+                                        #   functions/*.yaml -> markdown, called
                                         #   from asis chunks at render time
-  build-index.R                         # reads functions.yaml -> function-index.qmd
+  build-index.R                         # reads functions/*.yaml -> function-index.qmd
                                         #   data, functions.json, coverage report
   llms.R                                # post-render: llms.txt, llms-full.txt,
                                         #   per-page .md copies
@@ -298,7 +300,7 @@ sources/                                # r-api.md and other mined raw material
 - `website`/`book` repo config: `repo-url`, `repo-actions: [edit, issue]` so
   every page has an "edit this page" link.
 - knitr execution is used only for the `results: asis` chunks that inject
-  generated entries from `functions.yaml` (via `tools/render-entries.R`,
+  generated entries from `functions/*.yaml` (via `tools/render-entries.R`,
   sourced from a setup chunk or `_quarto.yml` config). No other code
   execution; C examples are never run. If we later want *verified*
   examples, add a separate CI job that extracts entry examples and compiles
@@ -326,7 +328,7 @@ Mechanical steps:
 - **Coverage audit** (`tools/build-index.R`, run in CI): parse the function
   names declared in the installed headers (`R.home("include")`) and the
   API-status metadata R now publishes (WRE's `@apifun` annotations /
-  `tools:::funAPI()` in recent R), diff against `functions.yaml`, and
+  `tools:::funAPI()` in recent R), diff against `functions/*.yaml`, and
   emit a report: API functions we don't document (gaps), entries we
   document that no longer exist (rot), and status mismatches. CI fails on
   rot, warns on gaps.
@@ -338,11 +340,11 @@ Mechanical steps:
 - **Sequencing**:
   1. Scaffold the Quarto book + CI with the existing chapters lightly
      renamed (site live early). ✔
-  2. Build the metadata pipeline: define `functions.yaml` schema, seed it
+  2. Build the metadata pipeline: define `functions/*.yaml` schema, seed it
      with a handful of entries, and write `tools/render-entries.R` so
      chapters can inject entries via asis chunks. Validate end-to-end on
      one chapter before scaling up. ✔
-  3. **Assemble a clean `functions.yaml`.** Mechanically extract every
+  3. **Assemble a clean `functions/*.yaml`.** Mechanically extract every
      hand-written function definition from the existing chapters into YAML
      records (summary, signature, status, protect/errors, chapter/section),
      replacing each with an asis chunk call. This is a *move*, not a
@@ -350,7 +352,7 @@ Mechanical steps:
      (park it in `notes`), don't fix stale claims yet, and don't touch the
      surrounding prose. Goal: one machine-readable inventory of everything
      we currently document.
-  4. Clean up `functions.yaml` in place: verify signatures against current
+  4. Clean up `functions/*.yaml` in place: verify signatures against current
      headers, assign/correct statuses, mine r-api.md §6.23 for modern
      replacements, fix stale claims, tighten summaries and notes to the
      brief reference style. Prose in chapters still untouched.
@@ -360,4 +362,4 @@ Mechanical steps:
   7. Turn on the coverage audit; fill gaps until the API-status diff is
      clean.
   8. Add LLM outputs + function index last (they fall out of
-     `functions.yaml`).
+     `functions/*.yaml`).

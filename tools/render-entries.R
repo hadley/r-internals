@@ -1,9 +1,14 @@
-# Render function entries from functions.yaml into markdown.
+# Render function entries from functions/<chapter>.yaml into markdown.
 # Chapters call render_entries() from knitr `results: asis` chunks.
 
-read_functions <- function(path = "functions.yaml") {
+read_functions <- function(dir = "functions") {
+  # One YAML file per chapter: functions/<chapter>.yaml
   # yaml12 is a YAML 1.2 parser: bare keys like `n`/`y` stay strings
-  yaml12::parse_yaml(readLines(path, warn = FALSE))
+  files <- list.files(dir, pattern = "[.]yaml$", full.names = TRUE)
+  unlist(
+    lapply(files, function(f) yaml12::parse_yaml(readLines(f, warn = FALSE))),
+    recursive = FALSE
+  )
 }
 
 status_label <- function(status) {
@@ -85,8 +90,8 @@ render_entry <- function(entry) {
 #'
 #' Call from a knitr chunk with `results: asis`:
 #' `render_entries("vectors", "Create")`
-render_entries <- function(chapter, section, path = "functions.yaml") {
-  entries <- read_functions(path)
+render_entries <- function(chapter, section, dir = "functions") {
+  entries <- read_functions(dir)
   keep <- vapply(
     entries,
     function(e) identical(e$chapter, chapter) && identical(e$section, section),
