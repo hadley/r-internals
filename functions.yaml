@@ -1,0 +1,104 @@
+# Machine-readable metadata for every documented C entry point.
+# Schema documented in plan.md ("Function metadata" section).
+# Entries are rendered into chapters by tools/render-entries.R.
+
+- name: Rf_allocVector
+  family: []
+  summary: Create a new vector of the given type and length.
+  signature: |
+    SEXP Rf_allocVector(SEXPTYPE type, R_xlen_t n);
+  status: api
+  replacement: ~
+  header: Rinternals.h
+  protect: result
+  errors: can-throw
+  since: ~
+  r_equivalent: vector()
+  args:
+    type: any vector `SEXPTYPE` (`LGLSXP`, `INTSXP`, `REALSXP`, `CPLXSXP`, `STRSXP`, `VECSXP`, `RAWSXP`, `EXPRSXP`).
+    "n": number of elements; `R_xlen_t` supports long vectors on 64-bit platforms.
+  notes: |
+    Atomic vector contents are uninitialised; `VECSXP`/`EXPRSXP` elements are
+    `R_NilValue` and `STRSXP` elements are `""`. Attributes are unset.
+  example: |
+    SEXP out = PROTECT(Rf_allocVector(REALSXP, n));
+  see_also: [Rf_allocVector3]
+  chapter: vectors
+  section: Create
+
+- name: Rf_allocVector3
+  family: []
+  summary: Create a new vector using a custom allocator.
+  signature: |
+    SEXP Rf_allocVector3(SEXPTYPE type, R_xlen_t n, R_allocator_t *allocator);
+  status: api
+  replacement: ~
+  header: Rinternals.h
+  protect: result
+  errors: can-throw
+  since: R 3.4.0
+  r_equivalent: ~
+  args: ~
+  notes: |
+    Like `Rf_allocVector()`, but memory for the data payload comes from
+    `allocator`. Pass `NULL` to get exactly `Rf_allocVector()` behaviour.
+    Rarely needed in package code.
+  example: ~
+  see_also: [Rf_allocVector]
+  chapter: vectors
+  section: Create
+
+- name: Rf_xlength
+  family: [Rf_length]
+  summary: Get the length of a vector.
+  signature: |
+    R_xlen_t Rf_xlength(SEXP x);
+    int Rf_length(SEXP x);
+  status: api
+  replacement: ~
+  header: Rinternals.h
+  protect: not-needed
+  errors: never
+  since: ~
+  r_equivalent: length()
+  args: ~
+  notes: |
+    Use `Rf_xlength()` (`R_xlen_t`) for anything that might be a long
+    vector; `Rf_length()` truncates to `int` and is kept for historical
+    compatibility. Also works on pairlists, where it is O(n).
+  example: ~
+  see_also: [Rf_allocVector]
+  chapter: vectors
+  section: Length
+
+- name: PROTECT
+  family: [UNPROTECT, PROTECT_WITH_INDEX, REPROTECT]
+  summary: Protect SEXPs from garbage collection.
+  signature: |
+    SEXP PROTECT(SEXP s);
+    void UNPROTECT(int n);
+    PROTECT_INDEX PROTECT_WITH_INDEX(SEXP s, PROTECT_INDEX *idx);
+    void REPROTECT(SEXP s, PROTECT_INDEX idx);
+  status: api
+  replacement: ~
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  since: ~
+  r_equivalent: ~
+  args: ~
+  notes: |
+    `PROTECT()` pushes `s` onto the protection stack; `UNPROTECT(n)` pops
+    the `n` most recent. Protections must balance within a single C call —
+    they are released automatically when your `.Call` entry point returns,
+    but unbalanced use inside a loop can overflow the pointer-protection
+    stack. Use `PROTECT_WITH_INDEX`/`REPROTECT` when you must re-protect a
+    different value at the same stack depth (e.g. in a loop).
+  example: |
+    SEXP out = PROTECT(Rf_allocVector(REALSXP, n));
+    // ... fill out ...
+    UNPROTECT(1);
+    return out;
+  see_also: [R_PreserveObject]
+  chapter: protection
+  section: Protect

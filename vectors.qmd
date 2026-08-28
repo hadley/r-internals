@@ -1,5 +1,7 @@
 # Vectors
 
+{{< include _setup.qmd >}}
+
 There are seven vector types in R:
 
 * Logical (`LGLSXP`), contains `Rboolean`.
@@ -39,6 +41,13 @@ typedef struct {
 
 ## Length
 
+```{r}
+#| results: asis
+#| echo: false
+render_entries("vectors", "Length")
+```
+
+
 After the SEXPTYPE, the most important property of a vector is it's length. Historically, R vectors were limited to length $2 ^ {31} -  1$. Still most vectors are shorter than this, so you can use an `int` based interface:
 
 ```c
@@ -70,6 +79,13 @@ int IS_LONG_VEC(SEXP x);
 ```
 
 ## Create
+
+```{r}
+#| results: asis
+#| echo: false
+render_entries("vectors", "Create")
+```
+
 
 The most common way to create a new vector is with `Rf_allocVector()`:
 

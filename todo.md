@@ -9,11 +9,12 @@ brief; explain R-specific surprises, not C basics.
 
 ## Phase 1.5 — Function metadata pipeline (new; do before converting chapters)
 
-- [ ] Define the `functions.yaml` schema (see plan.md: name, family, summary, signature, status, replacement, header, protect, errors, since, r_equivalent, args, notes, example, see_also, chapter, section)
-- [ ] Seed `functions.yaml` with a handful of entries (e.g. `Rf_allocVector`, `PROTECT`/`UNPROTECT`) as schema examples
-- [ ] Write `tools/render-entries.R`: `render_entries(chapter, section)` reads `functions.yaml` and returns canonical markdown; chapters call it from `{r} results: asis` chunks (no splicing; generated text never lives in `.qmd` source)
-- [ ] Wire up knitr so chapters can call `render_entries()` (setup chunk or project-level config)
-- [ ] Validate end-to-end on one chapter (e.g. `vectors.qmd`) before scaling up
+- [x] Define the `functions.yaml` schema (see plan.md: name, family, summary, signature, status, replacement, header, protect, errors, since, r_equivalent, args, notes, example, see_also, chapter, section)
+- [x] Seed `functions.yaml` with a handful of entries (`Rf_allocVector`, `Rf_allocVector3`, `Rf_xlength`/`Rf_length`, `PROTECT` family) as schema examples
+- [x] Write `tools/render-entries.R`: `render_entries(chapter, section)` reads `functions.yaml` and returns canonical markdown; chapters call it from `{r} results: asis` chunks (no splicing; generated text never lives in `.qmd` source)
+- [x] Wire up knitr so chapters can call `render_entries()` (`_setup.qmd` include + `execute: enabled: true` in `_quarto.yml`)
+- [x] Validate end-to-end on one chapter (`vectors.qmd` renders; anchors present in HTML)
+- [ ] YAML gotcha to document: bare keys like `n`/`y` parse as booleans — always quote arg names in `args:`
 
 ## Phase 1 — Quarto scaffold and repo cleanup ✔ (commit `0ddcd4e`)
 

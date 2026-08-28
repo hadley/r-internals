@@ -1,0 +1,5 @@
+```{r}
+#| label: setup
+#| include: false
+source("tools/render-entries.R")
+```
