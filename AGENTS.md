@@ -26,7 +26,8 @@ This repo is a Quarto book documenting R's C API for package authors. See
   `tools/r-versions.csv` records the commit SHA for each minor release
   (4.2.0+; patch releases don't change the C API). Each SHA is the
   release branch point (parent of the "go to X.(Y+1).0 devel" commit).
-- Full source is downloaded on demand (shallow fetch of the SHA) into
-  `sources/r-<version>/`, which is gitignored — never commit it.
+- Full source is downloaded on demand into `sources/r-<version>/src`
+  (gitignored — never commit it) with `tools/fetch-r-source.sh <version>`
+  (or `all`).
 - Committed copies of the public headers for each release live in
   `sources/headers/<version>/` (e.g. `sources/headers/4.2.0/`).
