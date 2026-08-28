@@ -54,3 +54,42 @@
   see_also: []
   chapter: functions
   section: Srcrefs
+- name: R_mkClosure
+  family: []
+  summary: Create a closure from formals, body, and environment.
+  signature: |
+    SEXP R_mkClosure(SEXP formals, SEXP body, SEXP env);
+  status: api
+  header: Rinternals.h
+  protect: result
+  errors: can-throw
+  since: 4.5.0
+  r_equivalent: as.function()
+  notes: |
+    The API replacement for the non-API idiom `Rf_allocSExp(CLOSXP)` +
+    `SET_FORMALS`/`SET_BODY`/`SET_CLOENV`. Checks that `formals` is a
+    well-formed pairlist of formal arguments.
+  see_also: [R_ClosureFormals]
+  chapter: functions
+  section: Closures
+- name: R_ClosureFormals
+  family:
+    - R_ClosureBody
+    - R_ClosureEnv
+  summary: Access the formals, body, or environment of a closure.
+  signature: |
+    SEXP R_ClosureFormals(SEXP x);
+    SEXP R_ClosureBody(SEXP x);
+    SEXP R_ClosureEnv(SEXP x);
+  status: api
+  header: Rinternals.h
+  protect: not-needed
+  errors: never
+  since: 4.5.0
+  r_equivalent: formals()
+  notes: |
+    The API replacements for `FORMALS()`, `BODY()`, and `CLOENV()`.
+  see_also: [R_mkClosure]
+  chapter: functions
+  section: Closures
+...

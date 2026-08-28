@@ -65,3 +65,18 @@ render_entries("environments", "Check for presence")
 #| echo: false
 render_entries("environments", "Miscellaneous")
 ```
+
+## Inspecting bindings
+
+R 4.6.0 added an **experimental** API for examining bindings in detail —
+whether a binding is delayed (a promise), forced, missing, or active —
+and for working with `...` without evaluating it. Both interface and
+semantics may change in future R releases. Note that the `R_Dots*` and
+`R_Dot*` accessors look up `...` only in the frame you pass; call
+`R_findDotsEnv()` first if you want R's usual inherited lookup.
+
+```{r}
+#| results: asis
+#| echo: false
+render_entries("environments", "Inspecting bindings")
+```

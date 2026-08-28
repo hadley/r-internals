@@ -241,4 +241,193 @@
   see_also: []
   chapter: environments
   section: Set values
+- name: R_getVar
+  family: R_getVarEx
+  summary: Get the value of a variable from an environment.
+  signature: |
+    SEXP R_getVar(SEXP sym, SEXP env, Rboolean inherits);
+    SEXP R_getVarEx(SEXP sym, SEXP env, Rboolean inherits, SEXP ifnotfound);
+  status: api
+  header: Rinternals.h
+  protect: not-needed
+  errors: can-throw
+  since: 4.5.0
+  r_equivalent: get()
+  args:
+    inherits: search enclosing frames, as `inherits = TRUE` in `get()`.
+    ifnotfound: "`R_getVarEx` only: value returned when the variable is not found, as in `get0()`."
+  notes: |
+    The API replacement for the non-API `Rf_findVar()`/
+    `Rf_findVarInFrame()`. `R_getVar()` errors when the variable is not
+    found. Active bindings are triggered and delayed bindings are forced.
+  see_also: [R_GetBindingType]
+  chapter: environments
+  section: Get values
+- name: R_ParentEnv
+  family: []
+  summary: Get the enclosing environment of an environment.
+  signature: |
+    SEXP R_ParentEnv(SEXP env);
+  status: api
+  header: Rinternals.h
+  protect: not-needed
+  errors: can-throw
+  since: 4.5.0
+  r_equivalent: parent.env()
+  notes: |
+    The API replacement for `ENCLOS()`; errors on the empty environment.
+  see_also: []
+  chapter: environments
+  section: Get values
+- name: R_GetBindingType
+  family: []
+  summary: Query the type of a symbol's binding in an environment.
+  signature: |
+    R_BindingType_t R_GetBindingType(SEXP sym, SEXP env);
+  status: experimental
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  since: 4.6.0
+  notes: |
+    Returns one of `R_BindingTypeUnbound`, `R_BindingTypeValue`,
+    `R_BindingTypeMissing`, `R_BindingTypeDelayed`,
+    `R_BindingTypeForced`, or `R_BindingTypeActive`. Part of the
+    experimental binding API added in R 4.6.0; the interface may change.
+  see_also: [R_getVar]
+  chapter: environments
+  section: Inspecting bindings
+- name: R_DelayedBindingExpression
+  family:
+    - R_DelayedBindingEnvironment
+    - R_ForcedBindingExpression
+  summary: Inspect the expression or environment behind a delayed or forced binding.
+  signature: |
+    SEXP R_DelayedBindingExpression(SEXP sym, SEXP env);
+    SEXP R_DelayedBindingEnvironment(SEXP sym, SEXP env);
+    SEXP R_ForcedBindingExpression(SEXP sym, SEXP env);
+  status: experimental
+  header: Rinternals.h
+  protect: not-needed
+  errors: never
+  since: 4.6.0
+  notes: |
+    Use `R_GetBindingType()` first to check the binding type.
+  see_also: [R_GetBindingType, R_MakeDelayedBinding]
+  chapter: environments
+  section: Inspecting bindings
+- name: R_MakeDelayedBinding
+  family:
+    - R_MakeForcedBinding
+    - R_MakeMissingBinding
+  summary: Create a delayed, forced, or missing binding in an environment.
+  signature: |
+    void R_MakeDelayedBinding(SEXP sym, SEXP expr, SEXP evalEnv, SEXP env);
+    void R_MakeForcedBinding(SEXP sym, SEXP expr, SEXP value, SEXP env);
+    void R_MakeMissingBinding(SEXP sym, SEXP env);
+  status: experimental
+  header: Rinternals.h
+  protect: n/a
+  errors: can-throw
+  since: 4.6.0
+  args:
+    expr: the expression associated with the binding.
+    evalEnv: environment in which a delayed binding's expression is evaluated.
+  notes: |
+    A delayed binding is a promise; a forced binding pairs an expression
+    with its already-computed value; a missing binding is one whose
+    argument was not supplied.
+  see_also: [R_GetBindingType]
+  chapter: environments
+  section: Inspecting bindings
+- name: R_envSymbols
+  family: []
+  summary: List the symbols bound in an environment.
+  signature: |
+    SEXP R_envSymbols(SEXP env);
+  status: experimental
+  header: Rinternals.h
+  protect: result
+  errors: can-throw
+  since: 4.6.0
+  r_equivalent: ls()
+  see_also: []
+  chapter: environments
+  section: Inspecting bindings
+- name: R_findDotsEnv
+  family: R_DotsExist
+  summary: Find the nearest enclosing frame containing a `...` binding.
+  signature: |
+    SEXP R_findDotsEnv(SEXP env);
+    Rboolean R_DotsExist(SEXP env);
+  status: experimental
+  header: Rinternals.h
+  protect: not-needed
+  errors: never
+  since: 4.6.0
+  notes: |
+    `R_findDotsEnv()` walks parent environments and returns the first
+    containing a proper `...` binding, or `R_EmptyEnv`. The `R_Dots*`/`R_Dot*`
+    accessors look up `...` only in the given frame, so call this first if
+    you need R's inherited lookup.
+  see_also: [R_DotsLength, R_DotsElt]
+  chapter: environments
+  section: Inspecting bindings
+- name: R_DotsLength
+  family: R_DotsNames
+  summary: Get the length or names of the `...` binding in a frame.
+  signature: |
+    int R_DotsLength(SEXP env);
+    SEXP R_DotsNames(SEXP env);
+  status: experimental
+  header: Rinternals.h
+  protect: result
+  errors: never
+  since: 4.6.0
+  r_equivalent: ...length()
+  see_also: [R_findDotsEnv]
+  chapter: environments
+  section: Inspecting bindings
+- name: R_GetDotType
+  family: []
+  summary: Query the type of an individual `...` element.
+  signature: |
+    R_DotType_t R_GetDotType(int i, SEXP env);
+  status: experimental
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  since: 4.6.0
+  notes: |
+    Returns one of `R_DotTypeValue`, `R_DotTypeMissing`,
+    `R_DotTypeDelayed`, or `R_DotTypeForced`.
+  see_also: [R_DotsElt]
+  chapter: environments
+  section: Inspecting bindings
+- name: R_DotsElt
+  family:
+    - R_DotForcedExpression
+    - R_DotDelayedExpression
+    - R_DotDelayedEnvironment
+  summary: Access an individual `...` element or its underlying expression.
+  signature: |
+    SEXP R_DotsElt(int i, SEXP env);
+    SEXP R_DotForcedExpression(int i, SEXP env);
+    SEXP R_DotDelayedExpression(int i, SEXP env);
+    SEXP R_DotDelayedEnvironment(int i, SEXP env);
+  status: experimental
+  header: Rinternals.h
+  protect: result
+  errors: can-throw
+  since: 4.6.0
+  r_equivalent: ...elt()
+  args:
+    i: zero-based index into the `...` binding.
+  notes: |
+    `R_DotsElt()` forces the element, like `...elt()`; the `R_Dot*`
+    variants inspect a delayed or forced element without forcing — check
+    with `R_GetDotType()` first.
+  see_also: [R_findDotsEnv, R_GetDotType]
+  chapter: environments
+  section: Inspecting bindings
 ...

@@ -700,4 +700,20 @@
   see_also: []
   chapter: vectors
   section: Matching and duplication
+- name: STRING_PTR_RO
+  family: []
+  summary: Get read-only access to the CHARSXP elements of a character vector.
+  signature: |
+    const SEXP *STRING_PTR_RO(SEXP x);
+  status: api
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  notes: |
+    The read-only analogue of `STRING_PTR()`; use it when you only read
+    elements so ALTREP and future representations aren't forced to
+    materialize a writable array.
+  see_also: [STRING_ELT]
+  chapter: vectors
+  section: Get and set values
 ...

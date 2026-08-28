@@ -299,4 +299,23 @@
   see_also: Rf_cons
   chapter: pairlists
   section: Creation
+- name: Rf_allocLang
+  family: []
+  summary: Allocate a call (LANGSXP) with room for a function and n - 1 arguments.
+  signature: |
+    SEXP Rf_allocLang(int n);
+  status: api
+  header: Rinternals.h
+  protect: result
+  errors: can-throw
+  since: 4.4.1
+  args:
+    n: total number of pairlist nodes (function plus arguments).
+  notes: |
+    The API replacement for the non-API idiom `Rf_allocList(n)` +
+    `SET_TYPEOF(..., LANGSXP)`. Fill in the function and arguments with
+    `SETCAR()`/`SETCADR()` etc. before evaluating.
+  see_also: [Rf_lang1, Rf_allocList]
+  chapter: pairlists
+  section: Creation
 ...

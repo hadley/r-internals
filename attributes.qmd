@@ -80,6 +80,12 @@ Rf_setAttrib(df, R_RowNamesSymbol, rn);
 UNPROTECT(1);
 ```
 
+```{r}
+#| results: asis
+#| echo: false
+render_entries("attributes", "Data frames")
+```
+
 ## Time series
 
 A `ts` object is a numeric vector or matrix with a `tsp` attribute

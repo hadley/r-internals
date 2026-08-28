@@ -349,4 +349,97 @@
   chapter: attributes
   section: Time series
 ...
+- name: Rf_isDataFrame
+  family: []
+  summary: Test whether an object is a data frame.
+  signature: |
+    Rboolean Rf_isDataFrame(SEXP x);
+  status: api
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  since: 4.5.0
+  r_equivalent: is.data.frame()
+  see_also: []
+  chapter: attributes
+  section: Data frames
+- name: R_getAttributes
+  family:
+    - R_getAttribCount
+    - R_getAttribNames
+    - R_hasAttrib
+  summary: Query the attributes of an object as a whole.
+  signature: |
+    SEXP R_getAttributes(SEXP x);
+    R_xlen_t R_getAttribCount(SEXP x);
+    SEXP R_getAttribNames(SEXP x);
+    bool R_hasAttrib(SEXP x, SEXP name);
+  status: api
+  header: Rinternals.h
+  protect: result
+  errors: can-throw
+  since: 4.6.0
+  r_equivalent: attributes()
+  notes: |
+    `R_getAttributes()` returns the attributes as a named list, like
+    `attributes()`; `R_hasAttrib()` tests for one attribute by name
+    without retrieving it.
+  see_also: [Rf_getAttrib, R_mapAttrib]
+  chapter: attributes
+  section: Get and set
+- name: R_nrow
+  family: R_ncol
+  summary: Get the number of rows or columns of a matrix or data frame.
+  signature: |
+    R_xlen_t R_nrow(SEXP x);
+    R_xlen_t R_ncol(SEXP x);
+  status: api
+  header: Rinternals.h
+  protect: n/a
+  errors: can-throw
+  since: 4.6.0
+  r_equivalent: nrow()
+  notes: |
+    May dispatch to the `dim` method for non-standard objects, so they
+    can allocate and error.
+  see_also: [Rf_getAttrib]
+  chapter: attributes
+  section: Get and set
+- name: R_class
+  family: []
+  summary: Get the class vector of an object.
+  signature: |
+    SEXP R_class(SEXP x);
+  status: api
+  header: Rinternals.h
+  protect: not-needed
+  errors: can-throw
+  since: 4.6.0
+  r_equivalent: class()
+  notes: |
+    Returns the implicit class for classless objects, like `class()`
+    does; use `Rf_getAttrib(x, R_ClassSymbol)` if you want only the
+    explicit class attribute.
+  see_also: [Rf_getAttrib]
+  chapter: attributes
+  section: Get and set
+- name: R_mapAttrib
+  family: []
+  summary: Iterate over the attributes of an object with a callback.
+  signature: |
+    SEXP R_mapAttrib(SEXP x, SEXP (*FUN)(SEXP, SEXP, void *), void *data);
+  status: experimental
+  header: Rinternals.h
+  protect: result
+  errors: can-throw
+  since: 4.6.0
+  args:
+    FUN: "called with each attribute's name and value; return `NULL` to continue, or any other value to stop and return it."
+  notes: |
+    Highly experimental: both interface and semantics may change at short
+    notice. Use only when `Rf_getAttrib()`/`R_getAttributes()` can't do
+    the job.
+  see_also: [R_getAttributes]
+  chapter: attributes
+  section: Get and set
 ...
