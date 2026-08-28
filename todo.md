@@ -56,14 +56,14 @@ All chapters extracted (268 records, one YAML file per chapter in
 - [x] Every extracted record has `chapter`/`section` matching its current location (reorganisation is Phase 4)
 - [x] Whole book renders cleanly with all entries generated from YAML
 
-Known issues parked for Phase 4 (reported by extraction agents):
+Known issues from extraction, re-verified after Phase 4:
 
-- Some statuses are best guesses; several agents verified against installed R 4.4 headers, others defaulted to `api`
-- `bSEXP` typo in `Rf_installS3Signature` signature kept verbatim (real type: `SEXP`)
-- `Rf_mkString`/`Rf_ScalarString` documented in both vectors and strings fragments — pick one home
-- `R_MissingArg` documented in both symbols and functions fragments — pick one home
-- `errors`/`protect` fields are educated guesses in many records
-- Stray trailing space in rendered output (`cat()` default `sep`) in render-entries.R
+- [x] Statuses best guesses → fixed via header audit + §6.23 mining
+- [x] `bSEXP` typo in `Rf_installS3Signature` → fixed
+- [x] `Rf_mkString`/`Rf_ScalarString` duplication → record lives in strings.yaml only
+- [x] `R_MissingArg` duplication → record lives in symbols.yaml only
+- [x] Stray trailing space in rendered output → no longer reproducible (0/3733 lines)
+- [ ] `errors`/`protect` fields are educated guesses in many records — needs a systematic audit against R's behaviour
 
 ## Phase 3.5 — Verification against `sources/r-api.md` ✔
 
