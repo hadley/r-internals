@@ -16,7 +16,7 @@
   r_equivalent: vector()
   args:
     type: any vector `SEXPTYPE` (`LGLSXP`, `INTSXP`, `REALSXP`, `CPLXSXP`, `STRSXP`, `VECSXP`, `RAWSXP`, `EXPRSXP`).
-    "n": number of elements; `R_xlen_t` supports long vectors on 64-bit platforms.
+    n: number of elements; `R_xlen_t` supports long vectors on 64-bit platforms.
   notes: |
     Atomic vector contents are uninitialised; `VECSXP`/`EXPRSXP` elements are
     `R_NilValue` and `STRSXP` elements are `""`. Attributes are unset.

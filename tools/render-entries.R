@@ -2,7 +2,8 @@
 # Chapters call render_entries() from knitr `results: asis` chunks.
 
 read_functions <- function(path = "functions.yaml") {
-  yaml::read_yaml(path)
+  # yaml12 is a YAML 1.2 parser: bare keys like `n`/`y` stay strings
+  yaml12::parse_yaml(readLines(path, warn = FALSE))
 }
 
 status_label <- function(status) {

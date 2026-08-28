@@ -14,7 +14,7 @@ brief; explain R-specific surprises, not C basics.
 - [x] Write `tools/render-entries.R`: `render_entries(chapter, section)` reads `functions.yaml` and returns canonical markdown; chapters call it from `{r} results: asis` chunks (no splicing; generated text never lives in `.qmd` source)
 - [x] Wire up knitr so chapters can call `render_entries()` (`_setup.qmd` include + `execute: enabled: true` in `_quarto.yml`)
 - [x] Validate end-to-end on one chapter (`vectors.qmd` renders; anchors present in HTML)
-- [ ] YAML gotcha to document: bare keys like `n`/`y` parse as booleans — always quote arg names in `args:`
+- [x] Use the yaml12 package (YAML 1.2) so bare keys like `n`/`y` stay strings — no quoting needed in `args:`
 
 ## Phase 1 — Quarto scaffold and repo cleanup ✔ (commit `0ddcd4e`)
 
