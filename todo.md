@@ -90,6 +90,7 @@ Now that everything is machine-readable, fix the data — prose still untouched.
 - [x] Deduplicate: `R_MissingArg` (symbols only), `Rf_ScalarString`/`Rf_mkString` (strings only)
 - [x] Reassign `chapter`/`section` to the final chapter map: attributes (from pairlists + vectors arrays/matrices/factors/data-frames), evaluation + printing (from errors), weak references (utilities → external-pointers); qmd sections moved to match
 - [x] Tighten summaries to one imperative sentence; notes to ≤1 short paragraph (done systematically across all 268 records, one `functions/<chapter>.yaml` file at a time)
+- [ ] Re-add `since:` fields for APIs introduced in R 4.2 or later (dropped wholesale with pre-4.2 references; only post-4.2 introductions need the field, per the version policy in `index.qmd`)
 - [ ] Add records for the §6.23 replacement functions that lack them (list reported by the mining pass: `R_getVar` family, `R_ClosureFormals/Body/Env`, `STRING_PTR_RO`, `R_getAttributes` family, `R_nrow`/`R_ncol`, R 4.6.0 binding/dots API, etc.) — overlaps with the Phase 3.5 gap list; fold into Phase 7
 
 ## Phase 5 — Part I: Foundations prose (mostly new; adv-r chapter is the model)
