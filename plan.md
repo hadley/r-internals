@@ -8,6 +8,12 @@ concise (reference-style entries, not tutorials), and current (reflecting the
 post-R-4.5 API-compliance era: `R_NO_REMAP`, `Rf_`/`R_` prefixes, and the
 API/experimental/embedding/non-API classification).
 
+**Audience:** experienced C programmers who are new to R's API specifically.
+This is not a book for beginners — we assume fluency in C (pointers, memory
+management, calling conventions) and focus on what's *different* about R's
+API: SEXPs, protection, longjmp errors, the API-compliance taxonomy. Keep
+everything very brief for now; depth can come later.
+
 Three sources feed the content:
 
 1. The existing hand-written chapters (`vectors.md`, `strings.md`, etc.):
@@ -40,7 +46,8 @@ is one `.qmd`. Existing files map onto this with modest reshuffling.
 ### Part I — Foundations (new material; adv-r chapter is the model)
 
 1. `index.qmd` — **Introduction.** What this site is, relationship to WRE /
-   R Internals / adv-r; audience and prerequisites; conventions used
+   R Internals / adv-r; audience and prerequisites (experienced C
+   programmers; C basics not explained); conventions used
    throughout (always `R_NO_REMAP` + `Rf_`/`R_` prefixes, C not C++, `.Call`
    only); the API status taxonomy (API / experimental / embedding /
    non-API) and what "don't use non-API" means in practice
@@ -156,13 +163,61 @@ into clearly-marked "Internals — non-API, do not use in packages" call-out
 boxes within the relevant chapter, or is cut. Every retained entry gets an
 explicit status so we never again blur API and non-API.
 
-## Standard format for describing C functions
+## Function metadata: `functions.yaml` + generated entries
 
-Every documented entry point appears in exactly one canonical entry (and in
-the generated index). Closely-related functions share one entry
-(e.g. `Rf_lang1`–`Rf_lang6`; the getter and setter for a field). The format
-is rigid so a script can parse it (this powers the index, llms.txt, and
-coverage checks):
+Function documentation is **data-driven**. The single source of truth for
+per-function metadata is `functions.yaml` at the repo root — one record per
+documented entry point (or family of closely-related entry points, e.g.
+`Rf_lang1`–`Rf_lang6`). An R function in `tools/` reads the YAML and returns
+the canonical markdown entries; chapters call it from knitr `asis` chunks,
+so entries are rendered inline at render time and never spliced into or
+hand-edited in the `.qmd` source.
+
+### YAML schema
+
+```yaml
+- name: Rf_allocVector        # anchor = C identifier; also the heading
+  family: []                  # extra functions sharing this entry, if any
+  summary: Create a new vector of the given type and length.
+  signature: |
+    SEXP Rf_allocVector(SEXPTYPE type, R_xlen_t n);
+  status: api                 # api | experimental | embedding | non-api
+  replacement: ~              # for non-api: name of preferred alternative
+  header: Rinternals.h
+  protect: result             # result | not needed | n/a (+ note, e.g. "can allocate")
+  errors: can-throw           # can-throw | never
+  since: ~                    # R version when it matters for portability
+  r_equivalent: vector()      # closest R-level function, or ~
+  args:                       # only when non-obvious from the signature
+    type: any vector `SEXPTYPE` (`LGLSXP`, ..., `VECSXP`, `RAWSXP`, `EXPRSXP`).
+    n: number of elements.
+  notes: |                    # ≤1 short paragraph; edge cases, gotchas
+    Atomic vector contents are uninitialised; `VECSXP`/`EXPRSXP` elements
+    are `R_NilValue` and `STRSXP` elements are `""`.
+  example: |                  # optional, ≤ ~8 lines
+    SEXP out = PROTECT(Rf_allocVector(REALSXP, n));
+  see_also: [Rf_allocVector3]
+  chapter: vectors            # which .qmd the entry is placed in
+  section: Create             # which ## section within the chapter
+```
+
+### Generated entry format
+
+`tools/render-entries.R` provides `render_entries(chapter, section)`, which
+turns each matching record into markdown of this shape. Chapters pull in a
+section's entries with an asis chunk:
+
+````markdown
+## Create
+
+```{r}
+#| results: asis
+#| echo: false
+render_entries("vectors", "Create")
+```
+````
+
+Each entry renders as:
 
 ````markdown
 ### `Rf_allocVector()` {#Rf_allocVector}
@@ -176,11 +231,10 @@ SEXP Rf_allocVector(SEXPTYPE type, R_xlen_t n);
 **Status:** API · **Header:** `Rinternals.h` · **Protect:** result ·
 **Errors:** can throw · **Since:** — · **R equivalent:** `vector()`
 
-- `type`: any vector `SEXPTYPE` (`LGLSXP`, ..., `VECSXP`, `RAWSXP`, `EXPRSXP`).
+- `type`: any vector `SEXPTYPE` ...
 - `n`: number of elements.
 
-Atomic vector contents are uninitialised; `VECSXP`/`EXPRSXP` elements are
-`R_NilValue` and `STRSXP` elements are `""`. Attributes are unset.
+Atomic vector contents are uninitialised; ...
 
 ```c
 SEXP out = PROTECT(Rf_allocVector(REALSXP, n));
@@ -194,27 +248,22 @@ Rules:
 - **Heading**: `### \`name()\` {#name}` — explicit stable anchor equal to the
   C identifier, so links survive re-organisation and LLMs can cite
   `page.html#Rf_allocVector`.
-- **One-sentence summary** first (imperative mood), then the exact
-  **signature block** (```` ```c ````, copied from the current header, all
-  functions in the family in one block).
-- **Metadata line** — a single bold-label line with fixed keys in fixed order:
-  - `Status:` API | experimental | embedding | non-API (with replacement link)
-  - `Header:` the header that declares it
-  - `Protect:` `result` | `not needed` | `n/a` — does the return value need
-    `PROTECT`? Plus a note when arguments are at risk (e.g. "can allocate").
-  - `Errors:` `can throw` | `never` — can it longjmp?
-  - `Since:` R version, only when it matters for portability; `—` otherwise.
-  - `R equivalent:` the closest R-level function, or `—`.
-- **Arguments** as a bullet list only when non-obvious from the signature.
-- **Behaviour notes**: at most a short paragraph — edge cases, gotchas,
-  performance. This is where the repo's editorial voice lives.
+- **Metadata line** — fixed keys in fixed order: Status, Header, Protect,
+  Errors, Since, R equivalent. `Protect` says whether the return value needs
+  `PROTECT`; `Errors` says whether it can longjmp.
+- **Notes**: at most a short paragraph. This is where the editorial voice
+  lives — aimed at C programmers, so explain R-specific surprises, not C
+  basics.
 - **Example**: optional, ≤ ~8 lines, only when usage isn't obvious.
-- **See also**: cross-links, including the preferred alternative when this
-  entry exists mainly to warn against it.
 
-Chapters are prose-plus-entries: each chapter opens with 1–3 pages of
-conceptual prose (the adv-r-style material), then `##` task-oriented sections
-("Create", "Get and set values", "Test") containing the canonical entries.
+Chapters are prose-plus-entries: each chapter opens with brief conceptual
+prose (kept short — the audience knows C), then `##` task-oriented sections
+("Create", "Get and set values", "Test") whose entries come from a single
+asis chunk call.
+
+Because the metadata is machine-readable YAML, the index, llms.txt, and
+coverage audit all read `functions.yaml` directly instead of parsing
+markdown.
 
 ## Quarto conversion
 
@@ -223,11 +272,16 @@ Layout:
 ```
 _quarto.yml
 index.qmd, calling-c.qmd, ...           # chapters as above
+functions.yaml                          # machine-readable metadata for every
+                                        #   documented entry point (source of truth)
 diagrams/                               # existing pngs (+ regenerate as needed)
 tools/
   extract-r-api.R                       # moved; regenerates sources/r-api.md
-  build-index.R                         # parses entries -> D-index.qmd data,
-                                        #   functions.json, coverage report
+  render-entries.R                      # render_entries(chapter, section):
+                                        #   functions.yaml -> markdown, called
+                                        #   from asis chunks at render time
+  build-index.R                         # reads functions.yaml -> function-index.qmd
+                                        #   data, functions.json, coverage report
   llms.R                                # post-render: llms.txt, llms-full.txt,
                                         #   per-page .md copies
 sources/                                # r-api.md and other mined raw material
@@ -243,10 +297,12 @@ sources/                                # r-api.md and other mined raw material
   search on; C syntax highlighting (```` ```c ````, not ```` ```cpp ````).
 - `website`/`book` repo config: `repo-url`, `repo-actions: [edit, issue]` so
   every page has an "edit this page" link.
-- No knitr/jupyter execution: chapters are pure markdown → renders are fast
-  and there's no freeze/cache to manage. If we later want *verified*
+- knitr execution is used only for the `results: asis` chunks that inject
+  generated entries from `functions.yaml` (via `tools/render-entries.R`,
+  sourced from a setup chunk or `_quarto.yml` config). No other code
+  execution; C examples are never run. If we later want *verified*
   examples, add a separate CI job that extracts entry examples and compiles
-  them against R headers rather than executing chunks at render time.
+  them against R headers.
 - `aliases:` on each page for old filenames (e.g. `gc-rc.html` →
   `protection.html`) once anything external links to the site.
 
@@ -270,7 +326,7 @@ Mechanical steps:
 - **Coverage audit** (`tools/build-index.R`, run in CI): parse the function
   names declared in the installed headers (`R.home("include")`) and the
   API-status metadata R now publishes (WRE's `@apifun` annotations /
-  `tools:::funAPI()` in recent R), diff against documented entries, and
+  `tools:::funAPI()` in recent R), diff against `functions.yaml`, and
   emit a report: API functions we don't document (gaps), entries we
   document that no longer exist (rot), and status mismatches. CI fails on
   rot, warns on gaps.
@@ -281,12 +337,17 @@ Mechanical steps:
   entry gets a status assigned or is cut.
 - **Sequencing**:
   1. Scaffold the Quarto book + CI with the existing chapters lightly
-     renamed (site live early).
-  2. Write Part I foundations (mostly new prose).
-  3. Convert Part II chapters to the standard entry format, mining
-     r-api.md §6.23 for the modern replacements.
-  4. Write Parts III–IV by reorganising r-api.md content into entries.
-  5. Turn on the coverage audit; fill gaps until the API-status diff is
+     renamed (site live early). ✔
+  2. Build the metadata pipeline: define `functions.yaml` schema, seed it
+     with a handful of entries, and write `tools/render-entries.R` so
+     chapters can inject entries via asis chunks. Validate end-to-end on
+     one chapter before scaling up.
+  3. Write Part I foundations (mostly new, brief prose).
+  4. Convert Part II chapters: extract function metadata into
+     `functions.yaml`, mining r-api.md §6.23 for the modern replacements;
+     chapters keep only prose + asis chunk calls.
+  5. Write Parts III–IV by reorganising r-api.md content into YAML records.
+  6. Turn on the coverage audit; fill gaps until the API-status diff is
      clean.
-  6. Add LLM outputs + function index last (they fall out of the entry
-     format).
+  7. Add LLM outputs + function index last (they fall out of
+     `functions.yaml`).

@@ -1,7 +1,19 @@
 # Todo: a comprehensive, concise guide to R's C API
 
 Derived from [plan.md](plan.md). Sequencing follows the plan: scaffold first,
-then Part I, Part II, Parts III–IV, coverage audit, then index/LLM outputs.
+then the `functions.yaml` metadata pipeline, then Part I, Part II,
+Parts III–IV, coverage audit, then index/LLM outputs.
+
+**Audience reminder:** experienced C programmers, new to R's API. Keep prose
+brief; explain R-specific surprises, not C basics.
+
+## Phase 1.5 — Function metadata pipeline (new; do before converting chapters)
+
+- [ ] Define the `functions.yaml` schema (see plan.md: name, family, summary, signature, status, replacement, header, protect, errors, since, r_equivalent, args, notes, example, see_also, chapter, section)
+- [ ] Seed `functions.yaml` with a handful of entries (e.g. `Rf_allocVector`, `PROTECT`/`UNPROTECT`) as schema examples
+- [ ] Write `tools/render-entries.R`: `render_entries(chapter, section)` reads `functions.yaml` and returns canonical markdown; chapters call it from `{r} results: asis` chunks (no splicing; generated text never lives in `.qmd` source)
+- [ ] Wire up knitr so chapters can call `render_entries()` (setup chunk or project-level config)
+- [ ] Validate end-to-end on one chapter (e.g. `vectors.qmd`) before scaling up
 
 ## Phase 1 — Quarto scaffold and repo cleanup ✔ (commit `0ddcd4e`)
 
@@ -49,7 +61,7 @@ then Part I, Part II, Parts III–IV, coverage audit, then index/LLM outputs.
   - [ ] `R_Calloc`/`R_Realloc`/`R_Free` and cleanup-on-error obligations
   - [ ] Alignment; when to prefer a `RAWSXP` instead
 
-## Phase 3 — Part II: Objects (convert to standard entry format; mine r-api.md §6.23 for modern replacements)
+## Phase 3 — Part II: Objects (extract metadata into `functions.yaml`; mine r-api.md §6.23 for modern replacements)
 
 - [ ] `vectors.qmd` — atomic vectors and lists
   - [ ] Types, length (`R_xlen_t`), creation, data access (`REAL()` etc., `*_ELT`, add `*_RO` const pointers)
@@ -70,7 +82,7 @@ then Part I, Part II, Parts III–IV, coverage audit, then index/LLM outputs.
 - [ ] `external-pointers.qmd` — external pointers, finalizers, weak references (moved from misc.md)
 - [ ] `oo.qmd` — `Rf_isObject`, S3 (`Rf_inherits`, class get/set, dispatch helpers), S4 (slots, class checks), brief S7-at-C-level note if applicable
 
-## Phase 4 — Part III: The engine (reorganise r-api.md content into entries)
+## Phase 4 — Part III: The engine (reorganise r-api.md content into `functions.yaml` records)
 
 - [ ] `evaluation.qmd` — `Rf_eval`, `R_tryEval`/`R_tryEvalSilent`, `R_forceAndCall`, `Rf_applyClosure`; building and evaluating calls end-to-end (worked example). Split from error-eval.md
 - [ ] `errors.qmd` — signalling (`Rf_error`, `Rf_warning`, `*call` variants); longjmp problem and C++/resource safety; condition handling and cleanup (§6.13: `R_UnwindProtect`, `R_withCallingErrorHandler`, `R_MakeUnwindCont`); interrupts (§6.14, `R_CheckUserInterrupt`); C stack checking (§6.15)
@@ -94,10 +106,10 @@ then Part I, Part II, Parts III–IV, coverage audit, then index/LLM outputs.
 
 ## Phase 7 — Tooling, coverage audit, and generated outputs
 
-- [ ] `tools/build-index.R` — parse entries → `function-index.qmd` data, `functions.json`, coverage report
+- [ ] `tools/build-index.R` — read `functions.yaml` → `function-index.qmd` data, `functions.json`, coverage report
   - [ ] Parse function names declared in installed headers (`R.home("include")`)
   - [ ] Use API-status metadata R publishes (WRE `@apifun` annotations / `tools:::funAPI()`)
-  - [ ] Diff against documented entries; emit report: undocumented API functions (gaps), documented entries that no longer exist (rot), status mismatches
+  - [ ] Diff against `functions.yaml`; emit report: undocumented API functions (gaps), records that no longer exist (rot), status mismatches
   - [ ] Wire into CI: fail on rot, warn on gaps
 - [ ] Turn on the coverage audit; fill gaps until the API-status diff is clean
 - [ ] `tools/llms.R` — post-render: `llms.txt`, `llms-full.txt`, per-page `.md` copies
@@ -106,8 +118,8 @@ then Part I, Part II, Parts III–IV, coverage audit, then index/LLM outputs.
 
 ## Cross-cutting (applies to every chapter)
 
-- [ ] Every documented entry point appears in exactly one canonical entry (plus the generated index); closely-related functions share one entry
-- [ ] Standard entry format: `### \`name()\` {#name}` heading; one-sentence imperative summary; exact signature block copied from current header; metadata line with fixed keys in fixed order (Status, Header, Protect, Errors, Since, R equivalent); argument bullets only when non-obvious; ≤1 short paragraph of behaviour notes; optional ≤8-line example; See also links
-- [ ] Chapters are prose-plus-entries: 1–3 pages of conceptual prose, then `##` task-oriented sections containing canonical entries
+- [ ] Every documented entry point appears in exactly one record in `functions.yaml` (plus the generated index); closely-related functions share one record via `family:`
+- [ ] Entry format is generated by `tools/render-entries.R` from the YAML schema (see plan.md); chapters inject entries via `results: asis` chunks, never hand-written entry text
+- [ ] Chapters are prose-plus-entries: brief conceptual prose (audience knows C — keep it short), then `##` task-oriented sections each with one asis chunk calling `render_entries()`
 - [ ] Verify every claim in migrated text against current R; assign a status to every existing entry or cut it
 - [ ] Treat r-api.md as raw material to mine and rewrite, not text to copy (licensing + prose style)
