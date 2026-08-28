@@ -1,0 +1,914 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "R’s C API",
+    "section": "",
+    "text": "Introduction\n\n\n\n\n\n\nWarning\n\n\n\nThis chapter is a placeholder. Planned content:\n\nWhat this site is; relationship to WRE / R Internals / Advanced R\nAudience and prerequisites\nConventions used throughout: always R_NO_REMAP + Rf_/R_ prefixes, C not C++, .Call only\nThe API status taxonomy (API / experimental / embedding / non-API) and what “don’t use non-API” means in practice (R CMD check NOTEs, CRAN policy)\nWhich headers to include and why &lt;Rinternals.h&gt; is fine\n\n\n\nOut of scope for this site: the .C/.Fortran interface as a recommended approach, embedding R / writing front-ends, the graphics engine API, and non-API entry points except where the compliance appendix maps them to replacements.",
+    "crumbs": [
+      "Introduction"
+    ]
+  },
+  {
+    "objectID": "calling-c.html",
+    "href": "calling-c.html",
+    "title": "1  Calling C from R",
+    "section": "",
+    "text": "Warning\n\n\n\nPlaceholder. Planned content:\n\n.Call and .External\nRoutine registration: R_registerRoutines, R_CallMethodDef, useDynLib\nThe contract your C function signs up to: main thread only, may longjmp on error, arguments are borrowed references, inputs must not be modified\nMinimal package skeleton plus how to iterate quickly (cpp11/Rcpp mention, callme-style workflow)",
+    "crumbs": [
+      "Part I — Foundations",
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Calling C from R</span>"
+    ]
+  },
+  {
+    "objectID": "sexps.html",
+    "href": "sexps.html",
+    "title": "2  SEXPs",
+    "section": "",
+    "text": "Warning\n\n\n\nPlaceholder. Planned content:\n\nThe uniform object model; complete SEXPTYPE table (with which chapter covers each)\nTYPEOF(); the header/data layout at a conceptual level\nAttributes exist on (almost) every object\nCopy-on-modify, NAMED/reference counting, and why you must not mutate inputs (MAYBE_SHARED, Rf_duplicate/Rf_shallow_duplicate)\nType testing philosophy (prefer TYPEOF(x) == ...)",
+    "crumbs": [
+      "Part I — Foundations",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>SEXPs</span>"
+    ]
+  },
+  {
+    "objectID": "protection.html",
+    "href": "protection.html",
+    "title": "3  Garbage collection and reference counting",
+    "section": "",
+    "text": "3.1 GC",
+    "crumbs": [
+      "Part I — Foundations",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Garbage collection and reference counting</span>"
+    ]
+  },
+  {
+    "objectID": "protection.html#gc",
+    "href": "protection.html#gc",
+    "title": "3  Garbage collection and reference counting",
+    "section": "",
+    "text": "3.1.1 R_gc() (R_gc_running())\nTrigger garbage collection, or check whether it is running.\nvoid R_gc(void);\nint R_gc_running();\nStatus: API · Header: R_ext/Memory.h · Protect: n/a · Errors: never · Since: — · R equivalent: gc\n\n\n3.1.2 R_cycle_detected()\nDetect a reference cycle between two objects.\nRboolean R_cycle_detected(SEXP s, SEXP child);\nStatus: non-API · Header: Defn.h · Protect: n/a · Errors: never · Since: — · R equivalent: —\nYou might wonder what all the PROTECT() calls do. They tell R that the object is in use and shouldn’t be deleted if the garbage collector is activated. (We don’t need to protect objects that R already knows we’re using, like function arguments.)\nYou also need to make sure that every protected object is unprotected. UNPROTECT() takes a single integer argument, n, and unprotects the last n objects that were protected. The number of protects and unprotects must match. If not, R will warn about a “stack imbalance in .Call”. Other specialised forms of protection are needed in some circumstances:\n\nUNPROTECT_PTR() unprotects the object pointed to by the SEXP,\nPROTECT_WITH_INDEX() saves an index of the protection location that can be used to replace the protected value using REPROTECT().\n\nConsult the R externals section on garbage collection for more details.",
+    "crumbs": [
+      "Part I — Foundations",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Garbage collection and reference counting</span>"
+    ]
+  },
+  {
+    "objectID": "protection.html#protect",
+    "href": "protection.html#protect",
+    "title": "3  Garbage collection and reference counting",
+    "section": "3.2 Protect",
+    "text": "3.2 Protect\n\n3.2.1 Rf_protect() (Rf_unprotect())\nProtect and unprotect objects from garbage collection.\nSEXP Rf_protect(SEXP);\nvoid Rf_unprotect(int);\nStatus: API · Header: Rinternals.h · Protect: n/a · Errors: never · Since: — · R equivalent: —\nThese are the functions underlying the PROTECT() and UNPROTECT() macros; package code should normally use the macros instead.\nSee also: PROTECT()\n\n\n3.2.2 R_ProtectWithIndex() (R_Reprotect())\nProtect an object at a fixed stack location so its value can be replaced later.\nvoid R_ProtectWithIndex(SEXP, PROTECT_INDEX *);\nvoid R_Reprotect(SEXP, PROTECT_INDEX);\nStatus: API · Header: Rinternals.h · Protect: n/a · Errors: never · Since: — · R equivalent: —\nWe sometimes need to coerce a protected value and place the new coerced value under protection. For these cases PROTECT_WITH_INDEX saves an index of the protection location that can be used to replace the protected value using REPROTECT. These are the functions behind those macros.\nSee also: PROTECT()\n\n\n3.2.3 UNPROTECT_PTR() (Rf_unprotect_ptr())\nUnprotect a specific object by pointer.\n#define UNPROTECT_PTR(s) Rf_unprotect_ptr(s)\nvoid Rf_unprotect_ptr(SEXP);\nStatus: non-API (use UNPROTECT()) · Header: Rinternals.h · Protect: n/a · Errors: never · Since: — · R equivalent: —\nUNPROTECT_PTR() unprotects the object pointed to by the SEXP. It performs a search (from the top of the protection stack) to find the element to unprotect.\nSee also: PROTECT()\n\n\n3.2.4 PROTECT() (UNPROTECT(), PROTECT_WITH_INDEX(), REPROTECT())\nProtect SEXPs from garbage collection.\nSEXP PROTECT(SEXP s);\nvoid UNPROTECT(int n);\nPROTECT_INDEX PROTECT_WITH_INDEX(SEXP s, PROTECT_INDEX *idx);\nvoid REPROTECT(SEXP s, PROTECT_INDEX idx);\nStatus: API · Header: Rinternals.h · Protect: n/a · Errors: never · Since: — · R equivalent: —\nPROTECT() pushes s onto the protection stack; UNPROTECT(n) pops the n most recent. Protections must balance within a single C call — they are released automatically when your .Call entry point returns, but unbalanced use inside a loop can overflow the pointer-protection stack. Use PROTECT_WITH_INDEX/REPROTECT when you must re-protect a different value at the same stack depth (e.g. in a loop).\nSEXP out = PROTECT(Rf_allocVector(REALSXP, n));\n// ... fill out ...\nUNPROTECT(1);\nreturn out;\nSee also: R_PreserveObject()",
+    "crumbs": [
+      "Part I — Foundations",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Garbage collection and reference counting</span>"
+    ]
+  },
+  {
+    "objectID": "protection.html#how-protect-works",
+    "href": "protection.html#how-protect-works",
+    "title": "3  Garbage collection and reference counting",
+    "section": "3.3 How PROTECT works",
+    "text": "3.3 How PROTECT works\nObjects protected by PROTECT() are placed on a protection stack (internally called R_PPStack), which itself is just an array of SEXPs. A protection index, called R_PPStackTop, denotes the top of the protection stack. When UNPROTECT()ing a (number) of objects, the stack top is decremented, and so all SEXPs ‘overflowing’ the R_PPStack are considered unprotected and hence eligible for garbage collection.\nNote that this implies that PROTECT_WITH_INDEX() and REPROTECT() are merely APIs for modifying elements within the protection stack. UNPROTECT_PTR() performs a search (from the top of the stack) to find the element to unprotect.",
+    "crumbs": [
+      "Part I — Foundations",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Garbage collection and reference counting</span>"
+    ]
+  },
+  {
+    "objectID": "protection.html#using-protect",
+    "href": "protection.html#using-protect",
+    "title": "3  Garbage collection and reference counting",
+    "section": "3.4 Using PROTECT",
+    "text": "3.4 Using PROTECT\nProperly protecting the R objects you allocate is extremely important! Improper protection leads to difficulty diagnosing errors, typically segfaults, but other corruption is possible as well. In general, if you allocate a new R object, you must PROTECT it.\n\n3.4.1 R_PreserveObject, R_ReleaseObject\n\n\n3.4.2 R_PreserveObject() (R_ReleaseObject())\nPreserve an object across C calls by adding it to R’s precious list.\nvoid R_PreserveObject(SEXP);\nvoid R_ReleaseObject(SEXP);\nStatus: API · Header: Rinternals.h · Protect: n/a · Errors: never · Since: — · R equivalent: —\nThe primary structure that R uses for protecting objects is the so-called R_PreciousList, which is just a pairlist of SEXPs; the R_PPStack protection stack is part of this list. These functions need to be used with care: because R_ReleaseObject() performs a recursive search for the object to release, inserting and later removing many SEXPs in the same order can cause performance regressions. See this dplyr issue for an interesting manifestation of this problem.\nSee also: PROTECT()\nThe primary structure that R uses for protecting objects is the so-called R_PreciousList, which is just a pairlist of SEXPs. The aforementioned R_PPStack is part of this R_PreciousList (and hence is the mechanism by which those SEXPs become protected). R_PreserveObject() and R_ReleaseObject() are mechanisms for inserting and removing SEXPs from this precious list.\nThese functions need to be used with care: because R_ReleaseObject() will perform a recursive search for the object to protect, if many SEXPs are inserted and later removed in the same order, this can cause performance regressions. See this dplyr issue for an interesting manifestation of this problem.",
+    "crumbs": [
+      "Part I — Foundations",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Garbage collection and reference counting</span>"
+    ]
+  },
+  {
+    "objectID": "protection.html#memory-size",
+    "href": "protection.html#memory-size",
+    "title": "3  Garbage collection and reference counting",
+    "section": "3.5 Memory size",
+    "text": "3.5 Memory size\n\n3.5.1 vmaxget() (vmaxset())\nGet and set the high-water mark of R’s temporary allocation arena.\nvoid* vmaxget(void);\nvoid vmaxset(const void *);\nStatus: API · Header: R_ext/Memory.h · Protect: n/a · Errors: never · Since: — · R equivalent: —\nSee also: R_alloc()",
+    "crumbs": [
+      "Part I — Foundations",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Garbage collection and reference counting</span>"
+    ]
+  },
+  {
+    "objectID": "protection.html#manual-memory-management",
+    "href": "protection.html#manual-memory-management",
+    "title": "3  Garbage collection and reference counting",
+    "section": "3.6 Manual memory management",
+    "text": "3.6 Manual memory management\n\n3.6.1 R_alloc() (R_allocLD())\nAllocate temporary memory that R reclaims automatically.\nchar* R_alloc(size_t, int);\nlong double *R_allocLD(size_t nelem);\nStatus: API · Header: R_ext/Memory.h · Protect: n/a · Errors: can throw · Since: — · R equivalent: —\nSee also: vmaxget()\n\n\n3.6.2 S_alloc() (S_realloc())\nAllocate and reallocate temporary memory using the legacy S interface.\nchar* S_alloc(long, int);\nchar* S_realloc(char *, long, long, int);\nStatus: API · Header: R_ext/Memory.h · Protect: n/a · Errors: can throw · Since: — · R equivalent: —\nSee also: R_alloc()",
+    "crumbs": [
+      "Part I — Foundations",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Garbage collection and reference counting</span>"
+    ]
+  },
+  {
+    "objectID": "protection.html#reference-counting",
+    "href": "protection.html#reference-counting",
+    "title": "3  Garbage collection and reference counting",
+    "section": "3.7 Reference counting",
+    "text": "3.7 Reference counting\n\n3.7.1 MAYBE_SHARED() (NO_REFERENCES(), MAYBE_REFERENCED(), NOT_SHARED(), MARK_NOT_MUTABLE())\nTest or set an object’s reference-count flags before modifying it in place.\n#define MAYBE_SHARED(x) (NAMED(x) &gt; 1)\n#define NO_REFERENCES(x) (NAMED(x) == 0)\n#define MARK_NOT_MUTABLE(x) SET_NAMED(x, NAMEDMAX)\n#define MAYBE_REFERENCED(x) (! NO_REFERENCES(x))\n#define NOT_SHARED(x) (! MAYBE_SHARED(x))\nStatus: API · Header: Rinternals.h · Protect: n/a · Errors: never · Since: — · R equivalent: —\nYou must be very careful when modifying function inputs. These macros test the NAMED reference count so you can tell whether an object may be shared before changing it in place.\nSee also: Rf_duplicate()\n\n\n3.7.2 IS_GETTER_CALL()\nTest whether a call is a getter call in complex assignment support.\n#define IS_GETTER_CALL(call) (CADR(call) == R_TmpvalSymbol)\nStatus: non-API · Header: Defn.h · Protect: n/a · Errors: never · Since: — · R equivalent: —\nComplex assignment support: a temporary definition that will need to be refined to distinguish getter from setter calls.\nYou must be very careful when modifying function inputs. If you’re working with lists, use shallow_duplicate() to make a shallow copy; duplicate() will also copy every element in the list.\n\n\n3.7.3 Efficient copying\n\n\n3.7.4 Rf_duplicate() (Rf_shallow_duplicate(), Rf_lazy_duplicate())\nDuplicate an object, either deeply or shallowly.\nSEXP Rf_duplicate(SEXP);\nSEXP Rf_shallow_duplicate(SEXP);\nSEXP Rf_lazy_duplicate(SEXP);\nStatus: API · Header: Rinternals.h · Protect: result · Errors: can throw · Since: — · R equivalent: —\nYou must be very careful when modifying function inputs. If you’re working with lists, use shallow_duplicate() to make a shallow copy; duplicate() will also copy every element in the list.\nSee also: MAYBE_SHARED()\n\n\n3.7.5 Internals\n\n\n3.7.6 OBJECT() (MARK(), TYPEOF(), NAMED(), REFCNT(), SET_OBJECT(), SET_TYPEOF(), SET_NAMED(), LEVELS(), SETLEVELS())\nRead and write the general attribute flags of a cons cell.\nint  (OBJECT)(SEXP x);\nint  (MARK)(SEXP x);\nint  (TYPEOF)(SEXP x);\nint  (NAMED)(SEXP x);\nint  (REFCNT)(SEXP x);\nvoid (SET_OBJECT)(SEXP x, int v);\nvoid (SET_TYPEOF)(SEXP x, int v);\nvoid (SET_NAMED)(SEXP x, int v);\nint  (LEVELS)(SEXP x);\nint  (SETLEVELS)(SEXP x, int v);\nStatus: API · Header: Rinternals.h · Protect: n/a · Errors: never · Since: — · R equivalent: —\nGeneral cons cell attributes: the object flag, GC mark, type, named count, reference count, and general-purpose levels. OBJECT() and SET_OBJECT() are not part of the API; prefer Rf_isObject() and Rf_setAttrib() (or CLEAR_ATTRIB(), added in R 4.5.0) in new code. SET_TYPEOF() will also not be available to packages in the future; use a constructor such as Rf_allocLang() (added in R 4.4.1) instead.\nSee also: Rf_isObject(), Rf_getAttrib()",
+    "crumbs": [
+      "Part I — Foundations",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Garbage collection and reference counting</span>"
+    ]
+  },
+  {
+    "objectID": "memory.html",
+    "href": "memory.html",
+    "title": "4  Memory allocation",
+    "section": "",
+    "text": "Warning\n\n\n\nPlaceholder. Planned content:\n\nTransient allocation: R_alloc/vmaxget/vmaxset\nR_Calloc/R_Realloc/R_Free and cleanup-on-error obligations\nAlignment\nWhen to prefer a RAWSXP instead",
+    "crumbs": [
+      "Part I — Foundations",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Memory allocation</span>"
+    ]
+  },
+  {
+    "objectID": "vectors.html",
+    "href": "vectors.html",
+    "title": "5  Vectors",
+    "section": "",
+    "text": "5.1 Length\nThere are seven vector types in R:\nThree of those vectors are built on top of simple types defined by R:",
+    "crumbs": [
+      "Part II — Objects",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Vectors</span>"
+    ]
+  },
+  {
+    "objectID": "vectors.html#length",
+    "href": "vectors.html#length",
+    "title": "5  Vectors",
+    "section": "",
+    "text": "5.1.1 Rf_xlength() (Rf_length())\nGet the length of a vector.\nR_xlen_t Rf_xlength(SEXP x);\nR_len_t Rf_length(SEXP x);\nStatus: API · Header: Rinternals.h · Protect: not needed · Errors: never · Since: — · R equivalent: length()\n\nx: any vector.\n\nHistorically, R vectors were limited to length 2^31 - 1, and most vectors are still shorter than this, so the int-based Rf_length() interface suffices. As of R 3.0.0, vectors can have length up to 2^64 - 1; use the R_xlen_t-based Rf_xlength() if you want your code to be as general as possible. Also works on pairlists, where it is O(n).\nSee also: Rf_lengthgets(), LENGTH()\n\n\n5.1.2 Rf_lengthgets() (Rf_xlengthgets())\nSet the length of a vector by creating a new vector of extended length.\nSEXP Rf_lengthgets(SEXP x, R_len_t n);\nSEXP Rf_xlengthgets(SEXP x, R_xlen_t n);\nStatus: API · Header: Rinternals.h · Protect: result · Errors: can throw · Since: — · R equivalent: length&lt;-\n\nx: a vector.\nn: the new length.\n\nSets the length of a vector by creating a new vector of extended length. Rf_xlengthgets() is the R_xlen_t-based variant for long vectors (available since R 3.0.0).\nSee also: Rf_xlength(), SETLENGTH()\n\n\n5.1.3 LENGTH() (XLENGTH())\nGet the length of a vector.\nint LENGTH(SEXP x);\nR_xlen_t XLENGTH(SEXP x);\nStatus: API · Header: Rinternals.h · Protect: n/a · Errors: never · Since: — · R equivalent: length()\n\nx: any vector.\n\nUppercase variants of Rf_length()/Rf_xlength(); in base R code these are implemented as macros for efficiency.\nSee also: Rf_xlength(), SETLENGTH()\n\n\n5.1.4 SETLENGTH()\nSet the length of a vector in place.\nvoid SETLENGTH(SEXP x, int v);\nStatus: non-API (use Rf_lengthgets()) · Header: Rinternals.h · Protect: n/a · Errors: never · Since: — · R equivalent: length&lt;-\n\nx: a vector.\nv: the new length.\n\nUppercase variant of Rf_lengthgets(); in base R code these uppercase variants are implemented as macros for efficiency. For resizable (growable) vectors, R 4.6.0 adds R_resizeVector(); see R_allocResizableVector().\nSee also: Rf_lengthgets(), LENGTH()\n\n\n5.1.5 IS_LONG_VEC()\nTest whether a vector is a long vector.\nint IS_LONG_VEC(SEXP x);\nStatus: API · Header: Rinternals.h · Protect: n/a · Errors: never · Since: R 3.0.0 · R equivalent: —\n\nx: any vector.\n\nAs of R 3.0.0, R vectors can have length up to 2^64 - 1; a long vector is one whose length exceeds the int-based limit of 2^31 - 1.\nSee also: Rf_xlength()\nAfter the SEXPTYPE, the most important property of a vector is it’s length. Historically, R vectors were limited to length \\(2 ^ {31} -  1\\). Still most vectors are shorter than this, so you can use an int based interface:\ntypedef int R_len_t;\nAs of R 3.0.0, R vectors can have length up to \\(2 ^ {64} - 1\\). If you want your code to be as general as possible, you should instead use the R_xlen_tbased interface:\n// ptrdiff_t is the type of the result of subtracting two pointers, and\n// is usually 8 bytes (like a double)\ntypedef ptrdiff_t R_xlen_t;\nThese functions also have uppercase variants - in base R code these are implemented as macros for efficiency.",
+    "crumbs": [
+      "Part II — Objects",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Vectors</span>"
+    ]
+  },
+  {
+    "objectID": "vectors.html#create",
+    "href": "vectors.html#create",
+    "title": "5  Vectors",
+    "section": "5.2 Create",
+    "text": "5.2 Create\n\n5.2.1 Rf_allocVector()\nCreate a new vector of the given type and length.\nSEXP Rf_allocVector(SEXPTYPE type, R_xlen_t n);\nStatus: API · Header: Rinternals.h · Protect: result · Errors: can throw · Since: — · R equivalent: vector()\n\ntype: any vector SEXPTYPE (LGLSXP, INTSXP, REALSXP, CPLXSXP, STRSXP, VECSXP, RAWSXP, EXPRSXP).\nn: number of elements; R_xlen_t supports long vectors on 64-bit platforms.\n\nThe most common way to create a new vector. Atomic vector contents are uninitialised; VECSXP/EXPRSXP elements are R_NilValue and STRSXP elements are \"\". Attributes are unset.\nSEXP out = PROTECT(Rf_allocVector(REALSXP, n));\nSee also: Rf_allocVector3(), Rf_coerceVector()\n\n\n5.2.2 Rf_ScalarLogical() (Rf_ScalarInteger(), Rf_ScalarReal(), Rf_ScalarComplex(), Rf_ScalarRaw())\nCreate a vector of length 1 from the corresponding C type.\nSEXP Rf_ScalarLogical(int x);\nSEXP Rf_ScalarInteger(int x);\nSEXP Rf_ScalarReal(double x);\nSEXP Rf_ScalarComplex(Rcomplex x);\nSEXP Rf_ScalarRaw(Rbyte x);\nStatus: API · Header: Rinternals.h · Protect: result · Errors: can throw · Since: — · R equivalent: —\n\nx: the C value to wrap.\n\nAs with all SEXP creation functions you must PROTECT() the result of any of these calls unless you’re immediately assigning it into an already protected object. For strings see Rf_ScalarString() and Rf_mkString().\nSee also: Rf_allocVector(), Rf_ScalarString(), Rf_mkString()\n\n\n5.2.3 Rf_coerceVector()\nCoerce an existing vector to a different type.\nSEXP Rf_coerceVector(SEXP x, SEXPTYPE newtype);\nStatus: API · Header: Rinternals.h · Protect: result · Errors: can throw · Since: — · R equivalent: as.vector()\n\nx: a vector.\nnewtype: the SEXPTYPE to coerce to.\n\nErrors if it can’t coerce between TYPEOF(x) and newtype.\nSee also: Rf_allocVector(), Rf_asLogical()\n\n\n5.2.4 Rf_mkNamed()\nCreate a named vector of the given type.\nSEXP Rf_mkNamed(SEXPTYPE type, const char **names);\nStatus: API · Header: Rinternals.h · Protect: result · Errors: can throw · Since: — · R equivalent: setNames()\n\ntype: any vector SEXPTYPE.\nnames: a null-terminated array of const char* names.\n\nGiven a null-terminated array of const char*s, creates a vector of that length and initialises a character vector of names.\n// array of names; note the null string\nconst char *names[] = {\"xname\", \"yname\", \"\"};\nSEXP list = PROTECT(Rf_mkNamed(VECSXP, names));  // creates a list of length 2\nSET_VECTOR_ELT(list, 0, x); // x and y are arbitrary SEXPs\nSET_VECTOR_ELT(list, 1, y);\nUNPROTECT(1);\nSee also: Rf_allocVector()\n\n\n5.2.5 Rf_allocVector3()\nCreate a new vector using a custom allocator.\nSEXP Rf_allocVector3(SEXPTYPE type, R_xlen_t n, R_allocator_t *allocator);\nStatus: API · Header: Rinternals.h · Protect: result · Errors: can throw · Since: R 3.4.0 · R equivalent: —\nLike Rf_allocVector(), but memory for the data payload comes from allocator. Pass NULL to get exactly Rf_allocVector() behaviour. Rarely needed in package code.\nSee also: Rf_allocVector()\nThe most common way to create a new vector is with Rf_allocVector(). If you want to create a vector of length 1 from the corresponding C type, use the scalar helpers.\n(Note, as with all SEXP creation functions you must Rf_protect() the result of any of these calls unless you’re immediately assigning it into an already protected object)\nAlternatively you can coerce from an existing vector with Rf_coerceVector().\nTo create a named vector, use Rf_mkNamed().\nFor example, this template creates a list holding two objects x and y named xname and yname:\n  // array of names; note the null string\n  const char *names[] = {\"xname\", \"yname\", \"\"};\n  SEXP list = PROTECT(Rf_mkNamed(VECSXP, names));  // creates a list of length 2\n  SET_VECTOR_ELT(list, 0, x); // x and y are arbitrary SEXPs\n  SET_VECTOR_ELT(list, 1, y);\n  UNPROTECT(1);\nFinally, you can use a custom allocator:\n// Create a vector with a custom memory allocator\ntypedef void *(*custom_alloc_t)(R_allocator_t *allocator, size_t);\ntypedef void  (*custom_free_t)(R_allocator_t *allocator, void *);\ntypedef struct R_allocator {\n    custom_alloc_t mem_alloc; /* malloc equivalent */\n    custom_free_t  mem_free;  /* free equivalent */\n    void *res;                /* reserved (maybe for copy) - must be NULL */\n    void *data;               /* custom data for the allocator implementation */\n} R_allocator_t;",
+    "crumbs": [
+      "Part II — Objects",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Vectors</span>"
+    ]
+  },
+  {
+    "objectID": "vectors.html#get-and-set-values",
+    "href": "vectors.html#get-and-set-values",
+    "title": "5  Vectors",
+    "section": "5.3 Get and set values",
+    "text": "5.3 Get and set values\n\n5.3.1 LOGICAL() (INTEGER(), REAL(), COMPLEX(), RAW())\nGet a pointer to the underlying C array of an atomic vector.\nint*      LOGICAL(SEXP x);\nint*      INTEGER(SEXP x);\ndouble*   REAL(SEXP x);\nRcomplex* COMPLEX(SEXP x);\nRbyte*    RAW(SEXP x);\nStatus: API · Header: Rinternals.h · Protect: not needed · Errors: never · Since: — · R equivalent: —\n\nx: a vector of the corresponding type.\n\nThese functions are all upper case and don’t start with Rf_. When working with longer vectors, there’s typically a performance advantage to saving the pointer and reusing it rather than calling the accessor on every iteration.\nint* px = INTEGER(x);\nfor (int i = 0; i &lt; n; ++i) {\n  px[i] = px[i] * 2;\n}\nSee also: STRING_ELT(), VECTOR_ELT()\n\n\n5.3.2 STRING_ELT() (SET_STRING_ELT())\nGet or set a single element of a character vector.\nSEXP STRING_ELT(SEXP x, R_xlen_t i);\nvoid SET_STRING_ELT(SEXP x, R_xlen_t i, SEXP v);\nStatus: API · Header: Rinternals.h · Protect: not needed · Errors: can throw · Since: — · R equivalent: —\n\nx: a STRSXP.\ni: zero-based element index.\nv: the CHARSXP to set.\n\nSTRING_ELT() returns a CHARSXP. Strings don’t map to simple C structs, so they use a pair of functions to get and set values.\nSee also: VECTOR_ELT(), STRING_PTR()\n\n\n5.3.3 VECTOR_ELT() (SET_VECTOR_ELT())\nGet or set a single element of a list.\nSEXP VECTOR_ELT(SEXP x, R_xlen_t i);\nSEXP SET_VECTOR_ELT(SEXP x, R_xlen_t i, SEXP v);\nStatus: API · Header: Rinternals.h · Protect: not needed · Errors: can throw · Since: — · R equivalent: —\n\nx: a VECSXP.\ni: zero-based element index.\nv: the value to set.\n\nVECTOR_ELT() returns potentially any SEXPTYPE. Lists don’t map to simple C structs, so they use a pair of functions to get and set values.\nSee also: STRING_ELT(), VECTOR_PTR()\n\n\n5.3.4 STRING_PTR()\nGet a pointer to the elements of a character vector.\nSEXP* STRING_PTR(SEXP x);\nStatus: non-API (use STRING_PTR_RO()) · Header: Rinternals.h · Protect: not needed · Errors: never · Since: — · R equivalent: —\n\nx: a STRSXP.\n\nUsed in a handful of places in the R source. Obtaining a writable pointer to character vector data can violate the memory manager’s integrity assumptions and is not supported; use STRING_PTR_RO() instead.\nSee also: STRING_ELT()\n\n\n5.3.5 VECTOR_PTR()\nGet a pointer to the elements of a list.\nSEXP* VECTOR_PTR(SEXP x);\nStatus: non-API (use VECTOR_ELT()) · Header: Rinternals.h · Protect: not needed · Errors: can throw · Since: — · R equivalent: —\n\nx: a VECSXP.\n\nA deprecated interface that now throws an error.\nSee also: VECTOR_ELT()\nThe simple types are wrappers around an array of C values, so you get and set by using a helper that returns a pointer:\nNB: these functions are all upper case and don’t start with Rf_.\nWhen working with longer vectors, there’s typically a performance advantage to saving the index and reusing. For example, instead of:\nfor (int i = 0; i &lt; n; ++i) {\n  INTEGER(x)[i] = INTEGER(x)[i] * 2;\n}\nDo:\nint* px = INTEGER(x);\nfor (int i = 0; i &lt; n; ++i) {\n  px[i] = px[i] * 2;\n}\nStrings and lists don’t map to simple C structs, so instead have a pair of functions to get and set values.\n(There is STRING_PTR() which is used in a handful of places in the R source; VECTOR_PTR() is a deprecated interface that now throws an error.)\n\n\n5.3.6 Scalars\n\n\n5.3.7 Rf_asLogical() (Rf_asInteger(), Rf_asReal(), Rf_asComplex())\nExtract the first value of a vector as a C type, coercing as necessary.\nint Rf_asLogical(SEXP x);\nint Rf_asInteger(SEXP x);\ndouble Rf_asReal(SEXP x);\nRcomplex Rf_asComplex(SEXP x);\nStatus: API · Header: Rinternals.h · Protect: not needed · Errors: can throw · Since: — · R equivalent: as.logical()\n\nx: a vector.\n\nThese helpers extract the first value, coercing the vector as necessary.\nSee also: Rf_coerceVector()\nThere are a few helpers that extract the first value, coercing the vector as necessary:\n\n\n5.3.8 Special values\n\n\n5.3.9 NA_LOGICAL() (NA_INTEGER(), NA_STRING())\nSentinel values for missing logical, integer, and character elements.\n#define NA_LOGICAL R_NaInt\n#define NA_INTEGER R_NaInt\n#define NA_STRING  R_NaString\nStatus: API · Header: R_ext/Arith.h · Protect: n/a · Errors: never · Since: — · R equivalent: NA\nInteger, logical, and character vectors have special sentinels for missing values. NA_LOGICAL and NA_INTEGER are both R_NaInt (currently INT_MIN); NA_STRING is R_NaString.\nSee also: NA_REAL()\n\n\n5.3.10 NA_REAL() (R_NaReal())\nMissing value sentinel for doubles.\ndouble R_NaReal;\n#define NA_REAL R_NaReal\nStatus: API · Header: R_ext/Arith.h · Protect: n/a · Errors: never · Since: — · R equivalent: NA_real_\nMissing values are somewhat more complicated for REALSXP because there is an existing protocol for missing values defined by the IEEE 754 floating-point standard. In doubles, an NA is NaN with a special bit pattern (the lowest word is 1954, the year Ross Ihaka was born).\nSee also: R_NaN(), ISNA(), NA_LOGICAL()\n\n\n5.3.11 R_NaN() (R_PosInf(), R_NegInf())\nSpecial floating-point values for NaN and positive and negative infinity.\ndouble R_NaN;\ndouble R_PosInf;\ndouble R_NegInf;\nStatus: API · Header: R_ext/Arith.h · Protect: n/a · Errors: never · Since: — · R equivalent: NaN\nProvided for cross-platform safety. Use these constants (and NA_REAL) to set NaN, infinite, and missing values.\nSee also: NA_REAL(), ISNA()\n\n\n5.3.12 ISNA() (ISNAN(), R_FINITE())\nCheck a double for missing, NaN, or non-finite values.\nint ISNA(double x);\nint ISNAN(double x);\nint R_FINITE(double x);\nStatus: API · Header: R_ext/Arith.h · Protect: n/a · Errors: never · Since: — · R equivalent: is.na()\n\nx: the double to check.\n\nUse ISNA(), ISNAN(), and !R_FINITE() to check for missing, NaN, or non-finite values. These are macros; R_IsNA(), R_IsNaN(), and R_finite() are the equivalent functions.\nSee also: R_IsNA(), NA_REAL()\n\n\n5.3.13 R_IsNA() (R_IsNaN(), R_finite())\nCheck a double for missing, NaN, or non-finite values.\nint R_IsNA(double);\nint R_IsNaN(double);\nint R_finite(double);\nStatus: API · Header: R_ext/Arith.h · Protect: n/a · Errors: never · Since: — · R equivalent: is.finite()\nFunction equivalents of the ISNA(), ISNAN(), and R_FINITE() macros. R_finite() is true when the value is not NA, NaN, Inf, or -Inf.\nSee also: ISNA()\nInteger, logical, and character vectors have special sentinels for missing values.\nMissing values are somewhat more complicated for REALSXP because there is an existing protocol for missing values defined by the floating point standard (IEEE 754). In doubles, an NA is NaN with a special bit pattern (the lowest word is 1954, the year Ross Ihaka was born), and there are other special values for positive and negative infinity. Use ISNA(), ISNAN(), and !R_FINITE() macros to check for missing, NaN, or non-finite values. Use the constants NA_REAL, R_NaN, R_PosInf, and R_NegInf to set those values.",
+    "crumbs": [
+      "Part II — Objects",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Vectors</span>"
+    ]
+  },
+  {
+    "objectID": "vectors.html#test",
+    "href": "vectors.html#test",
+    "title": "5  Vectors",
+    "section": "5.4 Test",
+    "text": "5.4 Test\n\n5.4.1 Rf_isLogical() (Rf_isInteger(), Rf_isReal(), Rf_isComplex(), Rf_isString(), Rf_isExpression())\nTest if an SEXP is a vector of the given type.\nRboolean Rf_isLogical(SEXP s);\nRboolean Rf_isInteger(SEXP s);\nRboolean Rf_isReal(SEXP s);\nRboolean Rf_isComplex(SEXP s);\nRboolean Rf_isString(SEXP s);\nRboolean Rf_isExpression(SEXP s);\nStatus: API · Header: Rinternals.h · Protect: not needed · Errors: never · Since: — · R equivalent: is.logical()\n\ns: any SEXP.\n\nThere’s no function to test for RAWSXP or VECSXP; you must use TYPEOF(x) == RAWSXP or TYPEOF(x) == VECSXP. (isList() tests if the object is a pairlist.) Be careful when checking whether an R object is an integer vector: internally, factors are also INTSXPs, so TYPEOF(x) == INTSXP would accept both vanilla integer vectors and factors; prefer Rf_isInteger() and Rf_isFactor() for these cases.\nSee also: Rf_isNewList(), Rf_isFactor()\n\n\n5.4.2 Rf_isNewList() (Rf_isVectorAtomic(), Rf_isVectorList(), Rf_isVector(), Rf_isNumber(), Rf_isNumeric())\nTest for frequently used combinations of vector types.\nRboolean Rf_isNewList(SEXP s);\nRboolean Rf_isVectorAtomic(SEXP s);\nRboolean Rf_isVectorList(SEXP s);\nRboolean Rf_isVector(SEXP s);\nRboolean Rf_isNumber(SEXP s);\nRboolean Rf_isNumeric(SEXP s);\nStatus: API · Header: Rinternals.h · Protect: not needed · Errors: never · Since: — · R equivalent: —\n\ns: any SEXP.\n\nRf_isNewList(): NILSXP, VECSXP. Rf_isVectorAtomic(): LGLSXP, INTSXP, REALSXP, CPLXSXP, STRSXP, RAWSXP. Rf_isVectorList(): LISTSXP, EXPRSXP. Rf_isVector(): isVectorAtomic(x) || isVectorList(). Rf_isNumber(): INTSXP (but not factor), LGLSXP, REALSXP, CPLXSXP. Rf_isNumeric(): INTSXP (but not factor), REALSXP, CPLXSXP. These are not always consistent with their R equivalents: Rf_isVectorAtomic(R_NilValue) is false but is.atomic(NULL) is true, and Rf_isNewList(R_NilValue) is true but is.list(NULL) is false (somewhat strange, given that R_NilValue is just an empty pairlist, i.e. NULL and pairlist() are identical). Because of this confusion, I recommend writing your own wrapper around TYPEOF(x).\nSee also: Rf_isLogical()\nA number of helpers let you test if an SEXP is of the given type:\nNB: there’s no function to test for RAWSXP or VECSXP; you use must use TYPEOF(x) == RAWSXP, or TYPEOF(x) == VECSXP. isList() tests if the object is a pairlist.\nA handful of functions test for frequently used combinations of variable types:\nNB: these are not always consistent with their R equivalents. For example, Rf_isVectorAtomic(R_NilValue) is false, but is.atomic(NULL) is true; Rf_isNewList(R_NilValue) is true; but is.list(NULL) is false. Because of this confusion, I recommend writing your own wrapper around TYPEOF(x).\nNB: Be careful when checking whether whether an R object is an integer vector. Internally, factors are also INTSXPs so TYPEOF(x) == INTSXP would accept both vanilla integer vectors and factors. (Prefer using Rf_isInteger() and Rf_isFactor() for these cases.)\nNB: It is somewhat strange that Rf_isNewList() returns TRUE for R_NilValue, given that R_NilValue is just an empty pairlist (ie, NULL and pairlist() are identical).",
+    "crumbs": [
+      "Part II — Objects",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Vectors</span>"
+    ]
+  },
+  {
+    "objectID": "vectors.html#miscellaneous-helpers",
+    "href": "vectors.html#miscellaneous-helpers",
+    "title": "5  Vectors",
+    "section": "5.5 Miscellaneous helpers",
+    "text": "5.5 Miscellaneous helpers\n\n5.5.1 Rf_copyVector()\nCopy from one vector to another, recycling as necessary.\nvoid Rf_copyVector(SEXP source, SEXP target);\nStatus: API · Header: Rinternals.h · Protect: n/a · Errors: can throw · Since: — · R equivalent: —\n\nsource: the vector to copy from.\ntarget: the vector to copy to.\n\nCopies from source to target, recycling as necessary. Use Rf_duplicate() if you simply want to duplicate a vector.\nSee also: Rf_copyMatrix()\n\n\n5.5.2 Rf_stringSuffix()\nExtract the tail of a STRSXP.\nSEXP Rf_stringSuffix(SEXP string, int fromIndex);\nStatus: API · Header: Rinternals.h · Protect: result · Errors: can throw · Since: — · R equivalent: substring()\n\nstring: a STRSXP.\nfromIndex: the index to start the suffix from.\n\n\n\n5.5.3 IS_SCALAR() (IS_SIMPLE_SCALAR())\nTest if an object is a scalar (a vector of length 1) of the given type.\n#define IS_SCALAR(x, type) (TYPEOF(x) == (type) && XLENGTH(x) == 1)\n#define IS_SIMPLE_SCALAR(x, type) (IS_SCALAR(x, type) && ATTRIB(x) == R_NilValue)\nStatus: API · Header: Rinternals.h · Protect: n/a · Errors: never · Since: — · R equivalent: —\n\nx: any SEXP.\ntype: a SEXPTYPE.\n\nIS_SIMPLE_SCALAR() additionally requires that the object has no attributes.\n\n\n5.5.4 Rf_isVectorizable()\nTest if a list can be converted into a vector.\nRboolean Rf_isVectorizable(SEXP x);\nStatus: API · Header: Rinternals.h · Protect: not needed · Errors: never · Since: — · R equivalent: —\n\nx: a list or pairlist.\n\nChecks to see if a list can be converted into a vector, i.e. each element of a list or pairlist is a vector of length 0 or 1.\n\n\n5.5.5 Rf_duplicated()\nIdentify duplicated elements of a vector.\nSEXP Rf_duplicated(SEXP x, Rboolean from_last);\nStatus: API · Header: Rinternals.h · Protect: result · Errors: can throw · Since: — · R equivalent: duplicated()\n\nx: a vector.\nfrom_last: if TRUE, search from the last element.\n\nReturns an LGLSXP the same length as x.\nA couple of macros aid in testing if an object is a “scalar” (a vector of length 1):",
+    "crumbs": [
+      "Part II — Objects",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Vectors</span>"
+    ]
+  },
+  {
+    "objectID": "strings.html",
+    "href": "strings.html",
+    "title": "6  Strings",
+    "section": "",
+    "text": "6.1 Encodings\nA character vector (STRSXP) is effectively an array of pointers to CHARSXPs, which are stored in a global string pool. This design allows individual CHARSXP’s to be shared between multiple character vectors, reducing memory usage.\nEach CHARSXP has an encoding associated with it:",
+    "crumbs": [
+      "Part II — Objects",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Strings</span>"
+    ]
+  },
+  {
+    "objectID": "strings.html#encodings",
+    "href": "strings.html#encodings",
+    "title": "6  Strings",
+    "section": "",
+    "text": "6.1.1 cetype_t() (CE_NATIVE(), CE_UTF8(), CE_LATIN1(), CE_BYTES(), CE_SYMBOL(), CE_ANY())\nEnumerate the encodings a CHARSXP can carry.\ntypedef enum {\n  CE_NATIVE = 0,\n  CE_UTF8   = 1,\n  CE_LATIN1 = 2,\n  CE_BYTES  = 3,\n  CE_SYMBOL = 5,\n  CE_ANY    = 99\n} cetype_t;\nStatus: API · Header: Rinternals.h · Protect: n/a · Errors: never · Since: — · R equivalent: —\nEach CHARSXP has an encoding associated with it, one of CE_NATIVE, CE_UTF8, CE_LATIN1, CE_BYTES, CE_SYMBOL, or CE_ANY.\nSee also: Rf_getCharCE()\n\n\n6.1.2 Rf_getCharCE()\nGet the encoding of a CHARSXP.\ncetype_t Rf_getCharCE(SEXP);\nStatus: API · Header: Rinternals.h · Protect: not needed · Errors: never · Since: — · R equivalent: —\nReturns the cetype_t encoding associated with a CHARSXP.\nSee also: cetype_t()",
+    "crumbs": [
+      "Part II — Objects",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Strings</span>"
+    ]
+  },
+  {
+    "objectID": "strings.html#creating-from-c-strings",
+    "href": "strings.html#creating-from-c-strings",
+    "title": "6  Strings",
+    "section": "6.2 Creating from C strings",
+    "text": "6.2 Creating from C strings\n\n6.2.1 Rf_mkChar() (Rf_mkCharLen())\nCreate a CHARSXP from a C string in the current encoding.\nSEXP Rf_mkChar(const char* x);\nSEXP Rf_mkCharLen(const char* x, int n);\nStatus: API · Header: Rinternals.h · Protect: result · Errors: can throw · Since: — · R equivalent: —\nRf_mkChar() uses a null-terminated string; Rf_mkCharLen() uses a specified length. Typically these calls don’t need to be protected as they are immediately assigned into a STRSXP. These calls will crash R if passed a NULL; it is your responsibility to check for that and return the correct value (typically \"\" or NA_STRING).\nSee also: Rf_mkCharCE(), Rf_ScalarString()\n\n\n6.2.2 Rf_mkCharCE() (Rf_mkCharLenCE())\nCreate a CHARSXP from a C string in a specified encoding.\nSEXP Rf_mkCharCE(const char* x, cetype_t encoding);\nSEXP Rf_mkCharLenCE(const char* x, int n, cetype_t encoding);\nStatus: API · Header: Rinternals.h · Protect: result · Errors: can throw · Since: — · R equivalent: —\nMost modern C libraries encode strings as UTF-8. This means you should typically use Rf_mkCharCE() or Rf_mkCharLenCE(), and avoid the other string creation methods including Rf_mkString().\nSee also: cetype_t(), Rf_mkChar()\n\n\n6.2.3 Rf_ScalarString() (Rf_mkString())\nCreate a length-1 STRSXP from a CHARSXP or C string.\nSEXP Rf_ScalarString(SEXP);\nSEXP Rf_mkString(const char*);\nStatus: API · Header: Rinternals.h · Protect: result · Errors: can throw · Since: — · R equivalent: —\nRf_ScalarString() makes a STRSXP from a CHARSXP; Rf_mkString() makes a STRSXP from a C string. Note that these calls will crash R if passed a NULL.\nSee also: Rf_mkChar()\n(Typically these calls don’t need to be protected as they are immediately assigned into a STRSXP.)\nIf you need to re-encode strings from another encoding, use R’s wrapper around iconv found in R_ext/Riconv.h. It provides cross-platform Riconv_open() and Riconv. It’s usually best to convert to UTF-8.\nNote that these calls will crash R if passed a NULL. It is your responsibility to check for that and return the correct value (typically \"\" or NA_STRING).\nNote that most modern C libraries encode strings as UTF-8. This means you should typically use Rf_mkCharCE() or Rf_mkCharLenCE(), and avoid the other string creation methods including Rf_mkString()",
+    "crumbs": [
+      "Part II — Objects",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Strings</span>"
+    ]
+  },
+  {
+    "objectID": "strings.html#convert-to-c-string",
+    "href": "strings.html#convert-to-c-string",
+    "title": "6  Strings",
+    "section": "6.3 Convert to C string",
+    "text": "6.3 Convert to C string\nTo access the underlying C-string stored in a CHARSXP, use CHAR():\n\n6.3.1 CHAR() (R_CHAR())\nAccess the underlying C string stored in a CHARSXP.\nconst char* R_CHAR(SEXP x);\n#define CHAR(x) R_CHAR(x)\nStatus: API · Header: Rinternals.h · Protect: not needed · Errors: never · Since: — · R equivalent: —\nTo match the other vector accessor functions (LOGICAL(), INTEGER(), …), this is typically called as CHAR().\nSee also: Rf_translateCharUTF8()\n\n\n6.3.2 Rf_translateCharUTF8() (Rf_translateChar(), Rf_translateChar0())\nTranslate a CHARSXP to a C string in a specified encoding.\nconst char* Rf_translateChar(SEXP x);\nconst char* Rf_translateChar0(SEXP x);\nconst char* Rf_translateCharUTF8(SEXP x);\nStatus: API · Header: Rinternals.h · Protect: not needed · Errors: can throw · Since: — · R equivalent: —\nRf_translateChar() translates to the native encoding; Rf_translateChar0() returns the string as is if bytes, otherwise translates to native encoding; Rf_translateCharUTF8() translates to UTF-8. Most modern C APIs use UTF-8, so you almost always want Rf_translateCharUTF8(). If re-encoding is necessary, the char* will be allocated by R_alloc() and will be automatically freed at the end of the call to .C, .Call, or .External; if you want to save it across calls to C, make a copy.\nSee also: CHAR()\nNB: To match the other vector accessor functions (LOGICAL(), INTEGER(), …), this is typically called as CHAR().\nThree functions create const char* with the specified encoding.\nMost modern C APIs use UTF-8, so you almost always want Rf_translateCharUTF8().\nNB: if re-encoding is necessary, the char* will be allocated by R_alloc() and will be automatically freed at the end of the call to .C, .Call, or .External. If you want to save across calls to C, make a copy.\nIf the memory is needed only for a short period of time or if you are making a large number of repeated calls that allocate memory, you may want to manage the deallocation explicitly. This is alluded to in the R source code with this comment (src/main/sysutils.c):\n/* This may return a R_alloc-ed result, so the caller has to manage the\n   R_alloc stack */\nconst char *translateChar(SEXP x)\n{\n...\nThe code would look like this:\nconst void *vmax = vmaxget();\n... // one or more calls to Rf_translateChar(), Rf_translateCharUTF8(), etc.\nvmaxset(vmax);",
+    "crumbs": [
+      "Part II — Objects",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Strings</span>"
+    ]
+  },
+  {
+    "objectID": "strings.html#special-values",
+    "href": "strings.html#special-values",
+    "title": "6  Strings",
+    "section": "6.4 Special values",
+    "text": "6.4 Special values\n\n6.4.1 NA_STRING() (R_NaString())\nUse the singleton CHARSXP representing NA.\nSEXP R_NaString; // Singleton CHARSXP\n#define NA_STRING R_NaString\nStatus: API · Header: Rinternals.h · Protect: n/a · Errors: never · Since: — · R equivalent: NA_character_\nR_NaString is a singleton CHARSXP; NA_STRING is the macro alias.\nSee also: R_BlankString()\n\n\n6.4.2 R_BlankString() (R_BlankScalarString())\nUse the global blank string objects.\nSEXP R_BlankString; // CHARSXP\nSEXP R_BlankScalarString; // STRSXP\nStatus: API · Header: Rinternals.h · Protect: n/a · Errors: never · Since: — · R equivalent: \"\"\nR_BlankString is a CHARSXP; R_BlankScalarString is a STRSXP.\nSee also: NA_STRING()\n\n\n6.4.3 Rf_StringBlank() (Rf_isBlankString())\nCheck whether a string is blank.\nRboolean Rf_StringBlank(SEXP);\nRboolean Rf_isBlankString(const char *);\nStatus: API · Header: Rinternals.h · Protect: not needed · Errors: never · Since: — · R equivalent: —\nRf_StringBlank() takes a SEXP; Rf_isBlankString() takes a const char*.\nSee also: R_BlankString()\n\n\n6.4.4 Rf_StringFalse() (Rf_StringTrue())\nCheck whether a C string represents false or true.\nRboolean Rf_StringFalse(const char *);\nRboolean Rf_StringTrue(const char *);\nStatus: non-API · Header: R_ext/Utils.h · Protect: not needed · Errors: never · Since: — · R equivalent: —\n\n\n6.4.5 Rf_isValidString() (Rf_isValidStringF())\nCheck whether a STRSXP holds at least one valid string.\nRboolean Rf_isValidString(SEXP);\nRboolean Rf_isValidStringF(SEXP);\nStatus: API · Header: Rinternals.h · Protect: not needed · Errors: never · Since: — · R equivalent: —\nRf_isValidString(x) is TYPEOF(x) == STRSXP && LENGTH(x) &gt; 0 && TYPEOF(STRING_ELT(x, 0)) != NILSXP; Rf_isValidStringF(x) is isValidString(x) && CHAR(STRING_ELT(x, 0))[0].",
+    "crumbs": [
+      "Part II — Objects",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Strings</span>"
+    ]
+  },
+  {
+    "objectID": "strings.html#helper-functions",
+    "href": "strings.html#helper-functions",
+    "title": "6  Strings",
+    "section": "6.5 Helper functions",
+    "text": "6.5 Helper functions\n\n6.5.1 R_nchar()\nCompute the length of a string in bytes, characters, or display width.\ntypedef enum {Bytes, Chars, Width} nchar_type;\nint R_nchar(SEXP string, nchar_type type_,\n  Rboolean allowNA, Rboolean keepNA, const char* msg_name);\nStatus: API · Header: Rinternals.h · Protect: not needed · Errors: can throw · Since: — · R equivalent: nchar()\nnchar_type is one of Bytes, Chars, or Width.\n\n\n6.5.2 Rf_acopy_string()\nCopy a C string into memory allocated by R_alloc().\nchar* Rf_acopy_string(const char *);\nStatus: API · Header: Rinternals.h · Protect: not needed · Errors: can throw · Since: — · R equivalent: —\nReturns a copy of a string using memory from R_alloc(); the memory is freed on gc.\n\n\n6.5.3 Rf_asChar()\nRender an R object to a CHARSXP.\nSEXP Rf_asChar(SEXP x);\nStatus: API · Header: Rinternals.h · Protect: result · Errors: can throw · Since: — · R equivalent: as.character()\nRenders some R objects to a CHARSXP (utils.c).\n\n\n6.5.4 Rf_NonNullStringMatch()\nCheck that two strings are equal and neither NA nor empty.\nRboolean Rf_NonNullStringMatch(SEXP s, SEXP t);\nStatus: API · Header: Rinternals.h · Protect: not needed · Errors: can throw · Since: — · R equivalent: —\nChecks that s and t are equal (and not NA or \"\") (match.c). Translates both to UTF-8 for comparison.\n\n\n6.5.5 Rf_reEnc()\nRe-encode a C string from one encoding to another.\nconst char *Rf_reEnc(const char *x, cetype_t ce_in, cetype_t ce_out, int subst);\nStatus: API · Header: Rinternals.h · Protect: not needed · Errors: can throw · Since: — · R equivalent: —\nSee also: cetype_t()\n\n\n6.5.6 Paths\n\n\n6.5.7 R_ExpandFileName()\nExpand a path containing ~ to a full path.\nconst char *R_ExpandFileName(const char *);\nStatus: API · Header: R_ext/Utils.h · Protect: not needed · Errors: can throw · Since: — · R equivalent: path.expand()\nExpands paths with ~ to full paths. This is necessary for most C APIs.\n\n\n6.5.8 Types\nYou can convert SEXPTYPEs to and from C strings with:\n\n\n6.5.9 Rf_str2type()\nConvert a C string to a SEXPTYPE.\nSEXPTYPE Rf_str2type(const char *);\nStatus: API · Header: Rinternals.h · Protect: not needed · Errors: can throw · Since: — · R equivalent: —\nSee also: Rf_type2str()\n\n\n6.5.10 Rf_type2str() (Rf_type2char(), Rf_type2rstr(), Rf_type2str_nowarn())\nConvert a SEXPTYPE to a string.\nconst char * Rf_type2char(SEXPTYPE);\nSEXP Rf_type2rstr(SEXPTYPE);\nSEXP Rf_type2str(SEXPTYPE);\nSEXP Rf_type2str_nowarn(SEXPTYPE);\nStatus: API · Header: Rinternals.h · Protect: result · Errors: never · Since: — · R equivalent: typeof()\nRf_type2char() returns a C string; Rf_type2rstr() returns a STRSXP; Rf_type2str() returns a CHARSXP. Only the SEXP-returning members need protection.\nSee also: Rf_str2type()",
+    "crumbs": [
+      "Part II — Objects",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Strings</span>"
+    ]
+  },
+  {
+    "objectID": "attributes.html",
+    "href": "attributes.html",
+    "title": "7  Attributes",
+    "section": "",
+    "text": "7.1 Get and set\nThe R API provides some support for the various data structures built on top of vectors.",
+    "crumbs": [
+      "Part II — Objects",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Attributes</span>"
+    ]
+  },
+  {
+    "objectID": "attributes.html#get-and-set",
+    "href": "attributes.html#get-and-set",
+    "title": "7  Attributes",
+    "section": "",
+    "text": "7.1.1 Rf_getAttrib() (Rf_setAttrib())\nGet or set the attribute associated with a symbol.\nSEXP Rf_getAttrib(SEXP x, SEXP symbol);\nSEXP Rf_setAttrib(SEXP x, SEXP symbol, SEXP value);\nStatus: API · Header: Rinternals.h · Protect: not needed · Errors: can throw · Since: — · R equivalent: —\nSee also: Rf_copyMostAttrib(), ATTRIB()\n\n\n7.1.2 Rf_copyMostAttrib()\nCopy attributes, except names, dim, and dimnames, from one object to another.\nvoid Rf_copyMostAttrib(SEXP source, SEXP target);\nStatus: API · Header: Rinternals.h · Protect: n/a · Errors: can throw · Since: — · R equivalent: —\nSee also: Rf_getAttrib(), DUPLICATE_ATTRIB()\n\n\n7.1.3 ATTRIB() (SET_ATTRIB())\nGet or set the pairlist containing an object’s attributes.\nSEXP ATTRIB(SEXP x);\nvoid SET_ATTRIB(SEXP x, SEXP v);\nStatus: non-API (use Rf_getAttrib()) · Header: Rinternals.h · Protect: not needed · Errors: never · Since: — · R equivalent: —\nNot part of the API, as these reveal the internal linked-list representation of attributes. Use Rf_getAttrib() and Rf_setAttrib() for individual attributes, DUPLICATE_ATTRIB() or SHALLOW_DUPLICATE_ATTRIB() to copy attributes between objects, CLEAR_ATTRIB() (added in R 4.5.0) to remove all attributes, ANY_ATTRIB() (added in R 4.5.0) to test whether any attributes are present, and R_mapAttrib() (added in R 4.6.0) to iterate over attributes.\nSee also: Rf_getAttrib(), DUPLICATE_ATTRIB()\n\n\n7.1.4 DUPLICATE_ATTRIB() (SHALLOW_DUPLICATE_ATTRIB())\nCopy attributes from one object to another when duplicating an object.\nvoid DUPLICATE_ATTRIB(SEXP to, SEXP from);\nvoid SHALLOW_DUPLICATE_ATTRIB(SEXP to, SEXP from);\nStatus: API · Header: Rinternals.h · Protect: n/a · Errors: can throw · Since: — · R equivalent: —\nSee also: Rf_copyMostAttrib()",
+    "crumbs": [
+      "Part II — Objects",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Attributes</span>"
+    ]
+  },
+  {
+    "objectID": "attributes.html#arrays",
+    "href": "attributes.html#arrays",
+    "title": "7  Attributes",
+    "section": "7.2 Arrays",
+    "text": "7.2 Arrays\n\n7.2.1 Rf_isArray()\nTest if an object is an array.\nRboolean Rf_isArray(SEXP x);\nStatus: API · Header: Rinternals.h · Protect: not needed · Errors: never · Since: — · R equivalent: is.array()\n\nx: any SEXP.\n\nArrays are vectors with a dim attribute.\nSee also: Rf_allocArray(), Rf_isMatrix()\n\n\n7.2.2 Rf_allocArray() (Rf_alloc3DArray())\nCreate an array of the given type and dimensions.\nSEXP Rf_allocArray(SEXPTYPE type, SEXP dims);\nSEXP Rf_alloc3DArray(SEXPTYPE type, int, int, int);\nStatus: API · Header: Rinternals.h · Protect: result · Errors: can throw · Since: — · R equivalent: array()\n\ntype: any vector SEXPTYPE.\ndims: an integer vector of dimensions.\n\nSee also: Rf_allocMatrix(), Rf_dimgets()\n\n\n7.2.3 Rf_GetArrayDimnames()\nGet the dimnames of an array.\nSEXP Rf_GetArrayDimnames(SEXP x);\nStatus: API · Header: Rinternals.h · Protect: not needed · Errors: never · Since: — · R equivalent: dimnames()\n\nx: an array.\n\nSee also: Rf_dimgets()\n\n\n7.2.4 Rf_dimgets() (Rf_dimnamesgets())\nSet the dim or dimnames attribute of an array.\nSEXP Rf_dimgets(SEXP x, SEXP v);\nSEXP Rf_dimnamesgets(SEXP x, SEXP v);\nStatus: API · Header: Rinternals.h · Protect: result · Errors: can throw · Since: — · R equivalent: dim&lt;-\n\nx: an array.\nv: the new dim (an integer vector) or dimnames (a list).\n\nSee also: Rf_GetArrayDimnames(), Rf_DropDims()\n\n\n7.2.5 Rf_DropDims()\nDrop the dim attribute of an array.\nSEXP Rf_DropDims(SEXP x);\nStatus: API · Header: Rinternals.h · Protect: result · Errors: can throw · Since: — · R equivalent: drop()\n\nx: an array.\n\nSee also: Rf_dimgets()\n\n\n7.2.6 Rf_arraySubscript()\nCompute the vector offset corresponding to an array subscript.\nSEXP Rf_arraySubscript(int, SEXP, SEXP, SEXP (*)(SEXP,SEXP), SEXP (*)(SEXP, int), SEXP);\nStatus: API · Header: Rinternals.h · Protect: result · Errors: can throw · Since: — · R equivalent: —\nArrays are vectors with a dim attribute:",
+    "crumbs": [
+      "Part II — Objects",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Attributes</span>"
+    ]
+  },
+  {
+    "objectID": "attributes.html#matrices",
+    "href": "attributes.html#matrices",
+    "title": "7  Attributes",
+    "section": "7.3 Matrices",
+    "text": "7.3 Matrices\n\n7.3.1 Rf_allocMatrix()\nCreate a matrix of the given type and dimensions.\nSEXP Rf_allocMatrix(SEXPTYPE type, int nrow, int ncol);\nStatus: API · Header: Rinternals.h · Protect: result · Errors: can throw · Since: — · R equivalent: matrix()\n\ntype: any vector SEXPTYPE.\nnrow: number of rows.\nncol: number of columns.\n\nMatrices are a special case of arrays; those with 2 dimensions.\nSee also: Rf_allocArray(), Rf_ncols()\n\n\n7.3.2 Rf_isMatrix()\nTest if an object is a matrix.\nRboolean Rf_isMatrix(SEXP x);\nStatus: API · Header: Rinternals.h · Protect: not needed · Errors: never · Since: — · R equivalent: is.matrix()\n\nx: any SEXP.\n\nSee also: Rf_isArray()\n\n\n7.3.3 Rf_GetColNames() (Rf_GetRowNames())\nGet the column or row names from a dimnames object.\nSEXP Rf_GetColNames(SEXP dimnames);\nSEXP Rf_GetRowNames(SEXP dimnames);\nStatus: API · Header: Rinternals.h · Protect: not needed · Errors: never · Since: — · R equivalent: colnames()\n\ndimnames: a dimnames object.\n\nSee also: Rf_GetMatrixDimnames()\n\n\n7.3.4 Rf_GetMatrixDimnames()\nGet the row and column names of a matrix through output parameters.\nvoid Rf_GetMatrixDimnames(SEXP x, SEXP* rl, SEXP* cl,\n  const char** rownames, const char** colnames);\nStatus: API · Header: Rinternals.h · Protect: n/a · Errors: never · Since: — · R equivalent: dimnames()\n\nx: a matrix.\nrl: output parameter for the row names as a SEXP.\ncl: output parameter for the column names as a SEXP.\nrownames: output parameter for the row names as C strings.\ncolnames: output parameter for the column names as C strings.\n\nSee also: Rf_GetColNames()\n\n\n7.3.5 Rf_ncols() (Rf_nrows())\nGet the number of columns or rows of a matrix.\nint Rf_ncols(SEXP x);\nint Rf_nrows(SEXP x);\nStatus: API · Header: Rinternals.h · Protect: not needed · Errors: never · Since: — · R equivalent: ncol()\n\nx: a matrix.\n\nSee also: Rf_allocMatrix()\n\n\n7.3.6 Rf_copyMatrix() (Rf_copyListMatrix())\nCopy the contents of one matrix into another.\nvoid Rf_copyMatrix(SEXP source, SEXP target, Rboolean byrow);\nvoid Rf_copyListMatrix(SEXP source, SEXP target, Rboolean byrow);\nStatus: API · Header: Rinternals.h · Protect: n/a · Errors: can throw · Since: — · R equivalent: —\n\nsource: the matrix to copy from.\ntarget: the matrix to copy to.\nbyrow: if TRUE, copy by rows.\n\nSee also: Rf_copyVector()\nMatrices are a special case of arrays; those with 2 dimensions:",
+    "crumbs": [
+      "Part II — Objects",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Attributes</span>"
+    ]
+  },
+  {
+    "objectID": "attributes.html#factors",
+    "href": "attributes.html#factors",
+    "title": "7  Attributes",
+    "section": "7.4 Factors",
+    "text": "7.4 Factors\n\n7.4.1 Rf_isFactor() (Rf_isOrdered(), Rf_isUnordered())\nTest if an object is a factor, or an ordered or unordered factor.\nRboolean Rf_isFactor(SEXP x);\nRboolean Rf_isOrdered(SEXP x);\nRboolean Rf_isUnordered(SEXP x);\nStatus: API · Header: Rinternals.h · Protect: not needed · Errors: never · Since: — · R equivalent: is.factor()\n\nx: any SEXP.\n\nSee also: Rf_nlevels(), Rf_asCharacterFactor()\n\n\n7.4.2 Rf_nlevels()\nGet the number of levels of a factor.\nint Rf_nlevels(SEXP x);\nStatus: API · Header: Rinternals.h · Protect: not needed · Errors: never · Since: — · R equivalent: nlevels()\n\nx: a factor.\n\nSee also: Rf_isFactor()\n\n\n7.4.3 Rf_asCharacterFactor()\nCoerce a factor into a character vector.\nSEXP Rf_asCharacterFactor(SEXP x);\nStatus: API · Header: Rinternals.h · Protect: result · Errors: can throw · Since: — · R equivalent: as.character()\n\nx: a factor.\n\nSee also: Rf_isFactor()",
+    "crumbs": [
+      "Part II — Objects",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Attributes</span>"
+    ]
+  },
+  {
+    "objectID": "attributes.html#data-frames",
+    "href": "attributes.html#data-frames",
+    "title": "7  Attributes",
+    "section": "7.5 Data frames",
+    "text": "7.5 Data frames\n\n7.5.1 Rf_isFrame()\nTest if an object is a data frame.\nRboolean Rf_isFrame(SEXP x);\nStatus: non-API (use Rf_isDataFrame()) · Header: Rinternals.h · Protect: not needed · Errors: never · Since: — · R equivalent: is.data.frame()\n\nx: any SEXP.\n\nPrefer Rf_isDataFrame() (added in R 4.5.0) in new code.",
+    "crumbs": [
+      "Part II — Objects",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Attributes</span>"
+    ]
+  },
+  {
+    "objectID": "environments.html",
+    "href": "environments.html",
+    "title": "8  Environments",
+    "section": "",
+    "text": "8.1 Predefined environments\nEnvironments are commonly called rho in the sources.",
+    "crumbs": [
+      "Part II — Objects",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Environments</span>"
+    ]
+  },
+  {
+    "objectID": "environments.html#predefined-environments",
+    "href": "environments.html#predefined-environments",
+    "title": "8  Environments",
+    "section": "",
+    "text": "8.1.1 R_GlobalEnv()\nAccess the global environment.\nSEXP R_GlobalEnv;\nStatus: API · Header: Rinternals.h · Protect: n/a · Errors: never · Since: — · R equivalent: —\nThe “global” environment.\n\n\n8.1.2 R_EmptyEnv()\nAccess the empty environment.\nSEXP R_EmptyEnv;\nStatus: API · Header: Rinternals.h · Protect: n/a · Errors: never · Since: — · R equivalent: —\nAn empty environment at the root of the environment tree.\n\n\n8.1.3 R_BaseEnv()\nAccess the base environment.\nSEXP R_BaseEnv;\nStatus: API · Header: Rinternals.h · Protect: n/a · Errors: never · Since: — · R equivalent: —\nThe base environment; formerly R_NilValue.\n\n\n8.1.4 R_BaseNamespace()\nAccess the base namespace.\nSEXP R_BaseNamespace;\nStatus: API · Header: Rinternals.h · Protect: n/a · Errors: never · Since: — · R equivalent: —\nThe (fake) namespace for base.\n\n\n8.1.5 R_NamespaceRegistry()\nAccess the registry of registered namespaces.\nSEXP R_NamespaceRegistry;\nStatus: non-API (use R_getRegisteredNamespace()) · Header: Rinternals.h · Protect: n/a · Errors: never · Since: — · R equivalent: —\nRegistry for registered namespaces. This variable is not part of the API; use R_getRegisteredNamespace() to find a registered namespace.",
+    "crumbs": [
+      "Part II — Objects",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Environments</span>"
+    ]
+  },
+  {
+    "objectID": "environments.html#creation-r-4.1.0",
+    "href": "environments.html#creation-r-4.1.0",
+    "title": "8  Environments",
+    "section": "8.2 Creation (R >= 4.1.0)",
+    "text": "8.2 Creation (R &gt;= 4.1.0)\n\n8.2.1 R_NewEnv()\nCreate a new environment.\nSEXP R_NewEnv(SEXP enclos, int hash, int size);\nStatus: API · Header: Rinternals.h · Protect: result · Errors: can throw · Since: R 4.1.0 · R equivalent: —",
+    "crumbs": [
+      "Part II — Objects",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Environments</span>"
+    ]
+  },
+  {
+    "objectID": "environments.html#get-and-set-objects-in-environment",
+    "href": "environments.html#get-and-set-objects-in-environment",
+    "title": "8  Environments",
+    "section": "8.3 Get and set objects in environment",
+    "text": "8.3 Get and set objects in environment\nsymbol should be a SYMSXP; environment should be an ENVSXP.\n\n8.3.1 Get values\nNote that retrieving an variable from an environment may cause an allocation because it might be an active binding.\n\n\n8.3.2 Rf_findVar()\nFind the value bound to a symbol in an environment and its enclosing environments.\nSEXP Rf_findVar(SEXP symbol, SEXP environment);\nStatus: non-API (use R_getVar()) · Header: Rinternals.h · Protect: result · Errors: can throw · Since: — · R equivalent: —\nLooks up symbol in environment, following up enclosing environments. Retrieving a variable from an environment may cause an allocation because it might be an active binding. Too low level to be part of the API; prefer R_getVar() or R_getVarEx() (added in R 4.5.0) in new code.\nSee also: Rf_findFun(), Rf_findVarInFrame3()\n\n\n8.3.3 Rf_findFun()\nFind the function bound to a symbol in an environment and its enclosing environments.\nSEXP Rf_findFun(SEXP symbol, SEXP environment);\nStatus: API · Header: Rinternals.h · Protect: result · Errors: can throw · Since: — · R equivalent: —\nLike Rf_findVar(), but ignores non-functions.\nSee also: Rf_findVar()\n\n\n8.3.4 Rf_findVarInFrame3() (Rf_findVarInFrame())\nFind a symbol in a single environment, without searching enclosing environments.\nSEXP Rf_findVarInFrame3(SEXP env, SEXP symbol, Rboolean doGet);\nSEXP Rf_findVarInFrame(SEXP env, SEXP symbol);\nStatus: non-API (use R_getVar()) · Header: Rinternals.h · Protect: result · Errors: can throw · Since: — · R equivalent: —\n\ndoGet: if TRUE, returns the value; if FALSE, just checks for presence.\n\nLooks in a single environment. Returns R_UnboundValue if not found. Rf_findVarInFrame() is a shortcut for Rf_findVarInFrame3(rho, symbol, TRUE). Too low level to be part of the API; the R_getVar() family added in R 4.5.0 is the recommended interface: use R_getVar() or R_getVarEx() to retrieve a value and R_existsVarInFrame() to test for existence.\nSee also: Rf_findVar()\n\n\n8.3.5 Set values\n\n\n8.3.6 Rf_defineVar()\nBind a symbol to a value in an environment.\nvoid Rf_defineVar(SEXP symbol, SEXP value, SEXP env);\nStatus: API · Header: Rinternals.h · Protect: n/a · Errors: can throw · Since: — · R equivalent: —\nTo remove a binding, set its value to R_UnboundSymbol.\n\n\n8.3.7 Rf_addMissingVarsToNewEnv()\nCopy variables into a new environment unless already present.\nvoid Rf_addMissingVarsToNewEnv(SEXP to, SEXP from);\nStatus: non-API · Header: Rinternals.h · Protect: n/a · Errors: can throw · Since: — · R equivalent: —\nCopies variables from from (a VECSXP) unless already present in to.\nTo remove a binding, set its value to R_UnboundSymbol.\n\n\n8.3.8 Check for presence\n\n\n8.3.9 R_lsInternal3() (R_lsInternal())\nList the names bound in an environment.\nSEXP R_lsInternal3(SEXP env, Rboolean all_names, Rboolean sorted);\nSEXP R_lsInternal(SEXP, Rboolean);\nStatus: API · Header: Rinternals.h · Protect: result · Errors: can throw · Since: — · R equivalent: —\nReturns a character vector. R_lsInternal(env, all) is shorthand for R_lsInternal3(env, all, TRUE). R_lsInternal() is not part of the API; prefer R_lsInternal3() in new code.",
+    "crumbs": [
+      "Part II — Objects",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Environments</span>"
+    ]
+  },
+  {
+    "objectID": "environments.html#miscellaneous",
+    "href": "environments.html#miscellaneous",
+    "title": "8  Environments",
+    "section": "8.4 Miscellaneous",
+    "text": "8.4 Miscellaneous\n\n8.4.1 Rf_isEnvironment()\nTest whether an object is an environment.\nRboolean Rf_isEnvironment(SEXP x);\nStatus: API · Header: Rinternals.h · Protect: not needed · Errors: never · Since: — · R equivalent: —\nEquivalent to TYPEOF(x) == ENVSXP.\n\n\n8.4.2 R_GetCurrentEnv()\nRetrieve the current environment.\nSEXP R_GetCurrentEnv(void);\nStatus: non-API · Header: Rinternals.h · Protect: not needed · Errors: never · Since: R 3.6.0 · R equivalent: environment()\nNot part of the API; call environment() at the R level and pass the result as an argument to your C function.\n\n\n8.4.3 R_IsPackageEnv() (R_PackageEnvName(), R_FindPackageEnv())\nTest whether an environment is a package environment, get its name, or find a package’s environment.\nRboolean R_IsPackageEnv(SEXP rho);\nSEXP R_PackageEnvName(SEXP rho);\nSEXP R_FindPackageEnv(SEXP info);\nStatus: API · Header: Rinternals.h · Protect: result · Errors: can throw · Since: — · R equivalent: —\nSee also: R_IsNamespaceEnv()\n\n\n8.4.4 R_IsNamespaceEnv() (R_NamespaceEnvSpec(), R_FindNamespace())\nTest whether an environment is a namespace environment, get its spec, or find a namespace.\nRboolean R_IsNamespaceEnv(SEXP rho);\nSEXP R_NamespaceEnvSpec(SEXP rho);\nSEXP R_FindNamespace(SEXP info);\nStatus: API · Header: Rinternals.h · Protect: result · Errors: can throw · Since: — · R equivalent: —\nSee also: R_IsPackageEnv()\n\n\n8.4.5 R_LockEnvironment() (R_EnvironmentIsLocked())\nLock an environment, or test whether it is locked.\nvoid R_LockEnvironment(SEXP env, Rboolean bindings);\nRboolean R_EnvironmentIsLocked(SEXP env);\nStatus: API · Header: Rinternals.h · Protect: n/a · Errors: never · Since: — · R equivalent: —\nSee also: R_LockBinding()\n\n\n8.4.6 R_LockBinding() (R_unLockBinding())\nLock or unlock a binding in an environment.\nvoid R_LockBinding(SEXP sym, SEXP env);\nvoid R_unLockBinding(SEXP sym, SEXP env);\nStatus: API · Header: Rinternals.h · Protect: n/a · Errors: never · Since: — · R equivalent: —\nSee also: R_LockEnvironment()\n\n\n8.4.7 R_MakeActiveBinding()\nMake an active binding for a symbol in an environment.\nvoid R_MakeActiveBinding(SEXP sym, SEXP fun, SEXP env);\nStatus: API · Header: Rinternals.h · Protect: n/a · Errors: can throw · Since: — · R equivalent: —\nSee also: R_BindingIsLocked()\n\n\n8.4.8 R_BindingIsLocked() (R_BindingIsActive())\nTest whether a binding is locked or active.\nRboolean R_BindingIsLocked(SEXP sym, SEXP env);\nRboolean R_BindingIsActive(SEXP sym, SEXP env);\nStatus: API · Header: Rinternals.h · Protect: not needed · Errors: never · Since: — · R equivalent: —\nSee also: R_MakeActiveBinding()\n\n\n8.4.9 R_HasFancyBindings()\nTest whether an environment has fancy bindings.\nRboolean R_HasFancyBindings(SEXP rho);\nStatus: API · Header: Rinternals.h · Protect: not needed · Errors: never · Since: — · R equivalent: —\n\n\n8.4.10 R_envHasNoSpecialSymbols()\nTest whether an environment has no special symbols.\nRboolean R_envHasNoSpecialSymbols(SEXP);\nStatus: non-API · Header: Rinternals.h · Protect: not needed · Errors: never · Since: — · R equivalent: —",
+    "crumbs": [
+      "Part II — Objects",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Environments</span>"
+    ]
+  },
+  {
+    "objectID": "environments.html#internals",
+    "href": "environments.html#internals",
+    "title": "8  Environments",
+    "section": "8.5 Internals",
+    "text": "8.5 Internals\n\n8.5.1 FRAME() (SET_FRAME())\nGet or set the frame of an environment.\nSEXP FRAME(SEXP x);\nvoid SET_FRAME(SEXP x, SEXP v);\nStatus: non-API · Header: Rinternals.h · Protect: not needed · Errors: never · Since: — · R equivalent: —\nSET_FRAME() is not part of the API; create environments with the constructor R_NewEnv() instead of mutating an environment’s frame.\nSee also: ENCLOS(), HASHTAB(), R_NewEnv()\n\n\n8.5.2 ENCLOS() (SET_ENCLOS())\nGet or set an environment’s enclosing environment.\nSEXP ENCLOS(SEXP x);\nvoid SET_ENCLOS(SEXP x, SEXP v);\nStatus: non-API (use R_ParentEnv()) · Header: Rinternals.h · Protect: not needed · Errors: never · Since: — · R equivalent: —\nUse R_ParentEnv() (added in R 4.5.0) instead of ENCLOS(). To choose the enclosing environment of a new environment, use the constructor R_NewEnv() rather than SET_ENCLOS().\nSee also: FRAME(), R_NewEnv()\n\n\n8.5.3 ENVFLAGS() (SET_ENVFLAGS())\nGet or set the flags of an environment.\nint ENVFLAGS(SEXP x);\nvoid SET_ENVFLAGS(SEXP x, int v);\nStatus: non-API (use R_EnvironmentIsLocked()) · Header: Rinternals.h · Protect: not needed · Errors: never · Since: — · R equivalent: —\nUse R_EnvironmentIsLocked() and R_LockEnvironment() instead.\nSee also: R_LockEnvironment()\n\n\n8.5.4 Truelength\n\nThis is almost unused. The only current use is for hash tables of environments (VECSXPs), where length is the size of the table and truelength is the number of primary slots in use, and for the reference hash tables in serialization (VECSXPs), where truelength is the number of slots in use. — R-internals\n\n\n\n8.5.5 TRUELENGTH() (XTRUELENGTH(), SET_TRUELENGTH())\nGet or set the truelength of an object.\nint (TRUELENGTH)(SEXP x);\nR_xlen_t (XTRUELENGTH)(SEXP x);\nvoid (SET_TRUELENGTH)(SEXP x, int v);\nStatus: non-API · Header: Rinternals.h · Protect: not needed · Errors: never · Since: — · R equivalent: —\nAlmost unused. The only current use is for hash tables of environments (VECSXPs), where length is the size of the table and truelength is the number of primary slots in use, and for the reference hash tables in serialization (VECSXPs), where truelength is the number of slots in use. — R-internals\n\n\n8.5.6 Hash\n\n\n8.5.7 HASHTAB() (SET_HASHTAB())\nGet or set the hash table of an environment.\nSEXP HASHTAB(SEXP x);\nvoid SET_HASHTAB(SEXP x, SEXP v);\nStatus: non-API · Header: Rinternals.h · Protect: not needed · Errors: never · Since: — · R equivalent: —\nHashing is principally designed for fast searching of environments, which are from time to time added to but rarely deleted from, so items are not actually deleted but have their value set to R_UnboundValue. — R-Internals SET_HASHTAB() is not part of the API; create hash-based environments with the constructor R_NewEnv() instead.\nSee also: HASHASH(), HASHVALUE()\n\n\n8.5.8 HASHASH() (SET_HASHASH())\nGet or set the hash flag of an environment.\nint HASHASH(SEXP x);\nvoid SET_HASHASH(SEXP x, int v);\nStatus: non-API · Header: Rinternals.h · Protect: not needed · Errors: never · Since: — · R equivalent: —\nSee also: HASHTAB()\n\n\n8.5.9 HASHVALUE() (SET_HASHVALUE())\nGet or set the hash value of an environment.\nint HASHVALUE(SEXP x);\nvoid SET_HASHVALUE(SEXP x, int v);\nStatus: non-API · Header: Rinternals.h · Protect: not needed · Errors: never · Since: — · R equivalent: —\nSee also: HASHTAB()\n// [R-Internals]: Hashing is principally designed for fast searching of // environments, which are from time to time added to but rarely deleted from, // so items are not actually deleted but have their value set to R_UnboundValue.\nCode from lobstr should help me understand how they work:\nint FrameSize(SEXP frame) {\n  int count = 0;\n\n  for(SEXP cur = frame; cur != R_NilValue; cur = CDR(cur)) {\n    SEXP obj = CAR(cur)\n    if (obj != R_UnboundValue)\n      count++;\n  }\n  return count;\n}\n\nint HashTableSize(SEXP table) {\n  int count = 0;\n  int n = Rf_length(table);\n  for (int i = 0; i &lt; n; ++i)\n    count += FrameSize(VECTOR_ELT(table, i));\n  return count;\n}\n\nint envlength(SEXP x) {\n  bool isHashed = HASHTAB(x) != R_NilValue;\n  return isHashed ? HashTableSize(HASHTAB(x)) : FrameSize(FRAME(x));\n}",
+    "crumbs": [
+      "Part II — Objects",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Environments</span>"
+    ]
+  },
+  {
+    "objectID": "symbols.html",
+    "href": "symbols.html",
+    "title": "9  Symbols",
+    "section": "",
+    "text": "9.1 Test",
+    "crumbs": [
+      "Part II — Objects",
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Symbols</span>"
+    ]
+  },
+  {
+    "objectID": "symbols.html#test",
+    "href": "symbols.html#test",
+    "title": "9  Symbols",
+    "section": "",
+    "text": "9.1.1 Rf_isSymbol()\nTest whether an object is a symbol.\nRboolean Rf_isSymbol(SEXP s);\nStatus: API · Header: Rinternals.h · Protect: not needed · Errors: never · Since: — · R equivalent: is.symbol()",
+    "crumbs": [
+      "Part II — Objects",
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Symbols</span>"
+    ]
+  },
+  {
+    "objectID": "symbols.html#create",
+    "href": "symbols.html#create",
+    "title": "9  Symbols",
+    "section": "9.2 Create",
+    "text": "9.2 Create\nIf symbol exists, return it; otherwise create it. SYMSXPs don’t need to be protected because symbols are not currently reclaimed by the garbage collector. If you are using a symbol many times, it may be worth caching it to avoid repeated lookups.\n\n9.2.1 Rf_install() (Rf_installChar())\nCreate the symbol for a name, returning the existing symbol if already present.\nSEXP Rf_install(const char *);\nSEXP Rf_installChar(SEXP);\nStatus: API · Header: Rinternals.h · Protect: not needed · Errors: can throw · Since: — · R equivalent: as.name()\nIf symbol exists, return it; otherwise create it. SYMSXPs don’t need to be protected because symbols are not currently reclaimed by the garbage collector. If you are using a symbol many times, it may be worth caching it to avoid repeated lookups.",
+    "crumbs": [
+      "Part II — Objects",
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Symbols</span>"
+    ]
+  },
+  {
+    "objectID": "symbols.html#missing-symbol",
+    "href": "symbols.html#missing-symbol",
+    "title": "9  Symbols",
+    "section": "9.3 Missing symbol",
+    "text": "9.3 Missing symbol\nR_MissingArg represents the missing/empty symbol, i.e. the second argument in this call f(x, ).\n\n9.3.1 R_MissingArg()\nAccess the missing/empty symbol.\nSEXP R_MissingArg;\nStatus: API · Header: Rinternals.h · Protect: n/a · Errors: never · Since: — · R equivalent: —\nR_MissingArg represents the missing/empty symbol, i.e. the second argument in this call f(x, ).",
+    "crumbs": [
+      "Part II — Objects",
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Symbols</span>"
+    ]
+  },
+  {
+    "objectID": "symbols.html#predefined-symbols",
+    "href": "symbols.html#predefined-symbols",
+    "title": "9  Symbols",
+    "section": "9.4 Predefined symbols",
+    "text": "9.4 Predefined symbols\nA number of symbols are so commonly used, they’re predefined and exported:\n\nR_dot_defined: “.defined”\nR_dot_Method: “.Method”\nR_dot_packageName: “.packageName”\nR_dot_target: “.target”\nR_BaseSymbol: “base”\nR_BraceSymbol: “{”\nR_Bracket2Symbol: “[[”\nR_BracketSymbol: “[”\nR_ClassSymbol: “class”\nR_DeviceSymbol: “.Device”\nR_DimNamesSymbol: “dimnames”\nR_DimSymbol: “dim”\nR_DollarSymbol: “$”\nR_DotsSymbol: “…”\nR_DoubleColonSymbol: “::”\nR_DropSymbol: “drop”\nR_LastvalueSymbol: “.Last.value”\nR_LevelsSymbol: “levels”\nR_ModeSymbol: “mode”\nR_NaRmSymbol: “na.rm”\nR_NameSymbol: “name”\nR_NamesSymbol: “names”\nR_NamespaceEnvSymbol: “.__NAMESPACE__.”\nR_PackageSymbol: “package”\nR_PreviousSymbol: “previous”\nR_QuoteSymbol: “quote”\nR_RowNamesSymbol: “row.names”\nR_SeedsSymbol: “.Random.seed”\nR_SortListSymbol: “sort.list”\nR_SourceSymbol: “source”\nR_SpecSymbol: “spec”\nR_TripleColonSymbol: \":::\"\nR_TspSymbol: “tsp”\n\n\n9.4.1 R_dot_defined()\nAccess the predefined symbol for “.defined”.\nSEXP R_dot_defined;\nStatus: API · Header: Rinternals.h · Protect: n/a · Errors: never · Since: — · R equivalent: —\n\n\n9.4.2 R_dot_Method()\nAccess the predefined symbol for “.Method”.\nSEXP R_dot_Method;\nStatus: API · Header: Rinternals.h · Protect: n/a · Errors: never · Since: — · R equivalent: —\n\n\n9.4.3 R_dot_packageName()\nAccess the predefined symbol for “.packageName”.\nSEXP R_dot_packageName;\nStatus: API · Header: Rinternals.h · Protect: n/a · Errors: never · Since: — · R equivalent: —\n\n\n9.4.4 R_dot_target()\nAccess the predefined symbol for “.target”.\nSEXP R_dot_target;\nStatus: API · Header: Rinternals.h · Protect: n/a · Errors: never · Since: — · R equivalent: —\n\n\n9.4.5 R_BaseSymbol()\nAccess the predefined symbol for “base”.\nSEXP R_BaseSymbol;\nStatus: API · Header: Rinternals.h · Protect: n/a · Errors: never · Since: — · R equivalent: —\n\n\n9.4.6 R_BraceSymbol()\nAccess the predefined symbol for “{”.\nSEXP R_BraceSymbol;\nStatus: API · Header: Rinternals.h · Protect: n/a · Errors: never · Since: — · R equivalent: —\n\n\n9.4.7 R_Bracket2Symbol()\nAccess the predefined symbol for “[[”.\nSEXP R_Bracket2Symbol;\nStatus: API · Header: Rinternals.h · Protect: n/a · Errors: never · Since: — · R equivalent: —\n\n\n9.4.8 R_BracketSymbol()\nAccess the predefined symbol for “[”.\nSEXP R_BracketSymbol;\nStatus: API · Header: Rinternals.h · Protect: n/a · Errors: never · Since: — · R equivalent: —\n\n\n9.4.9 R_ClassSymbol()\nAccess the predefined symbol for “class”.\nSEXP R_ClassSymbol;\nStatus: API · Header: Rinternals.h · Protect: n/a · Errors: never · Since: — · R equivalent: —\n\n\n9.4.10 R_DeviceSymbol()\nAccess the predefined symbol for “.Device”.\nSEXP R_DeviceSymbol;\nStatus: API · Header: Rinternals.h · Protect: n/a · Errors: never · Since: — · R equivalent: —\n\n\n9.4.11 R_DimNamesSymbol()\nAccess the predefined symbol for “dimnames”.\nSEXP R_DimNamesSymbol;\nStatus: API · Header: Rinternals.h · Protect: n/a · Errors: never · Since: — · R equivalent: —\n\n\n9.4.12 R_DimSymbol()\nAccess the predefined symbol for “dim”.\nSEXP R_DimSymbol;\nStatus: API · Header: Rinternals.h · Protect: n/a · Errors: never · Since: — · R equivalent: —\n\n\n9.4.13 R_DollarSymbol()\nAccess the predefined symbol for “$”.\nSEXP R_DollarSymbol;\nStatus: API · Header: Rinternals.h · Protect: n/a · Errors: never · Since: — · R equivalent: —\n\n\n9.4.14 R_DotsSymbol()\nAccess the predefined symbol for “…”.\nSEXP R_DotsSymbol;\nStatus: API · Header: Rinternals.h · Protect: n/a · Errors: never · Since: — · R equivalent: —\n\n\n9.4.15 R_DoubleColonSymbol()\nAccess the predefined symbol for “::”.\nSEXP R_DoubleColonSymbol;\nStatus: API · Header: Rinternals.h · Protect: n/a · Errors: never · Since: — · R equivalent: —\n\n\n9.4.16 R_DropSymbol()\nAccess the predefined symbol for “drop”.\nSEXP R_DropSymbol;\nStatus: API · Header: Rinternals.h · Protect: n/a · Errors: never · Since: — · R equivalent: —\n\n\n9.4.17 R_LastvalueSymbol()\nAccess the predefined symbol for “.Last.value”.\nSEXP R_LastvalueSymbol;\nStatus: API · Header: Rinternals.h · Protect: n/a · Errors: never · Since: — · R equivalent: —\n\n\n9.4.18 R_LevelsSymbol()\nAccess the predefined symbol for “levels”.\nSEXP R_LevelsSymbol;\nStatus: API · Header: Rinternals.h · Protect: n/a · Errors: never · Since: — · R equivalent: —\n\n\n9.4.19 R_ModeSymbol()\nAccess the predefined symbol for “mode”.\nSEXP R_ModeSymbol;\nStatus: API · Header: Rinternals.h · Protect: n/a · Errors: never · Since: — · R equivalent: —\n\n\n9.4.20 R_NaRmSymbol()\nAccess the predefined symbol for “na.rm”.\nSEXP R_NaRmSymbol;\nStatus: API · Header: Rinternals.h · Protect: n/a · Errors: never · Since: — · R equivalent: —\n\n\n9.4.21 R_NameSymbol()\nAccess the predefined symbol for “name”.\nSEXP R_NameSymbol;\nStatus: API · Header: Rinternals.h · Protect: n/a · Errors: never · Since: — · R equivalent: —\n\n\n9.4.22 R_NamesSymbol()\nAccess the predefined symbol for “names”.\nSEXP R_NamesSymbol;\nStatus: API · Header: Rinternals.h · Protect: n/a · Errors: never · Since: — · R equivalent: —\n\n\n9.4.23 R_NamespaceEnvSymbol()\nAccess the predefined symbol for “.__NAMESPACE__.”.\nSEXP R_NamespaceEnvSymbol;\nStatus: API · Header: Rinternals.h · Protect: n/a · Errors: never · Since: — · R equivalent: —\n\n\n9.4.24 R_PackageSymbol()\nAccess the predefined symbol for “package”.\nSEXP R_PackageSymbol;\nStatus: API · Header: Rinternals.h · Protect: n/a · Errors: never · Since: — · R equivalent: —\n\n\n9.4.25 R_PreviousSymbol()\nAccess the predefined symbol for “previous”.\nSEXP R_PreviousSymbol;\nStatus: API · Header: Rinternals.h · Protect: n/a · Errors: never · Since: — · R equivalent: —\n\n\n9.4.26 R_QuoteSymbol()\nAccess the predefined symbol for “quote”.\nSEXP R_QuoteSymbol;\nStatus: API · Header: Rinternals.h · Protect: n/a · Errors: never · Since: — · R equivalent: —\n\n\n9.4.27 R_RowNamesSymbol()\nAccess the predefined symbol for “row.names”.\nSEXP R_RowNamesSymbol;\nStatus: API · Header: Rinternals.h · Protect: n/a · Errors: never · Since: — · R equivalent: —\n\n\n9.4.28 R_SeedsSymbol()\nAccess the predefined symbol for “.Random.seed”.\nSEXP R_SeedsSymbol;\nStatus: API · Header: Rinternals.h · Protect: n/a · Errors: never · Since: — · R equivalent: —\n\n\n9.4.29 R_SortListSymbol()\nAccess the predefined symbol for “sort.list”.\nSEXP R_SortListSymbol;\nStatus: API · Header: Rinternals.h · Protect: n/a · Errors: never · Since: — · R equivalent: —\n\n\n9.4.30 R_SourceSymbol()\nAccess the predefined symbol for “source”.\nSEXP R_SourceSymbol;\nStatus: API · Header: Rinternals.h · Protect: n/a · Errors: never · Since: — · R equivalent: —\n\n\n9.4.31 R_SpecSymbol()\nAccess the predefined symbol for “spec”.\nSEXP R_SpecSymbol;\nStatus: API · Header: Rinternals.h · Protect: n/a · Errors: never · Since: — · R equivalent: —\n\n\n9.4.32 R_TripleColonSymbol()\nAccess the predefined symbol for \":::\".\nSEXP R_TripleColonSymbol;\nStatus: API · Header: Rinternals.h · Protect: n/a · Errors: never · Since: — · R equivalent: —\n\n\n9.4.33 R_TspSymbol()\nAccess the predefined symbol for “tsp”.\nSEXP R_TspSymbol;\nStatus: API · Header: Rinternals.h · Protect: n/a · Errors: never · Since: — · R equivalent: —",
+    "crumbs": [
+      "Part II — Objects",
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Symbols</span>"
+    ]
+  },
+  {
+    "objectID": "symbols.html#internals",
+    "href": "symbols.html#internals",
+    "title": "9  Symbols",
+    "section": "9.5 Internals",
+    "text": "9.5 Internals\n\n9.5.1 PRINTNAME() (SET_PRINTNAME())\nGet or set the print name of a symbol.\nSEXP (PRINTNAME)(SEXP x);\nvoid SET_PRINTNAME(SEXP x, SEXP v);\nStatus: non-API · Header: Rinternals.h · Protect: n/a · Errors: never · Since: — · R equivalent: —\nThe value of the symbol, as a CHARSXP. Use CHAR(PRINTNAME(x)) to get the name as a const char*.\n\n\n9.5.2 SYMVALUE() (SET_SYMVALUE())\nGet or set the value of a symbol.\nSEXP (SYMVALUE)(SEXP x);\nvoid SET_SYMVALUE(SEXP x, SEXP v);\nStatus: non-API · Header: Rinternals.h · Protect: n/a · Errors: never · Since: — · R equivalent: —\n\n\n9.5.3 INTERNAL() (SET_INTERNAL())\nGet or set the internal function a symbol points to.\nSEXP (INTERNAL)(SEXP x);\nvoid SET_INTERNAL(SEXP x, SEXP v);\nStatus: non-API · Header: Rinternals.h · Protect: n/a · Errors: never · Since: — · R equivalent: —\n\n\n9.5.4 DDVAL() (SET_DDVAL(), Rf_installDDVAL())\nGet or set a symbol’s ... index, or install the symbol for a ... element.\nint  (DDVAL)(SEXP x);\nvoid (SET_DDVAL)(SEXP x, int v);\nSEXP Rf_installDDVAL(int i);\nStatus: non-API · Header: Rinternals.h · Protect: n/a · Errors: never · Since: — · R equivalent: —",
+    "crumbs": [
+      "Part II — Objects",
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Symbols</span>"
+    ]
+  },
+  {
+    "objectID": "pairlists.html",
+    "href": "pairlists.html",
+    "title": "10  Pairlists",
+    "section": "",
+    "text": "10.1 Test\nPairlists are linked lists used for calls, unevaluated arguments, attributes, and in ....\nThe terminology of pairlist comes from LISPs “dotted pairs” which is a way of describing “CONS” cells. A CONS cell is a pair of pointers:\nGraphically, this looks like:\nTo loop over all elements of a pairlist, use this template:",
+    "crumbs": [
+      "Part II — Objects",
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Pairlists</span>"
+    ]
+  },
+  {
+    "objectID": "pairlists.html#test",
+    "href": "pairlists.html#test",
+    "title": "10  Pairlists",
+    "section": "",
+    "text": "10.1.1 Rf_isPairList() (Rf_isLanguage(), Rf_isList())\nTest whether an object is a pairlist, a call, or a pairlist-or-NULL.\nRboolean Rf_isPairList(SEXP x); // LISTSXP\nRboolean Rf_isLanguage(SEXP x); // LANGSXP\nRboolean Rf_isList(SEXP x);     // LISTSXP, NILSXP\nStatus: API · Header: Rinternals.h · Protect: not needed · Errors: never · Since: — · R equivalent: —",
+    "crumbs": [
+      "Part II — Objects",
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Pairlists</span>"
+    ]
+  },
+  {
+    "objectID": "pairlists.html#creation",
+    "href": "pairlists.html#creation",
+    "title": "10  Pairlists",
+    "section": "10.2 Creation",
+    "text": "10.2 Creation\n\n10.2.1 Rf_cons() (Rf_lcons())\nCreate a new CONS cell linking two objects.\nSEXP Rf_cons(SEXP a, SEXP b);   // function arguments\nSEXP Rf_lcons(SEXP a, SEXP b);  // calls\nStatus: API · Header: Rinternals.h · Protect: result · Errors: can throw · Since: — · R equivalent: —\nThe CDR of the final value must be R_NilValue.\nSee also: Rf_list1(), Rf_lang1()\n\n\n10.2.2 Rf_list1() (Rf_list2(), Rf_list3(), Rf_list4(), Rf_list5())\nCreate a pairlist of one to five elements.\nSEXP Rf_list1(SEXP x1);\nSEXP Rf_list2(SEXP x1, SEXP x2);\nSEXP Rf_list3(SEXP x1, SEXP x2, SEXP x3);\nSEXP Rf_list4(SEXP x1, SEXP x2, SEXP x3, SEXP x4);\nSEXP Rf_list5(SEXP x1, SEXP x2, SEXP x3, SEXP x4, SEXP x5);\nStatus: API · Header: Rinternals.h · Protect: result · Errors: can throw · Since: — · R equivalent: —\nThese automatically add the terminating R_NilValue.\nSee also: Rf_cons(), Rf_lang1()\n\n\n10.2.3 Rf_lang1() (Rf_lang2(), Rf_lang3(), Rf_lang4(), Rf_lang5(), Rf_lang6())\nCreate a call to a function with zero to five arguments.\nSEXP Rf_lang1(SEXP x1);\nSEXP Rf_lang2(SEXP x1, SEXP x2);\nSEXP Rf_lang3(SEXP x1, SEXP x2, SEXP x3);\nSEXP Rf_lang4(SEXP x1, SEXP x2, SEXP x3, SEXP x4);\nSEXP Rf_lang5(SEXP x1, SEXP x2, SEXP x3, SEXP x4, SEXP x5);\nSEXP Rf_lang6(SEXP x1, SEXP x2, SEXP x3, SEXP x4, SEXP x5, SEXP x6);\nStatus: API · Header: Rinternals.h · Protect: result · Errors: can throw · Since: — · R equivalent: —\nThese automatically add the terminating R_NilValue.\nSee also: Rf_cons(), Rf_list1()\n\n\n10.2.4 Rf_allocFormalsList2() (Rf_allocFormalsList3(), Rf_allocFormalsList4(), Rf_allocFormalsList5(), Rf_allocFormalsList6())\nAllocate a formals pairlist of two to six elements.\nSEXP Rf_allocFormalsList2(SEXP x1, SEXP x2);\nSEXP Rf_allocFormalsList3(SEXP x1, SEXP x2, SEXP x3);\nSEXP Rf_allocFormalsList4(SEXP x1, SEXP x2, SEXP x3, SEXP x4);\nSEXP Rf_allocFormalsList5(SEXP x1, SEXP x2, SEXP x3, SEXP x4, SEXP x5);\nSEXP Rf_allocFormalsList6(SEXP x1, SEXP x2, SEXP x3, SEXP x4, SEXP x5, SEXP x6);\nStatus: API · Header: Rinternals.h · Protect: result · Errors: can throw · Since: — · R equivalent: —\nThese automatically add the terminating R_NilValue.\n\n\n10.2.5 Rf_PairToVectorList() (Rf_VectorToPairList())\nConvert a pairlist to a list vector, or a list vector to a pairlist.\nSEXP Rf_PairToVectorList(SEXP x);\nSEXP Rf_VectorToPairList(SEXP x);\nStatus: API · Header: Rinternals.h · Protect: result · Errors: can throw · Since: — · R equivalent: —\n\n\n10.2.6 Rf_listAppend()\nAppend one pairlist to another.\nSEXP Rf_listAppend(SEXP source, SEXP target);\nStatus: API · Header: Rinternals.h · Protect: result · Errors: can throw · Since: — · R equivalent: —\nThe CDR of the final value must be R_NilValue.\nThere are helpers for 5-6 arguments. These automatically add the terminating R_NilValue.",
+    "crumbs": [
+      "Part II — Objects",
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Pairlists</span>"
+    ]
+  },
+  {
+    "objectID": "pairlists.html#accessors",
+    "href": "pairlists.html#accessors",
+    "title": "10  Pairlists",
+    "section": "10.3 Accessors",
+    "text": "10.3 Accessors\n\n10.3.1 CAR() (CDR(), CAAR(), CDAR(), CADR(), CDDR(), CDDDR(), CADDR(), CADDDR(), CAD4R())\nGet the first element or a nested component of a CONS cell.\nSEXP CAR(SEXP e);\nSEXP CDR(SEXP e);\nSEXP CAAR(SEXP e);\nSEXP CDAR(SEXP e);\nSEXP CADR(SEXP e);\nSEXP CDDR(SEXP e);\nSEXP CDDDR(SEXP e);\nSEXP CADDR(SEXP e);\nSEXP CADDDR(SEXP e);\nSEXP CAD4R(SEXP e);\nStatus: API · Header: Rinternals.h · Protect: not needed · Errors: never · Since: — · R equivalent: —\nPairlists have no way to index into an arbitrary location; instead these helpers navigate along the linked list. CAR() extracts the first element of the list and CDR() extracts the rest of the list; these can be composed to get CAAR(), CDAR(), CADDR(), CADDDR(), and so on.\nSee also: SETCAR(), TAG()\n\n\n10.3.2 SETCAR() (SETCDR(), SETCADR(), SETCADDR(), SETCADDDR(), SETCAD4R())\nSet the first element or a nested component of a CONS cell.\nSEXP SETCAR(SEXP x, SEXP y);\nSEXP SETCDR(SEXP x, SEXP y);\nSEXP SETCADR(SEXP x, SEXP y);\nSEXP SETCADDR(SEXP x, SEXP y);\nSEXP SETCADDDR(SEXP x, SEXP y);\nSEXP SETCAD4R(SEXP e, SEXP y);\nStatus: API · Header: Rinternals.h · Protect: not needed · Errors: never · Since: — · R equivalent: —\nCorresponding to the getters, R provides setters SETCAR(), SETCDR(), etc.\nSee also: CAR(), SET_TAG()\n\n\n10.3.3 TAG() (SET_TAG())\nGet or set the tag (name) attached to a node of a pairlist.\nSEXP TAG(SEXP e);\nvoid SET_TAG(SEXP x, SEXP y);\nStatus: API · Header: Rinternals.h · Protect: not needed · Errors: never · Since: — · R equivalent: —\nSee also: CAR()\n\n\n10.3.4 CONS_NR()\nCreate a CONS cell with no reference counting.\nSEXP CONS_NR(SEXP a, SEXP b);\nStatus: non-API (use Rf_cons()) · Header: Rinternals.h · Protect: result · Errors: can throw · Since: — · R equivalent: —\nCONS with no-refcounting?\nSee also: Rf_cons()\n\n\n10.3.5 MISSING() (SET_MISSING())\nGet or set whether an element of a call is missing.\nint MISSING(SEXP x);\nvoid SET_MISSING(SEXP x, int v);\nStatus: API · Header: Rinternals.h · Protect: n/a · Errors: never · Since: — · R equivalent: —\nUsed for missing values in function calls?\nUnlike lists (VECSXPs), pairlists (LISTSXPs) have no way to index into an arbitrary location. Instead, R provides a set of helper functions that navigate along a linked list. The basic helpers are CAR(), which extracts the first element of the list, and CDR(), which extracts the rest of the list. These can be composed to get CAAR(), CDAR(), CADDR(), CADDDR(), and so on. Corresponding to the getters, R provides setters SETCAR(), SETCDR(), etc.\n\n\n\n10.3.6 Pretending it’s a vector\n\n\n10.3.7 Rf_allocList()\nCreate a new pairlist of the specified length.\nSEXP Rf_allocList(int n);\nStatus: API · Header: Rinternals.h · Protect: result · Errors: can throw · Since: — · R equivalent: —\nWorks with a pairlist as if it’s a vector. It’s easy to get O(n^2) behaviour, but for the usual size of pairlists this is unlikely to cause a performance bottleneck. To create a call expression, use Rf_allocLang() (added in R 4.4.1) or Rf_lcons() rather than Rf_allocList() plus SET_TYPEOF(), which will not be available to packages in the future.\nSee also: Rf_nthcdr(), Rf_lcons()\n\n\n10.3.8 Rf_nthcdr()\nAccess the nth element of a pairlist.\nSEXP Rf_nthcdr(SEXP x, int n);\nStatus: API · Header: Rinternals.h · Protect: not needed · Errors: never · Since: — · R equivalent: —\nWorks with a pairlist as if it’s a vector. It’s easy to get O(n^2) behaviour, but for the usual size of pairlists this is unlikely to cause a performance bottleneck.\nSee also: Rf_allocList(), CDR()\nSome functions allow you to work with a pair list as if it’s a vector:\nIf you use these it’s easy to get O(n^2) behaviour, but for the usual size of pairlists, this is unlikely to cause a performance bottleneck.\n\n\n10.3.9 Creating a call\nPairlists are most commonly used for function calls. Calls to functions with 0 to 5 arguments can be created directly via Rf_lang1() to Rf_lang6(). However, these functions do not allow for named arguments. If you need named arguments, use the following template:\n// equivalent of:\n// fun(arg1 = a, arg2 = b, arg3 = c)\nSEXP call = PROTECT(Rf_allocVector(LANGSXP, 4)); // 4 = # of args + 1 \nSETCAR(call, fun); \n  \nSEXP s = CDR(call);\nSETCAR(s, a);\nSET_TAG(s, Rf_install(\"arg1\"));\n  \ns = CDR(s);\nSETCAR(s, b);\nSET_TAG(s, Rf_install(\"arg2\"));\n  \ns = CDR(s);\nSETCAR(s, c);\nSET_TAG(s, Rf_install(\"arg3\"));\n\nSEXP out = PROTECT(Rf_eval(call, env));\n...\nUNPROTECT(2);",
+    "crumbs": [
+      "Part II — Objects",
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Pairlists</span>"
+    ]
+  },
+  {
+    "objectID": "pairlists.html#dots-dotsxp",
+    "href": "pairlists.html#dots-dotsxp",
+    "title": "10  Pairlists",
+    "section": "10.4 Dots (DOTSXP)",
+    "text": "10.4 Dots (DOTSXP)\nRepresents the ... structure in R. Easiest to get to with findVar(R_DotsSymbol, env) or similar. Is usually a pair list, but will have value R_MissingArg if there are no arguments.",
+    "crumbs": [
+      "Part II — Objects",
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Pairlists</span>"
+    ]
+  },
+  {
+    "objectID": "pairlists.html#null-nilsxp",
+    "href": "pairlists.html#null-nilsxp",
+    "title": "10  Pairlists",
+    "section": "10.5 Null (NILSXP)",
+    "text": "10.5 Null (NILSXP)\nThere is a single value with type NILSXP: R_NilValue. This corresponds to NULL in R, and is often used as generic zero length vector.",
+    "crumbs": [
+      "Part II — Objects",
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Pairlists</span>"
+    ]
+  },
+  {
+    "objectID": "functions.html",
+    "href": "functions.html",
+    "title": "11  Functions",
+    "section": "",
+    "text": "11.1 Testing functions\nFUNSXP is an abstract union type.",
+    "crumbs": [
+      "Part II — Objects",
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Functions</span>"
+    ]
+  },
+  {
+    "objectID": "functions.html#testing-functions",
+    "href": "functions.html#testing-functions",
+    "title": "11  Functions",
+    "section": "",
+    "text": "11.1.1 Rf_isFunction() (Rf_isPrimitive())\nTest whether an object is a function or a primitive function.\nRboolean Rf_isFunction(SEXP);\nRboolean Rf_isPrimitive(SEXP);\nStatus: API · Header: Rinternals.h · Protect: not needed · Errors: never · Since: — · R equivalent: is.function()\nFUNSXP is an abstract union type.",
+    "crumbs": [
+      "Part II — Objects",
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Functions</span>"
+    ]
+  },
+  {
+    "objectID": "functions.html#internals",
+    "href": "functions.html#internals",
+    "title": "11  Functions",
+    "section": "11.2 Internals",
+    "text": "11.2 Internals\n\n11.2.1 FORMALS() (BODY(), CLOENV())\nAccess the formal arguments, body, or environment of a closure.\nSEXP (FORMALS)(SEXP x);\nSEXP (BODY)(SEXP x);\nSEXP (CLOENV)(SEXP x);\nStatus: non-API (use R_ClosureFormals()) · Header: Rinternals.h · Protect: not needed · Errors: never · Since: — · R equivalent: formals()\nAccessors for the components of a closure (CLOSXP). Use R_ClosureFormals(), R_ClosureBody(), and R_ClosureEnv() (added in R 4.5.0) instead.\nSee also: R_ClosureBody(), R_ClosureEnv()\n\n\n11.2.2 SET_FORMALS() (SET_BODY(), SET_CLOENV())\nSet the formal arguments, body, or environment of a closure.\nvoid SET_FORMALS(SEXP x, SEXP v);\nvoid SET_BODY(SEXP x, SEXP v);\nvoid SET_CLOENV(SEXP x, SEXP v);\nStatus: non-API (use R_mkClosure()) · Header: Rinternals.h · Protect: not needed · Errors: never · Since: — · R equivalent: formals&lt;-()\nSetters for the components of a closure (CLOSXP). Use the constructor R_mkClosure() (added in R 4.5.0) to create a closure instead of allocating and mutating one.\n\n\n11.2.3 RDEBUG() (RSTEP(), RTRACE())\nQuery the debug, step, or trace flags of a closure.\nint  (RDEBUG)(SEXP x);\nint  (RSTEP)(SEXP x);\nint  (RTRACE)(SEXP x);\nStatus: non-API · Header: Rinternals.h · Protect: not needed · Errors: never · Since: — · R equivalent: —\nInternal macros for querying closure debugging flags.\n\n\n11.2.4 SET_RDEBUG() (SET_RSTEP(), SET_RTRACE())\nSet the debug, step, or trace flags of a closure.\nvoid (SET_RDEBUG)(SEXP x, int v);\nvoid (SET_RSTEP)(SEXP x, int v);\nvoid (SET_RTRACE)(SEXP x, int v);\nStatus: non-API · Header: Rinternals.h · Protect: not needed · Errors: never · Since: — · R equivalent: —\nInternal macros for setting closure debugging flags.",
+    "crumbs": [
+      "Part II — Objects",
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Functions</span>"
+    ]
+  },
+  {
+    "objectID": "functions.html#promises-promsxp",
+    "href": "functions.html#promises-promsxp",
+    "title": "11  Functions",
+    "section": "11.3 Promises (PROMSXP)",
+    "text": "11.3 Promises (PROMSXP)\n\n11.3.1 R_UnboundValue()\nAccess the unbound-value marker constant.\nLibExtern SEXP  R_UnboundValue;     /* Unbound marker */\nStatus: API · Header: Rinternals.h · Protect: n/a · Errors: never · Since: — · R equivalent: —\nR_UnboundValue marks an unbound symbol or an unread promise value.\nSee also: R_MissingArg()\n\n\n11.3.2 PRCODE() (PRENV(), PRVALUE())\nAccess the code, environment, or value of a promise.\nSEXP (PRCODE)(SEXP x);\nSEXP (PRENV)(SEXP x);\nSEXP (PRVALUE)(SEXP x);\nStatus: non-API · Header: Rinternals.h · Protect: not needed · Errors: never · Since: — · R equivalent: —\nAccessors for the components of a promise (PROMSXP). Use the binding access API added in R 4.6.0 instead: R_GetBindingType(), R_ForcedBindingExpression(), R_DelayedBindingExpression(), and R_DelayedBindingEnvironment().\nSee also: R_GetBindingType()\n\n\n11.3.3 PRSEEN() (SET_PRSEEN())\nQuery or set the seen flag of a promise.\nint  (PRSEEN)(SEXP x);\nvoid (SET_PRSEEN)(SEXP x, int v);\nvoid SET_PRSEEN(SEXP x, int v);\nStatus: non-API · Header: Rinternals.h · Protect: not needed · Errors: never · Since: — · R equivalent: —\nAccessors for the seen flag of a promise (PROMSXP), used to detect recursive promise evaluation.\n\n\n11.3.4 SET_PRENV() (SET_PRVALUE(), SET_PRCODE())\nSet the environment, value, or code of a promise.\nvoid SET_PRENV(SEXP x, SEXP v);\nvoid SET_PRVALUE(SEXP x, SEXP v);\nvoid SET_PRCODE(SEXP x, SEXP v);\nStatus: non-API · Header: Rinternals.h · Protect: not needed · Errors: never · Since: — · R equivalent: —\nSetters for the components of a promise (PROMSXP). Use the binding access API added in R 4.6.0 instead: R_MakeForcedBinding(), R_MakeDelayedBinding(), and R_MakeMissingBinding().\nSee also: R_MakeDelayedBinding()",
+    "crumbs": [
+      "Part II — Objects",
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Functions</span>"
+    ]
+  },
+  {
+    "objectID": "functions.html#srcrefs",
+    "href": "functions.html#srcrefs",
+    "title": "11  Functions",
+    "section": "11.4 Srcrefs",
+    "text": "11.4 Srcrefs\n\n11.4.1 R_Srcref()\nAccess the current srcref, for debuggers.\nLibExtern SEXP  R_Srcref;           /* Current srcref, for debuggers */\nStatus: API · Header: Rinternals.h · Protect: n/a · Errors: never · Since: — · R equivalent: —\nThe current srcref, for debuggers.\n\n\n11.4.2 R_GetCurrentSrcref() (R_GetSrcFilename())\nGet the current srcref or the source filename of a srcref.\nSEXP R_GetCurrentSrcref(int);\nSEXP R_GetSrcFilename(SEXP);\nStatus: API · Header: Rinternals.h · Protect: result · Errors: never · Since: — · R equivalent: —\nR_GetCurrentSrcref returns the current srcref and R_GetSrcFilename returns the source filename for a srcref.",
+    "crumbs": [
+      "Part II — Objects",
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Functions</span>"
+    ]
+  },
+  {
+    "objectID": "external-pointers.html",
+    "href": "external-pointers.html",
+    "title": "12  External pointers",
+    "section": "",
+    "text": "12.1 Create and access",
+    "crumbs": [
+      "Part II — Objects",
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>External pointers</span>"
+    ]
+  },
+  {
+    "objectID": "external-pointers.html#create-and-access",
+    "href": "external-pointers.html#create-and-access",
+    "title": "12  External pointers",
+    "section": "",
+    "text": "12.1.1 R_MakeExternalPtr()\nCreate an external pointer wrapping a C pointer.\nSEXP R_MakeExternalPtr(void *p, SEXP tag, SEXP prot);\nStatus: API · Header: Rinternals.h · Protect: result · Errors: can throw · Since: — · R equivalent: —\nWraps the C pointer p in an external pointer SEXP, along with a tag and a protected (prot) object, both arbitrary SEXPs.\n\n\n12.1.2 R_ClearExternalPtr()\nClear the address stored in an external pointer.\nvoid R_ClearExternalPtr(SEXP s);\nStatus: API · Header: Rinternals.h · Protect: n/a · Errors: never · Since: — · R equivalent: —\nSets the address of an external pointer to NULL.\n\n\n12.1.3 R_ExternalPtrAddr() (R_ExternalPtrTag(), R_ExternalPtrProtected(), R_SetExternalPtrAddr(), R_SetExternalPtrTag(), R_SetExternalPtrProtected())\nGet and set the address, tag, and protected fields of an external pointer.\nvoid *R_ExternalPtrAddr(SEXP s);\nSEXP R_ExternalPtrTag(SEXP s);\nSEXP R_ExternalPtrProtected(SEXP s);\nvoid R_SetExternalPtrAddr(SEXP s, void *p);\nvoid R_SetExternalPtrTag(SEXP s, SEXP tag);\nvoid R_SetExternalPtrProtected(SEXP s, SEXP p);\nStatus: API · Header: Rinternals.h · Protect: not needed · Errors: never · Since: — · R equivalent: —\nAccessors and setters for the three components of an external pointer: the C address, the tag, and the protected object.",
+    "crumbs": [
+      "Part II — Objects",
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>External pointers</span>"
+    ]
+  },
+  {
+    "objectID": "external-pointers.html#finalization",
+    "href": "external-pointers.html#finalization",
+    "title": "12  External pointers",
+    "section": "12.2 Finalization",
+    "text": "12.2 Finalization\ntypedef void (*R_CFinalizer_t)(SEXP);\n\n12.2.1 R_RegisterCFinalizer() (R_RegisterFinalizer(), R_RegisterFinalizerEx(), R_RegisterCFinalizerEx())\nRegister a finalizer to run when an external pointer is garbage collected.\nvoid R_RegisterFinalizer(SEXP s, SEXP fun);\nvoid R_RegisterCFinalizer(SEXP s, R_CFinalizer_t fun);\nvoid R_RegisterFinalizerEx(SEXP s, SEXP fun, Rboolean onexit);\nvoid R_RegisterCFinalizerEx(SEXP s, R_CFinalizer_t fun, Rboolean onexit);\nStatus: API · Header: Rinternals.h · Protect: n/a · Errors: can throw · Since: — · R equivalent: —\nR_RegisterFinalizer registers an R function and R_RegisterCFinalizer registers a C function of type R_CFinalizer_t to be run when s is garbage collected. The Ex variants add an onexit argument controlling whether the finalizer is also run when R shuts down.\n\n\n12.2.2 R_RunPendingFinalizers()\nRun any pending finalizers.\nvoid R_RunPendingFinalizers(void);\nStatus: API · Header: Rinternals.h · Protect: n/a · Errors: can throw · Since: — · R equivalent: —\nRuns finalizers that have been scheduled but not yet executed.",
+    "crumbs": [
+      "Part II — Objects",
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>External pointers</span>"
+    ]
+  },
+  {
+    "objectID": "external-pointers.html#weak-references",
+    "href": "external-pointers.html#weak-references",
+    "title": "12  External pointers",
+    "section": "12.3 Weak references",
+    "text": "12.3 Weak references\n\n12.3.1 R_MakeWeakRef() (R_MakeWeakRefC())\nCreate a weak reference.\nSEXP R_MakeWeakRef(SEXP key, SEXP val, SEXP fin, Rboolean onexit);\nSEXP R_MakeWeakRefC(SEXP key, SEXP val, R_CFinalizer_t fin, Rboolean onexit);\nStatus: API · Header: Rinternals.h · Protect: result · Errors: can throw · Since: — · R equivalent: —\nR_MakeWeakRef() takes an R function finalizer; R_MakeWeakRefC() takes a C finalizer (R_CFinalizer_t).\n\n\n12.3.2 R_WeakRefKey() (R_WeakRefValue())\nGet the key or value of a weak reference.\nSEXP R_WeakRefKey(SEXP w);\nSEXP R_WeakRefValue(SEXP w);\nStatus: API · Header: Rinternals.h · Protect: not needed · Errors: never · Since: — · R equivalent: —\n\n\n12.3.3 R_RunWeakRefFinalizer()\nRun the finalizer attached to a weak reference.\nvoid R_RunWeakRefFinalizer(SEXP w);\nStatus: API · Header: Rinternals.h · Protect: n/a · Errors: can throw · Since: — · R equivalent: —",
+    "crumbs": [
+      "Part II — Objects",
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>External pointers</span>"
+    ]
+  },
+  {
+    "objectID": "external-pointers.html#internals",
+    "href": "external-pointers.html#internals",
+    "title": "12  External pointers",
+    "section": "12.4 Internals",
+    "text": "12.4 Internals\n#| results: asis #| echo: false render_entries(“external-pointers”, “Internals”)",
+    "crumbs": [
+      "Part II — Objects",
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>External pointers</span>"
+    ]
+  },
+  {
+    "objectID": "oo.html",
+    "href": "oo.html",
+    "title": "13  Object oriented programming",
+    "section": "",
+    "text": "13.1 Object testing\nANYSXP is used internal in S4 class definitions to flag that any SEXP is ok.",
+    "crumbs": [
+      "Part II — Objects",
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>Object oriented programming</span>"
+    ]
+  },
+  {
+    "objectID": "oo.html#object-testing",
+    "href": "oo.html#object-testing",
+    "title": "13  Object oriented programming",
+    "section": "",
+    "text": "13.1.1 Rf_isObject()\nTest whether an object is flagged as object-oriented.\nRboolean (Rf_isObject)(SEXP s);\nStatus: API · Header: Rinternals.h · Protect: n/a · Errors: never · Since: — · R equivalent: is.object()\nReturns non-zero when the OBJECT bit is set on s, i.e. when the object carries a class attribute.",
+    "crumbs": [
+      "Part II — Objects",
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>Object oriented programming</span>"
+    ]
+  },
+  {
+    "objectID": "oo.html#s3",
+    "href": "oo.html#s3",
+    "title": "13  Object oriented programming",
+    "section": "13.2 S3",
+    "text": "13.2 S3\n\n13.2.1 Rf_inherits()\nTest whether an object inherits from a given class.\nRboolean Rf_inherits(SEXP, const char *);\nStatus: API · Header: Rinternals.h · Protect: n/a · Errors: never · Since: — · R equivalent: inherits()\nLooks for the given class name in the object’s class attribute.\n\n\n13.2.2 Rf_S3Class()\nReturn the S3 class of an object.\nSEXP Rf_S3Class(SEXP);\nStatus: API · Header: Rinternals.h · Protect: result · Errors: never · Since: — · R equivalent: class()\nReturns the S3 class of the object as a character vector.\n\n\n13.2.3 Rf_isBasicClass()\nTest whether a class name is one of the basic classes.\nint Rf_isBasicClass(const char *);\nStatus: API · Header: Rinternals.h · Protect: n/a · Errors: never · Since: — · R equivalent: —\nBasic classes are the built-in pseudo-classes (e.g. \"numeric\", \"matrix\") known to the methods package.\n\n\n13.2.4 Rf_classgets()\nSet the class attribute of an object.\nSEXP Rf_classgets(SEXP, SEXP);\nStatus: API · Header: Rinternals.h · Protect: result · Errors: can throw · Since: — · R equivalent: class&lt;-()\nAssigns a new class attribute to the object.",
+    "crumbs": [
+      "Part II — Objects",
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>Object oriented programming</span>"
+    ]
+  },
+  {
+    "objectID": "oo.html#s4-s4sxp",
+    "href": "oo.html#s4-s4sxp",
+    "title": "13  Object oriented programming",
+    "section": "13.3 S4 (S4SXP)",
+    "text": "13.3 S4 (S4SXP)\n\n13.3.1 Rf_isS4()\nTest whether an object is an S4 object.\nRboolean Rf_isS4(SEXP);\nStatus: API · Header: Rinternals.h · Protect: n/a · Errors: never · Since: — · R equivalent: isS4()\nReturns non-zero for objects of type S4SXP.\n\n\n13.3.2 Rf_asS4()\nSet or unset the S4 flag on an object.\nSEXP Rf_asS4(SEXP, Rboolean, int);\nStatus: API · Header: Rinternals.h · Protect: result · Errors: can throw · Since: — · R equivalent: —\nConverts an object to or from an S4 object by toggling its S4 flag.\n\n\n13.3.3 Rf_allocS4Object()\nAllocate a new S4 object.\nSEXP Rf_allocS4Object(void);\nStatus: API · Header: Rinternals.h · Protect: result · Errors: never · Since: — · R equivalent: —\nAllocates a bare S4 object (type S4SXP) with the S4 flag set.\n\n\n13.3.4 R_S4_extends() (R_extends())\nQuery S4 class inheritance (extends) relationships.\nSEXP R_S4_extends(SEXP klass, SEXP useTable);\nRboolean R_extends(SEXP class1, SEXP class2, SEXP env);\nStatus: API · Header: Rinternals.h · Protect: result · Errors: can throw · Since: — · R equivalent: extends()\nS3-S4 class (inheritance), defined in attrib.c. R_S4_extends() returns the extends information for class klass; R_extends() tests whether class1 extends class2 in environment env.\n\n\n13.3.5 R_do_MAKE_CLASS()\nCreate a new S4 class definition.\nSEXP R_do_MAKE_CLASS(const char *what);\nStatus: API · Header: Rinternals.h · Protect: result · Errors: can throw · Since: — · R equivalent: setClass()\nClass definition and new object creation, defined in objects.c. Creates the class definition for the class named what.\n\n\n13.3.6 R_getClassDef() (R_getClassDef_R())\nRetrieve an S4 class definition by name.\nSEXP R_getClassDef(const char *what);\nSEXP R_getClassDef_R(SEXP what);\nStatus: API · Header: Rinternals.h · Protect: result · Errors: can throw · Since: — · R equivalent: getClassDef()\nClass definition and new object creation, defined in objects.c. R_getClassDef_R() takes the class name as a SEXP rather than a C string.\n\n\n13.3.7 R_has_methods_attached()\nTest whether methods are currently attached.\nRboolean R_has_methods_attached(void);\nStatus: API · Header: Rinternals.h · Protect: n/a · Errors: never · Since: — · R equivalent: —\nClass definition and new object creation, defined in objects.c. Reports whether the methods package currently has methods attached.\n\n\n13.3.8 R_isVirtualClass()\nTest whether an S4 class definition describes a virtual class.\nRboolean R_isVirtualClass(SEXP class_def, SEXP env);\nStatus: API · Header: Rinternals.h · Protect: n/a · Errors: never · Since: — · R equivalent: —\nClass definition and new object creation, defined in objects.c.\n\n\n13.3.9 R_do_new_object()\nCreate a new object from an S4 class definition.\nSEXP R_do_new_object(SEXP class_def);\nStatus: API · Header: Rinternals.h · Protect: result · Errors: can throw · Since: — · R equivalent: new()\nClass definition and new object creation, defined in objects.c. Instantiates a new object from the given class definition.\n\n\n13.3.10 R_check_class_and_super() (R_check_class_etc())\nCheck an object against a set of valid classes, a C-level is().\nint R_check_class_and_super(SEXP x, const char **valid, SEXP rho);\nint R_check_class_etc(SEXP x, const char **valid);\nStatus: API · Header: Rinternals.h · Protect: n/a · Errors: never · Since: — · R equivalent: is()\nSupports a C-level version of is(., .): checks whether x matches or extends one of the classes in the NULL-terminated array valid. R_check_class_etc() is a variant without an environment argument.\n\n\n13.3.11 Internals\n\n\n13.3.12 IS_S4_OBJECT() (SET_S4_OBJECT(), UNSET_S4_OBJECT())\nTest, set, or clear the S4 object flag on a SEXP.\nint (IS_S4_OBJECT)(SEXP x);\nvoid (SET_S4_OBJECT)(SEXP x);\nvoid (UNSET_S4_OBJECT)(SEXP x);\nStatus: non-API (use Rf_isS4()) · Header: Rinternals.h · Protect: n/a · Errors: never · Since: — · R equivalent: isS4()\nLow-level access to the S4 object flag; listed under internals by the chapter. Use Rf_isS4() to test whether an object is an S4 object.\nSee also: Rf_isS4()\n\n\n13.3.13 Slots\n\n\n13.3.14 R_do_slot() (R_do_slot_assign(), R_has_slot())\nGet, assign, or test for the presence of an S4 slot.\nSEXP R_do_slot(SEXP obj, SEXP name);\nSEXP R_do_slot_assign(SEXP obj, SEXP name, SEXP value);\nint R_has_slot(SEXP obj, SEXP name);\nStatus: API · Header: Rinternals.h · Protect: result · Errors: can throw · Since: — · R equivalent: slot()\nC entry points behind the R slot operators: R_do_slot() extracts a slot, R_do_slot_assign() assigns it, and R_has_slot() tests for its presence.",
+    "crumbs": [
+      "Part II — Objects",
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>Object oriented programming</span>"
+    ]
+  },
+  {
+    "objectID": "evaluation.html",
+    "href": "evaluation.html",
+    "title": "14  Evaluation",
+    "section": "",
+    "text": "14.1 Evaluation",
+    "crumbs": [
+      "Part III — The engine",
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>Evaluation</span>"
+    ]
+  },
+  {
+    "objectID": "evaluation.html#evaluation",
+    "href": "evaluation.html#evaluation",
+    "title": "14  Evaluation",
+    "section": "",
+    "text": "14.1.1 Rf_eval()\nEvaluate an expression in an environment.\nSEXP Rf_eval(SEXP expression, SEXP environment);\nStatus: API · Header: Rinternals.h · Protect: result · Errors: can throw · Since: — · R equivalent: eval()\nExpression can be anything - non-language objects are returned as is.\n\n\n14.1.2 R_forceAndCall()\nForce promises in an expression and then call it.\nSEXP R_forceAndCall(SEXP expression, int n, SEXP environment);\nStatus: API · Header: Rinternals.h · Protect: result · Errors: can throw · Since: — · R equivalent: —\n\nn: The number of arguments to force.\n\nn, I think, is the number of arguments to force. Not sure what advantages are over Rf_eval.\nSee also: Rf_eval()",
+    "crumbs": [
+      "Part III — The engine",
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>Evaluation</span>"
+    ]
+  },
+  {
+    "objectID": "evaluation.html#protected-evaluation",
+    "href": "evaluation.html#protected-evaluation",
+    "title": "14  Evaluation",
+    "section": "14.2 Protected evaluation",
+    "text": "14.2 Protected evaluation\n\n14.2.1 R_tryEval() (R_tryEvalSilent())\nEvaluate an R expression in a stand-alone context so errors don’t longjmp.\nSEXP R_tryEval(SEXP expression, SEXP environment, int* pOutError);\nSEXP R_tryEvalSilent(SEXP expression, SEXP environment, int* pOutError);\nStatus: API · Header: Rinternals.h · Protect: result · Errors: never · Since: — · R equivalent: try()\n\npOutError: On error, the function returns NULL and sets the contents of pOutError to 1.\n\nUse these to evaluate R expressions in a stand-alone context ensuring that any errors produced during evaluation don’t cause a longjmp to a separate context. R_tryEvalSilent() is the same as R_tryEval(), but doesn’t print error messages. Note that these functions ignore all existing condition handlers so R functions like supressWarnings(), tryCatch(), will no longer work.\nSee also: R_ToplevelExec()\n\n\n14.2.2 R_ToplevelExec()\nExecute a C function in a top-level context, catching any errors.\nRboolean R_ToplevelExec(void (*fun)(void *), void *data);\nStatus: API · Header: Rinternals.h · Protect: n/a · Errors: never · Since: — · R equivalent: —\n\nfun: C function to call after context setup. Passed *data.\n\nBoth R_tryEval() and R_tryEvalSilent() call R_ToplevelExec under the hood.\nSee also: R_tryEval()\n\n\n14.2.3 R_curErrorBuf()\nAccess the text of the current error.\nconst char *R_curErrorBuf();\nStatus: API · Header: Rinternals.h · Protect: not needed · Errors: never · Since: — · R equivalent: geterrmessage()\n\n\n14.2.4 R_ExecWithCleanup()\nExecute a C function in a protected context, with cleanup before teardown.\nSEXP R_ExecWithCleanup(SEXP (*fun)(void *), void *data,\n                       void (*cleanfun)(void *),\n                       void *cleandata);\nStatus: API · Header: Rinternals.h · Protect: result · Errors: never · Since: — · R equivalent: —\n\nfun: C function to call after context setup. Passed *data.\ncleanfun: C function to call before context teardown. Passed *data.\n\nNot used anywhere in R source.\nSee also: R_ToplevelExec()\nUse these to evaluate R expressions in a stand-alone context ensuring that any errors produced during evaluation don’t cause a longjmp to a separate context.\nNote that these functions ignore all existing condition handlers so R functions like supressWarnings(), tryCatch(), will no longer work.\nBoth R_tryEval() and R_tryEvalSilent() call R_ToplevelExec under the hood:",
+    "crumbs": [
+      "Part III — The engine",
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>Evaluation</span>"
+    ]
+  },
+  {
+    "objectID": "errors.html",
+    "href": "errors.html",
+    "title": "15  Errors",
+    "section": "",
+    "text": "15.1 Errors, warnings, and printing",
+    "crumbs": [
+      "Part III — The engine",
+      "<span class='chapter-number'>15</span>  <span class='chapter-title'>Errors</span>"
+    ]
+  },
+  {
+    "objectID": "errors.html#errors-warnings-and-printing",
+    "href": "errors.html#errors-warnings-and-printing",
+    "title": "15  Errors",
+    "section": "",
+    "text": "15.1.1 Rf_error() (Rf_errorcall())\nSignal an error, optionally including the call in the message.\nvoid Rf_error(const char* format, ...);\nvoid Rf_errorcall(SEXP call, const char* format, ...);\nStatus: API · Header: Rinternals.h · Protect: n/a · Errors: can throw · Since: — · R equivalent: stop()\nUse Rf_errorcall(R_NilValue, ...) to suppress display of the call.\n\n\n15.1.2 Rf_warning() (Rf_warningcall(), Rf_warningcall_immediate())\nSignal a warning, optionally including the call or displaying it immediately.\nvoid Rf_warning(const char* format, ...);\nvoid Rf_warningcall(SEXP call, const char*, ...);\nvoid Rf_warningcall_immediate(SEXP call, const char*, ...);\nStatus: API · Header: R_ext/Error.h · Protect: n/a · Errors: can throw · Since: — · R equivalent: warning()\n\n\n15.1.3 error_return() (errorcall_return())\nEliminate compiler warnings about non-void functions that don’t return.\n#define error_return(msg) { \\\n  Rf_error(msg); \\\n  return R_NilValue; \\\n}\n#define errorcall_return(cl,msg) { \\\n  Rf_errorcall(cl, msg); \\\n  return R_NilValue; \\\n}\nStatus: API · Header: Rinternals.h · Protect: n/a · Errors: can throw · Since: — · R equivalent: —\nRf_error will longjmp and so any code following will not be executed; however, most compilers do not detect this when providing warnings.\nSee also: Rf_error()\nUse Rf_errorcall(R_NilValue, ...) to suppress display of call.\nTwo macros eliminate compiler warnings about non-void functions that don’t return. (Rf_error will longjmp and so any code following will not be executed; however, most compilers do not detect this when providing warnings)",
+    "crumbs": [
+      "Part III — The engine",
+      "<span class='chapter-number'>15</span>  <span class='chapter-title'>Errors</span>"
+    ]
+  },
+  {
+    "objectID": "printing.html",
+    "href": "printing.html",
+    "title": "16  Printing and messaging",
+    "section": "",
+    "text": "16.1 Printing",
+    "crumbs": [
+      "Part III — The engine",
+      "<span class='chapter-number'>16</span>  <span class='chapter-title'>Printing and messaging</span>"
+    ]
+  },
+  {
+    "objectID": "printing.html#printing",
+    "href": "printing.html#printing",
+    "title": "16  Printing and messaging",
+    "section": "",
+    "text": "16.1.1 R_ShowMessage()\nDisplay a message to the user.\nvoid R_ShowMessage(const char *s);\nStatus: API · Header: R_ext/Error.h · Protect: n/a · Errors: never · Since: — · R equivalent: message()\n\n\n16.1.2 Rprintf() (REprintf())\nPrint to stdout or stderr.\nvoid Rprintf(const char *, ...);\nvoid REprintf(const char *, ...);\nStatus: API · Header: R_ext/Print.h · Protect: n/a · Errors: never · Since: — · R equivalent: cat()\n\n\n16.1.3 Rf_PrintValue()\nPrint an object like print() would.\nvoid Rf_PrintValue(SEXP);\nStatus: API · Header: Rinternals.h · Protect: n/a · Errors: can throw · Since: — · R equivalent: print()\n\n\n16.1.4 R_FlushConsole()\nFlush the console.\nvoid R_FlushConsole(void);\nStatus: API · Header: R.h · Protect: n/a · Errors: never · Since: — · R equivalent: flush.console()",
+    "crumbs": [
+      "Part III — The engine",
+      "<span class='chapter-number'>16</span>  <span class='chapter-title'>Printing and messaging</span>"
+    ]
+  },
+  {
+    "objectID": "serialisation.html",
+    "href": "serialisation.html",
+    "title": "17  Serialisation",
+    "section": "",
+    "text": "17.1 XDR encoding",
+    "crumbs": [
+      "Part III — The engine",
+      "<span class='chapter-number'>17</span>  <span class='chapter-title'>Serialisation</span>"
+    ]
+  },
+  {
+    "objectID": "serialisation.html#xdr-encoding",
+    "href": "serialisation.html#xdr-encoding",
+    "title": "17  Serialisation",
+    "section": "",
+    "text": "17.1.1 R_XDR_DOUBLE_SIZE() (R_XDR_INTEGER_SIZE())\nSpecify the byte sizes of doubles and integers in XDR serialisation format.\n#define R_XDR_DOUBLE_SIZE 8\n#define R_XDR_INTEGER_SIZE 4\nStatus: API · Header: Rinternals.h · Protect: n/a · Errors: never · Since: — · R equivalent: —\n\n\n17.1.2 R_XDREncodeDouble() (R_XDRDecodeDouble(), R_XDREncodeInteger(), R_XDRDecodeInteger())\nEncode and decode doubles and integers in XDR format.\nvoid R_XDREncodeDouble(double d, void *buf);\ndouble R_XDRDecodeDouble(void *buf);\nvoid R_XDREncodeInteger(int i, void *buf);\nint R_XDRDecodeInteger(void *buf);\nStatus: API · Header: Rinternals.h · Protect: n/a · Errors: never · Since: — · R equivalent: —",
+    "crumbs": [
+      "Part III — The engine",
+      "<span class='chapter-number'>17</span>  <span class='chapter-title'>Serialisation</span>"
+    ]
+  },
+  {
+    "objectID": "serialisation.html#persistence-streams",
+    "href": "serialisation.html#persistence-streams",
+    "title": "17  Serialisation",
+    "section": "17.2 Persistence streams",
+    "text": "17.2 Persistence streams\ntypedef void *R_pstream_data_t;\n\ntypedef enum {\n  R_pstream_any_format,\n  R_pstream_ascii_format,\n  R_pstream_binary_format,\n  R_pstream_xdr_format,\n  R_pstream_asciihex_format\n} R_pstream_format_t;\n\ntypedef struct R_outpstream_st *R_outpstream_t;\nstruct R_outpstream_st {\n  R_pstream_data_t data;\n  R_pstream_format_t type;\n  int version;\n  void (*OutChar)(R_outpstream_t, int);\n  void (*OutBytes)(R_outpstream_t, void *, int);\n  SEXP (*OutPersistHookFunc)(SEXP, SEXP);\n  SEXP OutPersistHookData;\n};\n\ntypedef struct R_inpstream_st *R_inpstream_t;\nstruct R_inpstream_st {\n  R_pstream_data_t data;\n  R_pstream_format_t type;\n  int (*InChar)(R_inpstream_t);\n  void (*InBytes)(R_inpstream_t, void *, int);\n  SEXP (*InPersistHookFunc)(SEXP, SEXP);\n  SEXP InPersistHookData;\n};\n\n17.2.1 R_InitInPStream() (R_InitOutPStream())\nInitialise a custom input or output persistence stream.\nvoid R_InitInPStream(R_inpstream_t stream, R_pstream_data_t data,\n  R_pstream_format_t type,\n  int (*inchar)(R_inpstream_t),\n  void (*inbytes)(R_inpstream_t, void *, int),\n  SEXP (*phook)(SEXP, SEXP), SEXP pdata);\nvoid R_InitOutPStream(R_outpstream_t stream, R_pstream_data_t data,\n  R_pstream_format_t type, int version,\n  void (*outchar)(R_outpstream_t, int),\n  void (*outbytes)(R_outpstream_t, void *, int),\n  SEXP (*phook)(SEXP, SEXP), SEXP pdata);\nStatus: API · Header: Rinternals.h · Protect: n/a · Errors: never · Since: — · R equivalent: —\n\n\n17.2.2 R_InitFileInPStream() (R_InitFileOutPStream())\nInitialise a persistence stream that reads from or writes to a file.\nvoid R_InitFileInPStream(R_inpstream_t stream, FILE *fp,\n  R_pstream_format_t type,\n  SEXP (*phook)(SEXP, SEXP), SEXP pdata);\nvoid R_InitFileOutPStream(R_outpstream_t stream, FILE *fp,\n  R_pstream_format_t type, int version,\n  SEXP (*phook)(SEXP, SEXP), SEXP pdata);\nStatus: API · Header: Rinternals.h · Protect: n/a · Errors: never · Since: — · R equivalent: —\n\n\n17.2.3 R_InitConnOutPStream() (R_InitConnInPStream())\nInitialise a persistence stream that reads from or writes to a connection.\nvoid R_InitConnOutPStream(R_outpstream_t stream, Rconnection con,\n  R_pstream_format_t type, int version,\n  SEXP (*phook)(SEXP, SEXP), SEXP pdata);\nvoid R_InitConnInPStream(R_inpstream_t stream,  Rconnection con,\n  R_pstream_format_t type,\n  SEXP (*phook)(SEXP, SEXP), SEXP pdata);\nStatus: non-API · Header: Rinternals.h · Protect: n/a · Errors: never · Since: — · R equivalent: —\nThe connection interface is not available to packages. To allow limited use of connection pointers, defining NEED_CONNECTION_PSTREAMS before including Rinternals.h defines the opaque pointer type Rconnection.\nThe connection interface is not available to packages. To allow limited use of connection pointers, defining NEED_CONNECTION_PSTREAMS before including Rinternals.h defines the opaque pointer type:\n#ifdef NEED_CONNECTION_PSTREAMS\n#ifndef HAVE_RCONNECTION_TYPEDEF\ntypedef struct Rconn  *Rconnection;\n#define HAVE_RCONNECTION_TYPEDEF\n#endif\n#endif",
+    "crumbs": [
+      "Part III — The engine",
+      "<span class='chapter-number'>17</span>  <span class='chapter-title'>Serialisation</span>"
+    ]
+  },
+  {
+    "objectID": "serialisation.html#serialising-objects",
+    "href": "serialisation.html#serialising-objects",
+    "title": "17  Serialisation",
+    "section": "17.3 Serialising objects",
+    "text": "17.3 Serialising objects\n\n17.3.1 R_Serialize() (R_Unserialize())\nSerialise an R object to an output stream, or unserialise it from an input stream.\nvoid R_Serialize(SEXP s, R_outpstream_t ops);\nSEXP R_Unserialize(R_inpstream_t ips);\nStatus: API · Header: Rinternals.h · Protect: result · Errors: can throw · Since: — · R equivalent: serialize()\nThe R equivalents are serialize() and unserialize(). The SEXP returned by R_Unserialize() is freshly allocated and should be protected from garbage collection.\n\n\n17.3.2 R_RestoreHashCount()\nRestore the hash count of a hashed environment after unserialisation.\nvoid R_RestoreHashCount(SEXP rho);\nStatus: non-API · Header: Rinternals.h · Protect: n/a · Errors: can throw · Since: — · R equivalent: —",
+    "crumbs": [
+      "Part III — The engine",
+      "<span class='chapter-number'>17</span>  <span class='chapter-title'>Serialisation</span>"
+    ]
+  },
+  {
+    "objectID": "rng.html",
+    "href": "rng.html",
+    "title": "18  Random number generation",
+    "section": "",
+    "text": "Warning\n\n\n\nPlaceholder. Planned content:\n\nGetRNGstate/PutRNGstate\nunif_rand family, R_unif_index\nRelationship to .Random.seed",
+    "crumbs": [
+      "Part IV — Utilities",
+      "<span class='chapter-number'>18</span>  <span class='chapter-title'>Random number generation</span>"
+    ]
+  },
+  {
+    "objectID": "math.html",
+    "href": "math.html",
+    "title": "19  Mathematical functions (Rmath)",
+    "section": "",
+    "text": "Warning\n\n\n\nPlaceholder. Planned content:\n\nDistribution functions (d/p/q/r table)\nMathematical functions (bessel, gamma, beta, …)\nNumerical utilities (R_pow, fmax2, imin2, expm1-style helpers)\nConstants (M_PI etc.)\nStandalone Rmath usage",
+    "crumbs": [
+      "Part IV — Utilities",
+      "<span class='chapter-number'>19</span>  <span class='chapter-title'>Mathematical functions (Rmath)</span>"
+    ]
+  },
+  {
+    "objectID": "numerical.html",
+    "href": "numerical.html",
+    "title": "20  Numerical methods",
+    "section": "",
+    "text": "Warning\n\n\n\nPlaceholder. Planned content:\n\nOptimization\nIntegration\nLinear algebra: BLAS / LAPACK headers and FCONE\nfindInterval, R_max_col",
+    "crumbs": [
+      "Part IV — Utilities",
+      "<span class='chapter-number'>20</span>  <span class='chapter-title'>Numerical methods</span>"
+    ]
+  },
+  {
+    "objectID": "utilities.html",
+    "href": "utilities.html",
+    "title": "21  Utilities",
+    "section": "",
+    "text": "21.1 Other sexptypes",
+    "crumbs": [
+      "Part IV — Utilities",
+      "<span class='chapter-number'>21</span>  <span class='chapter-title'>Utilities</span>"
+    ]
+  },
+  {
+    "objectID": "utilities.html#other-sexptypes",
+    "href": "utilities.html#other-sexptypes",
+    "title": "21  Utilities",
+    "section": "",
+    "text": "21.1.1 Byte code (BCODESXP)\n\n\n21.1.2 BCODE_CODE() (BCODE_CONSTS(), BCODE_EXPR(), isByteCode())\nAccess the components of a byte-code object.\n#define BCODE_CODE(x)   CAR(x)\n#define BCODE_CONSTS(x) CDR(x)\n#define BCODE_EXPR(x)   TAG(x)\n#define isByteCode(x)   (TYPEOF(x)==BCODESXP)\nStatus: non-API · Header: none (internal) · Protect: not needed · Errors: never · Since: — · R equivalent: —\n\n\n21.1.3 R_initialize_bcode()\nInitialize the byte-code engine.\nvoid R_initialize_bcode(void);\nStatus: non-API · Header: none (internal) · Protect: n/a · Errors: never · Since: — · R equivalent: —\n\n\n21.1.4 R_bcEncode() (R_bcDecode())\nEncode or decode a byte-code object.\nSEXP R_bcEncode(SEXP);\nSEXP R_bcDecode(SEXP);\nStatus: non-API · Header: none (internal) · Protect: result · Errors: can throw · Since: — · R equivalent: —\n\n\n21.1.5 R_PromiseExpr() (R_ClosureExpr(), PREXPR(), BODY_EXPR())\nGet the unevaluated expression of a promise or the body expression of a closure.\nSEXP R_PromiseExpr(SEXP);\nSEXP R_ClosureExpr(SEXP);\n#define PREXPR(e) R_PromiseExpr(e)\n#define BODY_EXPR(e) R_ClosureExpr(e)\nStatus: non-API · Header: Rinternals.h · Protect: not needed · Errors: never · Since: — · R equivalent: —\nR_PromiseExpr() is not part of the API; use the binding access API added in R 4.6.0 (e.g. R_DelayedBindingExpression()) to inspect promise bindings.",
+    "crumbs": [
+      "Part IV — Utilities",
+      "<span class='chapter-number'>21</span>  <span class='chapter-title'>Utilities</span>"
+    ]
+  },
+  {
+    "objectID": "utilities.html#sorting",
+    "href": "utilities.html#sorting",
+    "title": "21  Utilities",
+    "section": "21.2 Sorting",
+    "text": "21.2 Sorting\n\n21.2.1 R_qsort() (R_qsort_I(), R_qsort_int(), R_qsort_int_I())\nSort a numeric array in place using quicksort.\nvoid R_qsort    (double *v,         size_t i, size_t j);\nvoid R_qsort_I  (double *v, int *II, int i, int j);\nvoid R_qsort_int  (int *iv,         size_t i, size_t j);\nvoid R_qsort_int_I(int *iv, int *II, int i, int j);\nStatus: API · Header: R_ext/Utils.h · Protect: n/a · Errors: never · Since: — · R equivalent: sort()\nThe dummy index argument is renamed to II to avoid problems with g++ on Solaris.\nSee also: R_isort(), R_orderVector()\n\n\n21.2.2 R_isort() (R_rsort(), R_csort())\nSort an int, double, or complex array in place.\nvoid R_isort(int*, int);\nvoid R_rsort(double*, int);\nvoid R_csort(Rcomplex*, int);\nStatus: API · Header: R_ext/Utils.h · Protect: n/a · Errors: never · Since: — · R equivalent: sort()\nSee also: R_qsort()\n\n\n21.2.3 rsort_with_index()\nSort a double array in place, reordering an index array alongside.\nvoid rsort_with_index(double *, int *, int);\nStatus: API · Header: R_ext/Utils.h · Protect: n/a · Errors: never · Since: — · R equivalent: —\nSee also: revsort()\n\n\n21.2.4 revsort()\nSort a double array in reverse order, reordering an index array alongside.\nvoid revsort(double*, int*, int);\nStatus: API · Header: R_ext/Utils.h · Protect: n/a · Errors: never · Since: — · R equivalent: —\nReverse; sort i[] alongside.\nSee also: rsort_with_index()\n\n\n21.2.5 iPsort() (rPsort(), cPsort())\nPartially sort an int, double, or complex array around the k-th element.\nvoid iPsort(int*,    int, int);\nvoid rPsort(double*, int, int);\nvoid cPsort(Rcomplex*, int, int);\nStatus: API · Header: R_ext/Utils.h · Protect: n/a · Errors: never · Since: — · R equivalent: —\nSee also: R_qsort()\n\n\n21.2.6 R_orderVector() (R_orderVector1())\nCompute an ordering permutation into an index array.\nvoid R_orderVector (int *indx, int n, SEXP arglist, Rboolean nalast, Rboolean decreasing);\nvoid R_orderVector1(int *indx, int n, SEXP x,       Rboolean nalast, Rboolean decreasing);\nStatus: API · Header: Rinternals.h · Protect: n/a · Errors: never · Since: — · R equivalent: order()\nC version of R’s indx &lt;- order(..., na.last, decreasing); arglist can be built with e.g. Rf_lang2(x, y) or Rf_lang3(x, y, z). R_orderVector1() is the single-vector version, indx &lt;- order(x, na.last, decreasing).\nSee also: R_qsort()",
+    "crumbs": [
+      "Part IV — Utilities",
+      "<span class='chapter-number'>21</span>  <span class='chapter-title'>Utilities</span>"
+    ]
+  },
+  {
+    "objectID": "utilities.html#misc",
+    "href": "utilities.html#misc",
+    "title": "21  Utilities",
+    "section": "21.3 Misc",
+    "text": "21.3 Misc\n\n21.3.1 Rf_allocSExp()\nAllocate a non-vector SEXP of the given type.\nSEXP Rf_allocSExp(SEXPTYPE);\nStatus: non-API · Header: Rinternals.h · Protect: result · Errors: can throw · Since: — · R equivalent: —\nNot part of the API, as it exposes internal structure that might need to change. Use an appropriate constructor instead: R_NewEnv() for environments, R_mkClosure() for closures (added in R 4.5.0), or Rf_allocLang() for call expressions (added in R 4.4.1).\nSee also: R_NewEnv()\n\n\n21.3.2 Rf_any_duplicated() (Rf_any_duplicated3())\nFind the position of the first duplicated element of a vector.\nR_xlen_t Rf_any_duplicated(SEXP x, Rboolean from_last);\nR_xlen_t Rf_any_duplicated3(SEXP x, SEXP incomp, Rboolean from_last);\nStatus: API · Header: Rinternals.h · Protect: n/a · Errors: never · Since: — · R equivalent: anyDuplicated()\n\n\n21.3.3 Rf_applyClosure()\nApply a closure to a list of arguments.\nSEXP Rf_applyClosure(SEXP, SEXP, SEXP, SEXP, SEXP);\nStatus: non-API · Header: none (internal) · Protect: result · Errors: can throw · Since: — · R equivalent: —\n\n\n21.3.4 Rf_countContexts()\nCount evaluation contexts on the context stack.\nint Rf_countContexts(int, int);\nStatus: non-API · Header: none (internal) · Protect: n/a · Errors: never · Since: — · R equivalent: —\n\n\n21.3.5 Rf_CreateTag()\nCreate the tag for a pairlist element.\nSEXP Rf_CreateTag(SEXP);\nStatus: non-API · Header: none (internal) · Protect: result · Errors: can throw · Since: — · R equivalent: —\n\n\n21.3.6 Rf_GetOption() (Rf_GetOption1())\nRetrieve the value of an R option.\nSEXP Rf_GetOption(SEXP, SEXP); /* pre-2.13.0 compatibility */\nSEXP Rf_GetOption1(SEXP);\nStatus: API · Header: Rinternals.h · Protect: not needed · Errors: never · Since: — · R equivalent: getOption()\nRf_GetOption() is kept for pre-2.13.0 compatibility; use Rf_GetOption1().\nSee also: Rf_GetOptionDigits()\n\n\n21.3.7 Rf_GetOptionDigits() (Rf_GetOptionWidth())\nRetrieve the digits or width option.\nint Rf_GetOptionDigits(void);\nint Rf_GetOptionWidth(void);\nStatus: API · Header: Rinternals.h · Protect: n/a · Errors: never · Since: — · R equivalent: getOption()\nSee also: Rf_GetOption()\n\n\n21.3.8 Rf_setVar() (Rf_gsetVar())\nAssign a value to a symbol in an environment.\nvoid Rf_setVar(SEXP, SEXP, SEXP);\nvoid Rf_gsetVar(SEXP, SEXP, SEXP);\nStatus: API · Header: Rinternals.h · Protect: n/a · Errors: can throw · Since: — · R equivalent: assign()\n\n\n21.3.9 Rf_installS3Signature()\nInstall the signature string for an S3 method.\nSEXP Rf_installS3Signature(const char *, const char *);\nStatus: non-API · Header: none (internal) · Protect: not needed · Errors: never · Since: — · R equivalent: —\n\n\n21.3.10 Rf_isFree()\nTest whether a symbol has no value binding.\nRboolean Rf_isFree(SEXP);\nStatus: non-API · Header: none (internal) · Protect: n/a · Errors: never · Since: — · R equivalent: —\n\n\n21.3.11 Rf_isUnsorted()\nTest whether a vector may be unsorted.\nRboolean Rf_isUnsorted(SEXP, Rboolean);\nStatus: API · Header: Rinternals.h · Protect: n/a · Errors: never · Since: — · R equivalent: is.unsorted()\n\n\n21.3.12 Rf_namesgets()\nSet the names of a vector.\nSEXP Rf_namesgets(SEXP, SEXP);\nStatus: API · Header: Rinternals.h · Protect: result · Errors: can throw · Since: — · R equivalent: names&lt;-()\n\n\n21.3.13 Rf_pmatch() (Rf_psmatch())\nPerform partial matching of strings.\nRboolean Rf_pmatch(SEXP, SEXP, Rboolean);\nRboolean Rf_psmatch(const char *, const char *, Rboolean);\nStatus: API · Header: Rinternals.h · Protect: n/a · Errors: never · Since: — · R equivalent: pmatch()\nRf_psmatch() is the variant for C strings.\nSee also: Rf_match()\n\n\n21.3.14 Rf_readS3VarsFromFrame()\nRead the S3 dispatch variables from a method’s evaluation frame.\nvoid Rf_readS3VarsFromFrame(SEXP, SEXP*, SEXP*, SEXP*, SEXP*, SEXP*, SEXP*);\nStatus: non-API · Header: none (internal) · Protect: n/a · Errors: never · Since: — · R equivalent: —\n\n\n21.3.15 Rf_setSVector()\nSet an element of a C array of SEXPs.\nvoid Rf_setSVector(SEXP*, int, SEXP);\nStatus: non-API · Header: none (internal) · Protect: n/a · Errors: never · Since: — · R equivalent: —\n\n\n21.3.16 Rf_substitute()\nSubstitute values for variables in an expression.\nSEXP Rf_substitute(SEXP,SEXP);\nStatus: API · Header: Rinternals.h · Protect: result · Errors: can throw · Since: — · R equivalent: substitute()\n\n\n21.3.17 Rf_match() (Rf_matchE())\nFind the positions of first matches between two vectors.\nSEXP Rf_match(SEXP itable, SEXP ix, int no_match);\nSEXP Rf_matchE(SEXP itable, SEXP ix, int no_match, SEXP env);\nStatus: API · Header: Rinternals.h · Protect: result · Errors: can throw · Since: — · R equivalent: match()\nMatch vectors. In Rf_matchE(), env is used to look up as.character when translating POSIXlt; seems unlikely you’d ever need to use this variant.\nSee also: Rf_pmatch()\n\n\n21.3.18 R_dot_Last() (R_RunExitFinalizers())\nRun shutdown actions when R exits.\nvoid R_dot_Last(void);\nvoid R_RunExitFinalizers(void);\nStatus: embedding · Header: Rinternals.h · Protect: n/a · Errors: can throw · Since: — · R equivalent: —\nShutdown actions: R_dot_Last() runs the .Last() function (in main.c); R_RunExitFinalizers() runs finalizers registered for exit (in memory.c).\n\n\n21.3.19 R_popen() (R_system())\nOpen a pipe or run a command in a shell.\n#ifdef HAVE_POPEN\nFILE *R_popen(const char *, const char *);\n#endif\nint R_system(const char *);\nStatus: API · Header: Rinternals.h · Protect: n/a · Errors: never · Since: — · R equivalent: system()\nReplacements for popen and system. R_popen() is only available when HAVE_POPEN is defined.\n\n\n21.3.20 R_compute_identical()\nTest whether two objects are identical.\nRboolean R_compute_identical(SEXP, SEXP, int);\nStatus: API · Header: Rinternals.h · Protect: n/a · Errors: never · Since: — · R equivalent: identical()\nThe third arg consists of bitmapped flags for non-default options: currently the first 4 and the 6th default to TRUE, so the flag is set for FALSE values: 1 = !NUM_EQ, 2 = !SINGLE_NA, 4 = !ATTR_AS_SET, 8 = !IGNORE_BYTECODE, 16 = !IGNORE_ENV, 32 = !IGNORE_SRCREF. Default from R’s default: 16 = (0 + 0 + 0 + 0 + 16 + 0).\n\n\n21.3.21 Rf_conformable()\nTest whether two objects have conformable dimensions.\nRboolean Rf_conformable(SEXP, SEXP);\nStatus: API · Header: Rinternals.h · Protect: n/a · Errors: never · Since: — · R equivalent: —\n\n\n21.3.22 Rf_elt() (Rf_lastElt())\nGet an element of a pairlist by index, or the last element.\nSEXP Rf_elt(SEXP, int);\nSEXP Rf_lastElt(SEXP);\nStatus: API · Header: Rinternals.h · Protect: not needed · Errors: never · Since: — · R equivalent: —\n\n\n21.3.23 Rf_isTs()\nTest whether an object is a time series.\nRboolean Rf_isTs(SEXP);\nStatus: API · Header: Rinternals.h · Protect: n/a · Errors: never · Since: — · R equivalent: is.ts()\n\n\n21.3.24 Rf_isUserBinop()\nTest whether a call is a user-defined binary operator.\nRboolean Rf_isUserBinop(SEXP);\nStatus: API · Header: Rinternals.h · Protect: n/a · Errors: never · Since: — · R equivalent: —\n\n\n21.3.25 Rf_lcons()\nPrepend a value to a language object.\nSEXP Rf_lcons(SEXP, SEXP);\nStatus: API · Header: Rinternals.h · Protect: result · Errors: can throw · Since: — · R equivalent: —\nSee also: Rf_cons()\n\n\n21.3.26 Rf_stringPositionTr()\nFind the position of a string within a character vector.\nint Rf_stringPositionTr(SEXP, const char *);\nStatus: API · Header: Rinternals.h · Protect: n/a · Errors: never · Since: — · R equivalent: —\n\n\n21.3.27 R_FixupRHS()\nFix up the right-hand side value of a complex assignment.\nSEXP R_FixupRHS(SEXP x, SEXP y);\nStatus: non-API · Header: none (internal) · Protect: result · Errors: can throw · Since: — · R equivalent: —\n\n\n21.3.28 IndexWidth()\nCompute the character width needed to print a vector index.\n#define IndexWidth    Rf_IndexWidth\nStatus: API · Header: R_ext/Utils.h · Protect: n/a · Errors: never · Since: — · R equivalent: —\n\n\n21.3.29 setIVector() (setRVector())\nFill an int or double array with a constant value.\n#define setIVector    Rf_setIVector\nvoid setIVector(int*, int, int);\n#define setRVector    Rf_setRVector\nvoid setRVector(double*, int, double);\nStatus: non-API · Header: R_ext/Utils.h · Protect: n/a · Errors: never · Since: — · R equivalent: —\nSee also: Rf_setSVector()\n\n\n21.3.30 R_atof() (R_strtod())\nConvert a string to a double.\ndouble R_atof(const char *str);\ndouble R_strtod(const char *c, char **end);\nStatus: API · Header: R_ext/Utils.h · Protect: n/a · Errors: never · Since: — · R equivalent: as.numeric()\nThese two are guaranteed to use ‘.’ as the decimal point, and to accept “NA”.\n\n\n21.3.31 R_tmpnam() (R_tmpnam2())\nCreate a name for a temporary file.\nchar *R_tmpnam(const char *prefix, const char *tempdir);\nchar *R_tmpnam2(const char *prefix, const char *tempdir, const char *fileext);\nStatus: API · Header: R_ext/Utils.h · Protect: n/a · Errors: never · Since: — · R equivalent: tempfile()\n\n\n21.3.32 R_CheckUserInterrupt()\nCheck whether the user has requested an interrupt.\nvoid R_CheckUserInterrupt(void);\nStatus: API · Header: R_ext/Utils.h · Protect: n/a · Errors: can throw · Since: — · R equivalent: —\nSee also: R_CheckStack()\n\n\n21.3.33 R_CheckStack() (R_CheckStack2())\nCheck for C stack overflow.\nvoid R_CheckStack(void);\nvoid R_CheckStack2(size_t);\nStatus: API · Header: R_ext/Utils.h · Protect: n/a · Errors: can throw · Since: — · R equivalent: —\nSee also: R_CheckUserInterrupt()\n\n\n21.3.34 findInterval() (find_interv_vec())\nLocate the interval containing a value within a sorted vector.\nint findInterval(double *xt, int n, double x,\n  Rboolean rightmost_closed,  Rboolean all_inside, int ilo,\n  int *mflag);\n\nvoid find_interv_vec(double *xt, int *n, double *x,   int *nx,\n  int *rightmost_closed, int *all_inside, int *indx);\nStatus: API · Header: R_ext/Utils.h · Protect: n/a · Errors: never · Since: — · R equivalent: findInterval()\nAlso in Applic.h.\n\n\n21.3.35 R_max_col()\nFind the column position of the maximum in each row of a matrix.\nvoid R_max_col(double *matrix, int *nr, int *nc, int *maxes, int *ties_meth);\nStatus: API · Header: R_ext/Utils.h · Protect: n/a · Errors: never · Since: — · R equivalent: max.col()\nAlso in Applic.h.",
+    "crumbs": [
+      "Part IV — Utilities",
+      "<span class='chapter-number'>21</span>  <span class='chapter-title'>Utilities</span>"
+    ]
+  },
+  {
+    "objectID": "r-version.html",
+    "href": "r-version.html",
+    "title": "22  R version",
+    "section": "",
+    "text": "22.0.1 Rversion.h\nUsed test current version of R\n\n\n22.0.2 R_Version() (R_VERSION())\nTest the compile-time version of R against a required version.\n#define R_VERSION\n#define R_Version(major, minor, patch) \\\n  (((major) * 65536) + ((minor) * 256) + (patch))\nStatus: API · Header: Rversion.h · Protect: n/a · Errors: never · Since: — · R equivalent: R.version\nUsed to test the current version of R. R_VERSION is the packed version number of the R being compiled against; R_Version() packs a major.minor.patch triple into the same format for comparison.\n#include &lt;Rversion.h&gt;\n\n#if defined(R_VERSION) && R_VERSION &lt; R_Version(3, 2, 0)\nSEXP Rf_installChar(SEXP x) {\n  return Rf_install(CHAR(x));\n}\n#endif",
+    "crumbs": [
+      "Part IV — Utilities",
+      "<span class='chapter-number'>22</span>  <span class='chapter-title'>R version</span>"
+    ]
+  },
+  {
+    "objectID": "compliance.html",
+    "href": "compliance.html",
+    "title": "Migrating to API compliance",
+    "section": "",
+    "text": "Warning\n\n\n\nPlaceholder. Planned content:\n\nThe non-API → API replacement tables and recipes\nBackports\nHow to check a package (R CMD check, tools::checkFF-era tooling)",
+    "crumbs": [
+      "Appendices",
+      "Migrating to API compliance"
+    ]
+  },
+  {
+    "objectID": "function-index.html",
+    "href": "function-index.html",
+    "title": "Function index",
+    "section": "",
+    "text": "Warning\n\n\n\nPlaceholder. This page will be generated by tools/build-index.R:\n\nAlphabetical table of every documented entry point → chapter + anchor + status\nNever hand-edited",
+    "crumbs": [
+      "Appendices",
+      "Function index"
+    ]
+  }
+]

@@ -1,0 +1,1162 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.18">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>8&nbsp; Environments – R's C API</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./symbols.html" rel="next">
+<link href="./attributes.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-9d48ed9de51e4db89a51ee292ab6623e.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./vectors.html">Part II — Objects</a></li><li class="breadcrumb-item"><a href="./environments.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Environments</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">R’s C API</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/hadley/r-internals" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introduction</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Part I — Foundations</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./calling-c.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Calling C from R</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sexps.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">SEXPs</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./protection.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Garbage collection and reference counting</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./memory.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Memory allocation</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Part II — Objects</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./vectors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Vectors</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./strings.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Strings</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./attributes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Attributes</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./environments.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Environments</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./symbols.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Symbols</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./pairlists.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Pairlists</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./external-pointers.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">External pointers</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./oo.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Object oriented programming</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">Part III — The engine</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./evaluation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Evaluation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./errors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Errors</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./printing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Printing and messaging</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./serialisation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Serialisation</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">Part IV — Utilities</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./rng.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Random number generation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./math.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Mathematical functions (Rmath)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./numerical.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Numerical methods</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./utilities.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Utilities</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./r-version.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">R version</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./compliance.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Migrating to API compliance</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./function-index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Function index</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#predefined-environments" id="toc-predefined-environments" class="nav-link active" data-scroll-target="#predefined-environments"><span class="header-section-number">8.1</span> Predefined environments</a>
+  <ul class="collapse">
+  <li><a href="#R_GlobalEnv" id="toc-R_GlobalEnv" class="nav-link" data-scroll-target="#R_GlobalEnv"><span class="header-section-number">8.1.1</span> <code>R_GlobalEnv()</code></a></li>
+  <li><a href="#R_EmptyEnv" id="toc-R_EmptyEnv" class="nav-link" data-scroll-target="#R_EmptyEnv"><span class="header-section-number">8.1.2</span> <code>R_EmptyEnv()</code></a></li>
+  <li><a href="#R_BaseEnv" id="toc-R_BaseEnv" class="nav-link" data-scroll-target="#R_BaseEnv"><span class="header-section-number">8.1.3</span> <code>R_BaseEnv()</code></a></li>
+  <li><a href="#R_BaseNamespace" id="toc-R_BaseNamespace" class="nav-link" data-scroll-target="#R_BaseNamespace"><span class="header-section-number">8.1.4</span> <code>R_BaseNamespace()</code></a></li>
+  <li><a href="#R_NamespaceRegistry" id="toc-R_NamespaceRegistry" class="nav-link" data-scroll-target="#R_NamespaceRegistry"><span class="header-section-number">8.1.5</span> <code>R_NamespaceRegistry()</code></a></li>
+  </ul></li>
+  <li><a href="#creation-r-4.1.0" id="toc-creation-r-4.1.0" class="nav-link" data-scroll-target="#creation-r-4.1.0"><span class="header-section-number">8.2</span> Creation (R &gt;= 4.1.0)</a>
+  <ul class="collapse">
+  <li><a href="#R_NewEnv" id="toc-R_NewEnv" class="nav-link" data-scroll-target="#R_NewEnv"><span class="header-section-number">8.2.1</span> <code>R_NewEnv()</code></a></li>
+  </ul></li>
+  <li><a href="#get-and-set-objects-in-environment" id="toc-get-and-set-objects-in-environment" class="nav-link" data-scroll-target="#get-and-set-objects-in-environment"><span class="header-section-number">8.3</span> Get and set objects in environment</a>
+  <ul class="collapse">
+  <li><a href="#get-values" id="toc-get-values" class="nav-link" data-scroll-target="#get-values"><span class="header-section-number">8.3.1</span> Get values</a></li>
+  <li><a href="#Rf_findVar" id="toc-Rf_findVar" class="nav-link" data-scroll-target="#Rf_findVar"><span class="header-section-number">8.3.2</span> <code>Rf_findVar()</code></a></li>
+  <li><a href="#Rf_findFun" id="toc-Rf_findFun" class="nav-link" data-scroll-target="#Rf_findFun"><span class="header-section-number">8.3.3</span> <code>Rf_findFun()</code></a></li>
+  <li><a href="#Rf_findVarInFrame3" id="toc-Rf_findVarInFrame3" class="nav-link" data-scroll-target="#Rf_findVarInFrame3"><span class="header-section-number">8.3.4</span> <code>Rf_findVarInFrame3()</code> (<code>Rf_findVarInFrame()</code>)</a></li>
+  <li><a href="#set-values" id="toc-set-values" class="nav-link" data-scroll-target="#set-values"><span class="header-section-number">8.3.5</span> Set values</a></li>
+  <li><a href="#Rf_defineVar" id="toc-Rf_defineVar" class="nav-link" data-scroll-target="#Rf_defineVar"><span class="header-section-number">8.3.6</span> <code>Rf_defineVar()</code></a></li>
+  <li><a href="#Rf_addMissingVarsToNewEnv" id="toc-Rf_addMissingVarsToNewEnv" class="nav-link" data-scroll-target="#Rf_addMissingVarsToNewEnv"><span class="header-section-number">8.3.7</span> <code>Rf_addMissingVarsToNewEnv()</code></a></li>
+  <li><a href="#check-for-presence" id="toc-check-for-presence" class="nav-link" data-scroll-target="#check-for-presence"><span class="header-section-number">8.3.8</span> Check for presence</a></li>
+  <li><a href="#R_lsInternal3" id="toc-R_lsInternal3" class="nav-link" data-scroll-target="#R_lsInternal3"><span class="header-section-number">8.3.9</span> <code>R_lsInternal3()</code> (<code>R_lsInternal()</code>)</a></li>
+  </ul></li>
+  <li><a href="#miscellaneous" id="toc-miscellaneous" class="nav-link" data-scroll-target="#miscellaneous"><span class="header-section-number">8.4</span> Miscellaneous</a>
+  <ul class="collapse">
+  <li><a href="#Rf_isEnvironment" id="toc-Rf_isEnvironment" class="nav-link" data-scroll-target="#Rf_isEnvironment"><span class="header-section-number">8.4.1</span> <code>Rf_isEnvironment()</code></a></li>
+  <li><a href="#R_GetCurrentEnv" id="toc-R_GetCurrentEnv" class="nav-link" data-scroll-target="#R_GetCurrentEnv"><span class="header-section-number">8.4.2</span> <code>R_GetCurrentEnv()</code></a></li>
+  <li><a href="#R_IsPackageEnv" id="toc-R_IsPackageEnv" class="nav-link" data-scroll-target="#R_IsPackageEnv"><span class="header-section-number">8.4.3</span> <code>R_IsPackageEnv()</code> (<code>R_PackageEnvName()</code>, <code>R_FindPackageEnv()</code>)</a></li>
+  <li><a href="#R_IsNamespaceEnv" id="toc-R_IsNamespaceEnv" class="nav-link" data-scroll-target="#R_IsNamespaceEnv"><span class="header-section-number">8.4.4</span> <code>R_IsNamespaceEnv()</code> (<code>R_NamespaceEnvSpec()</code>, <code>R_FindNamespace()</code>)</a></li>
+  <li><a href="#R_LockEnvironment" id="toc-R_LockEnvironment" class="nav-link" data-scroll-target="#R_LockEnvironment"><span class="header-section-number">8.4.5</span> <code>R_LockEnvironment()</code> (<code>R_EnvironmentIsLocked()</code>)</a></li>
+  <li><a href="#R_LockBinding" id="toc-R_LockBinding" class="nav-link" data-scroll-target="#R_LockBinding"><span class="header-section-number">8.4.6</span> <code>R_LockBinding()</code> (<code>R_unLockBinding()</code>)</a></li>
+  <li><a href="#R_MakeActiveBinding" id="toc-R_MakeActiveBinding" class="nav-link" data-scroll-target="#R_MakeActiveBinding"><span class="header-section-number">8.4.7</span> <code>R_MakeActiveBinding()</code></a></li>
+  <li><a href="#R_BindingIsLocked" id="toc-R_BindingIsLocked" class="nav-link" data-scroll-target="#R_BindingIsLocked"><span class="header-section-number">8.4.8</span> <code>R_BindingIsLocked()</code> (<code>R_BindingIsActive()</code>)</a></li>
+  <li><a href="#R_HasFancyBindings" id="toc-R_HasFancyBindings" class="nav-link" data-scroll-target="#R_HasFancyBindings"><span class="header-section-number">8.4.9</span> <code>R_HasFancyBindings()</code></a></li>
+  <li><a href="#R_envHasNoSpecialSymbols" id="toc-R_envHasNoSpecialSymbols" class="nav-link" data-scroll-target="#R_envHasNoSpecialSymbols"><span class="header-section-number">8.4.10</span> <code>R_envHasNoSpecialSymbols()</code></a></li>
+  </ul></li>
+  <li><a href="#internals" id="toc-internals" class="nav-link" data-scroll-target="#internals"><span class="header-section-number">8.5</span> Internals</a>
+  <ul class="collapse">
+  <li><a href="#FRAME" id="toc-FRAME" class="nav-link" data-scroll-target="#FRAME"><span class="header-section-number">8.5.1</span> <code>FRAME()</code> (<code>SET_FRAME()</code>)</a></li>
+  <li><a href="#ENCLOS" id="toc-ENCLOS" class="nav-link" data-scroll-target="#ENCLOS"><span class="header-section-number">8.5.2</span> <code>ENCLOS()</code> (<code>SET_ENCLOS()</code>)</a></li>
+  <li><a href="#ENVFLAGS" id="toc-ENVFLAGS" class="nav-link" data-scroll-target="#ENVFLAGS"><span class="header-section-number">8.5.3</span> <code>ENVFLAGS()</code> (<code>SET_ENVFLAGS()</code>)</a></li>
+  <li><a href="#truelength" id="toc-truelength" class="nav-link" data-scroll-target="#truelength"><span class="header-section-number">8.5.4</span> Truelength</a></li>
+  <li><a href="#TRUELENGTH" id="toc-TRUELENGTH" class="nav-link" data-scroll-target="#TRUELENGTH"><span class="header-section-number">8.5.5</span> <code>TRUELENGTH()</code> (<code>XTRUELENGTH()</code>, <code>SET_TRUELENGTH()</code>)</a></li>
+  <li><a href="#hash" id="toc-hash" class="nav-link" data-scroll-target="#hash"><span class="header-section-number">8.5.6</span> Hash</a></li>
+  <li><a href="#HASHTAB" id="toc-HASHTAB" class="nav-link" data-scroll-target="#HASHTAB"><span class="header-section-number">8.5.7</span> <code>HASHTAB()</code> (<code>SET_HASHTAB()</code>)</a></li>
+  <li><a href="#HASHASH" id="toc-HASHASH" class="nav-link" data-scroll-target="#HASHASH"><span class="header-section-number">8.5.8</span> <code>HASHASH()</code> (<code>SET_HASHASH()</code>)</a></li>
+  <li><a href="#HASHVALUE" id="toc-HASHVALUE" class="nav-link" data-scroll-target="#HASHVALUE"><span class="header-section-number">8.5.9</span> <code>HASHVALUE()</code> (<code>SET_HASHVALUE()</code>)</a></li>
+  </ul></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/hadley/r-internals/edit/main/environments.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/hadley/r-internals/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./vectors.html">Part II — Objects</a></li><li class="breadcrumb-item"><a href="./environments.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Environments</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Environments</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<ul>
+<li><code>R_GlobalEnv</code>: The “global” environment</li>
+<li><code>R_EmptyEnv</code>: An empty environment at the root of the environment tree</li>
+<li><code>R_BaseEnv</code>: The base environment; formerly R_NilValue</li>
+<li><code>R_BaseNamespace</code>: The (fake) namespace for base</li>
+<li><code>R_NamespaceRegistry</code>: Registry for registered namespaces</li>
+<li><code>R_GetCurrentEnv</code>: Retrieve the current environment <code>R (&gt;= 3.6.0)</code></li>
+<li><code>R_NewEnv</code>: Create a new environment <code>R (&gt;= 4.1.0)</code></li>
+</ul>
+<p>Environments are commonly called <code>rho</code> in the sources.</p>
+<section id="predefined-environments" class="level2" data-number="8.1">
+<h2 data-number="8.1" class="anchored" data-anchor-id="predefined-environments"><span class="header-section-number">8.1</span> Predefined environments</h2>
+<section id="R_GlobalEnv" class="level3" data-number="8.1.1">
+<h3 data-number="8.1.1" class="anchored" data-anchor-id="R_GlobalEnv"><span class="header-section-number">8.1.1</span> <code>R_GlobalEnv()</code></h3>
+<p>Access the global environment.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>SEXP R_GlobalEnv<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<p>The “global” environment.</p>
+</section>
+<section id="R_EmptyEnv" class="level3" data-number="8.1.2">
+<h3 data-number="8.1.2" class="anchored" data-anchor-id="R_EmptyEnv"><span class="header-section-number">8.1.2</span> <code>R_EmptyEnv()</code></h3>
+<p>Access the empty environment.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>SEXP R_EmptyEnv<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<p>An empty environment at the root of the environment tree.</p>
+</section>
+<section id="R_BaseEnv" class="level3" data-number="8.1.3">
+<h3 data-number="8.1.3" class="anchored" data-anchor-id="R_BaseEnv"><span class="header-section-number">8.1.3</span> <code>R_BaseEnv()</code></h3>
+<p>Access the base environment.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>SEXP R_BaseEnv<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<p>The base environment; formerly <code>R_NilValue</code>.</p>
+</section>
+<section id="R_BaseNamespace" class="level3" data-number="8.1.4">
+<h3 data-number="8.1.4" class="anchored" data-anchor-id="R_BaseNamespace"><span class="header-section-number">8.1.4</span> <code>R_BaseNamespace()</code></h3>
+<p>Access the base namespace.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>SEXP R_BaseNamespace<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<p>The (fake) namespace for base.</p>
+</section>
+<section id="R_NamespaceRegistry" class="level3" data-number="8.1.5">
+<h3 data-number="8.1.5" class="anchored" data-anchor-id="R_NamespaceRegistry"><span class="header-section-number">8.1.5</span> <code>R_NamespaceRegistry()</code></h3>
+<p>Access the registry of registered namespaces.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>SEXP R_NamespaceRegistry<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Status:</strong> non-API (use <a href="#R_getRegisteredNamespace"><code>R_getRegisteredNamespace()</code></a>) · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<p>Registry for registered namespaces. This variable is not part of the API; use <code>R_getRegisteredNamespace()</code> to find a registered namespace.</p>
+</section>
+</section>
+<section id="creation-r-4.1.0" class="level2" data-number="8.2">
+<h2 data-number="8.2" class="anchored" data-anchor-id="creation-r-4.1.0"><span class="header-section-number">8.2</span> Creation (R &gt;= 4.1.0)</h2>
+<section id="R_NewEnv" class="level3" data-number="8.2.1">
+<h3 data-number="8.2.1" class="anchored" data-anchor-id="R_NewEnv"><span class="header-section-number">8.2.1</span> <code>R_NewEnv()</code></h3>
+<p>Create a new environment.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>SEXP R_NewEnv<span class="op">(</span>SEXP enclos<span class="op">,</span> <span class="dt">int</span> hash<span class="op">,</span> <span class="dt">int</span> size<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> result · <strong>Errors:</strong> can throw · <strong>Since:</strong> R 4.1.0 · <strong>R equivalent:</strong> —</p>
+</section>
+</section>
+<section id="get-and-set-objects-in-environment" class="level2" data-number="8.3">
+<h2 data-number="8.3" class="anchored" data-anchor-id="get-and-set-objects-in-environment"><span class="header-section-number">8.3</span> Get and set objects in environment</h2>
+<p><code>symbol</code> should be a <code>SYMSXP</code>; <code>environment</code> should be an <code>ENVSXP</code>.</p>
+<section id="get-values" class="level3" data-number="8.3.1">
+<h3 data-number="8.3.1" class="anchored" data-anchor-id="get-values"><span class="header-section-number">8.3.1</span> Get values</h3>
+<p>Note that retrieving an variable from an environment may cause an allocation because it might be an active binding.</p>
+</section>
+<section id="Rf_findVar" class="level3" data-number="8.3.2">
+<h3 data-number="8.3.2" class="anchored" data-anchor-id="Rf_findVar"><span class="header-section-number">8.3.2</span> <code>Rf_findVar()</code></h3>
+<p>Find the value bound to a symbol in an environment and its enclosing environments.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>SEXP Rf_findVar<span class="op">(</span>SEXP symbol<span class="op">,</span> SEXP environment<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Status:</strong> non-API (use <a href="#R_getVar"><code>R_getVar()</code></a>) · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> result · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<p>Looks up <code>symbol</code> in <code>environment</code>, following up enclosing environments. Retrieving a variable from an environment may cause an allocation because it might be an active binding. Too low level to be part of the API; prefer <code>R_getVar()</code> or <code>R_getVarEx()</code> (added in R 4.5.0) in new code.</p>
+<p><strong>See also:</strong> <a href="#Rf_findFun"><code>Rf_findFun()</code></a>, <a href="#Rf_findVarInFrame3"><code>Rf_findVarInFrame3()</code></a></p>
+</section>
+<section id="Rf_findFun" class="level3" data-number="8.3.3">
+<h3 data-number="8.3.3" class="anchored" data-anchor-id="Rf_findFun"><span class="header-section-number">8.3.3</span> <code>Rf_findFun()</code></h3>
+<p>Find the function bound to a symbol in an environment and its enclosing environments.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>SEXP Rf_findFun<span class="op">(</span>SEXP symbol<span class="op">,</span> SEXP environment<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> result · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<p>Like <code>Rf_findVar()</code>, but ignores non-functions.</p>
+<p><strong>See also:</strong> <a href="#Rf_findVar"><code>Rf_findVar()</code></a></p>
+</section>
+<section id="Rf_findVarInFrame3" class="level3" data-number="8.3.4">
+<h3 data-number="8.3.4" class="anchored" data-anchor-id="Rf_findVarInFrame3"><span class="header-section-number">8.3.4</span> <code>Rf_findVarInFrame3()</code> (<code>Rf_findVarInFrame()</code>)</h3>
+<p>Find a symbol in a single environment, without searching enclosing environments.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>SEXP Rf_findVarInFrame3<span class="op">(</span>SEXP env<span class="op">,</span> SEXP symbol<span class="op">,</span> Rboolean doGet<span class="op">);</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>SEXP Rf_findVarInFrame<span class="op">(</span>SEXP env<span class="op">,</span> SEXP symbol<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Status:</strong> non-API (use <a href="#R_getVar"><code>R_getVar()</code></a>) · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> result · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<ul>
+<li><code>doGet</code>: if <code>TRUE</code>, returns the value; if <code>FALSE</code>, just checks for presence.</li>
+</ul>
+<p>Looks in a single environment. Returns <code>R_UnboundValue</code> if not found. <code>Rf_findVarInFrame()</code> is a shortcut for <code>Rf_findVarInFrame3(rho, symbol, TRUE)</code>. Too low level to be part of the API; the <code>R_getVar()</code> family added in R 4.5.0 is the recommended interface: use <code>R_getVar()</code> or <code>R_getVarEx()</code> to retrieve a value and <code>R_existsVarInFrame()</code> to test for existence.</p>
+<p><strong>See also:</strong> <a href="#Rf_findVar"><code>Rf_findVar()</code></a></p>
+</section>
+<section id="set-values" class="level3" data-number="8.3.5">
+<h3 data-number="8.3.5" class="anchored" data-anchor-id="set-values"><span class="header-section-number">8.3.5</span> Set values</h3>
+</section>
+<section id="Rf_defineVar" class="level3" data-number="8.3.6">
+<h3 data-number="8.3.6" class="anchored" data-anchor-id="Rf_defineVar"><span class="header-section-number">8.3.6</span> <code>Rf_defineVar()</code></h3>
+<p>Bind a symbol to a value in an environment.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> Rf_defineVar<span class="op">(</span>SEXP symbol<span class="op">,</span> SEXP value<span class="op">,</span> SEXP env<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<p>To remove a binding, set its value to <code>R_UnboundSymbol</code>.</p>
+</section>
+<section id="Rf_addMissingVarsToNewEnv" class="level3" data-number="8.3.7">
+<h3 data-number="8.3.7" class="anchored" data-anchor-id="Rf_addMissingVarsToNewEnv"><span class="header-section-number">8.3.7</span> <code>Rf_addMissingVarsToNewEnv()</code></h3>
+<p>Copy variables into a new environment unless already present.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> Rf_addMissingVarsToNewEnv<span class="op">(</span>SEXP to<span class="op">,</span> SEXP from<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Status:</strong> non-API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<p>Copies variables from <code>from</code> (a <code>VECSXP</code>) unless already present in <code>to</code>.</p>
+<p>To remove a binding, set its value to <code>R_UnboundSymbol</code>.</p>
+</section>
+<section id="check-for-presence" class="level3" data-number="8.3.8">
+<h3 data-number="8.3.8" class="anchored" data-anchor-id="check-for-presence"><span class="header-section-number">8.3.8</span> Check for presence</h3>
+</section>
+<section id="R_lsInternal3" class="level3" data-number="8.3.9">
+<h3 data-number="8.3.9" class="anchored" data-anchor-id="R_lsInternal3"><span class="header-section-number">8.3.9</span> <code>R_lsInternal3()</code> (<code>R_lsInternal()</code>)</h3>
+<p>List the names bound in an environment.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>SEXP R_lsInternal3<span class="op">(</span>SEXP env<span class="op">,</span> Rboolean all_names<span class="op">,</span> Rboolean sorted<span class="op">);</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>SEXP R_lsInternal<span class="op">(</span>SEXP<span class="op">,</span> Rboolean<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> result · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<p>Returns a character vector. <code>R_lsInternal(env, all)</code> is shorthand for <code>R_lsInternal3(env, all, TRUE)</code>. <code>R_lsInternal()</code> is not part of the API; prefer <code>R_lsInternal3()</code> in new code.</p>
+</section>
+</section>
+<section id="miscellaneous" class="level2" data-number="8.4">
+<h2 data-number="8.4" class="anchored" data-anchor-id="miscellaneous"><span class="header-section-number">8.4</span> Miscellaneous</h2>
+<section id="Rf_isEnvironment" class="level3" data-number="8.4.1">
+<h3 data-number="8.4.1" class="anchored" data-anchor-id="Rf_isEnvironment"><span class="header-section-number">8.4.1</span> <code>Rf_isEnvironment()</code></h3>
+<p>Test whether an object is an environment.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>Rboolean Rf_isEnvironment<span class="op">(</span>SEXP x<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<p>Equivalent to <code>TYPEOF(x) == ENVSXP</code>.</p>
+</section>
+<section id="R_GetCurrentEnv" class="level3" data-number="8.4.2">
+<h3 data-number="8.4.2" class="anchored" data-anchor-id="R_GetCurrentEnv"><span class="header-section-number">8.4.2</span> <code>R_GetCurrentEnv()</code></h3>
+<p>Retrieve the current environment.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>SEXP R_GetCurrentEnv<span class="op">(</span><span class="dt">void</span><span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Status:</strong> non-API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> never · <strong>Since:</strong> R 3.6.0 · <strong>R equivalent:</strong> <code>environment()</code></p>
+<p>Not part of the API; call <code>environment()</code> at the R level and pass the result as an argument to your C function.</p>
+</section>
+<section id="R_IsPackageEnv" class="level3" data-number="8.4.3">
+<h3 data-number="8.4.3" class="anchored" data-anchor-id="R_IsPackageEnv"><span class="header-section-number">8.4.3</span> <code>R_IsPackageEnv()</code> (<code>R_PackageEnvName()</code>, <code>R_FindPackageEnv()</code>)</h3>
+<p>Test whether an environment is a package environment, get its name, or find a package’s environment.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>Rboolean R_IsPackageEnv<span class="op">(</span>SEXP rho<span class="op">);</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>SEXP R_PackageEnvName<span class="op">(</span>SEXP rho<span class="op">);</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>SEXP R_FindPackageEnv<span class="op">(</span>SEXP info<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> result · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<p><strong>See also:</strong> <a href="#R_IsNamespaceEnv"><code>R_IsNamespaceEnv()</code></a></p>
+</section>
+<section id="R_IsNamespaceEnv" class="level3" data-number="8.4.4">
+<h3 data-number="8.4.4" class="anchored" data-anchor-id="R_IsNamespaceEnv"><span class="header-section-number">8.4.4</span> <code>R_IsNamespaceEnv()</code> (<code>R_NamespaceEnvSpec()</code>, <code>R_FindNamespace()</code>)</h3>
+<p>Test whether an environment is a namespace environment, get its spec, or find a namespace.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>Rboolean R_IsNamespaceEnv<span class="op">(</span>SEXP rho<span class="op">);</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>SEXP R_NamespaceEnvSpec<span class="op">(</span>SEXP rho<span class="op">);</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>SEXP R_FindNamespace<span class="op">(</span>SEXP info<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> result · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<p><strong>See also:</strong> <a href="#R_IsPackageEnv"><code>R_IsPackageEnv()</code></a></p>
+</section>
+<section id="R_LockEnvironment" class="level3" data-number="8.4.5">
+<h3 data-number="8.4.5" class="anchored" data-anchor-id="R_LockEnvironment"><span class="header-section-number">8.4.5</span> <code>R_LockEnvironment()</code> (<code>R_EnvironmentIsLocked()</code>)</h3>
+<p>Lock an environment, or test whether it is locked.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> R_LockEnvironment<span class="op">(</span>SEXP env<span class="op">,</span> Rboolean bindings<span class="op">);</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>Rboolean R_EnvironmentIsLocked<span class="op">(</span>SEXP env<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<p><strong>See also:</strong> <a href="#R_LockBinding"><code>R_LockBinding()</code></a></p>
+</section>
+<section id="R_LockBinding" class="level3" data-number="8.4.6">
+<h3 data-number="8.4.6" class="anchored" data-anchor-id="R_LockBinding"><span class="header-section-number">8.4.6</span> <code>R_LockBinding()</code> (<code>R_unLockBinding()</code>)</h3>
+<p>Lock or unlock a binding in an environment.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> R_LockBinding<span class="op">(</span>SEXP sym<span class="op">,</span> SEXP env<span class="op">);</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> R_unLockBinding<span class="op">(</span>SEXP sym<span class="op">,</span> SEXP env<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<p><strong>See also:</strong> <a href="#R_LockEnvironment"><code>R_LockEnvironment()</code></a></p>
+</section>
+<section id="R_MakeActiveBinding" class="level3" data-number="8.4.7">
+<h3 data-number="8.4.7" class="anchored" data-anchor-id="R_MakeActiveBinding"><span class="header-section-number">8.4.7</span> <code>R_MakeActiveBinding()</code></h3>
+<p>Make an active binding for a symbol in an environment.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> R_MakeActiveBinding<span class="op">(</span>SEXP sym<span class="op">,</span> SEXP fun<span class="op">,</span> SEXP env<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<p><strong>See also:</strong> <a href="#R_BindingIsLocked"><code>R_BindingIsLocked()</code></a></p>
+</section>
+<section id="R_BindingIsLocked" class="level3" data-number="8.4.8">
+<h3 data-number="8.4.8" class="anchored" data-anchor-id="R_BindingIsLocked"><span class="header-section-number">8.4.8</span> <code>R_BindingIsLocked()</code> (<code>R_BindingIsActive()</code>)</h3>
+<p>Test whether a binding is locked or active.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>Rboolean R_BindingIsLocked<span class="op">(</span>SEXP sym<span class="op">,</span> SEXP env<span class="op">);</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>Rboolean R_BindingIsActive<span class="op">(</span>SEXP sym<span class="op">,</span> SEXP env<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<p><strong>See also:</strong> <a href="#R_MakeActiveBinding"><code>R_MakeActiveBinding()</code></a></p>
+</section>
+<section id="R_HasFancyBindings" class="level3" data-number="8.4.9">
+<h3 data-number="8.4.9" class="anchored" data-anchor-id="R_HasFancyBindings"><span class="header-section-number">8.4.9</span> <code>R_HasFancyBindings()</code></h3>
+<p>Test whether an environment has fancy bindings.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>Rboolean R_HasFancyBindings<span class="op">(</span>SEXP rho<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+</section>
+<section id="R_envHasNoSpecialSymbols" class="level3" data-number="8.4.10">
+<h3 data-number="8.4.10" class="anchored" data-anchor-id="R_envHasNoSpecialSymbols"><span class="header-section-number">8.4.10</span> <code>R_envHasNoSpecialSymbols()</code></h3>
+<p>Test whether an environment has no special symbols.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>Rboolean R_envHasNoSpecialSymbols<span class="op">(</span>SEXP<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Status:</strong> non-API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+</section>
+</section>
+<section id="internals" class="level2" data-number="8.5">
+<h2 data-number="8.5" class="anchored" data-anchor-id="internals"><span class="header-section-number">8.5</span> Internals</h2>
+<section id="FRAME" class="level3" data-number="8.5.1">
+<h3 data-number="8.5.1" class="anchored" data-anchor-id="FRAME"><span class="header-section-number">8.5.1</span> <code>FRAME()</code> (<code>SET_FRAME()</code>)</h3>
+<p>Get or set the frame of an environment.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>SEXP FRAME<span class="op">(</span>SEXP x<span class="op">);</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> SET_FRAME<span class="op">(</span>SEXP x<span class="op">,</span> SEXP v<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Status:</strong> non-API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<p><code>SET_FRAME()</code> is not part of the API; create environments with the constructor <code>R_NewEnv()</code> instead of mutating an environment’s frame.</p>
+<p><strong>See also:</strong> <a href="#ENCLOS"><code>ENCLOS()</code></a>, <a href="#HASHTAB"><code>HASHTAB()</code></a>, <a href="#R_NewEnv"><code>R_NewEnv()</code></a></p>
+</section>
+<section id="ENCLOS" class="level3" data-number="8.5.2">
+<h3 data-number="8.5.2" class="anchored" data-anchor-id="ENCLOS"><span class="header-section-number">8.5.2</span> <code>ENCLOS()</code> (<code>SET_ENCLOS()</code>)</h3>
+<p>Get or set an environment’s enclosing environment.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb24"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>SEXP ENCLOS<span class="op">(</span>SEXP x<span class="op">);</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> SET_ENCLOS<span class="op">(</span>SEXP x<span class="op">,</span> SEXP v<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Status:</strong> non-API (use <a href="#R_ParentEnv"><code>R_ParentEnv()</code></a>) · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<p>Use <code>R_ParentEnv()</code> (added in R 4.5.0) instead of <code>ENCLOS()</code>. To choose the enclosing environment of a new environment, use the constructor <code>R_NewEnv()</code> rather than <code>SET_ENCLOS()</code>.</p>
+<p><strong>See also:</strong> <a href="#FRAME"><code>FRAME()</code></a>, <a href="#R_NewEnv"><code>R_NewEnv()</code></a></p>
+</section>
+<section id="ENVFLAGS" class="level3" data-number="8.5.3">
+<h3 data-number="8.5.3" class="anchored" data-anchor-id="ENVFLAGS"><span class="header-section-number">8.5.3</span> <code>ENVFLAGS()</code> (<code>SET_ENVFLAGS()</code>)</h3>
+<p>Get or set the flags of an environment.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb25"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> ENVFLAGS<span class="op">(</span>SEXP x<span class="op">);</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> SET_ENVFLAGS<span class="op">(</span>SEXP x<span class="op">,</span> <span class="dt">int</span> v<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Status:</strong> non-API (use <a href="#R_EnvironmentIsLocked"><code>R_EnvironmentIsLocked()</code></a>) · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<p>Use <code>R_EnvironmentIsLocked()</code> and <code>R_LockEnvironment()</code> instead.</p>
+<p><strong>See also:</strong> <a href="#R_LockEnvironment"><code>R_LockEnvironment()</code></a></p>
+</section>
+<section id="truelength" class="level3" data-number="8.5.4">
+<h3 data-number="8.5.4" class="anchored" data-anchor-id="truelength"><span class="header-section-number">8.5.4</span> Truelength</h3>
+<blockquote class="blockquote">
+<p>This is almost unused. The only current use is for hash tables of environments (VECSXPs), where length is the size of the table and truelength is the number of primary slots in use, and for the reference hash tables in serialization (VECSXPs), where truelength is the number of slots in use. — R-internals</p>
+</blockquote>
+</section>
+<section id="TRUELENGTH" class="level3" data-number="8.5.5">
+<h3 data-number="8.5.5" class="anchored" data-anchor-id="TRUELENGTH"><span class="header-section-number">8.5.5</span> <code>TRUELENGTH()</code> (<code>XTRUELENGTH()</code>, <code>SET_TRUELENGTH()</code>)</h3>
+<p>Get or set the truelength of an object.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> <span class="op">(</span>TRUELENGTH<span class="op">)(</span>SEXP x<span class="op">);</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>R_xlen_t <span class="op">(</span>XTRUELENGTH<span class="op">)(</span>SEXP x<span class="op">);</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> <span class="op">(</span>SET_TRUELENGTH<span class="op">)(</span>SEXP x<span class="op">,</span> <span class="dt">int</span> v<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Status:</strong> non-API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<p>Almost unused. The only current use is for hash tables of environments (<code>VECSXP</code>s), where length is the size of the table and truelength is the number of primary slots in use, and for the reference hash tables in serialization (<code>VECSXP</code>s), where truelength is the number of slots in use. — R-internals</p>
+</section>
+<section id="hash" class="level3" data-number="8.5.6">
+<h3 data-number="8.5.6" class="anchored" data-anchor-id="hash"><span class="header-section-number">8.5.6</span> Hash</h3>
+</section>
+<section id="HASHTAB" class="level3" data-number="8.5.7">
+<h3 data-number="8.5.7" class="anchored" data-anchor-id="HASHTAB"><span class="header-section-number">8.5.7</span> <code>HASHTAB()</code> (<code>SET_HASHTAB()</code>)</h3>
+<p>Get or set the hash table of an environment.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb27"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>SEXP HASHTAB<span class="op">(</span>SEXP x<span class="op">);</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> SET_HASHTAB<span class="op">(</span>SEXP x<span class="op">,</span> SEXP v<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Status:</strong> non-API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<p>Hashing is principally designed for fast searching of environments, which are from time to time added to but rarely deleted from, so items are not actually deleted but have their value set to <code>R_UnboundValue</code>. — R-Internals <code>SET_HASHTAB()</code> is not part of the API; create hash-based environments with the constructor <code>R_NewEnv()</code> instead.</p>
+<p><strong>See also:</strong> <a href="#HASHASH"><code>HASHASH()</code></a>, <a href="#HASHVALUE"><code>HASHVALUE()</code></a></p>
+</section>
+<section id="HASHASH" class="level3" data-number="8.5.8">
+<h3 data-number="8.5.8" class="anchored" data-anchor-id="HASHASH"><span class="header-section-number">8.5.8</span> <code>HASHASH()</code> (<code>SET_HASHASH()</code>)</h3>
+<p>Get or set the hash flag of an environment.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb28"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> HASHASH<span class="op">(</span>SEXP x<span class="op">);</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> SET_HASHASH<span class="op">(</span>SEXP x<span class="op">,</span> <span class="dt">int</span> v<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Status:</strong> non-API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<p><strong>See also:</strong> <a href="#HASHTAB"><code>HASHTAB()</code></a></p>
+</section>
+<section id="HASHVALUE" class="level3" data-number="8.5.9">
+<h3 data-number="8.5.9" class="anchored" data-anchor-id="HASHVALUE"><span class="header-section-number">8.5.9</span> <code>HASHVALUE()</code> (<code>SET_HASHVALUE()</code>)</h3>
+<p>Get or set the hash value of an environment.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb29"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> HASHVALUE<span class="op">(</span>SEXP x<span class="op">);</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> SET_HASHVALUE<span class="op">(</span>SEXP x<span class="op">,</span> <span class="dt">int</span> v<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Status:</strong> non-API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<p><strong>See also:</strong> <a href="#HASHTAB"><code>HASHTAB()</code></a></p>
+<p>// [R-Internals]: Hashing is principally designed for fast searching of // environments, which are from time to time added to but rarely deleted from, // so items are not actually deleted but have their value set to R_UnboundValue.</p>
+<p>Code from lobstr should help me understand how they work:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb30"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> FrameSize<span class="op">(</span>SEXP frame<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span> count <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span><span class="op">(</span>SEXP cur <span class="op">=</span> frame<span class="op">;</span> cur <span class="op">!=</span> R_NilValue<span class="op">;</span> cur <span class="op">=</span> CDR<span class="op">(</span>cur<span class="op">))</span> <span class="op">{</span></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>    SEXP obj <span class="op">=</span> CAR<span class="op">(</span>cur<span class="op">)</span></span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>obj <span class="op">!=</span> R_UnboundValue<span class="op">)</span></span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>      count<span class="op">++;</span></span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> count<span class="op">;</span></span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> HashTableSize<span class="op">(</span>SEXP table<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span> count <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span> n <span class="op">=</span> Rf_length<span class="op">(</span>table<span class="op">);</span></span>
+<span id="cb30-15"><a href="#cb30-15" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> n<span class="op">;</span> <span class="op">++</span>i<span class="op">)</span></span>
+<span id="cb30-16"><a href="#cb30-16" aria-hidden="true" tabindex="-1"></a>    count <span class="op">+=</span> FrameSize<span class="op">(</span>VECTOR_ELT<span class="op">(</span>table<span class="op">,</span> i<span class="op">));</span></span>
+<span id="cb30-17"><a href="#cb30-17" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> count<span class="op">;</span></span>
+<span id="cb30-18"><a href="#cb30-18" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb30-19"><a href="#cb30-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-20"><a href="#cb30-20" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> envlength<span class="op">(</span>SEXP x<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb30-21"><a href="#cb30-21" aria-hidden="true" tabindex="-1"></a>  <span class="dt">bool</span> isHashed <span class="op">=</span> HASHTAB<span class="op">(</span>x<span class="op">)</span> <span class="op">!=</span> R_NilValue<span class="op">;</span></span>
+<span id="cb30-22"><a href="#cb30-22" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> isHashed <span class="op">?</span> HashTableSize<span class="op">(</span>HASHTAB<span class="op">(</span>x<span class="op">))</span> <span class="op">:</span> FrameSize<span class="op">(</span>FRAME<span class="op">(</span>x<span class="op">));</span></span>
+<span id="cb30-23"><a href="#cb30-23" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./attributes.html" class="pagination-link" aria-label="Attributes">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Attributes</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./symbols.html" class="pagination-link" aria-label="Symbols">
+        <span class="nav-page-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Symbols</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/hadley/r-internals/edit/main/environments.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/hadley/r-internals/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>
