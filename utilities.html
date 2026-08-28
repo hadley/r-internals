@@ -181,7 +181,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./protection.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Garbage collection and reference counting</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Protection and the garbage collector</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -464,7 +464,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 data-number="21.1.3" class="anchored" data-anchor-id="R_initialize_bcode"><span class="header-section-number">21.1.3</span> <code>R_initialize_bcode()</code></h3>
 <p>Initialize the byte-code engine.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> R_initialize_bcode<span class="op">(</span><span class="dt">void</span><span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> non-API · <strong>Header:</strong> <code>none (internal)</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<p><strong>Status:</strong> non-API · <strong>Header:</strong> <code>none (internal)</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 </section>
 <section id="R_bcEncode" class="level3" data-number="21.1.4">
 <h3 data-number="21.1.4" class="anchored" data-anchor-id="R_bcEncode"><span class="header-section-number">21.1.4</span> <code>R_bcEncode()</code> (<code>R_bcDecode()</code>)</h3>
@@ -518,7 +518,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Sort a double array in reverse order, reordering an index array alongside.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> revsort<span class="op">(</span><span class="dt">double</span><span class="op">*,</span> <span class="dt">int</span><span class="op">*,</span> <span class="dt">int</span><span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>R_ext/Utils.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
-<p>Reverse; sort <code>i[]</code> alongside.</p>
 <p><strong>See also:</strong> <a href="#rsort_with_index"><code>rsort_with_index()</code></a></p>
 </section>
 <section id="iPsort" class="level3" data-number="21.2.5">
@@ -535,8 +534,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Compute an ordering permutation into an index array.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> R_orderVector <span class="op">(</span><span class="dt">int</span> <span class="op">*</span>indx<span class="op">,</span> <span class="dt">int</span> n<span class="op">,</span> SEXP arglist<span class="op">,</span> Rboolean nalast<span class="op">,</span> Rboolean decreasing<span class="op">);</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> R_orderVector1<span class="op">(</span><span class="dt">int</span> <span class="op">*</span>indx<span class="op">,</span> <span class="dt">int</span> n<span class="op">,</span> SEXP x<span class="op">,</span>       Rboolean nalast<span class="op">,</span> Rboolean decreasing<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>order()</code></p>
-<p>C version of R’s <code>indx &lt;- order(..., na.last, decreasing)</code>; <code>arglist</code> can be built with e.g.&nbsp;<code>Rf_lang2(x, y)</code> or <code>Rf_lang3(x, y, z)</code>. <code>R_orderVector1()</code> is the single-vector version, <code>indx &lt;- order(x, na.last, decreasing)</code>.</p>
+<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>order()</code></p>
+<p>C equivalent of <code>order(..., na.last, decreasing)</code>; build <code>arglist</code> with <code>Rf_lang2()</code> or <code>Rf_lang3()</code>. <code>R_orderVector1()</code> is the single-vector version, equivalent to <code>order(x, na.last, decreasing)</code>.</p>
 <p><strong>See also:</strong> <a href="#R_qsort"><code>R_qsort()</code></a></p>
 </section>
 </section>
@@ -555,7 +554,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Find the position of the first duplicated element of a vector.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>R_xlen_t Rf_any_duplicated<span class="op">(</span>SEXP x<span class="op">,</span> Rboolean from_last<span class="op">);</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>R_xlen_t Rf_any_duplicated3<span class="op">(</span>SEXP x<span class="op">,</span> SEXP incomp<span class="op">,</span> Rboolean from_last<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>anyDuplicated()</code></p>
+<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>anyDuplicated()</code></p>
 </section>
 <section id="Rf_applyClosure" class="level3" data-number="21.3.3">
 <h3 data-number="21.3.3" class="anchored" data-anchor-id="Rf_applyClosure"><span class="header-section-number">21.3.3</span> <code>Rf_applyClosure()</code></h3>
@@ -573,15 +572,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 data-number="21.3.5" class="anchored" data-anchor-id="Rf_CreateTag"><span class="header-section-number">21.3.5</span> <code>Rf_CreateTag()</code></h3>
 <p>Create the tag for a pairlist element.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>SEXP Rf_CreateTag<span class="op">(</span>SEXP<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> non-API · <strong>Header:</strong> <code>none (internal)</code> · <strong>Protect:</strong> result · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<p><strong>Status:</strong> non-API · <strong>Header:</strong> <code>none (internal)</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 </section>
 <section id="Rf_GetOption" class="level3" data-number="21.3.6">
 <h3 data-number="21.3.6" class="anchored" data-anchor-id="Rf_GetOption"><span class="header-section-number">21.3.6</span> <code>Rf_GetOption()</code> (<code>Rf_GetOption1()</code>)</h3>
 <p>Retrieve the value of an R option.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>SEXP Rf_GetOption<span class="op">(</span>SEXP<span class="op">,</span> SEXP<span class="op">);</span> <span class="co">/* pre-2.13.0 compatibility */</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>SEXP Rf_GetOption<span class="op">(</span>SEXP<span class="op">,</span> SEXP<span class="op">);</span></span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>SEXP Rf_GetOption1<span class="op">(</span>SEXP<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>getOption()</code></p>
-<p><code>Rf_GetOption()</code> is kept for pre-2.13.0 compatibility; use <code>Rf_GetOption1()</code>.</p>
+<p>Use <code>Rf_GetOption1()</code>; <code>Rf_GetOption()</code> is kept for compatibility.</p>
 <p><strong>See also:</strong> <a href="#Rf_GetOptionDigits"><code>Rf_GetOptionDigits()</code></a></p>
 </section>
 <section id="Rf_GetOptionDigits" class="level3" data-number="21.3.7">
@@ -603,7 +602,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 data-number="21.3.9" class="anchored" data-anchor-id="Rf_installS3Signature"><span class="header-section-number">21.3.9</span> <code>Rf_installS3Signature()</code></h3>
 <p>Install the signature string for an S3 method.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>SEXP Rf_installS3Signature<span class="op">(</span><span class="dt">const</span> <span class="dt">char</span> <span class="op">*,</span> <span class="dt">const</span> <span class="dt">char</span> <span class="op">*);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> non-API · <strong>Header:</strong> <code>none (internal)</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<p><strong>Status:</strong> non-API · <strong>Header:</strong> <code>none (internal)</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 </section>
 <section id="Rf_isFree" class="level3" data-number="21.3.10">
 <h3 data-number="21.3.10" class="anchored" data-anchor-id="Rf_isFree"><span class="header-section-number">21.3.10</span> <code>Rf_isFree()</code></h3>
@@ -615,20 +614,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 data-number="21.3.11" class="anchored" data-anchor-id="Rf_isUnsorted"><span class="header-section-number">21.3.11</span> <code>Rf_isUnsorted()</code></h3>
 <p>Test whether a vector may be unsorted.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>Rboolean Rf_isUnsorted<span class="op">(</span>SEXP<span class="op">,</span> Rboolean<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>is.unsorted()</code></p>
+<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>is.unsorted()</code></p>
 </section>
 <section id="Rf_namesgets" class="level3" data-number="21.3.12">
 <h3 data-number="21.3.12" class="anchored" data-anchor-id="Rf_namesgets"><span class="header-section-number">21.3.12</span> <code>Rf_namesgets()</code></h3>
 <p>Set the names of a vector.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>SEXP Rf_namesgets<span class="op">(</span>SEXP<span class="op">,</span> SEXP<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> result · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>names&lt;-()</code></p>
+<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>names&lt;-()</code></p>
 </section>
 <section id="Rf_pmatch" class="level3" data-number="21.3.13">
 <h3 data-number="21.3.13" class="anchored" data-anchor-id="Rf_pmatch"><span class="header-section-number">21.3.13</span> <code>Rf_pmatch()</code> (<code>Rf_psmatch()</code>)</h3>
 <p>Perform partial matching of strings.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>Rboolean Rf_pmatch<span class="op">(</span>SEXP<span class="op">,</span> SEXP<span class="op">,</span> Rboolean<span class="op">);</span></span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>Rboolean Rf_psmatch<span class="op">(</span><span class="dt">const</span> <span class="dt">char</span> <span class="op">*,</span> <span class="dt">const</span> <span class="dt">char</span> <span class="op">*,</span> Rboolean<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>pmatch()</code></p>
+<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>pmatch()</code></p>
 <p><code>Rf_psmatch()</code> is the variant for C strings.</p>
 <p><strong>See also:</strong> <a href="#Rf_match"><code>Rf_match()</code></a></p>
 </section>
@@ -636,7 +635,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 data-number="21.3.14" class="anchored" data-anchor-id="Rf_readS3VarsFromFrame"><span class="header-section-number">21.3.14</span> <code>Rf_readS3VarsFromFrame()</code></h3>
 <p>Read the S3 dispatch variables from a method’s evaluation frame.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb24"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> Rf_readS3VarsFromFrame<span class="op">(</span>SEXP<span class="op">,</span> SEXP<span class="op">*,</span> SEXP<span class="op">*,</span> SEXP<span class="op">*,</span> SEXP<span class="op">*,</span> SEXP<span class="op">*,</span> SEXP<span class="op">*);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> non-API · <strong>Header:</strong> <code>none (internal)</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<p><strong>Status:</strong> non-API · <strong>Header:</strong> <code>none (internal)</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 </section>
 <section id="Rf_setSVector" class="level3" data-number="21.3.15">
 <h3 data-number="21.3.15" class="anchored" data-anchor-id="Rf_setSVector"><span class="header-section-number">21.3.15</span> <code>Rf_setSVector()</code></h3>
@@ -656,7 +655,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb27"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>SEXP Rf_match<span class="op">(</span>SEXP itable<span class="op">,</span> SEXP ix<span class="op">,</span> <span class="dt">int</span> no_match<span class="op">);</span></span>
 <span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>SEXP Rf_matchE<span class="op">(</span>SEXP itable<span class="op">,</span> SEXP ix<span class="op">,</span> <span class="dt">int</span> no_match<span class="op">,</span> SEXP env<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> result · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>match()</code></p>
-<p>Match vectors. In <code>Rf_matchE()</code>, <code>env</code> is used to look up as.character when translating POSIXlt; seems unlikely you’d ever need to use this variant.</p>
+<p>In <code>Rf_matchE()</code>, <code>env</code> is used to look up <code>as.character</code> when translating <code>POSIXlt</code>; rarely needed directly.</p>
 <p><strong>See also:</strong> <a href="#Rf_pmatch"><code>Rf_pmatch()</code></a></p>
 </section>
 <section id="R_dot_Last" class="level3" data-number="21.3.18">
@@ -675,20 +674,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="pp">#endif</span></span>
 <span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> R_system<span class="op">(</span><span class="dt">const</span> <span class="dt">char</span> <span class="op">*);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>system()</code></p>
-<p>Replacements for popen and system. <code>R_popen()</code> is only available when <code>HAVE_POPEN</code> is defined.</p>
+<p><code>R_popen()</code> is only available when <code>HAVE_POPEN</code> is defined.</p>
 </section>
 <section id="R_compute_identical" class="level3" data-number="21.3.20">
 <h3 data-number="21.3.20" class="anchored" data-anchor-id="R_compute_identical"><span class="header-section-number">21.3.20</span> <code>R_compute_identical()</code></h3>
 <p>Test whether two objects are identical.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb30"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>Rboolean R_compute_identical<span class="op">(</span>SEXP<span class="op">,</span> SEXP<span class="op">,</span> <span class="dt">int</span><span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>identical()</code></p>
-<p>The third arg consists of bitmapped flags for non-default options: currently the first 4 and the 6th default to TRUE, so the flag is set for FALSE values: 1 = !NUM_EQ, 2 = !SINGLE_NA, 4 = !ATTR_AS_SET, 8 = !IGNORE_BYTECODE, 16 = !IGNORE_ENV, 32 = !IGNORE_SRCREF. Default from R’s default: 16 = (0 + 0 + 0 + 0 + 16 + 0).</p>
+<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>identical()</code></p>
+<p>The third argument is a bitmask of flags for non-default options (set a bit to get the FALSE behaviour): 1 = !NUM_EQ, 2 = !SINGLE_NA, 4 = !ATTR_AS_SET, 8 = !IGNORE_BYTECODE, 16 = !IGNORE_ENV, 32 = !IGNORE_SRCREF. R’s <code>identical()</code> default corresponds to 16.</p>
 </section>
 <section id="Rf_conformable" class="level3" data-number="21.3.21">
 <h3 data-number="21.3.21" class="anchored" data-anchor-id="Rf_conformable"><span class="header-section-number">21.3.21</span> <code>Rf_conformable()</code></h3>
 <p>Test whether two objects have conformable dimensions.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb31"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>Rboolean Rf_conformable<span class="op">(</span>SEXP<span class="op">,</span> SEXP<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 </section>
 <section id="Rf_elt" class="level3" data-number="21.3.22">
 <h3 data-number="21.3.22" class="anchored" data-anchor-id="Rf_elt"><span class="header-section-number">21.3.22</span> <code>Rf_elt()</code> (<code>Rf_lastElt()</code>)</h3>
@@ -701,7 +700,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 data-number="21.3.23" class="anchored" data-anchor-id="Rf_isTs"><span class="header-section-number">21.3.23</span> <code>Rf_isTs()</code></h3>
 <p>Test whether an object is a time series.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb33"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>Rboolean Rf_isTs<span class="op">(</span>SEXP<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>is.ts()</code></p>
+<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>is.ts()</code></p>
 </section>
 <section id="Rf_isUserBinop" class="level3" data-number="21.3.24">
 <h3 data-number="21.3.24" class="anchored" data-anchor-id="Rf_isUserBinop"><span class="header-section-number">21.3.24</span> <code>Rf_isUserBinop()</code></h3>
@@ -720,7 +719,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 data-number="21.3.26" class="anchored" data-anchor-id="Rf_stringPositionTr"><span class="header-section-number">21.3.26</span> <code>Rf_stringPositionTr()</code></h3>
 <p>Find the position of a string within a character vector.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb36"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> Rf_stringPositionTr<span class="op">(</span>SEXP<span class="op">,</span> <span class="dt">const</span> <span class="dt">char</span> <span class="op">*);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 </section>
 <section id="R_FixupRHS" class="level3" data-number="21.3.27">
 <h3 data-number="21.3.27" class="anchored" data-anchor-id="R_FixupRHS"><span class="header-section-number">21.3.27</span> <code>R_FixupRHS()</code></h3>
@@ -757,7 +756,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Create a name for a temporary file.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb41"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="dt">char</span> <span class="op">*</span>R_tmpnam<span class="op">(</span><span class="dt">const</span> <span class="dt">char</span> <span class="op">*</span>prefix<span class="op">,</span> <span class="dt">const</span> <span class="dt">char</span> <span class="op">*</span>tempdir<span class="op">);</span></span>
 <span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a><span class="dt">char</span> <span class="op">*</span>R_tmpnam2<span class="op">(</span><span class="dt">const</span> <span class="dt">char</span> <span class="op">*</span>prefix<span class="op">,</span> <span class="dt">const</span> <span class="dt">char</span> <span class="op">*</span>tempdir<span class="op">,</span> <span class="dt">const</span> <span class="dt">char</span> <span class="op">*</span>fileext<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>R_ext/Utils.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>tempfile()</code></p>
+<p><strong>Status:</strong> API · <strong>Header:</strong> <code>R_ext/Utils.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>tempfile()</code></p>
 </section>
 <section id="R_CheckUserInterrupt" class="level3" data-number="21.3.32">
 <h3 data-number="21.3.32" class="anchored" data-anchor-id="R_CheckUserInterrupt"><span class="header-section-number">21.3.32</span> <code>R_CheckUserInterrupt()</code></h3>

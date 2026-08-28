@@ -181,7 +181,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./protection.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Garbage collection and reference counting</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Protection and the garbage collector</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -427,7 +427,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Test whether an object is flagged as object-oriented.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>Rboolean <span class="op">(</span>Rf_isObject<span class="op">)(</span>SEXP s<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>is.object()</code></p>
-<p>Returns non-zero when the <code>OBJECT</code> bit is set on <code>s</code>, i.e.&nbsp;when the object carries a class attribute.</p>
+<p>Returns non-zero when the <code>OBJECT</code> bit is set on <code>s</code>, i.e.&nbsp;the object carries a class attribute.</p>
 </section>
 </section>
 <section id="s3" class="level2" data-number="13.2">
@@ -437,28 +437,27 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Test whether an object inherits from a given class.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>Rboolean Rf_inherits<span class="op">(</span>SEXP<span class="op">,</span> <span class="dt">const</span> <span class="dt">char</span> <span class="op">*);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>inherits()</code></p>
-<p>Looks for the given class name in the object’s class attribute.</p>
+<p>Matches the given name against the object’s class attribute.</p>
 </section>
 <section id="Rf_S3Class" class="level3" data-number="13.2.2">
 <h3 data-number="13.2.2" class="anchored" data-anchor-id="Rf_S3Class"><span class="header-section-number">13.2.2</span> <code>Rf_S3Class()</code></h3>
 <p>Return the S3 class of an object.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>SEXP Rf_S3Class<span class="op">(</span>SEXP<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> result · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>class()</code></p>
-<p>Returns the S3 class of the object as a character vector.</p>
+<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>class()</code></p>
+<p>Returns a character vector of class names.</p>
 </section>
 <section id="Rf_isBasicClass" class="level3" data-number="13.2.3">
 <h3 data-number="13.2.3" class="anchored" data-anchor-id="Rf_isBasicClass"><span class="header-section-number">13.2.3</span> <code>Rf_isBasicClass()</code></h3>
 <p>Test whether a class name is one of the basic classes.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> Rf_isBasicClass<span class="op">(</span><span class="dt">const</span> <span class="dt">char</span> <span class="op">*);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 <p>Basic classes are the built-in pseudo-classes (e.g.&nbsp;<code>"numeric"</code>, <code>"matrix"</code>) known to the methods package.</p>
 </section>
 <section id="Rf_classgets" class="level3" data-number="13.2.4">
 <h3 data-number="13.2.4" class="anchored" data-anchor-id="Rf_classgets"><span class="header-section-number">13.2.4</span> <code>Rf_classgets()</code></h3>
 <p>Set the class attribute of an object.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>SEXP Rf_classgets<span class="op">(</span>SEXP<span class="op">,</span> SEXP<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> result · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>class&lt;-()</code></p>
-<p>Assigns a new class attribute to the object.</p>
+<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>class&lt;-()</code></p>
 </section>
 </section>
 <section id="s4-s4sxp" class="level2" data-number="13.3">
@@ -475,13 +474,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Set or unset the S4 flag on an object.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>SEXP Rf_asS4<span class="op">(</span>SEXP<span class="op">,</span> Rboolean<span class="op">,</span> <span class="dt">int</span><span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> result · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
-<p>Converts an object to or from an S4 object by toggling its S4 flag.</p>
 </section>
 <section id="Rf_allocS4Object" class="level3" data-number="13.3.3">
 <h3 data-number="13.3.3" class="anchored" data-anchor-id="Rf_allocS4Object"><span class="header-section-number">13.3.3</span> <code>Rf_allocS4Object()</code></h3>
 <p>Allocate a new S4 object.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>SEXP Rf_allocS4Object<span class="op">(</span><span class="dt">void</span><span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> result · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> result · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 <p>Allocates a bare S4 object (type <code>S4SXP</code>) with the S4 flag set.</p>
 </section>
 <section id="R_S4_extends" class="level3" data-number="13.3.4">
@@ -490,14 +488,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>SEXP R_S4_extends<span class="op">(</span>SEXP klass<span class="op">,</span> SEXP useTable<span class="op">);</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>Rboolean R_extends<span class="op">(</span>SEXP class1<span class="op">,</span> SEXP class2<span class="op">,</span> SEXP env<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> result · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>extends()</code></p>
-<p>S3-S4 class (inheritance), defined in attrib.c. <code>R_S4_extends()</code> returns the extends information for class <code>klass</code>; <code>R_extends()</code> tests whether <code>class1</code> extends <code>class2</code> in environment <code>env</code>.</p>
+<p><code>R_S4_extends()</code> returns the extends information for class <code>klass</code>; <code>R_extends()</code> tests whether <code>class1</code> extends <code>class2</code> in environment <code>env</code>.</p>
 </section>
 <section id="R_do_MAKE_CLASS" class="level3" data-number="13.3.5">
 <h3 data-number="13.3.5" class="anchored" data-anchor-id="R_do_MAKE_CLASS"><span class="header-section-number">13.3.5</span> <code>R_do_MAKE_CLASS()</code></h3>
 <p>Create a new S4 class definition.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>SEXP R_do_MAKE_CLASS<span class="op">(</span><span class="dt">const</span> <span class="dt">char</span> <span class="op">*</span>what<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> result · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>setClass()</code></p>
-<p>Class definition and new object creation, defined in objects.c. Creates the class definition for the class named <code>what</code>.</p>
 </section>
 <section id="R_getClassDef" class="level3" data-number="13.3.6">
 <h3 data-number="13.3.6" class="anchored" data-anchor-id="R_getClassDef"><span class="header-section-number">13.3.6</span> <code>R_getClassDef()</code> (<code>R_getClassDef_R()</code>)</h3>
@@ -505,36 +502,33 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>SEXP R_getClassDef<span class="op">(</span><span class="dt">const</span> <span class="dt">char</span> <span class="op">*</span>what<span class="op">);</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>SEXP R_getClassDef_R<span class="op">(</span>SEXP what<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> result · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>getClassDef()</code></p>
-<p>Class definition and new object creation, defined in objects.c. <code>R_getClassDef_R()</code> takes the class name as a <code>SEXP</code> rather than a C string.</p>
+<p><code>R_getClassDef_R()</code> takes the class name as a <code>SEXP</code> rather than a C string.</p>
 </section>
 <section id="R_has_methods_attached" class="level3" data-number="13.3.7">
 <h3 data-number="13.3.7" class="anchored" data-anchor-id="R_has_methods_attached"><span class="header-section-number">13.3.7</span> <code>R_has_methods_attached()</code></h3>
 <p>Test whether methods are currently attached.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>Rboolean R_has_methods_attached<span class="op">(</span><span class="dt">void</span><span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
-<p>Class definition and new object creation, defined in objects.c. Reports whether the methods package currently has methods attached.</p>
 </section>
 <section id="R_isVirtualClass" class="level3" data-number="13.3.8">
 <h3 data-number="13.3.8" class="anchored" data-anchor-id="R_isVirtualClass"><span class="header-section-number">13.3.8</span> <code>R_isVirtualClass()</code></h3>
 <p>Test whether an S4 class definition describes a virtual class.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>Rboolean R_isVirtualClass<span class="op">(</span>SEXP class_def<span class="op">,</span> SEXP env<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
-<p>Class definition and new object creation, defined in objects.c.</p>
+<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 </section>
 <section id="R_do_new_object" class="level3" data-number="13.3.9">
 <h3 data-number="13.3.9" class="anchored" data-anchor-id="R_do_new_object"><span class="header-section-number">13.3.9</span> <code>R_do_new_object()</code></h3>
 <p>Create a new object from an S4 class definition.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>SEXP R_do_new_object<span class="op">(</span>SEXP class_def<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> result · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>new()</code></p>
-<p>Class definition and new object creation, defined in objects.c. Instantiates a new object from the given class definition.</p>
 </section>
 <section id="R_check_class_and_super" class="level3" data-number="13.3.10">
 <h3 data-number="13.3.10" class="anchored" data-anchor-id="R_check_class_and_super"><span class="header-section-number">13.3.10</span> <code>R_check_class_and_super()</code> (<code>R_check_class_etc()</code>)</h3>
 <p>Check an object against a set of valid classes, a C-level <code>is()</code>.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> R_check_class_and_super<span class="op">(</span>SEXP x<span class="op">,</span> <span class="dt">const</span> <span class="dt">char</span> <span class="op">**</span>valid<span class="op">,</span> SEXP rho<span class="op">);</span></span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> R_check_class_etc<span class="op">(</span>SEXP x<span class="op">,</span> <span class="dt">const</span> <span class="dt">char</span> <span class="op">**</span>valid<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>is()</code></p>
-<p>Supports a C-level version of <code>is(., .)</code>: checks whether <code>x</code> matches or extends one of the classes in the <code>NULL</code>-terminated array <code>valid</code>. <code>R_check_class_etc()</code> is a variant without an environment argument.</p>
+<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>is()</code></p>
+<p>Checks whether <code>x</code> matches or extends one of the classes in the <code>NULL</code>-terminated array <code>valid</code>. <code>R_check_class_etc()</code> omits the environment argument.</p>
 </section>
 <section id="internals" class="level3" data-number="13.3.11">
 <h3 data-number="13.3.11" class="anchored" data-anchor-id="internals"><span class="header-section-number">13.3.11</span> Internals</h3>
@@ -546,7 +540,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> <span class="op">(</span>SET_S4_OBJECT<span class="op">)(</span>SEXP x<span class="op">);</span></span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> <span class="op">(</span>UNSET_S4_OBJECT<span class="op">)(</span>SEXP x<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> non-API (use <a href="#Rf_isS4"><code>Rf_isS4()</code></a>) · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>isS4()</code></p>
-<p>Low-level access to the S4 object flag; listed under internals by the chapter. Use <code>Rf_isS4()</code> to test whether an object is an S4 object.</p>
+<p>Low-level access to the S4 object flag.</p>
 <p><strong>See also:</strong> <a href="#Rf_isS4"><code>Rf_isS4()</code></a></p>
 </section>
 <section id="slots" class="level3" data-number="13.3.13">
@@ -559,7 +553,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>SEXP R_do_slot_assign<span class="op">(</span>SEXP obj<span class="op">,</span> SEXP name<span class="op">,</span> SEXP value<span class="op">);</span></span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> R_has_slot<span class="op">(</span>SEXP obj<span class="op">,</span> SEXP name<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> result · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>slot()</code></p>
-<p>C entry points behind the R slot operators: <code>R_do_slot()</code> extracts a slot, <code>R_do_slot_assign()</code> assigns it, and <code>R_has_slot()</code> tests for its presence.</p>
+<p><code>R_do_slot()</code> extracts a slot, <code>R_do_slot_assign()</code> assigns it, and <code>R_has_slot()</code> tests for its presence.</p>
 
 
 </section>

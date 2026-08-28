@@ -210,7 +210,7 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./protection.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Garbage collection and reference counting</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Protection and the garbage collector</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -495,11 +495,11 @@ window.Quarto = {
 <p>Get the length of a vector.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>R_xlen_t Rf_xlength<span class="op">(</span>SEXP x<span class="op">);</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>R_len_t Rf_length<span class="op">(</span>SEXP x<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>length()</code></p>
+<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>length()</code></p>
 <ul>
 <li><code>x</code>: any vector.</li>
 </ul>
-<p>Historically, R vectors were limited to length 2^31 - 1, and most vectors are still shorter than this, so the <code>int</code>-based <code>Rf_length()</code> interface suffices. As of R 3.0.0, vectors can have length up to 2^64 - 1; use the <code>R_xlen_t</code>-based <code>Rf_xlength()</code> if you want your code to be as general as possible. Also works on pairlists, where it is O(n).</p>
+<p><code>Rf_xlength()</code> uses <code>R_xlen_t</code> and supports long vectors (length up to 2^64 - 1); <code>Rf_length()</code> is limited to <code>int</code> (2^31 - 1). Also works on pairlists, where it is O(n).</p>
 <p><strong>See also:</strong> <a href="#Rf_lengthgets"><code>Rf_lengthgets()</code></a>, <a href="#LENGTH"><code>LENGTH()</code></a></p>
 </section>
 <section id="Rf_lengthgets" class="level3" data-number="5.1.2">
@@ -512,7 +512,7 @@ window.Quarto = {
 <li><code>x</code>: a vector.</li>
 <li><code>n</code>: the new length.</li>
 </ul>
-<p>Sets the length of a vector by creating a new vector of extended length. <code>Rf_xlengthgets()</code> is the <code>R_xlen_t</code>-based variant for long vectors (available since R 3.0.0).</p>
+<p><code>Rf_xlengthgets()</code> is the <code>R_xlen_t</code>-based variant for long vectors.</p>
 <p><strong>See also:</strong> <a href="#Rf_xlength"><code>Rf_xlength()</code></a>, <a href="#SETLENGTH"><code>SETLENGTH()</code></a></p>
 </section>
 <section id="LENGTH" class="level3" data-number="5.1.3">
@@ -524,34 +524,34 @@ window.Quarto = {
 <ul>
 <li><code>x</code>: any vector.</li>
 </ul>
-<p>Uppercase variants of <code>Rf_length()</code>/<code>Rf_xlength()</code>; in base R code these are implemented as macros for efficiency.</p>
+<p>Uppercase variants of <code>Rf_length()</code>/<code>Rf_xlength()</code>, implemented as macros in base R for efficiency.</p>
 <p><strong>See also:</strong> <a href="#Rf_xlength"><code>Rf_xlength()</code></a>, <a href="#SETLENGTH"><code>SETLENGTH()</code></a></p>
 </section>
 <section id="SETLENGTH" class="level3" data-number="5.1.4">
 <h3 data-number="5.1.4" class="anchored" data-anchor-id="SETLENGTH"><span class="header-section-number">5.1.4</span> <code>SETLENGTH()</code></h3>
 <p>Set the length of a vector in place.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> SETLENGTH<span class="op">(</span>SEXP x<span class="op">,</span> <span class="dt">int</span> v<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> non-API (use <a href="#Rf_lengthgets"><code>Rf_lengthgets()</code></a>) · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>length&lt;-</code></p>
+<p><strong>Status:</strong> non-API (use <a href="#Rf_lengthgets"><code>Rf_lengthgets()</code></a>) · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>length&lt;-</code></p>
 <ul>
 <li><code>x</code>: a vector.</li>
 <li><code>v</code>: the new length.</li>
 </ul>
-<p>Uppercase variant of <code>Rf_lengthgets()</code>; in base R code these uppercase variants are implemented as macros for efficiency. For resizable (growable) vectors, R 4.6.0 adds <code>R_resizeVector()</code>; see <code>R_allocResizableVector()</code>.</p>
+<p>Uppercase, macro variant of <code>Rf_lengthgets()</code>. For resizable (growable) vectors, see <code>R_allocResizableVector()</code> and <code>R_resizeVector()</code> (R 4.6.0). <code>SETLENGTH()</code> errors if applied to an ALTREP vector.</p>
 <p><strong>See also:</strong> <a href="#Rf_lengthgets"><code>Rf_lengthgets()</code></a>, <a href="#LENGTH"><code>LENGTH()</code></a></p>
 </section>
 <section id="IS_LONG_VEC" class="level3" data-number="5.1.5">
 <h3 data-number="5.1.5" class="anchored" data-anchor-id="IS_LONG_VEC"><span class="header-section-number">5.1.5</span> <code>IS_LONG_VEC()</code></h3>
 <p>Test whether a vector is a long vector.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> IS_LONG_VEC<span class="op">(</span>SEXP x<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> R 3.0.0 · <strong>R equivalent:</strong> —</p>
+<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 <ul>
 <li><code>x</code>: any vector.</li>
 </ul>
-<p>As of R 3.0.0, R vectors can have length up to 2^64 - 1; a long vector is one whose length exceeds the <code>int</code>-based limit of 2^31 - 1.</p>
+<p>True when a vector’s length exceeds the <code>int</code>-based limit of 2^31 - 1.</p>
 <p><strong>See also:</strong> <a href="#Rf_xlength"><code>Rf_xlength()</code></a></p>
 <p>After the SEXPTYPE, the most important property of a vector is it’s length. Historically, R vectors were limited to length <span class="math inline">\(2 ^ {31} -  1\)</span>. Still most vectors are shorter than this, so you can use an <code>int</code> based interface:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">typedef</span> <span class="dt">int</span> R_len_t<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>As of R 3.0.0, R vectors can have length up to <span class="math inline">\(2 ^ {64} - 1\)</span>. If you want your code to be as general as possible, you should instead use the <code>R_xlen_t</code>based interface:</p>
+<p>R vectors can have length up to <span class="math inline">\(2 ^ {64} - 1\)</span>. If you want your code to be as general as possible, you should instead use the <code>R_xlen_t</code>based interface:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">// ptrdiff_t is the type of the result of subtracting two pointers, and</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co">// is usually 8 bytes (like a double)</span></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="kw">typedef</span> <span class="dt">ptrdiff_t</span> R_xlen_t<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -569,7 +569,7 @@ window.Quarto = {
 <li><code>type</code>: any vector <code>SEXPTYPE</code> (<code>LGLSXP</code>, <code>INTSXP</code>, <code>REALSXP</code>, <code>CPLXSXP</code>, <code>STRSXP</code>, <code>VECSXP</code>, <code>RAWSXP</code>, <code>EXPRSXP</code>).</li>
 <li><code>n</code>: number of elements; <code>R_xlen_t</code> supports long vectors on 64-bit platforms.</li>
 </ul>
-<p>The most common way to create a new vector. Atomic vector contents are uninitialised; <code>VECSXP</code>/<code>EXPRSXP</code> elements are <code>R_NilValue</code> and <code>STRSXP</code> elements are <code>""</code>. Attributes are unset.</p>
+<p>Atomic vector contents are uninitialised; <code>VECSXP</code>/<code>EXPRSXP</code> elements are <code>R_NilValue</code> and <code>STRSXP</code> elements are <code>""</code>. Attributes are unset.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>SEXP out <span class="op">=</span> PROTECT<span class="op">(</span>Rf_allocVector<span class="op">(</span>REALSXP<span class="op">,</span> n<span class="op">));</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>See also:</strong> <a href="#Rf_allocVector3"><code>Rf_allocVector3()</code></a>, <a href="#Rf_coerceVector"><code>Rf_coerceVector()</code></a></p>
 </section>
@@ -585,7 +585,7 @@ window.Quarto = {
 <ul>
 <li><code>x</code>: the C value to wrap.</li>
 </ul>
-<p>As with all SEXP creation functions you must <code>PROTECT()</code> the result of any of these calls unless you’re immediately assigning it into an already protected object. For strings see <a href="strings.html#Rf_ScalarString"><code>Rf_ScalarString()</code></a> and <a href="#Rf_mkString"><code>Rf_mkString()</code></a>.</p>
+<p>For strings, use <a href="strings.html#Rf_ScalarString"><code>Rf_ScalarString()</code></a> or <a href="#Rf_mkString"><code>Rf_mkString()</code></a> instead. <code>Rf_ScalarLogical()</code> returns cached singletons and never allocates; the other <code>Rf_Scalar*()</code> variants always allocate.</p>
 <p><strong>See also:</strong> <a href="#Rf_allocVector"><code>Rf_allocVector()</code></a>, <a href="strings.html#Rf_ScalarString"><code>Rf_ScalarString()</code></a>, <a href="#Rf_mkString"><code>Rf_mkString()</code></a></p>
 </section>
 <section id="Rf_coerceVector" class="level3" data-number="5.2.3">
@@ -609,7 +609,7 @@ window.Quarto = {
 <li><code>type</code>: any vector <code>SEXPTYPE</code>.</li>
 <li><code>names</code>: a null-terminated array of <code>const char*</code> names.</li>
 </ul>
-<p>Given a null-terminated array of <code>const char*</code>s, creates a vector of that length and initialises a character vector of names.</p>
+<p>The vector’s length matches the number of names supplied, and its names attribute is set from them.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co">// array of names; note the null string</span></span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> <span class="dt">char</span> <span class="op">*</span>names<span class="op">[]</span> <span class="op">=</span> <span class="op">{</span><span class="st">"xname"</span><span class="op">,</span> <span class="st">"yname"</span><span class="op">,</span> <span class="st">""</span><span class="op">};</span></span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>SEXP list <span class="op">=</span> PROTECT<span class="op">(</span>Rf_mkNamed<span class="op">(</span>VECSXP<span class="op">,</span> names<span class="op">));</span>  <span class="co">// creates a list of length 2</span></span>
@@ -622,8 +622,8 @@ window.Quarto = {
 <h3 data-number="5.2.5" class="anchored" data-anchor-id="Rf_allocVector3"><span class="header-section-number">5.2.5</span> <code>Rf_allocVector3()</code></h3>
 <p>Create a new vector using a custom allocator.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>SEXP Rf_allocVector3<span class="op">(</span>SEXPTYPE type<span class="op">,</span> R_xlen_t n<span class="op">,</span> R_allocator_t <span class="op">*</span>allocator<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> result · <strong>Errors:</strong> can throw · <strong>Since:</strong> R 3.4.0 · <strong>R equivalent:</strong> —</p>
-<p>Like <code>Rf_allocVector()</code>, but memory for the data payload comes from <code>allocator</code>. Pass <code>NULL</code> to get exactly <code>Rf_allocVector()</code> behaviour. Rarely needed in package code.</p>
+<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> result · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<p>Like <code>Rf_allocVector()</code>, but memory for the data payload comes from <code>allocator</code>; pass <code>NULL</code> for plain <code>Rf_allocVector()</code> behaviour. Rarely needed in package code.</p>
 <p><strong>See also:</strong> <a href="#Rf_allocVector"><code>Rf_allocVector()</code></a></p>
 <p>The most common way to create a new vector is with <code>Rf_allocVector()</code>. If you want to create a vector of length 1 from the corresponding C type, use the scalar helpers.</p>
 <p>(Note, as with all SEXP creation functions you must <code>Rf_protect()</code> the result of any of these calls unless you’re immediately assigning it into an already protected object)</p>
@@ -658,11 +658,11 @@ window.Quarto = {
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="dt">double</span><span class="op">*</span>   REAL<span class="op">(</span>SEXP x<span class="op">);</span></span>
 <span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>Rcomplex<span class="op">*</span> COMPLEX<span class="op">(</span>SEXP x<span class="op">);</span></span>
 <span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>Rbyte<span class="op">*</span>    RAW<span class="op">(</span>SEXP x<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 <ul>
 <li><code>x</code>: a vector of the corresponding type.</li>
 </ul>
-<p>These functions are all upper case and don’t start with <code>Rf_</code>. When working with longer vectors, there’s typically a performance advantage to saving the pointer and reusing it rather than calling the accessor on every iteration.</p>
+<p>For long vectors, cache the returned pointer and reuse it rather than calling the accessor on every iteration.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span><span class="op">*</span> px <span class="op">=</span> INTEGER<span class="op">(</span>x<span class="op">);</span></span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> n<span class="op">;</span> <span class="op">++</span>i<span class="op">)</span> <span class="op">{</span></span>
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  px<span class="op">[</span>i<span class="op">]</span> <span class="op">=</span> px<span class="op">[</span>i<span class="op">]</span> <span class="op">*</span> <span class="dv">2</span><span class="op">;</span></span>
@@ -680,7 +680,7 @@ window.Quarto = {
 <li><code>i</code>: zero-based element index.</li>
 <li><code>v</code>: the <code>CHARSXP</code> to set.</li>
 </ul>
-<p><code>STRING_ELT()</code> returns a <code>CHARSXP</code>. Strings don’t map to simple C structs, so they use a pair of functions to get and set values.</p>
+<p><code>STRING_ELT()</code> returns a <code>CHARSXP</code>, not an ordinary <code>SEXP</code> value; strings use a pair of accessor functions rather than a plain C array.</p>
 <p><strong>See also:</strong> <a href="#VECTOR_ELT"><code>VECTOR_ELT()</code></a>, <a href="#STRING_PTR"><code>STRING_PTR()</code></a></p>
 </section>
 <section id="VECTOR_ELT" class="level3" data-number="5.3.3">
@@ -694,18 +694,18 @@ window.Quarto = {
 <li><code>i</code>: zero-based element index.</li>
 <li><code>v</code>: the value to set.</li>
 </ul>
-<p><code>VECTOR_ELT()</code> returns potentially any <code>SEXPTYPE</code>. Lists don’t map to simple C structs, so they use a pair of functions to get and set values.</p>
+<p><code>VECTOR_ELT()</code> may return any <code>SEXPTYPE</code>; lists use a pair of accessor functions rather than a plain C array.</p>
 <p><strong>See also:</strong> <a href="#STRING_ELT"><code>STRING_ELT()</code></a>, <a href="#VECTOR_PTR"><code>VECTOR_PTR()</code></a></p>
 </section>
 <section id="STRING_PTR" class="level3" data-number="5.3.4">
 <h3 data-number="5.3.4" class="anchored" data-anchor-id="STRING_PTR"><span class="header-section-number">5.3.4</span> <code>STRING_PTR()</code></h3>
 <p>Get a pointer to the elements of a character vector.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>SEXP<span class="op">*</span> STRING_PTR<span class="op">(</span>SEXP x<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> non-API (use <a href="#STRING_PTR_RO"><code>STRING_PTR_RO()</code></a>) · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<p><strong>Status:</strong> non-API (use <a href="#STRING_PTR_RO"><code>STRING_PTR_RO()</code></a>) · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 <ul>
 <li><code>x</code>: a <code>STRSXP</code>.</li>
 </ul>
-<p>Used in a handful of places in the R source. Obtaining a writable pointer to character vector data can violate the memory manager’s integrity assumptions and is not supported; use <code>STRING_PTR_RO()</code> instead.</p>
+<p>A writable pointer to character vector data can violate the memory manager’s integrity assumptions and is not supported; use <code>STRING_PTR_RO()</code> instead.</p>
 <p><strong>See also:</strong> <a href="#STRING_ELT"><code>STRING_ELT()</code></a></p>
 </section>
 <section id="VECTOR_PTR" class="level3" data-number="5.3.5">
@@ -742,11 +742,10 @@ window.Quarto = {
 <span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> Rf_asInteger<span class="op">(</span>SEXP x<span class="op">);</span></span>
 <span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="dt">double</span> Rf_asReal<span class="op">(</span>SEXP x<span class="op">);</span></span>
 <span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>Rcomplex Rf_asComplex<span class="op">(</span>SEXP x<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>as.logical()</code></p>
+<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>as.logical()</code></p>
 <ul>
 <li><code>x</code>: a vector.</li>
 </ul>
-<p>These helpers extract the first value, coercing the vector as necessary.</p>
 <p><strong>See also:</strong> <a href="#Rf_coerceVector"><code>Rf_coerceVector()</code></a></p>
 <p>There are a few helpers that extract the first value, coercing the vector as necessary:</p>
 </section>
@@ -755,31 +754,31 @@ window.Quarto = {
 </section>
 <section id="NA_LOGICAL" class="level3" data-number="5.3.9">
 <h3 data-number="5.3.9" class="anchored" data-anchor-id="NA_LOGICAL"><span class="header-section-number">5.3.9</span> <code>NA_LOGICAL()</code> (<code>NA_INTEGER()</code>, <code>NA_STRING()</code>)</h3>
-<p>Sentinel values for missing logical, integer, and character elements.</p>
+<p>Represent missing logical, integer, and character values.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb27"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#define NA_LOGICAL </span>R_NaInt</span>
 <span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#define NA_INTEGER </span>R_NaInt</span>
 <span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="pp">#define NA_STRING  </span>R_NaString</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>R_ext/Arith.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>NA</code></p>
-<p>Integer, logical, and character vectors have special sentinels for missing values. <code>NA_LOGICAL</code> and <code>NA_INTEGER</code> are both <code>R_NaInt</code> (currently <code>INT_MIN</code>); <code>NA_STRING</code> is <code>R_NaString</code>.</p>
+<p><code>NA_LOGICAL</code> and <code>NA_INTEGER</code> are both <code>R_NaInt</code> (currently <code>INT_MIN</code>); <code>NA_STRING</code> is <code>R_NaString</code>.</p>
 <p><strong>See also:</strong> <a href="#NA_REAL"><code>NA_REAL()</code></a></p>
 </section>
 <section id="NA_REAL" class="level3" data-number="5.3.10">
 <h3 data-number="5.3.10" class="anchored" data-anchor-id="NA_REAL"><span class="header-section-number">5.3.10</span> <code>NA_REAL()</code> (<code>R_NaReal()</code>)</h3>
-<p>Missing value sentinel for doubles.</p>
+<p>Represent a missing double value.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb28"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="dt">double</span> R_NaReal<span class="op">;</span></span>
 <span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#define NA_REAL </span>R_NaReal</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>R_ext/Arith.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>NA_real_</code></p>
-<p>Missing values are somewhat more complicated for <code>REALSXP</code> because there is an existing protocol for missing values defined by the IEEE 754 floating-point standard. In doubles, an <code>NA</code> is <code>NaN</code> with a special bit pattern (the lowest word is 1954, the year Ross Ihaka was born).</p>
+<p>Represented as an <code>NaN</code> with a specific bit pattern, per the IEEE 754 floating-point standard.</p>
 <p><strong>See also:</strong> <a href="#R_NaN"><code>R_NaN()</code></a>, <a href="#ISNA"><code>ISNA()</code></a>, <a href="#NA_LOGICAL"><code>NA_LOGICAL()</code></a></p>
 </section>
 <section id="R_NaN" class="level3" data-number="5.3.11">
 <h3 data-number="5.3.11" class="anchored" data-anchor-id="R_NaN"><span class="header-section-number">5.3.11</span> <code>R_NaN()</code> (<code>R_PosInf()</code>, <code>R_NegInf()</code>)</h3>
-<p>Special floating-point values for NaN and positive and negative infinity.</p>
+<p>Represent NaN and positive or negative infinity as doubles.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb29"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="dt">double</span> R_NaN<span class="op">;</span></span>
 <span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="dt">double</span> R_PosInf<span class="op">;</span></span>
 <span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="dt">double</span> R_NegInf<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>R_ext/Arith.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>NaN</code></p>
-<p>Provided for cross-platform safety. Use these constants (and <code>NA_REAL</code>) to set NaN, infinite, and missing values.</p>
+<p>Use these constants, together with <code>NA_REAL</code>, for cross-platform-safe NaN, infinite, and missing values.</p>
 <p><strong>See also:</strong> <a href="#NA_REAL"><code>NA_REAL()</code></a>, <a href="#ISNA"><code>ISNA()</code></a></p>
 </section>
 <section id="ISNA" class="level3" data-number="5.3.12">
@@ -792,7 +791,7 @@ window.Quarto = {
 <ul>
 <li><code>x</code>: the double to check.</li>
 </ul>
-<p>Use <code>ISNA()</code>, <code>ISNAN()</code>, and <code>!R_FINITE()</code> to check for missing, <code>NaN</code>, or non-finite values. These are macros; <code>R_IsNA()</code>, <code>R_IsNaN()</code>, and <code>R_finite()</code> are the equivalent functions.</p>
+<p>These are macros; <code>R_IsNA()</code>, <code>R_IsNaN()</code>, and <code>R_finite()</code> are the equivalent functions. Check <code>!R_FINITE()</code> for non-finite values.</p>
 <p><strong>See also:</strong> <a href="#R_IsNA"><code>R_IsNA()</code></a>, <a href="#NA_REAL"><code>NA_REAL()</code></a></p>
 </section>
 <section id="R_IsNA" class="level3" data-number="5.3.13">
@@ -802,7 +801,7 @@ window.Quarto = {
 <span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> R_IsNaN<span class="op">(</span><span class="dt">double</span><span class="op">);</span></span>
 <span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> R_finite<span class="op">(</span><span class="dt">double</span><span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>R_ext/Arith.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>is.finite()</code></p>
-<p>Function equivalents of the <code>ISNA()</code>, <code>ISNAN()</code>, and <code>R_FINITE()</code> macros. <code>R_finite()</code> is true when the value is not <code>NA</code>, <code>NaN</code>, <code>Inf</code>, or <code>-Inf</code>.</p>
+<p>Function equivalents of the <code>ISNA()</code>, <code>ISNAN()</code>, and <code>R_FINITE()</code> macros. <code>R_finite()</code> is false for <code>NA</code>, <code>NaN</code>, <code>Inf</code>, and <code>-Inf</code>.</p>
 <p><strong>See also:</strong> <a href="#ISNA"><code>ISNA()</code></a></p>
 <p>Integer, logical, and character vectors have special sentinels for missing values.</p>
 <p>Missing values are somewhat more complicated for <code>REALSXP</code> because there is an existing protocol for missing values defined by the floating point standard (<a href="http://en.wikipedia.org/wiki/IEEE_floating_point">IEEE 754</a>). In doubles, an <code>NA</code> is <code>NaN</code> with a special bit pattern (the lowest word is 1954, the year Ross Ihaka was born), and there are other special values for positive and negative infinity. Use <code>ISNA()</code>, <code>ISNAN()</code>, and <code>!R_FINITE()</code> macros to check for missing, NaN, or non-finite values. Use the constants <code>NA_REAL</code>, <code>R_NaN</code>, <code>R_PosInf</code>, and <code>R_NegInf</code> to set those values.</p>
@@ -819,11 +818,11 @@ window.Quarto = {
 <span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>Rboolean Rf_isComplex<span class="op">(</span>SEXP s<span class="op">);</span></span>
 <span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>Rboolean Rf_isString<span class="op">(</span>SEXP s<span class="op">);</span></span>
 <span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>Rboolean Rf_isExpression<span class="op">(</span>SEXP s<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>is.logical()</code></p>
+<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>is.logical()</code></p>
 <ul>
 <li><code>s</code>: any SEXP.</li>
 </ul>
-<p>There’s no function to test for <code>RAWSXP</code> or <code>VECSXP</code>; you must use <code>TYPEOF(x) == RAWSXP</code> or <code>TYPEOF(x) == VECSXP</code>. (<code>isList()</code> tests if the object is a pairlist.) Be careful when checking whether an R object is an integer vector: internally, factors are also <code>INTSXP</code>s, so <code>TYPEOF(x) == INTSXP</code> would accept both vanilla integer vectors and factors; prefer <code>Rf_isInteger()</code> and <code>Rf_isFactor()</code> for these cases.</p>
+<p>No function tests for <code>RAWSXP</code> or <code>VECSXP</code>; use <code>TYPEOF(x) == RAWSXP</code> or <code>TYPEOF(x) == VECSXP</code> instead. Factors are also <code>INTSXP</code>s, so <code>TYPEOF(x) == INTSXP</code> accepts both plain integer vectors and factors; combine <code>Rf_isInteger()</code> with <code>Rf_isFactor()</code> to distinguish them.</p>
 <p><strong>See also:</strong> <a href="#Rf_isNewList"><code>Rf_isNewList()</code></a>, <a href="attributes.html#Rf_isFactor"><code>Rf_isFactor()</code></a></p>
 </section>
 <section id="Rf_isNewList" class="level3" data-number="5.4.2">
@@ -835,11 +834,11 @@ window.Quarto = {
 <span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>Rboolean Rf_isVector<span class="op">(</span>SEXP s<span class="op">);</span></span>
 <span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>Rboolean Rf_isNumber<span class="op">(</span>SEXP s<span class="op">);</span></span>
 <span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>Rboolean Rf_isNumeric<span class="op">(</span>SEXP s<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 <ul>
 <li><code>s</code>: any SEXP.</li>
 </ul>
-<p><code>Rf_isNewList()</code>: <code>NILSXP</code>, <code>VECSXP</code>. <code>Rf_isVectorAtomic()</code>: <code>LGLSXP</code>, <code>INTSXP</code>, <code>REALSXP</code>, <code>CPLXSXP</code>, <code>STRSXP</code>, <code>RAWSXP</code>. <code>Rf_isVectorList()</code>: <code>LISTSXP</code>, <code>EXPRSXP</code>. <code>Rf_isVector()</code>: <code>isVectorAtomic(x) || isVectorList()</code>. <code>Rf_isNumber()</code>: <code>INTSXP</code> (but not factor), <code>LGLSXP</code>, <code>REALSXP</code>, <code>CPLXSXP</code>. <code>Rf_isNumeric()</code>: <code>INTSXP</code> (but not factor), <code>REALSXP</code>, <code>CPLXSXP</code>. These are not always consistent with their R equivalents: <code>Rf_isVectorAtomic(R_NilValue)</code> is false but <code>is.atomic(NULL)</code> is true, and <code>Rf_isNewList(R_NilValue)</code> is true but <code>is.list(NULL)</code> is false (somewhat strange, given that <code>R_NilValue</code> is just an empty pairlist, i.e.&nbsp;<code>NULL</code> and <code>pairlist()</code> are identical). Because of this confusion, I recommend writing your own wrapper around <code>TYPEOF(x)</code>.</p>
+<p><code>Rf_isNewList()</code> matches <code>NILSXP</code>/<code>VECSXP</code>; <code>Rf_isVectorAtomic()</code> matches <code>LGLSXP</code>/<code>INTSXP</code>/<code>REALSXP</code>/<code>CPLXSXP</code>/<code>STRSXP</code>/<code>RAWSXP</code>; <code>Rf_isVectorList()</code> matches <code>LISTSXP</code>/<code>EXPRSXP</code>; <code>Rf_isVector()</code> is their union; <code>Rf_isNumber()</code> and <code>Rf_isNumeric()</code> match <code>LGLSXP</code>/<code>REALSXP</code>/ <code>CPLXSXP</code> and non-factor <code>INTSXP</code>. Results can diverge from their R equivalents: <code>Rf_isVectorAtomic(R_NilValue)</code> is false (<code>is.atomic(NULL)</code> is true) while <code>Rf_isNewList(R_NilValue)</code> is true (<code>is.list(NULL)</code> is false); consider writing your own wrapper around <code>TYPEOF(x)</code> instead.</p>
 <p><strong>See also:</strong> <a href="#Rf_isLogical"><code>Rf_isLogical()</code></a></p>
 <p>A number of helpers let you test if an SEXP is of the given type:</p>
 <p><strong>NB</strong>: there’s no function to test for <code>RAWSXP</code> or <code>VECSXP</code>; you use must use <code>TYPEOF(x) == RAWSXP</code>, or <code>TYPEOF(x) == VECSXP</code>. <code>isList()</code> tests if the object is a pairlist.</p>
@@ -860,7 +859,7 @@ window.Quarto = {
 <li><code>source</code>: the vector to copy from.</li>
 <li><code>target</code>: the vector to copy to.</li>
 </ul>
-<p>Copies from source to target, recycling as necessary. Use <code>Rf_duplicate()</code> if you simply want to duplicate a vector.</p>
+<p>Use <code>Rf_duplicate()</code> instead if you just want to duplicate a vector without recycling.</p>
 <p><strong>See also:</strong> <a href="attributes.html#Rf_copyMatrix"><code>Rf_copyMatrix()</code></a></p>
 </section>
 <section id="Rf_stringSuffix" class="level3" data-number="5.5.2">
@@ -889,11 +888,11 @@ window.Quarto = {
 <h3 data-number="5.5.4" class="anchored" data-anchor-id="Rf_isVectorizable"><span class="header-section-number">5.5.4</span> <code>Rf_isVectorizable()</code></h3>
 <p>Test if a list can be converted into a vector.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb37"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>Rboolean Rf_isVectorizable<span class="op">(</span>SEXP x<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 <ul>
 <li><code>x</code>: a list or pairlist.</li>
 </ul>
-<p>Checks to see if a list can be converted into a vector, i.e.&nbsp;each element of a list or pairlist is a vector of length 0 or 1.</p>
+<p>True when every element of the list or pairlist is a vector of length 0 or 1.</p>
 </section>
 <section id="Rf_duplicated" class="level3" data-number="5.5.5">
 <h3 data-number="5.5.5" class="anchored" data-anchor-id="Rf_duplicated"><span class="header-section-number">5.5.5</span> <code>Rf_duplicated()</code></h3>

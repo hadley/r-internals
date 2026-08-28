@@ -26,6 +26,41 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -146,7 +181,7 @@ ul.task-list li input[type="checkbox"] {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./protection.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Garbage collection and reference counting</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Protection and the garbage collector</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -326,8 +361,24 @@ ul.task-list li input[type="checkbox"] {
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#transient-allocation" id="toc-transient-allocation" class="nav-link active" data-scroll-target="#transient-allocation"><span class="header-section-number">4.1</span> Transient allocation</a>
+  <ul class="collapse">
+  <li><a href="#R_alloc" id="toc-R_alloc" class="nav-link" data-scroll-target="#R_alloc"><span class="header-section-number">4.1.1</span> <code>R_alloc()</code> (<code>R_allocLD()</code>)</a></li>
+  <li><a href="#S_alloc" id="toc-S_alloc" class="nav-link" data-scroll-target="#S_alloc"><span class="header-section-number">4.1.2</span> <code>S_alloc()</code> (<code>S_realloc()</code>)</a></li>
+  <li><a href="#vmaxget" id="toc-vmaxget" class="nav-link" data-scroll-target="#vmaxget"><span class="header-section-number">4.1.3</span> <code>vmaxget()</code> (<code>vmaxset()</code>)</a></li>
+  </ul></li>
+  <li><a href="#user-controlled-memory" id="toc-user-controlled-memory" class="nav-link" data-scroll-target="#user-controlled-memory"><span class="header-section-number">4.2</span> User-controlled memory</a>
+  <ul class="collapse">
+  <li><a href="#R_Calloc" id="toc-R_Calloc" class="nav-link" data-scroll-target="#R_Calloc"><span class="header-section-number">4.2.1</span> <code>R_Calloc()</code> (<code>R_Realloc()</code>, <code>R_Free()</code>)</a></li>
+  </ul></li>
+  <li><a href="#when-to-use-a-rawsxp-instead" id="toc-when-to-use-a-rawsxp-instead" class="nav-link" data-scroll-target="#when-to-use-a-rawsxp-instead"><span class="header-section-number">4.3</span> When to use a RAWSXP instead</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/hadley/r-internals/edit/main/memory.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/hadley/r-internals/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -351,27 +402,73 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<div class="callout callout-style-default callout-warning callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Warning
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Placeholder. Planned content:</p>
+<p>Sometimes you need scratch memory that isn’t an R object — a work array, a lookup table. R offers two kinds of allocation, differing in who cleans up: <strong>transient</strong> memory that R reclaims automatically, and <strong>user-controlled</strong> memory that you must free yourself, including on error paths. These functions are declared in <code>R_ext/Memory.h</code> and <code>R_ext/RS.h</code> (both included by <code>&lt;R.h&gt;</code>), and are not thread-safe.</p>
+<section id="transient-allocation" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="transient-allocation"><span class="header-section-number">4.1</span> Transient allocation</h2>
+<p>Follows <a href="https://cran.r-project.org/doc/manuals/R-exts.html#Transient-storage-allocation-1">WRE §6.1.1, Transient storage allocation</a> closely.</p>
+<p><code>R_alloc()</code> memory comes from R’s heap arena and is released automatically when your <code>.Call</code> entry point returns — including when an error or interrupt unwinds the stack. That makes it the default choice: it is impossible to leak. If you call <code>R_alloc()</code> in a loop, bound the growth by resetting the arena’s high-water mark each iteration:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> <span class="op">*</span>vmax <span class="op">=</span> vmaxget<span class="op">();</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> <span class="op">(...)</span> <span class="op">{</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">double</span> <span class="op">*</span>work <span class="op">=</span> <span class="op">(</span><span class="dt">double</span> <span class="op">*)</span> R_alloc<span class="op">(</span>n<span class="op">,</span> <span class="kw">sizeof</span><span class="op">(</span><span class="dt">double</span><span class="op">));</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="op">...</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  vmaxset<span class="op">(</span>vmax<span class="op">);</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The returned memory is only guaranteed to be aligned for <code>double</code>; use <code>R_allocLD()</code> if you need <code>long double</code> alignment.</p>
+<section id="R_alloc" class="level3" data-number="4.1.1">
+<h3 data-number="4.1.1" class="anchored" data-anchor-id="R_alloc"><span class="header-section-number">4.1.1</span> <code>R_alloc()</code> (<code>R_allocLD()</code>)</h3>
+<p>Allocate temporary memory that R reclaims automatically.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="dt">char</span><span class="op">*</span> R_alloc<span class="op">(</span><span class="dt">size_t</span><span class="op">,</span> <span class="dt">int</span><span class="op">);</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="dt">long</span> <span class="dt">double</span> <span class="op">*</span>R_allocLD<span class="op">(</span><span class="dt">size_t</span> nelem<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Status:</strong> API · <strong>Header:</strong> <code>R_ext/Memory.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<p>Memory is freed automatically when the <code>.Call</code> entry point returns (including on error or interrupt). <code>R_allocLD()</code> additionally guarantees the 16-byte alignment some platforms need for <code>long double</code>.</p>
+<p><strong>See also:</strong> <a href="#vmaxget"><code>vmaxget()</code></a></p>
+</section>
+<section id="S_alloc" class="level3" data-number="4.1.2">
+<h3 data-number="4.1.2" class="anchored" data-anchor-id="S_alloc"><span class="header-section-number">4.1.2</span> <code>S_alloc()</code> (<code>S_realloc()</code>)</h3>
+<p>Allocate and reallocate temporary memory using the legacy S interface.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="dt">char</span><span class="op">*</span> S_alloc<span class="op">(</span><span class="dt">long</span><span class="op">,</span> <span class="dt">int</span><span class="op">);</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="dt">char</span><span class="op">*</span> S_realloc<span class="op">(</span><span class="dt">char</span> <span class="op">*,</span> <span class="dt">long</span><span class="op">,</span> <span class="dt">long</span><span class="op">,</span> <span class="dt">int</span><span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Status:</strong> API · <strong>Header:</strong> <code>R_ext/Memory.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<p>Best avoided: <code>long</code> is limited to 2^31 - 1 bytes on 64-bit Windows, so these cannot handle large allocations there. Prefer <code>R_alloc()</code>.</p>
+<p><strong>See also:</strong> <a href="#R_alloc"><code>R_alloc()</code></a></p>
+</section>
+<section id="vmaxget" class="level3" data-number="4.1.3">
+<h3 data-number="4.1.3" class="anchored" data-anchor-id="vmaxget"><span class="header-section-number">4.1.3</span> <code>vmaxget()</code> (<code>vmaxset()</code>)</h3>
+<p>Get and set the high-water mark of R’s temporary allocation arena.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span><span class="op">*</span> vmaxget<span class="op">(</span><span class="dt">void</span><span class="op">);</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> vmaxset<span class="op">(</span><span class="dt">const</span> <span class="dt">void</span> <span class="op">*);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Status:</strong> API · <strong>Header:</strong> <code>R_ext/Memory.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<p><code>vmaxset()</code> releases everything allocated by <code>R_alloc()</code> since the matching <code>vmaxget()</code>. Useful to bound memory growth when calling <code>R_alloc()</code> in a loop, but easy to get wrong — for experts only.</p>
+<p><strong>See also:</strong> <a href="#R_alloc"><code>R_alloc()</code></a></p>
+</section>
+</section>
+<section id="user-controlled-memory" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="user-controlled-memory"><span class="header-section-number">4.2</span> User-controlled memory</h2>
+<p>Follows <a href="https://cran.r-project.org/doc/manuals/R-exts.html#User_002dcontrolled-memory-1">WRE §6.1.2, User-controlled memory</a> closely.</p>
+<p><code>R_Calloc()</code>/<code>R_Realloc()</code>/<code>R_Free()</code> are for memory that must outlive the call or whose lifetime doesn’t fit the arena model. The catch is the longjmp contract (<a href="./calling-c.html">Calling C from R</a>): if R errors between allocation and free, your <code>R_Free()</code> never runs and the memory leaks. Options, in rough order of preference:</p>
 <ul>
-<li>Transient allocation: <code>R_alloc</code>/<code>vmaxget</code>/<code>vmaxset</code></li>
-<li><code>R_Calloc</code>/<code>R_Realloc</code>/<code>R_Free</code> and cleanup-on-error obligations</li>
-<li>Alignment</li>
-<li>When to prefer a <code>RAWSXP</code> instead</li>
+<li>Keep the allocation inside one function and wrap the body in <code>R_UnwindProtect()</code> with a cleanup handler that frees it.</li>
+<li>Free from an <code>on.exit()</code> action in the calling R function (base R’s <code>pwilcox</code> does this).</li>
+<li>Attach the memory to an external pointer with a finalizer (<a href="./external-pointers.html">External pointers</a>) when it must persist across calls.</li>
 </ul>
-</div>
-</div>
+<p>Also provided: <code>CallocCharBuf(n)</code> (a <code>char</code> buffer of <code>n + 1</code> for the NUL terminator), and <code>Memcpy()</code>/<code>Memzero()</code> for copying and zeroing arrays.</p>
+<section id="R_Calloc" class="level3" data-number="4.2.1">
+<h3 data-number="4.2.1" class="anchored" data-anchor-id="R_Calloc"><span class="header-section-number">4.2.1</span> <code>R_Calloc()</code> (<code>R_Realloc()</code>, <code>R_Free()</code>)</h3>
+<p>Allocate, reallocate, and free user-controlled memory with R error handling.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>type<span class="op">*</span> R_Calloc<span class="op">(</span><span class="dt">size_t</span> n<span class="op">,</span> type<span class="op">);</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>type<span class="op">*</span> R_Realloc<span class="op">(</span>any <span class="op">*</span>p<span class="op">,</span> <span class="dt">size_t</span> n<span class="op">,</span> type<span class="op">);</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> R_Free<span class="op">(</span>any <span class="op">*</span>p<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Status:</strong> API · <strong>Header:</strong> <code>R_ext/RS.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<p>Analogues of <code>calloc()</code>/<code>realloc()</code>/<code>free()</code>; on allocation failure R throws an error, so a returned pointer is always valid. You must <code>R_Free()</code> on every path, including error paths (see <code>R_UnwindProtect()</code>). Never mix with <code>malloc()</code>/<code>free()</code>, and never call the underlying <code>R_chk_calloc()</code> etc. directly. The legacy <code>Calloc</code>/<code>Realloc</code>/<code>Free</code> spellings were removed in R 4.5.0.</p>
+<p><strong>See also:</strong> <a href="#R_alloc"><code>R_alloc()</code></a></p>
+</section>
+</section>
+<section id="when-to-use-a-rawsxp-instead" class="level2" data-number="4.3">
+<h2 data-number="4.3" class="anchored" data-anchor-id="when-to-use-a-rawsxp-instead"><span class="header-section-number">4.3</span> When to use a RAWSXP instead</h2>
+<p>If the memory should be managed by R’s garbage collector, visible to R, or returned to R, don’t use either of the above — allocate a <code>RAWSXP</code> (<a href="./vectors.html">Vectors</a>) and work in <code>RAW(x)</code>. You get GC-managed lifetime, <code>PROTECT</code> semantics, and alignment suitable for any type, at the cost of an R object header.</p>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -776,8 +873,8 @@ Warning
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./protection.html" class="pagination-link" aria-label="Garbage collection and reference counting">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Garbage collection and reference counting</span></span>
+      <a href="./protection.html" class="pagination-link" aria-label="Protection and the garbage collector">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Protection and the garbage collector</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
@@ -791,4 +888,4 @@ Warning
 
 
 
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions"><ul><li><a href="https://github.com/hadley/r-internals/edit/main/memory.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/hadley/r-internals/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/hadley/r-internals/edit/main/memory.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/hadley/r-internals/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>

@@ -181,7 +181,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./protection.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Garbage collection and reference counting</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Protection and the garbage collector</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -404,7 +404,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#define R_Version</span><span class="op">(</span><span class="pp">major</span><span class="op">,</span><span class="pp"> minor</span><span class="op">,</span><span class="pp"> patch</span><span class="op">)</span><span class="pp"> </span><span class="op">\</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="pp">  </span><span class="op">(((</span><span class="pp">major</span><span class="op">)</span><span class="pp"> </span><span class="op">*</span><span class="pp"> </span><span class="dv">65536</span><span class="op">)</span><span class="pp"> </span><span class="op">+</span><span class="pp"> </span><span class="op">((</span><span class="pp">minor</span><span class="op">)</span><span class="pp"> </span><span class="op">*</span><span class="pp"> </span><span class="dv">256</span><span class="op">)</span><span class="pp"> </span><span class="op">+</span><span class="pp"> </span><span class="op">(</span><span class="pp">patch</span><span class="op">))</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rversion.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>R.version</code></p>
-<p>Used to test the current version of R. <code>R_VERSION</code> is the packed version number of the R being compiled against; <code>R_Version()</code> packs a <code>major.minor.patch</code> triple into the same format for comparison.</p>
+<p><code>R_VERSION</code> is the packed version number of the R being compiled against; <code>R_Version()</code> packs a <code>major.minor.patch</code> triple into the same format for comparison.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;Rversion.h&gt;</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="pp">#if defined(R_VERSION) &amp;&amp; R_VERSION &lt; R_Version(3, 2, 0)</span></span>

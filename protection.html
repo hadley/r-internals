@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>3&nbsp; Garbage collection and reference counting – R's C API</title>
+<title>3&nbsp; Protection and the garbage collector – R's C API</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -123,7 +123,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./calling-c.html">Part I — Foundations</a></li><li class="breadcrumb-item"><a href="./protection.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Garbage collection and reference counting</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./calling-c.html">Part I — Foundations</a></li><li class="breadcrumb-item"><a href="./protection.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Protection and the garbage collector</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -181,7 +181,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./protection.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Garbage collection and reference counting</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Protection and the garbage collector</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -366,41 +366,30 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#gc" id="toc-gc" class="nav-link active" data-scroll-target="#gc"><span class="header-section-number">3.1</span> GC</a>
+  <li><a href="#when-the-garbage-collector-runs" id="toc-when-the-garbage-collector-runs" class="nav-link active" data-scroll-target="#when-the-garbage-collector-runs"><span class="header-section-number">3.1</span> When the garbage collector runs</a>
   <ul class="collapse">
   <li><a href="#R_gc" id="toc-R_gc" class="nav-link" data-scroll-target="#R_gc"><span class="header-section-number">3.1.1</span> <code>R_gc()</code> (<code>R_gc_running()</code>)</a></li>
-  <li><a href="#R_cycle_detected" id="toc-R_cycle_detected" class="nav-link" data-scroll-target="#R_cycle_detected"><span class="header-section-number">3.1.2</span> <code>R_cycle_detected()</code></a></li>
   </ul></li>
-  <li><a href="#protect" id="toc-protect" class="nav-link" data-scroll-target="#protect"><span class="header-section-number">3.2</span> Protect</a>
+  <li><a href="#what-needs-protecting" id="toc-what-needs-protecting" class="nav-link" data-scroll-target="#what-needs-protecting"><span class="header-section-number">3.2</span> What needs protecting</a></li>
+  <li><a href="#protect-and-unprotect" id="toc-protect-and-unprotect" class="nav-link" data-scroll-target="#protect-and-unprotect"><span class="header-section-number">3.3</span> PROTECT and UNPROTECT</a>
   <ul class="collapse">
-  <li><a href="#Rf_protect" id="toc-Rf_protect" class="nav-link" data-scroll-target="#Rf_protect"><span class="header-section-number">3.2.1</span> <code>Rf_protect()</code> (<code>Rf_unprotect()</code>)</a></li>
-  <li><a href="#R_ProtectWithIndex" id="toc-R_ProtectWithIndex" class="nav-link" data-scroll-target="#R_ProtectWithIndex"><span class="header-section-number">3.2.2</span> <code>R_ProtectWithIndex()</code> (<code>R_Reprotect()</code>)</a></li>
-  <li><a href="#UNPROTECT_PTR" id="toc-UNPROTECT_PTR" class="nav-link" data-scroll-target="#UNPROTECT_PTR"><span class="header-section-number">3.2.3</span> <code>UNPROTECT_PTR()</code> (<code>Rf_unprotect_ptr()</code>)</a></li>
-  <li><a href="#PROTECT" id="toc-PROTECT" class="nav-link" data-scroll-target="#PROTECT"><span class="header-section-number">3.2.4</span> <code>PROTECT()</code> (<code>UNPROTECT()</code>, <code>PROTECT_WITH_INDEX()</code>, <code>REPROTECT()</code>)</a></li>
+  <li><a href="#Rf_protect" id="toc-Rf_protect" class="nav-link" data-scroll-target="#Rf_protect"><span class="header-section-number">3.3.1</span> <code>Rf_protect()</code> (<code>Rf_unprotect()</code>)</a></li>
+  <li><a href="#R_ProtectWithIndex" id="toc-R_ProtectWithIndex" class="nav-link" data-scroll-target="#R_ProtectWithIndex"><span class="header-section-number">3.3.2</span> <code>R_ProtectWithIndex()</code> (<code>R_Reprotect()</code>)</a></li>
+  <li><a href="#PROTECT" id="toc-PROTECT" class="nav-link" data-scroll-target="#PROTECT"><span class="header-section-number">3.3.3</span> <code>PROTECT()</code> (<code>UNPROTECT()</code>, <code>PROTECT_WITH_INDEX()</code>, <code>REPROTECT()</code>)</a></li>
   </ul></li>
-  <li><a href="#how-protect-works" id="toc-how-protect-works" class="nav-link" data-scroll-target="#how-protect-works"><span class="header-section-number">3.3</span> How PROTECT works</a></li>
-  <li><a href="#using-protect" id="toc-using-protect" class="nav-link" data-scroll-target="#using-protect"><span class="header-section-number">3.4</span> Using PROTECT</a>
+  <li><a href="#preserving-objects-across-calls" id="toc-preserving-objects-across-calls" class="nav-link" data-scroll-target="#preserving-objects-across-calls"><span class="header-section-number">3.4</span> Preserving objects across calls</a>
   <ul class="collapse">
-  <li><a href="#r_preserveobject-r_releaseobject" id="toc-r_preserveobject-r_releaseobject" class="nav-link" data-scroll-target="#r_preserveobject-r_releaseobject"><span class="header-section-number">3.4.1</span> R_PreserveObject, R_ReleaseObject</a></li>
-  <li><a href="#R_PreserveObject" id="toc-R_PreserveObject" class="nav-link" data-scroll-target="#R_PreserveObject"><span class="header-section-number">3.4.2</span> <code>R_PreserveObject()</code> (<code>R_ReleaseObject()</code>)</a></li>
+  <li><a href="#R_PreserveObject" id="toc-R_PreserveObject" class="nav-link" data-scroll-target="#R_PreserveObject"><span class="header-section-number">3.4.1</span> <code>R_PreserveObject()</code> (<code>R_ReleaseObject()</code>)</a></li>
   </ul></li>
-  <li><a href="#memory-size" id="toc-memory-size" class="nav-link" data-scroll-target="#memory-size"><span class="header-section-number">3.5</span> Memory size</a>
+  <li><a href="#modifying-inputs-and-reference-counting" id="toc-modifying-inputs-and-reference-counting" class="nav-link" data-scroll-target="#modifying-inputs-and-reference-counting"><span class="header-section-number">3.5</span> Modifying inputs and reference counting</a>
   <ul class="collapse">
-  <li><a href="#vmaxget" id="toc-vmaxget" class="nav-link" data-scroll-target="#vmaxget"><span class="header-section-number">3.5.1</span> <code>vmaxget()</code> (<code>vmaxset()</code>)</a></li>
+  <li><a href="#MAYBE_SHARED" id="toc-MAYBE_SHARED" class="nav-link" data-scroll-target="#MAYBE_SHARED"><span class="header-section-number">3.5.1</span> <code>MAYBE_SHARED()</code> (<code>NO_REFERENCES()</code>, <code>MAYBE_REFERENCED()</code>, <code>NOT_SHARED()</code>, <code>MARK_NOT_MUTABLE()</code>)</a></li>
+  <li><a href="#Rf_duplicate" id="toc-Rf_duplicate" class="nav-link" data-scroll-target="#Rf_duplicate"><span class="header-section-number">3.5.2</span> <code>Rf_duplicate()</code> (<code>Rf_shallow_duplicate()</code>, <code>Rf_lazy_duplicate()</code>)</a></li>
   </ul></li>
-  <li><a href="#manual-memory-management" id="toc-manual-memory-management" class="nav-link" data-scroll-target="#manual-memory-management"><span class="header-section-number">3.6</span> Manual memory management</a>
+  <li><a href="#finding-protection-bugs" id="toc-finding-protection-bugs" class="nav-link" data-scroll-target="#finding-protection-bugs"><span class="header-section-number">3.6</span> Finding protection bugs</a></li>
+  <li><a href="#header-flags" id="toc-header-flags" class="nav-link" data-scroll-target="#header-flags"><span class="header-section-number">3.7</span> Header flags</a>
   <ul class="collapse">
-  <li><a href="#R_alloc" id="toc-R_alloc" class="nav-link" data-scroll-target="#R_alloc"><span class="header-section-number">3.6.1</span> <code>R_alloc()</code> (<code>R_allocLD()</code>)</a></li>
-  <li><a href="#S_alloc" id="toc-S_alloc" class="nav-link" data-scroll-target="#S_alloc"><span class="header-section-number">3.6.2</span> <code>S_alloc()</code> (<code>S_realloc()</code>)</a></li>
-  </ul></li>
-  <li><a href="#reference-counting" id="toc-reference-counting" class="nav-link" data-scroll-target="#reference-counting"><span class="header-section-number">3.7</span> Reference counting</a>
-  <ul class="collapse">
-  <li><a href="#MAYBE_SHARED" id="toc-MAYBE_SHARED" class="nav-link" data-scroll-target="#MAYBE_SHARED"><span class="header-section-number">3.7.1</span> <code>MAYBE_SHARED()</code> (<code>NO_REFERENCES()</code>, <code>MAYBE_REFERENCED()</code>, <code>NOT_SHARED()</code>, <code>MARK_NOT_MUTABLE()</code>)</a></li>
-  <li><a href="#IS_GETTER_CALL" id="toc-IS_GETTER_CALL" class="nav-link" data-scroll-target="#IS_GETTER_CALL"><span class="header-section-number">3.7.2</span> <code>IS_GETTER_CALL()</code></a></li>
-  <li><a href="#efficient-copying" id="toc-efficient-copying" class="nav-link" data-scroll-target="#efficient-copying"><span class="header-section-number">3.7.3</span> Efficient copying</a></li>
-  <li><a href="#Rf_duplicate" id="toc-Rf_duplicate" class="nav-link" data-scroll-target="#Rf_duplicate"><span class="header-section-number">3.7.4</span> <code>Rf_duplicate()</code> (<code>Rf_shallow_duplicate()</code>, <code>Rf_lazy_duplicate()</code>)</a></li>
-  <li><a href="#internals" id="toc-internals" class="nav-link" data-scroll-target="#internals"><span class="header-section-number">3.7.5</span> Internals</a></li>
-  <li><a href="#OBJECT" id="toc-OBJECT" class="nav-link" data-scroll-target="#OBJECT"><span class="header-section-number">3.7.6</span> <code>OBJECT()</code> (<code>MARK()</code>, <code>TYPEOF()</code>, <code>NAMED()</code>, <code>REFCNT()</code>, <code>SET_OBJECT()</code>, <code>SET_TYPEOF()</code>, <code>SET_NAMED()</code>, <code>LEVELS()</code>, <code>SETLEVELS()</code>)</a></li>
+  <li><a href="#TYPEOF" id="toc-TYPEOF" class="nav-link" data-scroll-target="#TYPEOF"><span class="header-section-number">3.7.1</span> <code>TYPEOF()</code> (<code>MARK()</code>, <code>NAMED()</code>, <code>REFCNT()</code>, <code>SET_NAMED()</code>, <code>LEVELS()</code>, <code>SETLEVELS()</code>)</a></li>
   </ul></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/hadley/r-internals/edit/main/protection.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/hadley/r-internals/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
@@ -408,9 +397,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./calling-c.html">Part I — Foundations</a></li><li class="breadcrumb-item"><a href="./protection.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Garbage collection and reference counting</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./calling-c.html">Part I — Foundations</a></li><li class="breadcrumb-item"><a href="./protection.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Protection and the garbage collector</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Garbage collection and reference counting</span></h1>
+<h1 class="title"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Protection and the garbage collector</span></h1>
 </div>
 
 
@@ -427,8 +416,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="gc" class="level2" data-number="3.1">
-<h2 data-number="3.1" class="anchored" data-anchor-id="gc"><span class="header-section-number">3.1</span> GC</h2>
+<p>R’s garbage collector reclaims <code>SEXP</code>s that are no longer reachable. That creates a hazard unique to writing C against R: a <code>SEXP</code> you just allocated can be freed out from under you at the <em>next allocation</em>, unless you tell R you’re still using it. Telling R is called <strong>protection</strong>, and getting it right is the single most important discipline in R C programming.</p>
+<section id="when-the-garbage-collector-runs" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="when-the-garbage-collector-runs"><span class="header-section-number">3.1</span> When the garbage collector runs</h2>
+<p>GC can only run when R allocates — <code>Rf_allocVector()</code>, <code>Rf_cons()</code>, <code>Rf_install()</code>, <code>Rf_mkString()</code>, and anything else that creates an object. Pure accessors (<code>REAL()</code>, <code>TYPEOF()</code>, <code>CAR()</code>) never trigger it. The corollary: an unprotected <code>SEXP</code> is safe only until the next allocation, which makes protection bugs easy to miss — they surface only when GC happens to run at the wrong moment.</p>
 <section id="R_gc" class="level3" data-number="3.1.1">
 <h3 data-number="3.1.1" class="anchored" data-anchor-id="R_gc"><span class="header-section-number">3.1.1</span> <code>R_gc()</code> (<code>R_gc_running()</code>)</h3>
 <p>Trigger garbage collection, or check whether it is running.</p>
@@ -436,172 +427,118 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> R_gc_running<span class="op">();</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>R_ext/Memory.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>gc</code></p>
 </section>
-<section id="R_cycle_detected" class="level3" data-number="3.1.2">
-<h3 data-number="3.1.2" class="anchored" data-anchor-id="R_cycle_detected"><span class="header-section-number">3.1.2</span> <code>R_cycle_detected()</code></h3>
-<p>Detect a reference cycle between two objects.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>Rboolean R_cycle_detected<span class="op">(</span>SEXP s<span class="op">,</span> SEXP child<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> non-API · <strong>Header:</strong> <code>Defn.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
-<p>You might wonder what all the <code>PROTECT()</code> calls do. They tell R that the object is in use and shouldn’t be deleted if the garbage collector is activated. (We don’t need to protect objects that R already knows we’re using, like function arguments.)</p>
-<p>You also need to make sure that every protected object is unprotected. <code>UNPROTECT()</code> takes a single integer argument, <code>n</code>, and unprotects the last n objects that were protected. The number of protects and unprotects must match. If not, R will warn about a “stack imbalance in .Call”. Other specialised forms of protection are needed in some circumstances:</p>
+</section>
+<section id="what-needs-protecting" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="what-needs-protecting"><span class="header-section-number">3.2</span> What needs protecting</h2>
+<p>Protect every <code>SEXP</code> you allocate, unless it is immediately stored inside an already-protected object. You do <strong>not</strong> need to protect:</p>
 <ul>
-<li><p><code>UNPROTECT_PTR()</code> unprotects the object pointed to by the <code>SEXP</code>,</p></li>
-<li><p><code>PROTECT_WITH_INDEX()</code> saves an index of the protection location that can be used to replace the protected value using <code>REPROTECT()</code>.</p></li>
+<li><strong>Function arguments</strong> — R is holding them for the duration of the call.</li>
+<li><strong>Symbols</strong> — interned symbols are permanently reachable.</li>
+<li><strong>Values reachable from a protected object</strong> — e.g.&nbsp;once you’ve <code>SET_VECTOR_ELT(protected_list, i, x)</code>, <code>x</code> is safe.</li>
+<li><strong><code>R_NilValue</code></strong> and other R-owned constants.</li>
 </ul>
-<p>Consult the R externals section on <a href="http://cran.r-project.org/doc/manuals/R-exts.html#Garbage-Collection">garbage collection</a> for more details.</p>
+<p>When in doubt, protect: an extra <code>PROTECT</code> is cheap, a missing one is a crash.</p>
 </section>
-</section>
-<section id="protect" class="level2" data-number="3.2">
-<h2 data-number="3.2" class="anchored" data-anchor-id="protect"><span class="header-section-number">3.2</span> Protect</h2>
-<section id="Rf_protect" class="level3" data-number="3.2.1">
-<h3 data-number="3.2.1" class="anchored" data-anchor-id="Rf_protect"><span class="header-section-number">3.2.1</span> <code>Rf_protect()</code> (<code>Rf_unprotect()</code>)</h3>
+<section id="protect-and-unprotect" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="protect-and-unprotect"><span class="header-section-number">3.3</span> PROTECT and UNPROTECT</h2>
+<p><code>PROTECT()</code> pushes the object onto a protection stack (an internal array of <code>SEXP</code>s); <code>UNPROTECT(n)</code> pops the <code>n</code> most recent entries. Protects and unprotects must balance exactly — R warns about a “stack imbalance” when they don’t. Because the stack is only reset when your <code>.Call</code> entry point returns, protecting inside a loop without unprotecting can overflow it; use <code>PROTECT_WITH_INDEX()</code>/<code>REPROTECT()</code> to reuse one stack slot across iterations.</p>
+<section id="Rf_protect" class="level3" data-number="3.3.1">
+<h3 data-number="3.3.1" class="anchored" data-anchor-id="Rf_protect"><span class="header-section-number">3.3.1</span> <code>Rf_protect()</code> (<code>Rf_unprotect()</code>)</h3>
 <p>Protect and unprotect objects from garbage collection.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>SEXP Rf_protect<span class="op">(</span>SEXP<span class="op">);</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> Rf_unprotect<span class="op">(</span><span class="dt">int</span><span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>SEXP Rf_protect<span class="op">(</span>SEXP<span class="op">);</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> Rf_unprotect<span class="op">(</span><span class="dt">int</span><span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
-<p>These are the functions underlying the <code>PROTECT()</code> and <code>UNPROTECT()</code> macros; package code should normally use the macros instead.</p>
+<p>These are the underlying functions for the <code>PROTECT()</code> and <code>UNPROTECT()</code> macros; use the macros instead in package code.</p>
 <p><strong>See also:</strong> <a href="#PROTECT"><code>PROTECT()</code></a></p>
 </section>
-<section id="R_ProtectWithIndex" class="level3" data-number="3.2.2">
-<h3 data-number="3.2.2" class="anchored" data-anchor-id="R_ProtectWithIndex"><span class="header-section-number">3.2.2</span> <code>R_ProtectWithIndex()</code> (<code>R_Reprotect()</code>)</h3>
+<section id="R_ProtectWithIndex" class="level3" data-number="3.3.2">
+<h3 data-number="3.3.2" class="anchored" data-anchor-id="R_ProtectWithIndex"><span class="header-section-number">3.3.2</span> <code>R_ProtectWithIndex()</code> (<code>R_Reprotect()</code>)</h3>
 <p>Protect an object at a fixed stack location so its value can be replaced later.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> R_ProtectWithIndex<span class="op">(</span>SEXP<span class="op">,</span> PROTECT_INDEX <span class="op">*);</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> R_Reprotect<span class="op">(</span>SEXP<span class="op">,</span> PROTECT_INDEX<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> R_ProtectWithIndex<span class="op">(</span>SEXP<span class="op">,</span> PROTECT_INDEX <span class="op">*);</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> R_Reprotect<span class="op">(</span>SEXP<span class="op">,</span> PROTECT_INDEX<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
-<p>We sometimes need to coerce a protected value and place the new coerced value under protection. For these cases <code>PROTECT_WITH_INDEX</code> saves an index of the protection location that can be used to replace the protected value using <code>REPROTECT</code>. These are the functions behind those macros.</p>
+<p>These are the underlying functions for the <code>PROTECT_WITH_INDEX()</code> and <code>REPROTECT()</code> macros. Useful when you need to coerce a protected value and replace it in place, such as inside a loop.</p>
 <p><strong>See also:</strong> <a href="#PROTECT"><code>PROTECT()</code></a></p>
 </section>
-<section id="UNPROTECT_PTR" class="level3" data-number="3.2.3">
-<h3 data-number="3.2.3" class="anchored" data-anchor-id="UNPROTECT_PTR"><span class="header-section-number">3.2.3</span> <code>UNPROTECT_PTR()</code> (<code>Rf_unprotect_ptr()</code>)</h3>
-<p>Unprotect a specific object by pointer.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#define UNPROTECT_PTR</span><span class="op">(</span><span class="pp">s</span><span class="op">)</span><span class="pp"> </span>Rf_unprotect_ptr<span class="op">(</span><span class="pp">s</span><span class="op">)</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> Rf_unprotect_ptr<span class="op">(</span>SEXP<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> non-API (use <a href="#UNPROTECT"><code>UNPROTECT()</code></a>) · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
-<p><code>UNPROTECT_PTR()</code> unprotects the object pointed to by the <code>SEXP</code>. It performs a search (from the top of the protection stack) to find the element to unprotect.</p>
-<p><strong>See also:</strong> <a href="#PROTECT"><code>PROTECT()</code></a></p>
-</section>
-<section id="PROTECT" class="level3" data-number="3.2.4">
-<h3 data-number="3.2.4" class="anchored" data-anchor-id="PROTECT"><span class="header-section-number">3.2.4</span> <code>PROTECT()</code> (<code>UNPROTECT()</code>, <code>PROTECT_WITH_INDEX()</code>, <code>REPROTECT()</code>)</h3>
+<section id="PROTECT" class="level3" data-number="3.3.3">
+<h3 data-number="3.3.3" class="anchored" data-anchor-id="PROTECT"><span class="header-section-number">3.3.3</span> <code>PROTECT()</code> (<code>UNPROTECT()</code>, <code>PROTECT_WITH_INDEX()</code>, <code>REPROTECT()</code>)</h3>
 <p>Protect SEXPs from garbage collection.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>SEXP PROTECT<span class="op">(</span>SEXP s<span class="op">);</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> UNPROTECT<span class="op">(</span><span class="dt">int</span> n<span class="op">);</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>PROTECT_INDEX PROTECT_WITH_INDEX<span class="op">(</span>SEXP s<span class="op">,</span> PROTECT_INDEX <span class="op">*</span>idx<span class="op">);</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> REPROTECT<span class="op">(</span>SEXP s<span class="op">,</span> PROTECT_INDEX idx<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>SEXP PROTECT<span class="op">(</span>SEXP s<span class="op">);</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> UNPROTECT<span class="op">(</span><span class="dt">int</span> n<span class="op">);</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>PROTECT_INDEX PROTECT_WITH_INDEX<span class="op">(</span>SEXP s<span class="op">,</span> PROTECT_INDEX <span class="op">*</span>idx<span class="op">);</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> REPROTECT<span class="op">(</span>SEXP s<span class="op">,</span> PROTECT_INDEX idx<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
-<p><code>PROTECT()</code> pushes <code>s</code> onto the protection stack; <code>UNPROTECT(n)</code> pops the <code>n</code> most recent. Protections must balance within a single C call — they are released automatically when your <code>.Call</code> entry point returns, but unbalanced use inside a loop can overflow the pointer-protection stack. Use <code>PROTECT_WITH_INDEX</code>/<code>REPROTECT</code> when you must re-protect a different value at the same stack depth (e.g.&nbsp;in a loop).</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>SEXP out <span class="op">=</span> PROTECT<span class="op">(</span>Rf_allocVector<span class="op">(</span>REALSXP<span class="op">,</span> n<span class="op">));</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co">// ... fill out ...</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>UNPROTECT<span class="op">(</span><span class="dv">1</span><span class="op">);</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="cf">return</span> out<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>PROTECT()</code> pushes <code>s</code> onto the protection stack; <code>UNPROTECT(n)</code> pops the <code>n</code> most recent entries. Unbalanced use inside a loop can overflow the protection stack, since it is only reset automatically when your <code>.Call</code> entry point returns. Use <code>PROTECT_WITH_INDEX()</code>/<code>REPROTECT()</code> to re-protect a different value at the same stack depth, e.g.&nbsp;inside a loop.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>SEXP out <span class="op">=</span> PROTECT<span class="op">(</span>Rf_allocVector<span class="op">(</span>REALSXP<span class="op">,</span> n<span class="op">));</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co">// ... fill out ...</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>UNPROTECT<span class="op">(</span><span class="dv">1</span><span class="op">);</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="cf">return</span> out<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>See also:</strong> <a href="#R_PreserveObject"><code>R_PreserveObject()</code></a></p>
 </section>
 </section>
-<section id="how-protect-works" class="level2" data-number="3.3">
-<h2 data-number="3.3" class="anchored" data-anchor-id="how-protect-works"><span class="header-section-number">3.3</span> How PROTECT works</h2>
-<p>Objects protected by <code>PROTECT()</code> are placed on a protection stack (internally called <code>R_PPStack</code>), which itself is just an array of <code>SEXP</code>s. A protection index, called <code>R_PPStackTop</code>, denotes the top of the protection stack. When <code>UNPROTECT()</code>ing a (number) of objects, the stack top is decremented, and so all <code>SEXP</code>s ‘overflowing’ the <code>R_PPStack</code> are considered unprotected and hence eligible for garbage collection.</p>
-<p>Note that this implies that <code>PROTECT_WITH_INDEX()</code> and <code>REPROTECT()</code> are merely APIs for modifying elements within the protection stack. <code>UNPROTECT_PTR()</code> performs a search (from the top of the stack) to find the element to unprotect.</p>
-</section>
-<section id="using-protect" class="level2" data-number="3.4">
-<h2 data-number="3.4" class="anchored" data-anchor-id="using-protect"><span class="header-section-number">3.4</span> Using PROTECT</h2>
-<p>Properly protecting the R objects you allocate is extremely important! Improper protection leads to difficulty diagnosing errors, typically segfaults, but other corruption is possible as well. In general, if you allocate a new R object, you must <code>PROTECT</code> it.</p>
-<section id="r_preserveobject-r_releaseobject" class="level3" data-number="3.4.1">
-<h3 data-number="3.4.1" class="anchored" data-anchor-id="r_preserveobject-r_releaseobject"><span class="header-section-number">3.4.1</span> R_PreserveObject, R_ReleaseObject</h3>
-</section>
-<section id="R_PreserveObject" class="level3" data-number="3.4.2">
-<h3 data-number="3.4.2" class="anchored" data-anchor-id="R_PreserveObject"><span class="header-section-number">3.4.2</span> <code>R_PreserveObject()</code> (<code>R_ReleaseObject()</code>)</h3>
+<section id="preserving-objects-across-calls" class="level2" data-number="3.4">
+<h2 data-number="3.4" class="anchored" data-anchor-id="preserving-objects-across-calls"><span class="header-section-number">3.4</span> Preserving objects across calls</h2>
+<p><code>PROTECT</code> only lasts until your <code>.Call</code> returns. To keep an object alive across multiple calls from R (typically stashed in a static variable or an external pointer), add it to R’s precious list. The precious list is a pairlist walked by the GC; because <code>R_ReleaseObject()</code> searches it linearly, preserving and releasing many objects in the same order can degrade to quadratic time — see <a href="https://github.com/tidyverse/dplyr/issues/1396">this dplyr issue</a> for a real-world manifestation.</p>
+<section id="R_PreserveObject" class="level3" data-number="3.4.1">
+<h3 data-number="3.4.1" class="anchored" data-anchor-id="R_PreserveObject"><span class="header-section-number">3.4.1</span> <code>R_PreserveObject()</code> (<code>R_ReleaseObject()</code>)</h3>
 <p>Preserve an object across C calls by adding it to R’s precious list.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> R_PreserveObject<span class="op">(</span>SEXP<span class="op">);</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> R_ReleaseObject<span class="op">(</span>SEXP<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
-<p>The primary structure that R uses for protecting objects is the so-called <code>R_PreciousList</code>, which is just a pairlist of <code>SEXP</code>s; the <code>R_PPStack</code> protection stack is part of this list. These functions need to be used with care: because <code>R_ReleaseObject()</code> performs a recursive search for the object to release, inserting and later removing many <code>SEXP</code>s in the same order can cause performance regressions. See <a href="https://github.com/hadley/dplyr/issues/1396">this dplyr issue</a> for an interesting manifestation of this problem.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> R_PreserveObject<span class="op">(</span>SEXP<span class="op">);</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> R_ReleaseObject<span class="op">(</span>SEXP<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<p>Objects are added to <code>R_PreciousList</code>, a pairlist walked by the garbage collector. <code>R_PreserveObject()</code> allocates (it conses the object onto <code>R_PreciousList</code>), so it can throw on out-of-memory; <code>R_ReleaseObject()</code> performs a linear search of this list to remove the entry and does not allocate, but repeatedly preserving and releasing many objects in the same order can cause quadratic slowdowns.</p>
 <p><strong>See also:</strong> <a href="#PROTECT"><code>PROTECT()</code></a></p>
-<p>The primary structure that R uses for protecting objects is the so-called <code>R_PreciousList</code>, which is just a pairlist of <code>SEXP</code>s. The aforementioned <code>R_PPStack</code> is part of this <code>R_PreciousList</code> (and hence is the mechanism by which those <code>SEXP</code>s become protected). <code>R_PreserveObject()</code> and <code>R_ReleaseObject()</code> are mechanisms for inserting and removing <code>SEXP</code>s from this precious list.</p>
-<p>These functions need to be used with care: because <code>R_ReleaseObject()</code> will perform a recursive search for the object to protect, if many <code>SEXP</code>s are inserted and later removed in the same order, this can cause performance regressions. See <a href="https://github.com/hadley/dplyr/issues/1396">this dplyr issue</a> for an interesting manifestation of this problem.</p>
 </section>
 </section>
-<section id="memory-size" class="level2" data-number="3.5">
-<h2 data-number="3.5" class="anchored" data-anchor-id="memory-size"><span class="header-section-number">3.5</span> Memory size</h2>
-<section id="vmaxget" class="level3" data-number="3.5.1">
-<h3 data-number="3.5.1" class="anchored" data-anchor-id="vmaxget"><span class="header-section-number">3.5.1</span> <code>vmaxget()</code> (<code>vmaxset()</code>)</h3>
-<p>Get and set the high-water mark of R’s temporary allocation arena.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span><span class="op">*</span> vmaxget<span class="op">(</span><span class="dt">void</span><span class="op">);</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> vmaxset<span class="op">(</span><span class="dt">const</span> <span class="dt">void</span> <span class="op">*);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>R_ext/Memory.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
-<p><strong>See also:</strong> <a href="#R_alloc"><code>R_alloc()</code></a></p>
-</section>
-</section>
-<section id="manual-memory-management" class="level2" data-number="3.6">
-<h2 data-number="3.6" class="anchored" data-anchor-id="manual-memory-management"><span class="header-section-number">3.6</span> Manual memory management</h2>
-<section id="R_alloc" class="level3" data-number="3.6.1">
-<h3 data-number="3.6.1" class="anchored" data-anchor-id="R_alloc"><span class="header-section-number">3.6.1</span> <code>R_alloc()</code> (<code>R_allocLD()</code>)</h3>
-<p>Allocate temporary memory that R reclaims automatically.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="dt">char</span><span class="op">*</span> R_alloc<span class="op">(</span><span class="dt">size_t</span><span class="op">,</span> <span class="dt">int</span><span class="op">);</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="dt">long</span> <span class="dt">double</span> <span class="op">*</span>R_allocLD<span class="op">(</span><span class="dt">size_t</span> nelem<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>R_ext/Memory.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
-<p><strong>See also:</strong> <a href="#vmaxget"><code>vmaxget()</code></a></p>
-</section>
-<section id="S_alloc" class="level3" data-number="3.6.2">
-<h3 data-number="3.6.2" class="anchored" data-anchor-id="S_alloc"><span class="header-section-number">3.6.2</span> <code>S_alloc()</code> (<code>S_realloc()</code>)</h3>
-<p>Allocate and reallocate temporary memory using the legacy S interface.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="dt">char</span><span class="op">*</span> S_alloc<span class="op">(</span><span class="dt">long</span><span class="op">,</span> <span class="dt">int</span><span class="op">);</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="dt">char</span><span class="op">*</span> S_realloc<span class="op">(</span><span class="dt">char</span> <span class="op">*,</span> <span class="dt">long</span><span class="op">,</span> <span class="dt">long</span><span class="op">,</span> <span class="dt">int</span><span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>R_ext/Memory.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
-<p><strong>See also:</strong> <a href="#R_alloc"><code>R_alloc()</code></a></p>
-</section>
-</section>
-<section id="reference-counting" class="level2" data-number="3.7">
-<h2 data-number="3.7" class="anchored" data-anchor-id="reference-counting"><span class="header-section-number">3.7</span> Reference counting</h2>
-<section id="MAYBE_SHARED" class="level3" data-number="3.7.1">
-<h3 data-number="3.7.1" class="anchored" data-anchor-id="MAYBE_SHARED"><span class="header-section-number">3.7.1</span> <code>MAYBE_SHARED()</code> (<code>NO_REFERENCES()</code>, <code>MAYBE_REFERENCED()</code>, <code>NOT_SHARED()</code>, <code>MARK_NOT_MUTABLE()</code>)</h3>
+<section id="modifying-inputs-and-reference-counting" class="level2" data-number="3.5">
+<h2 data-number="3.5" class="anchored" data-anchor-id="modifying-inputs-and-reference-counting"><span class="header-section-number">3.5</span> Modifying inputs and reference counting</h2>
+<p>You must not modify a function argument in place: it may be shared with the caller (see <a href="./sexps.html">SEXPs</a>). Duplicate first — for lists, <code>Rf_shallow_duplicate()</code> copies only the top level, while <code>Rf_duplicate()</code> copies every element. <code>MAYBE_SHARED()</code> and friends let you check the reference-count flags before modifying an object you <em>did</em> create, which is the optimisation R’s own internals use.</p>
+<section id="MAYBE_SHARED" class="level3" data-number="3.5.1">
+<h3 data-number="3.5.1" class="anchored" data-anchor-id="MAYBE_SHARED"><span class="header-section-number">3.5.1</span> <code>MAYBE_SHARED()</code> (<code>NO_REFERENCES()</code>, <code>MAYBE_REFERENCED()</code>, <code>NOT_SHARED()</code>, <code>MARK_NOT_MUTABLE()</code>)</h3>
 <p>Test or set an object’s reference-count flags before modifying it in place.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#define MAYBE_SHARED</span><span class="op">(</span><span class="pp">x</span><span class="op">)</span><span class="pp"> </span><span class="op">(</span><span class="pp">NAMED</span><span class="op">(</span><span class="pp">x</span><span class="op">)</span><span class="pp"> </span><span class="op">&gt;</span><span class="pp"> </span><span class="dv">1</span><span class="op">)</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#define NO_REFERENCES</span><span class="op">(</span><span class="pp">x</span><span class="op">)</span><span class="pp"> </span><span class="op">(</span><span class="pp">NAMED</span><span class="op">(</span><span class="pp">x</span><span class="op">)</span><span class="pp"> </span><span class="op">==</span><span class="pp"> </span><span class="dv">0</span><span class="op">)</span></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="pp">#define MARK_NOT_MUTABLE</span><span class="op">(</span><span class="pp">x</span><span class="op">)</span><span class="pp"> SET_NAMED</span><span class="op">(</span><span class="pp">x</span><span class="op">,</span><span class="pp"> NAMEDMAX</span><span class="op">)</span></span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="pp">#define MAYBE_REFERENCED</span><span class="op">(</span><span class="pp">x</span><span class="op">)</span><span class="pp"> </span><span class="op">(!</span><span class="pp"> NO_REFERENCES</span><span class="op">(</span><span class="pp">x</span><span class="op">))</span></span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="pp">#define NOT_SHARED</span><span class="op">(</span><span class="pp">x</span><span class="op">)</span><span class="pp"> </span><span class="op">(!</span><span class="pp"> MAYBE_SHARED</span><span class="op">(</span><span class="pp">x</span><span class="op">))</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> MAYBE_SHARED<span class="op">(</span>SEXP x<span class="op">);</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> NO_REFERENCES<span class="op">(</span>SEXP x<span class="op">);</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> MARK_NOT_MUTABLE<span class="op">(</span>SEXP x<span class="op">);</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="pp">#define MAYBE_REFERENCED</span><span class="op">(</span><span class="pp">x</span><span class="op">)</span><span class="pp"> </span><span class="op">(!</span><span class="pp"> NO_REFERENCES</span><span class="op">(</span><span class="pp">x</span><span class="op">))</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="pp">#define NOT_SHARED</span><span class="op">(</span><span class="pp">x</span><span class="op">)</span><span class="pp"> </span><span class="op">(!</span><span class="pp"> MAYBE_SHARED</span><span class="op">(</span><span class="pp">x</span><span class="op">))</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
-<p>You must be very careful when modifying function inputs. These macros test the <code>NAMED</code> reference count so you can tell whether an object may be shared before changing it in place.</p>
+<p>Package code sees these as plain functions, not macros (that expansion is only visible inside R’s own build, where <code>USE_RINTERNALS</code> is defined). By default they test the <code>REFCNT</code> reference count, since R defines <code>SWITCH_TO_REFCNT</code> unless a package opts out with <code>SWITCH_TO_NAMED</code>; the legacy <code>NAMED</code> counter is what they test in that (rare) opt-out case.</p>
 <p><strong>See also:</strong> <a href="#Rf_duplicate"><code>Rf_duplicate()</code></a></p>
 </section>
-<section id="IS_GETTER_CALL" class="level3" data-number="3.7.2">
-<h3 data-number="3.7.2" class="anchored" data-anchor-id="IS_GETTER_CALL"><span class="header-section-number">3.7.2</span> <code>IS_GETTER_CALL()</code></h3>
-<p>Test whether a call is a getter call in complex assignment support.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#define IS_GETTER_CALL</span><span class="op">(</span><span class="pp">call</span><span class="op">)</span><span class="pp"> </span><span class="op">(</span><span class="pp">CADR</span><span class="op">(</span><span class="pp">call</span><span class="op">)</span><span class="pp"> </span><span class="op">==</span><span class="pp"> </span>R_TmpvalSymbol<span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> non-API · <strong>Header:</strong> <code>Defn.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
-<p>Complex assignment support: a temporary definition that will need to be refined to distinguish getter from setter calls.</p>
-<p>You must be very careful when modifying function inputs. If you’re working with lists, use <code>shallow_duplicate()</code> to make a shallow copy; <code>duplicate()</code> will also copy every element in the list.</p>
-</section>
-<section id="efficient-copying" class="level3" data-number="3.7.3">
-<h3 data-number="3.7.3" class="anchored" data-anchor-id="efficient-copying"><span class="header-section-number">3.7.3</span> Efficient copying</h3>
-</section>
-<section id="Rf_duplicate" class="level3" data-number="3.7.4">
-<h3 data-number="3.7.4" class="anchored" data-anchor-id="Rf_duplicate"><span class="header-section-number">3.7.4</span> <code>Rf_duplicate()</code> (<code>Rf_shallow_duplicate()</code>, <code>Rf_lazy_duplicate()</code>)</h3>
+<section id="Rf_duplicate" class="level3" data-number="3.5.2">
+<h3 data-number="3.5.2" class="anchored" data-anchor-id="Rf_duplicate"><span class="header-section-number">3.5.2</span> <code>Rf_duplicate()</code> (<code>Rf_shallow_duplicate()</code>, <code>Rf_lazy_duplicate()</code>)</h3>
 <p>Duplicate an object, either deeply or shallowly.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>SEXP Rf_duplicate<span class="op">(</span>SEXP<span class="op">);</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>SEXP Rf_shallow_duplicate<span class="op">(</span>SEXP<span class="op">);</span></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>SEXP Rf_lazy_duplicate<span class="op">(</span>SEXP<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>SEXP Rf_duplicate<span class="op">(</span>SEXP<span class="op">);</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>SEXP Rf_shallow_duplicate<span class="op">(</span>SEXP<span class="op">);</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>SEXP Rf_lazy_duplicate<span class="op">(</span>SEXP<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> result · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
-<p>You must be very careful when modifying function inputs. If you’re working with lists, use <code>shallow_duplicate()</code> to make a shallow copy; <code>duplicate()</code> will also copy every element in the list.</p>
+<p>Use <code>Rf_shallow_duplicate()</code> for lists when only the top-level structure needs copying; <code>Rf_duplicate()</code> also copies every element.</p>
 <p><strong>See also:</strong> <a href="#MAYBE_SHARED"><code>MAYBE_SHARED()</code></a></p>
 </section>
-<section id="internals" class="level3" data-number="3.7.5">
-<h3 data-number="3.7.5" class="anchored" data-anchor-id="internals"><span class="header-section-number">3.7.5</span> Internals</h3>
 </section>
-<section id="OBJECT" class="level3" data-number="3.7.6">
-<h3 data-number="3.7.6" class="anchored" data-anchor-id="OBJECT"><span class="header-section-number">3.7.6</span> <code>OBJECT()</code> (<code>MARK()</code>, <code>TYPEOF()</code>, <code>NAMED()</code>, <code>REFCNT()</code>, <code>SET_OBJECT()</code>, <code>SET_TYPEOF()</code>, <code>SET_NAMED()</code>, <code>LEVELS()</code>, <code>SETLEVELS()</code>)</h3>
-<p>Read and write the general attribute flags of a cons cell.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span>  <span class="op">(</span>OBJECT<span class="op">)(</span>SEXP x<span class="op">);</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span>  <span class="op">(</span>MARK<span class="op">)(</span>SEXP x<span class="op">);</span></span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span>  <span class="op">(</span>TYPEOF<span class="op">)(</span>SEXP x<span class="op">);</span></span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span>  <span class="op">(</span>NAMED<span class="op">)(</span>SEXP x<span class="op">);</span></span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span>  <span class="op">(</span>REFCNT<span class="op">)(</span>SEXP x<span class="op">);</span></span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> <span class="op">(</span>SET_OBJECT<span class="op">)(</span>SEXP x<span class="op">,</span> <span class="dt">int</span> v<span class="op">);</span></span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> <span class="op">(</span>SET_TYPEOF<span class="op">)(</span>SEXP x<span class="op">,</span> <span class="dt">int</span> v<span class="op">);</span></span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> <span class="op">(</span>SET_NAMED<span class="op">)(</span>SEXP x<span class="op">,</span> <span class="dt">int</span> v<span class="op">);</span></span>
-<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span>  <span class="op">(</span>LEVELS<span class="op">)(</span>SEXP x<span class="op">);</span></span>
-<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span>  <span class="op">(</span>SETLEVELS<span class="op">)(</span>SEXP x<span class="op">,</span> <span class="dt">int</span> v<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<section id="finding-protection-bugs" class="level2" data-number="3.6">
+<h2 data-number="3.6" class="anchored" data-anchor-id="finding-protection-bugs"><span class="header-section-number">3.6</span> Finding protection bugs</h2>
+<p>Protection bugs typically manifest as intermittent segfaults or corrupted objects. Two tools make them reproducible:</p>
+<ul>
+<li><code>gctorture(TRUE)</code> (or <code>gctorture2()</code> for finer control) forces a GC at every allocation, so a missing <code>PROTECT</code> fails immediately instead of randomly. Combine with <code>gctorture(TRUE); &lt;your test&gt;</code> under <code>R CMD check</code>.</li>
+<li><a href="https://github.com/kalibera/rchk">rchk</a> statically analyses your compiled package for protect/unprotect imbalances and unprotected uses. It has false positives, but every report is worth reading.</li>
+</ul>
+</section>
+<section id="header-flags" class="level2" data-number="3.7">
+<h2 data-number="3.7" class="anchored" data-anchor-id="header-flags"><span class="header-section-number">3.7</span> Header flags</h2>
+<p>The macros below read and write the flags in an object’s header. You rarely need them directly — prefer the higher-level accessors noted in the entry.</p>
+<section id="TYPEOF" class="level3" data-number="3.7.1">
+<h3 data-number="3.7.1" class="anchored" data-anchor-id="TYPEOF"><span class="header-section-number">3.7.1</span> <code>TYPEOF()</code> (<code>MARK()</code>, <code>NAMED()</code>, <code>REFCNT()</code>, <code>SET_NAMED()</code>, <code>LEVELS()</code>, <code>SETLEVELS()</code>)</h3>
+<p>Read an object’s type tag and header flags.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span>  <span class="op">(</span>TYPEOF<span class="op">)(</span>SEXP x<span class="op">);</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span>  <span class="op">(</span>MARK<span class="op">)(</span>SEXP x<span class="op">);</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span>  <span class="op">(</span>NAMED<span class="op">)(</span>SEXP x<span class="op">);</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span>  <span class="op">(</span>REFCNT<span class="op">)(</span>SEXP x<span class="op">);</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> <span class="op">(</span>SET_NAMED<span class="op">)(</span>SEXP x<span class="op">,</span> <span class="dt">int</span> v<span class="op">);</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span>  <span class="op">(</span>LEVELS<span class="op">)(</span>SEXP x<span class="op">);</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span>  <span class="op">(</span>SETLEVELS<span class="op">)(</span>SEXP x<span class="op">,</span> <span class="dt">int</span> v<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
-<p>General cons cell attributes: the object flag, GC mark, type, named count, reference count, and general-purpose levels. <code>OBJECT()</code> and <code>SET_OBJECT()</code> are not part of the API; prefer <code>Rf_isObject()</code> and <code>Rf_setAttrib()</code> (or <code>CLEAR_ATTRIB()</code>, added in R 4.5.0) in new code. <code>SET_TYPEOF()</code> will also not be available to packages in the future; use a constructor such as <code>Rf_allocLang()</code> (added in R 4.4.1) instead.</p>
-<p><strong>See also:</strong> <a href="oo.html#Rf_isObject"><code>Rf_isObject()</code></a>, <a href="attributes.html#Rf_getAttrib"><code>Rf_getAttrib()</code></a></p>
+<p><code>TYPEOF()</code> is the canonical way to test an object’s type. The flag accessors are mostly needed only for the reference-count checks described above. There are no API setters for the type or object flags — use constructors (e.g.&nbsp;<code>Rf_allocLang()</code>) and <code>Rf_setAttrib()</code> instead.</p>
+<p><strong>See also:</strong> <a href="#MAYBE_SHARED"><code>MAYBE_SHARED()</code></a>, <a href="oo.html#Rf_isObject"><code>Rf_isObject()</code></a></p>
 
 
 </section>

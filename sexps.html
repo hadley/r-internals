@@ -26,6 +26,41 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -146,7 +181,7 @@ ul.task-list li input[type="checkbox"] {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./protection.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Garbage collection and reference counting</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Protection and the garbage collector</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -326,8 +361,16 @@ ul.task-list li input[type="checkbox"] {
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#sexptypes" id="toc-sexptypes" class="nav-link active" data-scroll-target="#sexptypes"><span class="header-section-number">2.1</span> SEXPTYPEs</a></li>
+  <li><a href="#layout" id="toc-layout" class="nav-link" data-scroll-target="#layout"><span class="header-section-number">2.2</span> Layout</a></li>
+  <li><a href="#copy-on-modify" id="toc-copy-on-modify" class="nav-link" data-scroll-target="#copy-on-modify"><span class="header-section-number">2.3</span> Copy-on-modify</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/hadley/r-internals/edit/main/sexps.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/hadley/r-internals/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -351,28 +394,129 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<div class="callout callout-style-default callout-warning callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Warning
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Placeholder. Planned content:</p>
-<ul>
-<li>The uniform object model; complete SEXPTYPE table (with which chapter covers each)</li>
-<li><code>TYPEOF()</code>; the header/data layout at a conceptual level</li>
-<li>Attributes exist on (almost) every object</li>
-<li>Copy-on-modify, <code>NAMED</code>/reference counting, and why you must not mutate inputs (<code>MAYBE_SHARED</code>, <code>Rf_duplicate</code>/<code>Rf_shallow_duplicate</code>)</li>
-<li>Type testing philosophy (prefer <code>TYPEOF(x) == ...</code>)</li>
-</ul>
-</div>
-</div>
+<p>Every R object you see in C is a <code>SEXP</code> — a pointer to a headered structure whose first field is a <code>SEXPTYPE</code> tag saying what kind of object it is. This uniform object model means one C type represents everything from a number to an environment; you distinguish cases with <code>TYPEOF()</code>.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>SEXP x<span class="op">;</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="op">(</span>TYPEOF<span class="op">(</span>x<span class="op">)</span> <span class="op">==</span> REALSXP<span class="op">)</span> <span class="op">{</span> <span class="op">...</span> <span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Prefer <code>TYPEOF(x) == INTSXP</code>-style tests over the old <code>Rf_isInteger()</code> family: the <code>Rf_is*()</code> functions sometimes answer “can this be coerced to” rather than “is this”, and there is no <code>Rf_is*()</code> for many types. Test the type you actually require, and <code>Rf_error()</code> otherwise.</p>
+<section id="sexptypes" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="sexptypes"><span class="header-section-number">2.1</span> SEXPTYPEs</h2>
+<p>The complete set of <code>SEXPTYPE</code>s, with the chapter that covers each:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>SEXPTYPE</th>
+<th>R object</th>
+<th>Chapter</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>NILSXP</code></td>
+<td><code>NULL</code></td>
+<td>—</td>
+</tr>
+<tr class="even">
+<td><code>SYMSXP</code></td>
+<td>symbol (name)</td>
+<td><a href="./symbols.html">Symbols</a></td>
+</tr>
+<tr class="odd">
+<td><code>LISTSXP</code></td>
+<td>pairlist</td>
+<td><a href="./pairlists.html">Pairlists</a></td>
+</tr>
+<tr class="even">
+<td><code>CLOSXP</code></td>
+<td>closure (R function)</td>
+<td><a href="./functions.html">Functions</a></td>
+</tr>
+<tr class="odd">
+<td><code>ENVSXP</code></td>
+<td>environment</td>
+<td><a href="./environments.html">Environments</a></td>
+</tr>
+<tr class="even">
+<td><code>PROMSXP</code></td>
+<td>promise</td>
+<td><a href="./functions.html">Functions</a></td>
+</tr>
+<tr class="odd">
+<td><code>LANGSXP</code></td>
+<td>call</td>
+<td><a href="./pairlists.html">Pairlists</a></td>
+</tr>
+<tr class="even">
+<td><code>SPECIALSXP</code>, <code>BUILTINSXP</code></td>
+<td>primitive function</td>
+<td><a href="./functions.html">Functions</a></td>
+</tr>
+<tr class="odd">
+<td><code>CHARSXP</code></td>
+<td>single string (internal)</td>
+<td><a href="./strings.html">Strings</a></td>
+</tr>
+<tr class="even">
+<td><code>LGLSXP</code>, <code>INTSXP</code>, <code>REALSXP</code>, <code>CPLXSXP</code>, <code>STRSXP</code>, <code>RAWSXP</code>, <code>VECSXP</code>, <code>EXPRSXP</code></td>
+<td>vectors</td>
+<td><a href="./vectors.html">Vectors</a></td>
+</tr>
+<tr class="odd">
+<td><code>DOTSXP</code></td>
+<td><code>...</code></td>
+<td><a href="./pairlists.html">Pairlists</a></td>
+</tr>
+<tr class="even">
+<td><code>ANYSXP</code></td>
+<td>wildcard for matching; no object has this type</td>
+<td>—</td>
+</tr>
+<tr class="odd">
+<td><code>BCODESXP</code></td>
+<td>byte code</td>
+<td>internals; not covered</td>
+</tr>
+<tr class="even">
+<td><code>EXTPTRSXP</code></td>
+<td>external pointer</td>
+<td><a href="./external-pointers.html">External pointers</a></td>
+</tr>
+<tr class="odd">
+<td><code>WEAKREFSXP</code></td>
+<td>weak reference</td>
+<td><a href="./external-pointers.html">External pointers</a></td>
+</tr>
+<tr class="even">
+<td><code>S4SXP</code></td>
+<td>S4 object</td>
+<td><a href="./oo.html">OO</a></td>
+</tr>
+<tr class="odd">
+<td><code>NEWSXP</code>, <code>FREESXP</code></td>
+<td>node-class bookkeeping</td>
+<td>internals; never seen in package code</td>
+</tr>
+<tr class="even">
+<td><code>FUNSXP</code></td>
+<td>pseudo-type matching any function type</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="layout" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="layout"><span class="header-section-number">2.2</span> Layout</h2>
+<p>Conceptually, a <code>SEXP</code> points to a fixed-size header (the type tag, GC and reference-count flags, attribute pointer, and links) followed by type-specific payload. For vectors the payload is a contiguous C array you access with <code>REAL()</code>, <code>INTEGER()</code>, and friends (<a href="./vectors.html">Vectors</a>); for cons-based types it is <code>CAR</code>/<code>CDR</code> slots (<a href="./pairlists.html">Pairlists</a>). Treat the header as opaque: read it through accessor macros, never by poking struct fields directly.</p>
+<p>Almost every object can carry <strong>attributes</strong> — a pairlist of named metadata such as <code>names</code>, <code>dim</code>, and <code>class</code>. Attributes are what turn a bare vector into a matrix, factor, or data frame; see <a href="./attributes.html">Attributes</a>.</p>
+</section>
+<section id="copy-on-modify" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="copy-on-modify"><span class="header-section-number">2.3</span> Copy-on-modify</h2>
+<p>R semantics are copy-on-modify: two variables can point at the same object, and R copies only when one of them modifies it. At the C level there is no automatic copying, so the rule becomes: <strong>never modify an object you didn’t create</strong>. Function arguments in particular may be shared with the caller. If you need to modify an input, duplicate it first:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>SEXP out <span class="op">=</span> PROTECT<span class="op">(</span>Rf_duplicate<span class="op">(</span>x<span class="op">));</span>  <span class="co">// deep copy</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co">// or Rf_shallow_duplicate(x) to copy only the top level of a list</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>MAYBE_SHARED(x)</code> tells you whether an object <em>might</em> be shared, but it is conservative — treat “maybe” as “yes”. The reference-count flags behind it (<code>NAMED</code>/<code>REFCNT</code>) are an optimisation used by R’s internals, not a licence to mutate; see <a href="./protection.html">Protection</a> for the details.</p>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -782,8 +926,8 @@ Warning
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./protection.html" class="pagination-link" aria-label="Garbage collection and reference counting">
-        <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Garbage collection and reference counting</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./protection.html" class="pagination-link" aria-label="Protection and the garbage collector">
+        <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Protection and the garbage collector</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
@@ -792,4 +936,4 @@ Warning
 
 
 
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions"><ul><li><a href="https://github.com/hadley/r-internals/edit/main/sexps.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/hadley/r-internals/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/hadley/r-internals/edit/main/sexps.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/hadley/r-internals/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>

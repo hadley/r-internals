@@ -181,7 +181,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./protection.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Garbage collection and reference counting</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Protection and the garbage collector</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -493,8 +493,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> R_InitConnInPStream<span class="op">(</span>R_inpstream_t stream<span class="op">,</span>  Rconnection con<span class="op">,</span></span>
 <span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  R_pstream_format_t type<span class="op">,</span></span>
 <span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  SEXP <span class="op">(*</span>phook<span class="op">)(</span>SEXP<span class="op">,</span> SEXP<span class="op">),</span> SEXP pdata<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> non-API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
-<p>The connection interface is not available to packages. To allow limited use of connection pointers, defining <code>NEED_CONNECTION_PSTREAMS</code> before including <code>Rinternals.h</code> defines the opaque pointer type <code>Rconnection</code>.</p>
+<p><strong>Status:</strong> non-API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<p>The connection interface is not available to packages. Define <code>NEED_CONNECTION_PSTREAMS</code> before including <code>Rinternals.h</code> to get the opaque <code>Rconnection</code> pointer type.</p>
 <p>The connection interface is not available to packages. To allow limited use of connection pointers, defining <code>NEED_CONNECTION_PSTREAMS</code> before including <code>Rinternals.h</code> defines the opaque pointer type:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#ifdef NEED_CONNECTION_PSTREAMS</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#ifndef HAVE_RCONNECTION_TYPEDEF</span></span>
@@ -512,13 +512,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> R_Serialize<span class="op">(</span>SEXP s<span class="op">,</span> R_outpstream_t ops<span class="op">);</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>SEXP R_Unserialize<span class="op">(</span>R_inpstream_t ips<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> result · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>serialize()</code></p>
-<p>The R equivalents are <code>serialize()</code> and <code>unserialize()</code>. The <code>SEXP</code> returned by <code>R_Unserialize()</code> is freshly allocated and should be protected from garbage collection.</p>
+<p>The <code>SEXP</code> returned by <code>R_Unserialize()</code> is freshly allocated and must be protected from garbage collection.</p>
 </section>
 <section id="R_RestoreHashCount" class="level3" data-number="17.3.2">
 <h3 data-number="17.3.2" class="anchored" data-anchor-id="R_RestoreHashCount"><span class="header-section-number">17.3.2</span> <code>R_RestoreHashCount()</code></h3>
 <p>Restore the hash count of a hashed environment after unserialisation.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> R_RestoreHashCount<span class="op">(</span>SEXP rho<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> non-API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<p><strong>Status:</strong> non-API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 
 
 </section>

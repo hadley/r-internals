@@ -181,7 +181,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./protection.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Garbage collection and reference counting</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Protection and the garbage collector</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -420,7 +420,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <ul>
 <li><code>n</code>: The number of arguments to force.</li>
 </ul>
-<p><code>n</code>, I think, is the number of arguments to force. Not sure what advantages are over <code>Rf_eval</code>.</p>
+<p><code>n</code> is the number of leading arguments in the call to force before evaluating.</p>
 <p><strong>See also:</strong> <a href="#Rf_eval"><code>Rf_eval()</code></a></p>
 </section>
 </section>
@@ -435,7 +435,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <ul>
 <li><code>pOutError</code>: On error, the function returns NULL and sets the contents of <code>pOutError</code> to 1.</li>
 </ul>
-<p>Use these to evaluate R expressions in a stand-alone context ensuring that any errors produced during evaluation don’t cause a longjmp to a separate context. <code>R_tryEvalSilent()</code> is the same as <code>R_tryEval()</code>, but doesn’t print error messages. Note that these functions ignore all existing condition handlers so R functions like <code>supressWarnings()</code>, <code>tryCatch()</code>, will no longer work.</p>
+<p><code>R_tryEvalSilent()</code> behaves like <code>R_tryEval()</code> but suppresses printing of error messages. Both ignore existing condition handlers, so R-level <code>tryCatch()</code> and <code>suppressWarnings()</code> have no effect on the evaluation.</p>
 <p><strong>See also:</strong> <a href="#R_ToplevelExec"><code>R_ToplevelExec()</code></a></p>
 </section>
 <section id="R_ToplevelExec" class="level3" data-number="14.2.2">
@@ -453,7 +453,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 data-number="14.2.3" class="anchored" data-anchor-id="R_curErrorBuf"><span class="header-section-number">14.2.3</span> <code>R_curErrorBuf()</code></h3>
 <p>Access the text of the current error.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> <span class="dt">char</span> <span class="op">*</span>R_curErrorBuf<span class="op">();</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>geterrmessage()</code></p>
+<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>geterrmessage()</code></p>
 </section>
 <section id="R_ExecWithCleanup" class="level3" data-number="14.2.4">
 <h3 data-number="14.2.4" class="anchored" data-anchor-id="R_ExecWithCleanup"><span class="header-section-number">14.2.4</span> <code>R_ExecWithCleanup()</code></h3>
@@ -461,7 +461,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>SEXP R_ExecWithCleanup<span class="op">(</span>SEXP <span class="op">(*</span>fun<span class="op">)(</span><span class="dt">void</span> <span class="op">*),</span> <span class="dt">void</span> <span class="op">*</span>data<span class="op">,</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>                       <span class="dt">void</span> <span class="op">(*</span>cleanfun<span class="op">)(</span><span class="dt">void</span> <span class="op">*),</span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>                       <span class="dt">void</span> <span class="op">*</span>cleandata<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> result · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> result · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 <ul>
 <li><code>fun</code>: C function to call after context setup. Passed <code>*data</code>.</li>
 <li><code>cleanfun</code>: C function to call before context teardown. Passed <code>*data</code>.</li>

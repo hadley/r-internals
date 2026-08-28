@@ -27,6 +27,41 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -146,7 +181,7 @@ ul.task-list li input[type="checkbox"] {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./protection.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Garbage collection and reference counting</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Protection and the garbage collector</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -331,7 +366,14 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a>
+  <ul class="collapse">
+  <li><a href="#audience-and-prerequisites" id="toc-audience-and-prerequisites" class="nav-link" data-scroll-target="#audience-and-prerequisites">Audience and prerequisites</a></li>
+  <li><a href="#conventions" id="toc-conventions" class="nav-link" data-scroll-target="#conventions">Conventions</a></li>
+  <li><a href="#api-status" id="toc-api-status" class="nav-link" data-scroll-target="#api-status">API status</a></li>
+  <li><a href="#headers" id="toc-headers" class="nav-link" data-scroll-target="#headers">Headers</a></li>
+  <li><a href="#supported-r-versions" id="toc-supported-r-versions" class="nav-link" data-scroll-target="#supported-r-versions">Supported R versions</a></li>
+  </ul></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/hadley/r-internals/edit/main/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/hadley/r-internals/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -365,29 +407,44 @@ ul.task-list li input[type="checkbox"] {
 
 <section id="introduction" class="level1 unnumbered">
 <h1 class="unnumbered">Introduction</h1>
-<div class="callout callout-style-default callout-warning callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Warning
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>This chapter is a placeholder. Planned content:</p>
+<p>This site documents R’s C API for package authors: the functions, macros, and types you can call from C code in an R package. It aims to be comprehensive (every entry point a package author can legitimately use), concise (reference-style entries, not tutorials), and current (it reflects the post-R-4.5 API-compliance era).</p>
+<p>It complements, rather than replaces, the official manuals: <a href="https://cran.r-project.org/doc/manuals/R-exts.html">Writing R Extensions</a> (WRE) is the authoritative reference, and <a href="https://cran.r-project.org/doc/manuals/R-ints.html">R Internals</a> describes R’s internal structures. This site reorganises that material around tasks, adds an explicit API-status taxonomy, and drops what you should no longer use. The prose style is modelled on the C-interface chapter of <a href="http://adv-r.had.co.nz/C-interface.html">Advanced R</a>.</p>
+<section id="audience-and-prerequisites" class="level2">
+<h2 class="anchored" data-anchor-id="audience-and-prerequisites">Audience and prerequisites</h2>
+<p>We assume you (or your agent) are fluent in C — pointers, memory management, calling conventions — and in R as a language. What we explain is what’s <em>different</em> about R’s API: SEXPs, protection from the garbage collector, errors that longjmp, and which entry points you’re allowed to use.</p>
+</section>
+<section id="conventions" class="level2">
+<h2 class="anchored" data-anchor-id="conventions">Conventions</h2>
 <ul>
-<li>What this site is; relationship to WRE / R Internals / Advanced R</li>
-<li>Audience and prerequisites</li>
-<li>Conventions used throughout: always <code>R_NO_REMAP</code> + <code>Rf_</code>/<code>R_</code> prefixes, C not C++, <code>.Call</code> only</li>
-<li>The API status taxonomy (API / experimental / embedding / non-API) and what “don’t use non-API” means in practice (<code>R CMD check</code> NOTEs, CRAN policy)</li>
-<li>Which headers to include and why <code>&lt;Rinternals.h&gt;</code> is fine</li>
+<li>All examples are C, not C++. If you use Rcpp or cpp11, the same rules apply underneath, but those toolkits have their own documentation.</li>
+<li>All code is compiled with <code>R_NO_REMAP</code> defined, so every R API function is spelled with its canonical <code>Rf_</code> or <code>R_</code> prefix (<code>Rf_allocVector()</code>, never <code>allocVector()</code>). Define it in your package’s <code>src/Makevars</code> with <code>PKG_CPPFLAGS = -DR_NO_REMAP</code>.</li>
+<li>We cover <code>.Call</code> (and briefly <code>.External</code>) only. The older <code>.C</code> and <code>.Fortran</code> interfaces are not recommended for new code and are not described here.</li>
 </ul>
-</div>
-</div>
+</section>
+<section id="api-status" class="level2">
+<h2 class="anchored" data-anchor-id="api-status">API status</h2>
+<p>Every entry point on this site carries one of four statuses:</p>
+<ul>
+<li><strong>API</strong> — part of the public, supported interface. Safe to use in packages.</li>
+<li><strong>Experimental</strong> — public but may change in a future R release; use with a version check.</li>
+<li><strong>Embedding</strong> — only for front-ends embedding R, not for packages.</li>
+<li><strong>Non-API</strong> — not part of the public interface. Using these in a package triggers <code>R CMD check</code> NOTEs, is rejected by CRAN, and may break without warning in any R release. They are documented here only so the <a href="./compliance.html">compliance appendix</a> can map them to supported replacements.</li>
+</ul>
+</section>
+<section id="headers" class="level2">
+<h2 class="anchored" data-anchor-id="headers">Headers</h2>
+<p>Almost everything you need comes from two headers:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;R.h&gt;</span><span class="pp">           </span><span class="co">// R_ext/ utility headers, Rprintf, memory allocation</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;Rinternals.h&gt;</span><span class="pp">  </span><span class="co">// SEXP, vector access, most of the API</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>More specialised headers (<code>R_ext/BLAS.h</code>, <code>Rmath.h</code>, …) are introduced in the chapters that need them. Including <code>&lt;Rinternals.h&gt;</code> is fine even though it declares some non-API entry points: what matters is what you <em>call</em>, and <code>R CMD check</code> will tell you.</p>
+</section>
+<section id="supported-r-versions" class="level2">
+<h2 class="anchored" data-anchor-id="supported-r-versions">Supported R versions</h2>
+<p>Following the <a href="https://tidyverse.org/blog/2019/04/r-version-support/">tidyverse version policy</a>, this site documents the R C API as it exists in the current release, R-devel, and the four previous minor releases — currently R 4.2 through current. Behaviour specific to older R versions is not covered; if a function or pattern requires a version newer than R 4.2, the entry says so in its <strong>Since</strong> field.</p>
 <p>Out of scope for this site: the <code>.C</code>/<code>.Fortran</code> interface as a recommended approach, embedding R / writing front-ends, the graphics engine API, and non-API entry points except where the <a href="./compliance.html">compliance appendix</a> maps them to replacements.</p>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->

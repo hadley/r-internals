@@ -181,7 +181,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./protection.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Garbage collection and reference counting</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Protection and the garbage collector</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -445,7 +445,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>Rboolean Rf_isPairList<span class="op">(</span>SEXP x<span class="op">);</span> <span class="co">// LISTSXP</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>Rboolean Rf_isLanguage<span class="op">(</span>SEXP x<span class="op">);</span> <span class="co">// LANGSXP</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>Rboolean Rf_isList<span class="op">(</span>SEXP x<span class="op">);</span>     <span class="co">// LISTSXP, NILSXP</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 </section>
 </section>
 <section id="creation" class="level2" data-number="10.2">
@@ -506,7 +506,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 data-number="10.2.6" class="anchored" data-anchor-id="Rf_listAppend"><span class="header-section-number">10.2.6</span> <code>Rf_listAppend()</code></h3>
 <p>Append one pairlist to another.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>SEXP Rf_listAppend<span class="op">(</span>SEXP source<span class="op">,</span> SEXP target<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> result · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<p>Mutates <code>source</code> in place by walking to its last cell and setting its <code>CDR</code> to <code>target</code>; no new cells are allocated and the returned pairlist is the (mutated) <code>source</code> you already hold.</p>
 <p>The <code>CDR</code> of the final value must be <code>R_NilValue</code>.</p>
 <p>There are helpers for 5-6 arguments. These automatically add the terminating <code>R_NilValue</code>.</p>
 </section>
@@ -527,7 +528,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>SEXP CADDDR<span class="op">(</span>SEXP e<span class="op">);</span></span>
 <span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>SEXP CAD4R<span class="op">(</span>SEXP e<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
-<p>Pairlists have no way to index into an arbitrary location; instead these helpers navigate along the linked list. <code>CAR()</code> extracts the first element of the list and <code>CDR()</code> extracts the rest of the list; these can be composed to get <code>CAAR()</code>, <code>CDAR()</code>, <code>CADDR()</code>, <code>CADDDR()</code>, and so on.</p>
+<p>Pairlists can’t be indexed directly, so these accessors navigate the linked list instead. <code>CAR()</code> returns the first element and <code>CDR()</code> the rest; they compose to give <code>CAAR()</code>, <code>CDAR()</code>, <code>CADDR()</code>, <code>CADDDR()</code>, and so on.</p>
 <p><strong>See also:</strong> <a href="#SETCAR"><code>SETCAR()</code></a>, <a href="#TAG"><code>TAG()</code></a></p>
 </section>
 <section id="SETCAR" class="level3" data-number="10.3.2">
@@ -540,7 +541,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>SEXP SETCADDDR<span class="op">(</span>SEXP x<span class="op">,</span> SEXP y<span class="op">);</span></span>
 <span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>SEXP SETCAD4R<span class="op">(</span>SEXP e<span class="op">,</span> SEXP y<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
-<p>Corresponding to the getters, R provides setters <code>SETCAR()</code>, <code>SETCDR()</code>, etc.</p>
+<p>Mirror the <code>CAR()</code>/<code>CDR()</code> family of getters.</p>
 <p><strong>See also:</strong> <a href="#CAR"><code>CAR()</code></a>, <a href="#SET_TAG"><code>SET_TAG()</code></a></p>
 </section>
 <section id="TAG" class="level3" data-number="10.3.3">
@@ -577,15 +578,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Create a new pairlist of the specified length.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>SEXP Rf_allocList<span class="op">(</span><span class="dt">int</span> n<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> result · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
-<p>Works with a pairlist as if it’s a vector. It’s easy to get O(n^2) behaviour, but for the usual size of pairlists this is unlikely to cause a performance bottleneck. To create a call expression, use <code>Rf_allocLang()</code> (added in R 4.4.1) or <code>Rf_lcons()</code> rather than <code>Rf_allocList()</code> plus <code>SET_TYPEOF()</code>, which will not be available to packages in the future.</p>
+<p>Treats the pairlist as if it were a vector, which is easy to get O(n^2) from, but is unlikely to be a bottleneck at typical pairlist sizes. To create a call expression, use <code>Rf_allocLang()</code> (added in R 4.4.1) or <code>Rf_lcons()</code> rather than <code>Rf_allocList()</code> plus <code>SET_TYPEOF()</code>, which will not be available to packages in the future.</p>
 <p><strong>See also:</strong> <a href="#Rf_nthcdr"><code>Rf_nthcdr()</code></a>, <a href="utilities.html#Rf_lcons"><code>Rf_lcons()</code></a></p>
 </section>
 <section id="Rf_nthcdr" class="level3" data-number="10.3.8">
 <h3 data-number="10.3.8" class="anchored" data-anchor-id="Rf_nthcdr"><span class="header-section-number">10.3.8</span> <code>Rf_nthcdr()</code></h3>
 <p>Access the nth element of a pairlist.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>SEXP Rf_nthcdr<span class="op">(</span>SEXP x<span class="op">,</span> <span class="dt">int</span> n<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
-<p>Works with a pairlist as if it’s a vector. It’s easy to get O(n^2) behaviour, but for the usual size of pairlists this is unlikely to cause a performance bottleneck.</p>
+<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<p>Treats the pairlist as if it were a vector; repeated calls can become O(n^2), though this is unlikely to matter at typical pairlist sizes. Errors if <code>x</code> is not a pairlist or has fewer than <code>n</code> elements.</p>
 <p><strong>See also:</strong> <a href="#Rf_allocList"><code>Rf_allocList()</code></a>, <a href="#CDR"><code>CDR()</code></a></p>
 <p>Some functions allow you to work with a pair list as if it’s a vector:</p>
 <p>If you use these it’s easy to get O(n^2) behaviour, but for the usual size of pairlists, this is unlikely to cause a performance bottleneck.</p>

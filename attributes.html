@@ -181,7 +181,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./protection.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Garbage collection and reference counting</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Protection and the garbage collector</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -450,7 +450,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>SEXP ATTRIB<span class="op">(</span>SEXP x<span class="op">);</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> SET_ATTRIB<span class="op">(</span>SEXP x<span class="op">,</span> SEXP v<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> non-API (use <a href="#Rf_getAttrib"><code>Rf_getAttrib()</code></a>) · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
-<p>Not part of the API, as these reveal the internal linked-list representation of attributes. Use <code>Rf_getAttrib()</code> and <code>Rf_setAttrib()</code> for individual attributes, <code>DUPLICATE_ATTRIB()</code> or <code>SHALLOW_DUPLICATE_ATTRIB()</code> to copy attributes between objects, <code>CLEAR_ATTRIB()</code> (added in R 4.5.0) to remove all attributes, <code>ANY_ATTRIB()</code> (added in R 4.5.0) to test whether any attributes are present, and <code>R_mapAttrib()</code> (added in R 4.6.0) to iterate over attributes.</p>
+<p>Not part of the API, since it exposes the internal linked-list representation of attributes. Use <code>Rf_getAttrib()</code>/<code>Rf_setAttrib()</code> for individual attributes, <code>DUPLICATE_ATTRIB()</code>/<code>SHALLOW_DUPLICATE_ATTRIB()</code> to copy attributes between objects, <code>CLEAR_ATTRIB()</code> (R 4.5.0) to remove all attributes, <code>ANY_ATTRIB()</code> (R 4.5.0) to test for any attributes, and <code>R_mapAttrib()</code> (R 4.6.0) to iterate over attributes.</p>
 <p><strong>See also:</strong> <a href="#Rf_getAttrib"><code>Rf_getAttrib()</code></a>, <a href="#DUPLICATE_ATTRIB"><code>DUPLICATE_ATTRIB()</code></a></p>
 </section>
 <section id="DUPLICATE_ATTRIB" class="level3" data-number="7.1.4">
@@ -468,7 +468,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 data-number="7.2.1" class="anchored" data-anchor-id="Rf_isArray"><span class="header-section-number">7.2.1</span> <code>Rf_isArray()</code></h3>
 <p>Test if an object is an array.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>Rboolean Rf_isArray<span class="op">(</span>SEXP x<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>is.array()</code></p>
+<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>is.array()</code></p>
 <ul>
 <li><code>x</code>: any SEXP.</li>
 </ul>
@@ -502,7 +502,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Set the dim or dimnames attribute of an array.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>SEXP Rf_dimgets<span class="op">(</span>SEXP x<span class="op">,</span> SEXP v<span class="op">);</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>SEXP Rf_dimnamesgets<span class="op">(</span>SEXP x<span class="op">,</span> SEXP v<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> result · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>dim&lt;-</code></p>
+<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>dim&lt;-</code></p>
 <ul>
 <li><code>x</code>: an array.</li>
 <li><code>v</code>: the new dim (an integer vector) or dimnames (a list).</li>
@@ -513,7 +513,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 data-number="7.2.5" class="anchored" data-anchor-id="Rf_DropDims"><span class="header-section-number">7.2.5</span> <code>Rf_DropDims()</code></h3>
 <p>Drop the dim attribute of an array.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>SEXP Rf_DropDims<span class="op">(</span>SEXP x<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> result · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>drop()</code></p>
+<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>drop()</code></p>
 <ul>
 <li><code>x</code>: an array.</li>
 </ul>
@@ -539,14 +539,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><code>nrow</code>: number of rows.</li>
 <li><code>ncol</code>: number of columns.</li>
 </ul>
-<p>Matrices are a special case of arrays; those with 2 dimensions.</p>
+<p>Matrices are arrays with exactly 2 dimensions.</p>
 <p><strong>See also:</strong> <a href="#Rf_allocArray"><code>Rf_allocArray()</code></a>, <a href="#Rf_ncols"><code>Rf_ncols()</code></a></p>
 </section>
 <section id="Rf_isMatrix" class="level3" data-number="7.3.2">
 <h3 data-number="7.3.2" class="anchored" data-anchor-id="Rf_isMatrix"><span class="header-section-number">7.3.2</span> <code>Rf_isMatrix()</code></h3>
 <p>Test if an object is a matrix.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>Rboolean Rf_isMatrix<span class="op">(</span>SEXP x<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>is.matrix()</code></p>
+<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>is.matrix()</code></p>
 <ul>
 <li><code>x</code>: any SEXP.</li>
 </ul>
@@ -583,7 +583,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Get the number of columns or rows of a matrix.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> Rf_ncols<span class="op">(</span>SEXP x<span class="op">);</span></span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> Rf_nrows<span class="op">(</span>SEXP x<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>ncol()</code></p>
+<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>ncol()</code></p>
 <ul>
 <li><code>x</code>: a matrix.</li>
 </ul>
@@ -612,7 +612,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>Rboolean Rf_isFactor<span class="op">(</span>SEXP x<span class="op">);</span></span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>Rboolean Rf_isOrdered<span class="op">(</span>SEXP x<span class="op">);</span></span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>Rboolean Rf_isUnordered<span class="op">(</span>SEXP x<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>is.factor()</code></p>
+<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>is.factor()</code></p>
 <ul>
 <li><code>x</code>: any SEXP.</li>
 </ul>
@@ -622,7 +622,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 data-number="7.4.2" class="anchored" data-anchor-id="Rf_nlevels"><span class="header-section-number">7.4.2</span> <code>Rf_nlevels()</code></h3>
 <p>Get the number of levels of a factor.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> Rf_nlevels<span class="op">(</span>SEXP x<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>nlevels()</code></p>
+<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>nlevels()</code></p>
 <ul>
 <li><code>x</code>: a factor.</li>
 </ul>
@@ -645,7 +645,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 data-number="7.5.1" class="anchored" data-anchor-id="Rf_isFrame"><span class="header-section-number">7.5.1</span> <code>Rf_isFrame()</code></h3>
 <p>Test if an object is a data frame.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>Rboolean Rf_isFrame<span class="op">(</span>SEXP x<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> non-API (use <a href="#Rf_isDataFrame"><code>Rf_isDataFrame()</code></a>) · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>is.data.frame()</code></p>
+<p><strong>Status:</strong> non-API (use <a href="#Rf_isDataFrame"><code>Rf_isDataFrame()</code></a>) · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>is.data.frame()</code></p>
 <ul>
 <li><code>x</code>: any SEXP.</li>
 </ul>

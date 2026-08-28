@@ -181,7 +181,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./protection.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Garbage collection and reference counting</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Protection and the garbage collector</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -374,7 +374,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#R_BaseNamespace" id="toc-R_BaseNamespace" class="nav-link" data-scroll-target="#R_BaseNamespace"><span class="header-section-number">8.1.4</span> <code>R_BaseNamespace()</code></a></li>
   <li><a href="#R_NamespaceRegistry" id="toc-R_NamespaceRegistry" class="nav-link" data-scroll-target="#R_NamespaceRegistry"><span class="header-section-number">8.1.5</span> <code>R_NamespaceRegistry()</code></a></li>
   </ul></li>
-  <li><a href="#creation-r-4.1.0" id="toc-creation-r-4.1.0" class="nav-link" data-scroll-target="#creation-r-4.1.0"><span class="header-section-number">8.2</span> Creation (R &gt;= 4.1.0)</a>
+  <li><a href="#creation" id="toc-creation" class="nav-link" data-scroll-target="#creation"><span class="header-section-number">8.2</span> Creation</a>
   <ul class="collapse">
   <li><a href="#R_NewEnv" id="toc-R_NewEnv" class="nav-link" data-scroll-target="#R_NewEnv"><span class="header-section-number">8.2.1</span> <code>R_NewEnv()</code></a></li>
   </ul></li>
@@ -446,8 +446,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><code>R_BaseEnv</code>: The base environment; formerly R_NilValue</li>
 <li><code>R_BaseNamespace</code>: The (fake) namespace for base</li>
 <li><code>R_NamespaceRegistry</code>: Registry for registered namespaces</li>
-<li><code>R_GetCurrentEnv</code>: Retrieve the current environment <code>R (&gt;= 3.6.0)</code></li>
-<li><code>R_NewEnv</code>: Create a new environment <code>R (&gt;= 4.1.0)</code></li>
+<li><code>R_GetCurrentEnv</code>: Retrieve the current environment</li>
+<li><code>R_NewEnv</code>: Create a new environment</li>
 </ul>
 <p>Environments are commonly called <code>rho</code> in the sources.</p>
 <section id="predefined-environments" class="level2" data-number="8.1">
@@ -485,16 +485,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Access the registry of registered namespaces.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>SEXP R_NamespaceRegistry<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> non-API (use <a href="#R_getRegisteredNamespace"><code>R_getRegisteredNamespace()</code></a>) · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
-<p>Registry for registered namespaces. This variable is not part of the API; use <code>R_getRegisteredNamespace()</code> to find a registered namespace.</p>
+<p>Not part of the API; use <code>R_getRegisteredNamespace()</code> to find a registered namespace.</p>
 </section>
 </section>
-<section id="creation-r-4.1.0" class="level2" data-number="8.2">
-<h2 data-number="8.2" class="anchored" data-anchor-id="creation-r-4.1.0"><span class="header-section-number">8.2</span> Creation (R &gt;= 4.1.0)</h2>
+<section id="creation" class="level2" data-number="8.2">
+<h2 data-number="8.2" class="anchored" data-anchor-id="creation"><span class="header-section-number">8.2</span> Creation</h2>
 <section id="R_NewEnv" class="level3" data-number="8.2.1">
 <h3 data-number="8.2.1" class="anchored" data-anchor-id="R_NewEnv"><span class="header-section-number">8.2.1</span> <code>R_NewEnv()</code></h3>
 <p>Create a new environment.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>SEXP R_NewEnv<span class="op">(</span>SEXP enclos<span class="op">,</span> <span class="dt">int</span> hash<span class="op">,</span> <span class="dt">int</span> size<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> result · <strong>Errors:</strong> can throw · <strong>Since:</strong> R 4.1.0 · <strong>R equivalent:</strong> —</p>
+<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> result · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 </section>
 </section>
 <section id="get-and-set-objects-in-environment" class="level2" data-number="8.3">
@@ -509,7 +509,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Find the value bound to a symbol in an environment and its enclosing environments.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>SEXP Rf_findVar<span class="op">(</span>SEXP symbol<span class="op">,</span> SEXP environment<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> non-API (use <a href="#R_getVar"><code>R_getVar()</code></a>) · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> result · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
-<p>Looks up <code>symbol</code> in <code>environment</code>, following up enclosing environments. Retrieving a variable from an environment may cause an allocation because it might be an active binding. Too low level to be part of the API; prefer <code>R_getVar()</code> or <code>R_getVarEx()</code> (added in R 4.5.0) in new code.</p>
+<p>May allocate, since the binding it finds could be an active binding. Too low level to be part of the API; prefer <code>R_getVar()</code> or <code>R_getVarEx()</code> (added in R 4.5.0) in new code.</p>
 <p><strong>See also:</strong> <a href="#Rf_findFun"><code>Rf_findFun()</code></a>, <a href="#Rf_findVarInFrame3"><code>Rf_findVarInFrame3()</code></a></p>
 </section>
 <section id="Rf_findFun" class="level3" data-number="8.3.3">
@@ -529,7 +529,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <ul>
 <li><code>doGet</code>: if <code>TRUE</code>, returns the value; if <code>FALSE</code>, just checks for presence.</li>
 </ul>
-<p>Looks in a single environment. Returns <code>R_UnboundValue</code> if not found. <code>Rf_findVarInFrame()</code> is a shortcut for <code>Rf_findVarInFrame3(rho, symbol, TRUE)</code>. Too low level to be part of the API; the <code>R_getVar()</code> family added in R 4.5.0 is the recommended interface: use <code>R_getVar()</code> or <code>R_getVarEx()</code> to retrieve a value and <code>R_existsVarInFrame()</code> to test for existence.</p>
+<p>Returns <code>R_UnboundValue</code> if not found. <code>Rf_findVarInFrame()</code> is shorthand for <code>Rf_findVarInFrame3(rho, symbol, TRUE)</code>. Too low level to be part of the API; prefer <code>R_getVar()</code> or <code>R_getVarEx()</code> (added in R 4.5.0) to retrieve a value and <code>R_existsVarInFrame()</code> to test for existence.</p>
 <p><strong>See also:</strong> <a href="#Rf_findVar"><code>Rf_findVar()</code></a></p>
 </section>
 <section id="set-values" class="level3" data-number="8.3.5">
@@ -559,7 +559,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>SEXP R_lsInternal3<span class="op">(</span>SEXP env<span class="op">,</span> Rboolean all_names<span class="op">,</span> Rboolean sorted<span class="op">);</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>SEXP R_lsInternal<span class="op">(</span>SEXP<span class="op">,</span> Rboolean<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> result · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
-<p>Returns a character vector. <code>R_lsInternal(env, all)</code> is shorthand for <code>R_lsInternal3(env, all, TRUE)</code>. <code>R_lsInternal()</code> is not part of the API; prefer <code>R_lsInternal3()</code> in new code.</p>
+<p>Returns a character vector. <code>R_lsInternal(env, all)</code> is shorthand for <code>R_lsInternal3(env, all, TRUE)</code> but is not part of the API; prefer <code>R_lsInternal3()</code> directly.</p>
 </section>
 </section>
 <section id="miscellaneous" class="level2" data-number="8.4">
@@ -568,14 +568,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 data-number="8.4.1" class="anchored" data-anchor-id="Rf_isEnvironment"><span class="header-section-number">8.4.1</span> <code>Rf_isEnvironment()</code></h3>
 <p>Test whether an object is an environment.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>Rboolean Rf_isEnvironment<span class="op">(</span>SEXP x<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 <p>Equivalent to <code>TYPEOF(x) == ENVSXP</code>.</p>
 </section>
 <section id="R_GetCurrentEnv" class="level3" data-number="8.4.2">
 <h3 data-number="8.4.2" class="anchored" data-anchor-id="R_GetCurrentEnv"><span class="header-section-number">8.4.2</span> <code>R_GetCurrentEnv()</code></h3>
 <p>Retrieve the current environment.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>SEXP R_GetCurrentEnv<span class="op">(</span><span class="dt">void</span><span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> non-API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> never · <strong>Since:</strong> R 3.6.0 · <strong>R equivalent:</strong> <code>environment()</code></p>
+<p><strong>Status:</strong> non-API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>environment()</code></p>
 <p>Not part of the API; call <code>environment()</code> at the R level and pass the result as an argument to your C function.</p>
 </section>
 <section id="R_IsPackageEnv" class="level3" data-number="8.4.3">
@@ -601,7 +601,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Lock an environment, or test whether it is locked.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> R_LockEnvironment<span class="op">(</span>SEXP env<span class="op">,</span> Rboolean bindings<span class="op">);</span></span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>Rboolean R_EnvironmentIsLocked<span class="op">(</span>SEXP env<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 <p><strong>See also:</strong> <a href="#R_LockBinding"><code>R_LockBinding()</code></a></p>
 </section>
 <section id="R_LockBinding" class="level3" data-number="8.4.6">
@@ -609,7 +609,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Lock or unlock a binding in an environment.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> R_LockBinding<span class="op">(</span>SEXP sym<span class="op">,</span> SEXP env<span class="op">);</span></span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> R_unLockBinding<span class="op">(</span>SEXP sym<span class="op">,</span> SEXP env<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 <p><strong>See also:</strong> <a href="#R_LockEnvironment"><code>R_LockEnvironment()</code></a></p>
 </section>
 <section id="R_MakeActiveBinding" class="level3" data-number="8.4.7">
@@ -624,20 +624,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Test whether a binding is locked or active.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>Rboolean R_BindingIsLocked<span class="op">(</span>SEXP sym<span class="op">,</span> SEXP env<span class="op">);</span></span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>Rboolean R_BindingIsActive<span class="op">(</span>SEXP sym<span class="op">,</span> SEXP env<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 <p><strong>See also:</strong> <a href="#R_MakeActiveBinding"><code>R_MakeActiveBinding()</code></a></p>
 </section>
 <section id="R_HasFancyBindings" class="level3" data-number="8.4.9">
 <h3 data-number="8.4.9" class="anchored" data-anchor-id="R_HasFancyBindings"><span class="header-section-number">8.4.9</span> <code>R_HasFancyBindings()</code></h3>
 <p>Test whether an environment has fancy bindings.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>Rboolean R_HasFancyBindings<span class="op">(</span>SEXP rho<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 </section>
 <section id="R_envHasNoSpecialSymbols" class="level3" data-number="8.4.10">
 <h3 data-number="8.4.10" class="anchored" data-anchor-id="R_envHasNoSpecialSymbols"><span class="header-section-number">8.4.10</span> <code>R_envHasNoSpecialSymbols()</code></h3>
 <p>Test whether an environment has no special symbols.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>Rboolean R_envHasNoSpecialSymbols<span class="op">(</span>SEXP<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> non-API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<p><strong>Status:</strong> non-API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 </section>
 </section>
 <section id="internals" class="level2" data-number="8.5">
@@ -665,7 +665,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Get or set the flags of an environment.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb25"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> ENVFLAGS<span class="op">(</span>SEXP x<span class="op">);</span></span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> SET_ENVFLAGS<span class="op">(</span>SEXP x<span class="op">,</span> <span class="dt">int</span> v<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> non-API (use <a href="#R_EnvironmentIsLocked"><code>R_EnvironmentIsLocked()</code></a>) · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<p><strong>Status:</strong> non-API (use <a href="#R_EnvironmentIsLocked"><code>R_EnvironmentIsLocked()</code></a>) · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 <p>Use <code>R_EnvironmentIsLocked()</code> and <code>R_LockEnvironment()</code> instead.</p>
 <p><strong>See also:</strong> <a href="#R_LockEnvironment"><code>R_LockEnvironment()</code></a></p>
 </section>
@@ -681,8 +681,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> <span class="op">(</span>TRUELENGTH<span class="op">)(</span>SEXP x<span class="op">);</span></span>
 <span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>R_xlen_t <span class="op">(</span>XTRUELENGTH<span class="op">)(</span>SEXP x<span class="op">);</span></span>
 <span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> <span class="op">(</span>SET_TRUELENGTH<span class="op">)(</span>SEXP x<span class="op">,</span> <span class="dt">int</span> v<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> non-API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
-<p>Almost unused. The only current use is for hash tables of environments (<code>VECSXP</code>s), where length is the size of the table and truelength is the number of primary slots in use, and for the reference hash tables in serialization (<code>VECSXP</code>s), where truelength is the number of slots in use. — R-internals</p>
+<p><strong>Status:</strong> non-API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<p>Rarely used, mainly for hash tables of environments (<code>VECSXP</code>s), where length is the table size and truelength is the number of primary slots in use, and for the reference hash tables used in serialization, where truelength is the number of slots in use.</p>
 </section>
 <section id="hash" class="level3" data-number="8.5.6">
 <h3 data-number="8.5.6" class="anchored" data-anchor-id="hash"><span class="header-section-number">8.5.6</span> Hash</h3>
@@ -693,7 +693,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb27"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>SEXP HASHTAB<span class="op">(</span>SEXP x<span class="op">);</span></span>
 <span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> SET_HASHTAB<span class="op">(</span>SEXP x<span class="op">,</span> SEXP v<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> non-API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
-<p>Hashing is principally designed for fast searching of environments, which are from time to time added to but rarely deleted from, so items are not actually deleted but have their value set to <code>R_UnboundValue</code>. — R-Internals <code>SET_HASHTAB()</code> is not part of the API; create hash-based environments with the constructor <code>R_NewEnv()</code> instead.</p>
+<p>Hashing speeds up searching environments that are added to often but rarely deleted from; removed bindings are not actually deleted but have their value set to <code>R_UnboundValue</code>. <code>SET_HASHTAB()</code> is not part of the API; create hash-based environments with the constructor <code>R_NewEnv()</code> instead.</p>
 <p><strong>See also:</strong> <a href="#HASHASH"><code>HASHASH()</code></a>, <a href="#HASHVALUE"><code>HASHVALUE()</code></a></p>
 </section>
 <section id="HASHASH" class="level3" data-number="8.5.8">
@@ -701,7 +701,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Get or set the hash flag of an environment.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb28"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> HASHASH<span class="op">(</span>SEXP x<span class="op">);</span></span>
 <span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> SET_HASHASH<span class="op">(</span>SEXP x<span class="op">,</span> <span class="dt">int</span> v<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> non-API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<p><strong>Status:</strong> non-API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 <p><strong>See also:</strong> <a href="#HASHTAB"><code>HASHTAB()</code></a></p>
 </section>
 <section id="HASHVALUE" class="level3" data-number="8.5.9">
@@ -709,7 +709,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Get or set the hash value of an environment.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb29"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> HASHVALUE<span class="op">(</span>SEXP x<span class="op">);</span></span>
 <span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> SET_HASHVALUE<span class="op">(</span>SEXP x<span class="op">,</span> <span class="dt">int</span> v<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> non-API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<p><strong>Status:</strong> non-API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 <p><strong>See also:</strong> <a href="#HASHTAB"><code>HASHTAB()</code></a></p>
 <p>// [R-Internals]: Hashing is principally designed for fast searching of // environments, which are from time to time added to but rarely deleted from, // so items are not actually deleted but have their value set to R_UnboundValue.</p>
 <p>Code from lobstr should help me understand how they work:</p>
