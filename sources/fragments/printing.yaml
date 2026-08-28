@@ -1,0 +1,75 @@
+---
+- name: R_ShowMessage
+  family: []
+  summary: Display a message to the user.
+  signature: |
+    void R_ShowMessage(const char *s);
+  status: api
+  replacement: ~
+  header: R_ext/Error.h
+  protect: n/a
+  errors: never
+  since: ~
+  r_equivalent: message()
+  args: ~
+  notes: ~
+  example: ~
+  see_also: []
+  chapter: printing
+  section: Printing
+- name: Rprintf
+  family: REprintf
+  summary: Print to stdout or stderr.
+  signature: |
+    void Rprintf(const char *, ...);
+    void REprintf(const char *, ...);
+  status: api
+  replacement: ~
+  header: R_ext/Print.h
+  protect: n/a
+  errors: never
+  since: ~
+  r_equivalent: cat()
+  args: ~
+  notes: ~
+  example: ~
+  see_also: []
+  chapter: printing
+  section: Printing
+- name: Rf_PrintValue
+  family: []
+  summary: Print an object like print() would.
+  signature: |
+    void Rf_PrintValue(SEXP);
+  status: api
+  replacement: ~
+  header: Rinternals.h
+  protect: n/a
+  errors: can-throw
+  since: ~
+  r_equivalent: print()
+  args: ~
+  notes: ~
+  example: ~
+  see_also: []
+  chapter: printing
+  section: Printing
+- name: R_FlushConsole
+  family: []
+  summary: Flush the console.
+  signature: |
+    void R_FlushConsole(void);
+  status: api
+  replacement: ~
+  header: R.h
+  protect: n/a
+  errors: never
+  since: ~
+  r_equivalent: flush.console()
+  args: ~
+  notes: ~
+  example: ~
+  see_also: []
+  chapter: printing
+  section: Printing
+...

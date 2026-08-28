@@ -89,7 +89,7 @@ Now that everything is machine-readable, fix the data — prose still untouched.
 - [x] Fix header fields found by audit (`Rf_warning` → `R_ext/Error.h`, `R_ExpandFileName`/`Rf_StringFalse` → `R_ext/Utils.h`, `NA_LOGICAL` → `R_ext/Arith.h`)
 - [x] Deduplicate: `R_MissingArg` (symbols only), `Rf_ScalarString`/`Rf_mkString` (strings only)
 - [x] Reassign `chapter`/`section` to the final chapter map: attributes (from pairlists + vectors arrays/matrices/factors/data-frames), evaluation + printing (from errors), weak references (utilities → external-pointers); qmd sections moved to match
-- [ ] Tighten summaries to one imperative sentence; notes to ≤1 short paragraph (spot-checked; not systematically done)
+- [x] Tighten summaries to one imperative sentence; notes to ≤1 short paragraph (done systematically across all 268 records via per-chapter fragments in `sources/fragments/`, then reassembled)
 - [ ] Add records for the §6.23 replacement functions that lack them (list reported by the mining pass: `R_getVar` family, `R_ClosureFormals/Body/Env`, `STRING_PTR_RO`, `R_getAttributes` family, `R_nrow`/`R_ncol`, R 4.6.0 binding/dots API, etc.) — overlaps with the Phase 3.5 gap list; fold into Phase 7
 
 ## Phase 5 — Part I: Foundations prose (mostly new; adv-r chapter is the model)

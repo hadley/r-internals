@@ -1,0 +1,893 @@
+---
+- name: BCODE_CODE
+  family:
+    - BCODE_CONSTS
+    - BCODE_EXPR
+    - isByteCode
+  summary: Access the components of a byte-code object.
+  signature: |
+    #define BCODE_CODE(x)   CAR(x)
+    #define BCODE_CONSTS(x) CDR(x)
+    #define BCODE_EXPR(x)   TAG(x)
+    #define isByteCode(x)   (TYPEOF(x)==BCODESXP)
+  status: non-api
+  replacement: ~
+  header: none (internal)
+  protect: not-needed
+  errors: never
+  since: ~
+  r_equivalent: ~
+  args: ~
+  notes: ~
+  example: ~
+  see_also: []
+  chapter: utilities
+  section: "Byte code (`BCODESXP`)"
+- name: R_initialize_bcode
+  family: []
+  summary: Initialize the byte-code engine.
+  signature: |
+    void R_initialize_bcode(void);
+  status: non-api
+  replacement: ~
+  header: none (internal)
+  protect: n/a
+  errors: never
+  since: ~
+  r_equivalent: ~
+  args: ~
+  notes: ~
+  example: ~
+  see_also: []
+  chapter: utilities
+  section: "Byte code (`BCODESXP`)"
+- name: R_bcEncode
+  family: R_bcDecode
+  summary: Encode or decode a byte-code object.
+  signature: |
+    SEXP R_bcEncode(SEXP);
+    SEXP R_bcDecode(SEXP);
+  status: non-api
+  replacement: ~
+  header: none (internal)
+  protect: result
+  errors: can-throw
+  since: ~
+  r_equivalent: ~
+  args: ~
+  notes: ~
+  example: ~
+  see_also: []
+  chapter: utilities
+  section: "Byte code (`BCODESXP`)"
+- name: R_PromiseExpr
+  family:
+    - R_ClosureExpr
+    - PREXPR
+    - BODY_EXPR
+  summary: Get the unevaluated expression of a promise or the body expression of a closure.
+  signature: |
+    SEXP R_PromiseExpr(SEXP);
+    SEXP R_ClosureExpr(SEXP);
+    #define PREXPR(e) R_PromiseExpr(e)
+    #define BODY_EXPR(e) R_ClosureExpr(e)
+  status: non-api
+  replacement: ~
+  header: Rinternals.h
+  protect: not-needed
+  errors: never
+  since: ~
+  r_equivalent: ~
+  args: ~
+  notes: |
+    `R_PromiseExpr()` is not part of the API; use the binding access API
+    added in R 4.6.0 (e.g. `R_DelayedBindingExpression()`) to inspect
+    promise bindings.
+  example: ~
+  see_also: []
+  chapter: utilities
+  section: "Byte code (`BCODESXP`)"
+- name: R_qsort
+  family:
+    - R_qsort_I
+    - R_qsort_int
+    - R_qsort_int_I
+  summary: Sort a numeric array in place using quicksort.
+  signature: |
+    void R_qsort    (double *v,         size_t i, size_t j);
+    void R_qsort_I  (double *v, int *II, int i, int j);
+    void R_qsort_int  (int *iv,         size_t i, size_t j);
+    void R_qsort_int_I(int *iv, int *II, int i, int j);
+  status: api
+  replacement: ~
+  header: R_ext/Utils.h
+  protect: n/a
+  errors: never
+  since: ~
+  r_equivalent: sort()
+  args: ~
+  notes: |
+    The dummy index argument is renamed to `II` to avoid problems with
+    g++ on Solaris.
+  example: ~
+  see_also:
+    - R_isort
+    - R_orderVector
+  chapter: utilities
+  section: Sorting
+- name: R_isort
+  family:
+    - R_rsort
+    - R_csort
+  summary: "Sort an int, double, or complex array in place."
+  signature: |
+    void R_isort(int*, int);
+    void R_rsort(double*, int);
+    void R_csort(Rcomplex*, int);
+  status: api
+  replacement: ~
+  header: R_ext/Utils.h
+  protect: n/a
+  errors: never
+  since: ~
+  r_equivalent: sort()
+  args: ~
+  notes: ~
+  example: ~
+  see_also: R_qsort
+  chapter: utilities
+  section: Sorting
+- name: rsort_with_index
+  family: []
+  summary: "Sort a double array in place, reordering an index array alongside."
+  signature: |
+    void rsort_with_index(double *, int *, int);
+  status: api
+  replacement: ~
+  header: R_ext/Utils.h
+  protect: n/a
+  errors: never
+  since: ~
+  r_equivalent: ~
+  args: ~
+  notes: ~
+  example: ~
+  see_also: revsort
+  chapter: utilities
+  section: Sorting
+- name: revsort
+  family: []
+  summary: "Sort a double array in reverse order, reordering an index array alongside."
+  signature: |
+    void revsort(double*, int*, int);
+  status: api
+  replacement: ~
+  header: R_ext/Utils.h
+  protect: n/a
+  errors: never
+  since: ~
+  r_equivalent: ~
+  args: ~
+  notes: ~
+  example: ~
+  see_also: rsort_with_index
+  chapter: utilities
+  section: Sorting
+- name: iPsort
+  family:
+    - rPsort
+    - cPsort
+  summary: "Partially sort an int, double, or complex array around the k-th element."
+  signature: |
+    void iPsort(int*,    int, int);
+    void rPsort(double*, int, int);
+    void cPsort(Rcomplex*, int, int);
+  status: api
+  replacement: ~
+  header: R_ext/Utils.h
+  protect: n/a
+  errors: never
+  since: ~
+  r_equivalent: ~
+  args: ~
+  notes: ~
+  example: ~
+  see_also: R_qsort
+  chapter: utilities
+  section: Sorting
+- name: R_orderVector
+  family: R_orderVector1
+  summary: Compute an ordering permutation into an index array.
+  signature: |
+    void R_orderVector (int *indx, int n, SEXP arglist, Rboolean nalast, Rboolean decreasing);
+    void R_orderVector1(int *indx, int n, SEXP x,       Rboolean nalast, Rboolean decreasing);
+  status: api
+  replacement: ~
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  since: ~
+  r_equivalent: order()
+  args: ~
+  notes: |
+    C equivalent of `order(..., na.last, decreasing)`; build `arglist` with
+    `Rf_lang2()` or `Rf_lang3()`. `R_orderVector1()` is the single-vector
+    version, equivalent to `order(x, na.last, decreasing)`.
+  example: ~
+  see_also: R_qsort
+  chapter: utilities
+  section: Sorting
+- name: Rf_allocSExp
+  family: []
+  summary: Allocate a non-vector SEXP of the given type.
+  signature: |
+    SEXP Rf_allocSExp(SEXPTYPE);
+  status: non-api
+  replacement: ~
+  header: Rinternals.h
+  protect: result
+  errors: can-throw
+  since: ~
+  r_equivalent: ~
+  args: ~
+  notes: |
+    Not part of the API, as it exposes internal structure that might need to
+    change. Use an appropriate constructor instead: `R_NewEnv()` for
+    environments, `R_mkClosure()` for closures (added in R 4.5.0), or
+    `Rf_allocLang()` for call expressions (added in R 4.4.1).
+  example: ~
+  see_also: R_NewEnv
+  chapter: utilities
+  section: Misc
+- name: Rf_any_duplicated
+  family: Rf_any_duplicated3
+  summary: Find the position of the first duplicated element of a vector.
+  signature: |
+    R_xlen_t Rf_any_duplicated(SEXP x, Rboolean from_last);
+    R_xlen_t Rf_any_duplicated3(SEXP x, SEXP incomp, Rboolean from_last);
+  status: api
+  replacement: ~
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  since: ~
+  r_equivalent: anyDuplicated()
+  args: ~
+  notes: ~
+  example: ~
+  see_also: []
+  chapter: utilities
+  section: Misc
+- name: Rf_applyClosure
+  family: []
+  summary: Apply a closure to a list of arguments.
+  signature: |
+    SEXP Rf_applyClosure(SEXP, SEXP, SEXP, SEXP, SEXP);
+  status: non-api
+  replacement: ~
+  header: none (internal)
+  protect: result
+  errors: can-throw
+  since: ~
+  r_equivalent: ~
+  args: ~
+  notes: ~
+  example: ~
+  see_also: []
+  chapter: utilities
+  section: Misc
+- name: Rf_countContexts
+  family: []
+  summary: Count evaluation contexts on the context stack.
+  signature: |
+    int Rf_countContexts(int, int);
+  status: non-api
+  replacement: ~
+  header: none (internal)
+  protect: n/a
+  errors: never
+  since: ~
+  r_equivalent: ~
+  args: ~
+  notes: ~
+  example: ~
+  see_also: []
+  chapter: utilities
+  section: Misc
+- name: Rf_CreateTag
+  family: []
+  summary: Create the tag for a pairlist element.
+  signature: |
+    SEXP Rf_CreateTag(SEXP);
+  status: non-api
+  replacement: ~
+  header: none (internal)
+  protect: result
+  errors: can-throw
+  since: ~
+  r_equivalent: ~
+  args: ~
+  notes: ~
+  example: ~
+  see_also: []
+  chapter: utilities
+  section: Misc
+- name: Rf_GetOption
+  family: Rf_GetOption1
+  summary: Retrieve the value of an R option.
+  signature: |
+    SEXP Rf_GetOption(SEXP, SEXP); /* pre-2.13.0 compatibility */
+    SEXP Rf_GetOption1(SEXP);
+  status: api
+  replacement: ~
+  header: Rinternals.h
+  protect: not-needed
+  errors: never
+  since: ~
+  r_equivalent: getOption()
+  args: ~
+  notes: |
+    `Rf_GetOption()` is kept for pre-2.13.0 compatibility; use
+    `Rf_GetOption1()`.
+  example: ~
+  see_also: Rf_GetOptionDigits
+  chapter: utilities
+  section: Misc
+- name: Rf_GetOptionDigits
+  family: Rf_GetOptionWidth
+  summary: Retrieve the digits or width option.
+  signature: |
+    int Rf_GetOptionDigits(void);
+    int Rf_GetOptionWidth(void);
+  status: api
+  replacement: ~
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  since: ~
+  r_equivalent: getOption()
+  args: ~
+  notes: ~
+  example: ~
+  see_also: Rf_GetOption
+  chapter: utilities
+  section: Misc
+- name: Rf_setVar
+  family: Rf_gsetVar
+  summary: Assign a value to a symbol in an environment.
+  signature: |
+    void Rf_setVar(SEXP, SEXP, SEXP);
+    void Rf_gsetVar(SEXP, SEXP, SEXP);
+  status: api
+  replacement: ~
+  header: Rinternals.h
+  protect: n/a
+  errors: can-throw
+  since: ~
+  r_equivalent: assign()
+  args: ~
+  notes: ~
+  example: ~
+  see_also: []
+  chapter: utilities
+  section: Misc
+- name: Rf_installS3Signature
+  family: []
+  summary: Install the signature string for an S3 method.
+  signature: |
+    SEXP Rf_installS3Signature(const char *, const char *);
+  status: non-api
+  replacement: ~
+  header: none (internal)
+  protect: not-needed
+  errors: never
+  since: ~
+  r_equivalent: ~
+  args: ~
+  notes: ~
+  example: ~
+  see_also: []
+  chapter: utilities
+  section: Misc
+- name: Rf_isFree
+  family: []
+  summary: Test whether a symbol has no value binding.
+  signature: |
+    Rboolean Rf_isFree(SEXP);
+  status: non-api
+  replacement: ~
+  header: none (internal)
+  protect: n/a
+  errors: never
+  since: ~
+  r_equivalent: ~
+  args: ~
+  notes: ~
+  example: ~
+  see_also: []
+  chapter: utilities
+  section: Misc
+- name: Rf_isUnsorted
+  family: []
+  summary: Test whether a vector may be unsorted.
+  signature: |
+    Rboolean Rf_isUnsorted(SEXP, Rboolean);
+  status: api
+  replacement: ~
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  since: ~
+  r_equivalent: is.unsorted()
+  args: ~
+  notes: ~
+  example: ~
+  see_also: []
+  chapter: utilities
+  section: Misc
+- name: Rf_namesgets
+  family: []
+  summary: Set the names of a vector.
+  signature: |
+    SEXP Rf_namesgets(SEXP, SEXP);
+  status: api
+  replacement: ~
+  header: Rinternals.h
+  protect: result
+  errors: can-throw
+  since: ~
+  r_equivalent: names<-()
+  args: ~
+  notes: ~
+  example: ~
+  see_also: []
+  chapter: utilities
+  section: Misc
+- name: Rf_pmatch
+  family: Rf_psmatch
+  summary: Perform partial matching of strings.
+  signature: |
+    Rboolean Rf_pmatch(SEXP, SEXP, Rboolean);
+    Rboolean Rf_psmatch(const char *, const char *, Rboolean);
+  status: api
+  replacement: ~
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  since: ~
+  r_equivalent: pmatch()
+  args: ~
+  notes: |
+    `Rf_psmatch()` is the variant for C strings.
+  example: ~
+  see_also: Rf_match
+  chapter: utilities
+  section: Misc
+- name: Rf_readS3VarsFromFrame
+  family: []
+  summary: "Read the S3 dispatch variables from a method's evaluation frame."
+  signature: |
+    void Rf_readS3VarsFromFrame(SEXP, SEXP*, SEXP*, SEXP*, SEXP*, SEXP*, SEXP*);
+  status: non-api
+  replacement: ~
+  header: none (internal)
+  protect: n/a
+  errors: never
+  since: ~
+  r_equivalent: ~
+  args: ~
+  notes: ~
+  example: ~
+  see_also: []
+  chapter: utilities
+  section: Misc
+- name: Rf_setSVector
+  family: []
+  summary: Set an element of a C array of SEXPs.
+  signature: |
+    void Rf_setSVector(SEXP*, int, SEXP);
+  status: non-api
+  replacement: ~
+  header: none (internal)
+  protect: n/a
+  errors: never
+  since: ~
+  r_equivalent: ~
+  args: ~
+  notes: ~
+  example: ~
+  see_also: []
+  chapter: utilities
+  section: Misc
+- name: Rf_substitute
+  family: []
+  summary: Substitute values for variables in an expression.
+  signature: |
+    SEXP Rf_substitute(SEXP,SEXP);
+  status: api
+  replacement: ~
+  header: Rinternals.h
+  protect: result
+  errors: can-throw
+  since: ~
+  r_equivalent: substitute()
+  args: ~
+  notes: ~
+  example: ~
+  see_also: []
+  chapter: utilities
+  section: Misc
+- name: Rf_match
+  family: Rf_matchE
+  summary: Find the positions of first matches between two vectors.
+  signature: |
+    SEXP Rf_match(SEXP itable, SEXP ix, int no_match);
+    SEXP Rf_matchE(SEXP itable, SEXP ix, int no_match, SEXP env);
+  status: api
+  replacement: ~
+  header: Rinternals.h
+  protect: result
+  errors: can-throw
+  since: ~
+  r_equivalent: match()
+  args: ~
+  notes: |
+    In `Rf_matchE()`, `env` is used to look up `as.character` when
+    translating `POSIXlt`; rarely needed directly.
+  example: ~
+  see_also: Rf_pmatch
+  chapter: utilities
+  section: Misc
+- name: R_dot_Last
+  family: R_RunExitFinalizers
+  summary: Run shutdown actions when R exits.
+  signature: |
+    void R_dot_Last(void);
+    void R_RunExitFinalizers(void);
+  status: embedding
+  replacement: ~
+  header: Rinternals.h
+  protect: n/a
+  errors: can-throw
+  since: ~
+  r_equivalent: ~
+  args: ~
+  notes: |
+    Shutdown actions: `R_dot_Last()` runs the `.Last()` function (in
+    main.c); `R_RunExitFinalizers()` runs finalizers registered for exit
+    (in memory.c).
+  example: ~
+  see_also: []
+  chapter: utilities
+  section: Misc
+- name: R_popen
+  family: R_system
+  summary: Open a pipe or run a command in a shell.
+  signature: |
+    #ifdef HAVE_POPEN
+    FILE *R_popen(const char *, const char *);
+    #endif
+    int R_system(const char *);
+  status: api
+  replacement: ~
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  since: ~
+  r_equivalent: system()
+  args: ~
+  notes: |
+    `R_popen()` is only available when `HAVE_POPEN` is defined.
+  example: ~
+  see_also: []
+  chapter: utilities
+  section: Misc
+- name: R_compute_identical
+  family: []
+  summary: Test whether two objects are identical.
+  signature: |
+    Rboolean R_compute_identical(SEXP, SEXP, int);
+  status: api
+  replacement: ~
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  since: ~
+  r_equivalent: identical()
+  args: ~
+  notes: |
+    The third argument is a bitmask of flags for non-default options (set a
+    bit to get the FALSE behaviour): 1 = !NUM_EQ, 2 = !SINGLE_NA,
+    4 = !ATTR_AS_SET, 8 = !IGNORE_BYTECODE, 16 = !IGNORE_ENV,
+    32 = !IGNORE_SRCREF. R's `identical()` default corresponds to 16.
+  example: ~
+  see_also: []
+  chapter: utilities
+  section: Misc
+- name: Rf_conformable
+  family: []
+  summary: Test whether two objects have conformable dimensions.
+  signature: |
+    Rboolean Rf_conformable(SEXP, SEXP);
+  status: api
+  replacement: ~
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  since: ~
+  r_equivalent: ~
+  args: ~
+  notes: ~
+  example: ~
+  see_also: []
+  chapter: utilities
+  section: Misc
+- name: Rf_elt
+  family: Rf_lastElt
+  summary: "Get an element of a pairlist by index, or the last element."
+  signature: |
+    SEXP Rf_elt(SEXP, int);
+    SEXP Rf_lastElt(SEXP);
+  status: api
+  replacement: ~
+  header: Rinternals.h
+  protect: not-needed
+  errors: never
+  since: ~
+  r_equivalent: ~
+  args: ~
+  notes: ~
+  example: ~
+  see_also: []
+  chapter: utilities
+  section: Misc
+- name: Rf_isTs
+  family: []
+  summary: Test whether an object is a time series.
+  signature: |
+    Rboolean Rf_isTs(SEXP);
+  status: api
+  replacement: ~
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  since: ~
+  r_equivalent: is.ts()
+  args: ~
+  notes: ~
+  example: ~
+  see_also: []
+  chapter: utilities
+  section: Misc
+- name: Rf_isUserBinop
+  family: []
+  summary: Test whether a call is a user-defined binary operator.
+  signature: |
+    Rboolean Rf_isUserBinop(SEXP);
+  status: api
+  replacement: ~
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  since: ~
+  r_equivalent: ~
+  args: ~
+  notes: ~
+  example: ~
+  see_also: []
+  chapter: utilities
+  section: Misc
+- name: Rf_lcons
+  family: []
+  summary: Prepend a value to a language object.
+  signature: |
+    SEXP Rf_lcons(SEXP, SEXP);
+  status: api
+  replacement: ~
+  header: Rinternals.h
+  protect: result
+  errors: can-throw
+  since: ~
+  r_equivalent: ~
+  args: ~
+  notes: ~
+  example: ~
+  see_also: Rf_cons
+  chapter: utilities
+  section: Misc
+- name: Rf_stringPositionTr
+  family: []
+  summary: Find the position of a string within a character vector.
+  signature: |
+    int Rf_stringPositionTr(SEXP, const char *);
+  status: api
+  replacement: ~
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  since: ~
+  r_equivalent: ~
+  args: ~
+  notes: ~
+  example: ~
+  see_also: []
+  chapter: utilities
+  section: Misc
+- name: R_FixupRHS
+  family: []
+  summary: Fix up the right-hand side value of a complex assignment.
+  signature: |
+    SEXP R_FixupRHS(SEXP x, SEXP y);
+  status: non-api
+  replacement: ~
+  header: none (internal)
+  protect: result
+  errors: can-throw
+  since: ~
+  r_equivalent: ~
+  args: ~
+  notes: ~
+  example: ~
+  see_also: []
+  chapter: utilities
+  section: Misc
+- name: IndexWidth
+  family: []
+  summary: Compute the character width needed to print a vector index.
+  signature: |
+    #define IndexWidth    Rf_IndexWidth
+  status: api
+  replacement: ~
+  header: R_ext/Utils.h
+  protect: n/a
+  errors: never
+  since: ~
+  r_equivalent: ~
+  args: ~
+  notes: ~
+  example: ~
+  see_also: []
+  chapter: utilities
+  section: Misc
+- name: setIVector
+  family: setRVector
+  summary: Fill an int or double array with a constant value.
+  signature: |
+    #define setIVector    Rf_setIVector
+    void setIVector(int*, int, int);
+    #define setRVector    Rf_setRVector
+    void setRVector(double*, int, double);
+  status: non-api
+  replacement: ~
+  header: R_ext/Utils.h
+  protect: n/a
+  errors: never
+  since: ~
+  r_equivalent: ~
+  args: ~
+  notes: ~
+  example: ~
+  see_also: Rf_setSVector
+  chapter: utilities
+  section: Misc
+- name: R_atof
+  family: R_strtod
+  summary: Convert a string to a double.
+  signature: |
+    double R_atof(const char *str);
+    double R_strtod(const char *c, char **end);
+  status: api
+  replacement: ~
+  header: R_ext/Utils.h
+  protect: n/a
+  errors: never
+  since: ~
+  r_equivalent: as.numeric()
+  args: ~
+  notes: |
+    These two are guaranteed to use '.' as the decimal point,
+    and to accept "NA".
+  example: ~
+  see_also: []
+  chapter: utilities
+  section: Misc
+- name: R_tmpnam
+  family: R_tmpnam2
+  summary: Create a name for a temporary file.
+  signature: |
+    char *R_tmpnam(const char *prefix, const char *tempdir);
+    char *R_tmpnam2(const char *prefix, const char *tempdir, const char *fileext);
+  status: api
+  replacement: ~
+  header: R_ext/Utils.h
+  protect: n/a
+  errors: never
+  since: ~
+  r_equivalent: tempfile()
+  args: ~
+  notes: ~
+  example: ~
+  see_also: []
+  chapter: utilities
+  section: Misc
+- name: R_CheckUserInterrupt
+  family: []
+  summary: Check whether the user has requested an interrupt.
+  signature: |
+    void R_CheckUserInterrupt(void);
+  status: api
+  replacement: ~
+  header: R_ext/Utils.h
+  protect: n/a
+  errors: can-throw
+  since: ~
+  r_equivalent: ~
+  args: ~
+  notes: ~
+  example: ~
+  see_also: R_CheckStack
+  chapter: utilities
+  section: Misc
+- name: R_CheckStack
+  family: R_CheckStack2
+  summary: Check for C stack overflow.
+  signature: |
+    void R_CheckStack(void);
+    void R_CheckStack2(size_t);
+  status: api
+  replacement: ~
+  header: R_ext/Utils.h
+  protect: n/a
+  errors: can-throw
+  since: ~
+  r_equivalent: ~
+  args: ~
+  notes: ~
+  example: ~
+  see_also: R_CheckUserInterrupt
+  chapter: utilities
+  section: Misc
+- name: findInterval
+  family: find_interv_vec
+  summary: Locate the interval containing a value within a sorted vector.
+  signature: |
+    int findInterval(double *xt, int n, double x,
+      Rboolean rightmost_closed,  Rboolean all_inside, int ilo,
+      int *mflag);
+    
+    void find_interv_vec(double *xt, int *n, double *x,   int *nx,
+      int *rightmost_closed, int *all_inside, int *indx);
+  status: api
+  replacement: ~
+  header: R_ext/Utils.h
+  protect: n/a
+  errors: never
+  since: ~
+  r_equivalent: findInterval()
+  args: ~
+  notes: |
+    Also in Applic.h.
+  example: ~
+  see_also: []
+  chapter: utilities
+  section: Misc
+- name: R_max_col
+  family: []
+  summary: Find the column position of the maximum in each row of a matrix.
+  signature: |
+    void R_max_col(double *matrix, int *nr, int *nc, int *maxes, int *ties_meth);
+  status: api
+  replacement: ~
+  header: R_ext/Utils.h
+  protect: n/a
+  errors: never
+  since: ~
+  r_equivalent: max.col()
+  args: ~
+  notes: |
+    Also in Applic.h.
+  example: ~
+  see_also: []
+  chapter: utilities
+  section: Misc
+...

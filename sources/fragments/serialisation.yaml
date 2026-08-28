@@ -1,0 +1,160 @@
+---
+- name: R_XDR_DOUBLE_SIZE
+  family: R_XDR_INTEGER_SIZE
+  summary: Specify the byte sizes of doubles and integers in XDR serialisation format.
+  signature: |
+    #define R_XDR_DOUBLE_SIZE 8
+    #define R_XDR_INTEGER_SIZE 4
+  status: api
+  replacement: ~
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  since: ~
+  r_equivalent: ~
+  args: ~
+  notes: ~
+  example: ~
+  see_also: []
+  chapter: serialisation
+  section: XDR encoding
+- name: R_XDREncodeDouble
+  family:
+    - R_XDRDecodeDouble
+    - R_XDREncodeInteger
+    - R_XDRDecodeInteger
+  summary: Encode and decode doubles and integers in XDR format.
+  signature: |
+    void R_XDREncodeDouble(double d, void *buf);
+    double R_XDRDecodeDouble(void *buf);
+    void R_XDREncodeInteger(int i, void *buf);
+    int R_XDRDecodeInteger(void *buf);
+  status: api
+  replacement: ~
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  since: ~
+  r_equivalent: ~
+  args: ~
+  notes: ~
+  example: ~
+  see_also: []
+  chapter: serialisation
+  section: XDR encoding
+- name: R_InitInPStream
+  family: R_InitOutPStream
+  summary: Initialise a custom input or output persistence stream.
+  signature: |
+    void R_InitInPStream(R_inpstream_t stream, R_pstream_data_t data,
+      R_pstream_format_t type,
+      int (*inchar)(R_inpstream_t),
+      void (*inbytes)(R_inpstream_t, void *, int),
+      SEXP (*phook)(SEXP, SEXP), SEXP pdata);
+    void R_InitOutPStream(R_outpstream_t stream, R_pstream_data_t data,
+      R_pstream_format_t type, int version,
+      void (*outchar)(R_outpstream_t, int),
+      void (*outbytes)(R_outpstream_t, void *, int),
+      SEXP (*phook)(SEXP, SEXP), SEXP pdata);
+  status: api
+  replacement: ~
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  since: ~
+  r_equivalent: ~
+  args: ~
+  notes: ~
+  example: ~
+  see_also: []
+  chapter: serialisation
+  section: Persistence streams
+- name: R_InitFileInPStream
+  family: R_InitFileOutPStream
+  summary: Initialise a persistence stream that reads from or writes to a file.
+  signature: |
+    void R_InitFileInPStream(R_inpstream_t stream, FILE *fp,
+      R_pstream_format_t type,
+      SEXP (*phook)(SEXP, SEXP), SEXP pdata);
+    void R_InitFileOutPStream(R_outpstream_t stream, FILE *fp,
+      R_pstream_format_t type, int version,
+      SEXP (*phook)(SEXP, SEXP), SEXP pdata);
+  status: api
+  replacement: ~
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  since: ~
+  r_equivalent: ~
+  args: ~
+  notes: ~
+  example: ~
+  see_also: []
+  chapter: serialisation
+  section: Persistence streams
+- name: R_InitConnOutPStream
+  family: R_InitConnInPStream
+  summary: Initialise a persistence stream that reads from or writes to a connection.
+  signature: |
+    void R_InitConnOutPStream(R_outpstream_t stream, Rconnection con,
+      R_pstream_format_t type, int version,
+      SEXP (*phook)(SEXP, SEXP), SEXP pdata);
+    void R_InitConnInPStream(R_inpstream_t stream,  Rconnection con,
+      R_pstream_format_t type,
+      SEXP (*phook)(SEXP, SEXP), SEXP pdata);
+  status: non-api
+  replacement: ~
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  since: ~
+  r_equivalent: ~
+  args: ~
+  notes: |
+    The connection interface is not available to packages. Define
+    `NEED_CONNECTION_PSTREAMS` before including `Rinternals.h` to get the
+    opaque `Rconnection` pointer type.
+  example: ~
+  see_also: []
+  chapter: serialisation
+  section: Persistence streams
+- name: R_Serialize
+  family: R_Unserialize
+  summary: "Serialise an R object to an output stream, or unserialise it from an input stream."
+  signature: |
+    void R_Serialize(SEXP s, R_outpstream_t ops);
+    SEXP R_Unserialize(R_inpstream_t ips);
+  status: api
+  replacement: ~
+  header: Rinternals.h
+  protect: result
+  errors: can-throw
+  since: ~
+  r_equivalent: serialize()
+  args: ~
+  notes: |
+    The `SEXP` returned by `R_Unserialize()` is freshly allocated and must
+    be protected from garbage collection.
+  example: ~
+  see_also: []
+  chapter: serialisation
+  section: Serialising objects
+- name: R_RestoreHashCount
+  family: []
+  summary: Restore the hash count of a hashed environment after unserialisation.
+  signature: |
+    void R_RestoreHashCount(SEXP rho);
+  status: non-api
+  replacement: ~
+  header: Rinternals.h
+  protect: n/a
+  errors: can-throw
+  since: ~
+  r_equivalent: ~
+  args: ~
+  notes: ~
+  example: ~
+  see_also: []
+  chapter: serialisation
+  section: Serialising objects
+...
