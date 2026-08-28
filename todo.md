@@ -115,8 +115,8 @@ match the final `chapter`/`section` assignments from Phase 4.
 
 Split into small chunks, one chapter (or record batch) at a time:
 
-- [ ] 7a. `evaluation.qmd` — prose around existing records (`Rf_eval`, `R_tryEval`/`R_tryEvalSilent`, `R_forceAndCall`, `Rf_applyClosure`); building and evaluating calls end-to-end (worked example)
-- [ ] 7b. `errors.qmd` — signalling prose; longjmp problem and C++/resource safety; new records for §6.13 condition handling/cleanup (`R_UnwindProtect`, `R_ContinueUnwind`, `R_MakeUnwindCont`, `R_withCallingErrorHandler`, `R_tryCatch`, `R_tryCatchError`); interrupts (§6.14, `R_CheckUserInterrupt`); C stack checking (§6.15)
+- [x] 7a. `evaluation.qmd` — prose around existing records (`Rf_eval`, `R_tryEval`/`R_tryEvalSilent`, `R_forceAndCall`); building and evaluating calls end-to-end. Note: `Rf_applyClosure` has no public-header prototype (non-API), so it's not documented; prose says to build a call + `Rf_eval` instead
+- [x] 7b. `errors.qmd` — "Errors and conditions": signalling prose (incl. worked example of signalling a custom-classed error via a constructed `stop()` call); longjmp problem and C++/resource safety; new records for §6.13 condition handling/cleanup (`R_UnwindProtect`, `R_ContinueUnwind`, `R_MakeUnwindCont`, `R_withCallingErrorHandler`, `R_tryCatch`, `R_tryCatchError`; `R_ExecWithCleanup` moved here from evaluation); interrupts (§6.14, `R_CheckUserInterrupt`); C stack checking (§6.15). (Chapters were briefly combined, then re-split — kept separate after all.)
 - [ ] 7c. `printing.qmd` — short prose around existing records (`Rprintf`/`REprintf`, `Rf_PrintValue`, `R_ShowMessage`, `R_FlushConsole`)
 - [ ] 7d. `serialisation.qmd` — prose polish; custom pstreams (§6.16), XDR helpers
 - [ ] 7e. `rng.qmd` — new records + prose: `GetRNGstate`/`PutRNGstate`, `unif_rand` family, `R_unif_index`; relationship to `.Random.seed`

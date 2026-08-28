@@ -2,21 +2,96 @@
 aliases: [error-eval.html]
 ---
 
-# Errors
+# Errors and conditions
 
 {{< include _setup.qmd >}}
 
-## Errors, warnings, and printing
+R reports errors with a `longjmp`: `Rf_error()` never returns, abandoning
+your C function on the spot. That has two consequences you must design
+around. First, any cleanup your function owes — freeing `R_Calloc()`
+memory, closing files, restoring global state — will not run unless you
+arrange it in advance with `R_UnwindProtect()` or an external pointer
+finalizer. Second, in C++ the longjmp skips destructors, so RAII objects
+must live below an `R_UnwindProtect()` boundary that converts the longjmp
+into a C++ exception (see `R_MakeUnwindCont()`).
+
+For catching errors from R code you call, rather than signalling your own,
+see the protected evaluation entry points in
+[Evaluation](evaluation.qmd).
+
+## Signalling
+
+Follows [WRE §6.2, Error signaling](https://cran.r-project.org/doc/manuals/R-exts.html#Error-signaling-1)
+closely.
+
+`Rf_error()` and `Rf_warning()` take `printf`-style format strings. If
+your message is a plain string that might contain `%`, pass it as
+`Rf_error("%s", msg)` so it isn't interpreted as a format.
+
+To signal an error with a custom class — so R code can catch it
+selectively with `tryCatch(my_class = function(c) ...)` — there is no
+dedicated entry point. Build a condition object (a named list with
+`message` and `call` fields, classed `c("my_class", "error",
+"condition")`) and signal it by evaluating a call to `stop()`:
+
+```c
+SEXP cls = PROTECT(Rf_allocVector(STRSXP, 3));
+SET_STRING_ELT(cls, 0, Rf_mkChar("negative_value"));
+SET_STRING_ELT(cls, 1, Rf_mkChar("error"));
+SET_STRING_ELT(cls, 2, Rf_mkChar("condition"));
+
+SEXP cond = PROTECT(Rf_mkNamed(VECSXP, (const char *[]){"message", "call", ""}));
+SET_VECTOR_ELT(cond, 0, Rf_mkString("x must be non-negative"));
+SET_VECTOR_ELT(cond, 1, R_NilValue);
+Rf_classgets(cond, cls);
+
+/* Never returns, so the UNPROTECT is never reached */
+Rf_eval(Rf_lang2(Rf_install("stop"), cond), R_GlobalEnv);
+```
+
+The same pattern with `warning()` signals a classed warning.
 
 ```{r}
 #| results: asis
 #| echo: false
-render_entries("errors", "Errors, warnings, and printing")
+render_entries("errors", "Signalling")
 ```
 
-Use `Rf_errorcall(R_NilValue, ...)` to suppress display of call.
+## Condition handling and cleanup
 
-Two macros eliminate compiler warnings about non-void functions that don't return.
-(`Rf_error` will `longjmp` and so any code following will not be executed; however,
-most compilers do not detect this when providing warnings)
+Follows [WRE §6.13, Condition handling and cleanup code](https://cran.r-project.org/doc/manuals/R-exts.html#Condition-handling-and-cleanup-code-1)
+closely.
 
+These functions let C code do what `tryCatch()` and `on.exit()` do at the
+R level: run a body function with a condition handler or cleanup action
+installed. Reach for `R_UnwindProtect()` when you need guaranteed cleanup,
+and the `R_tryCatch*()` family when you need to inspect or recover from a
+condition object.
+
+```{r}
+#| results: asis
+#| echo: false
+render_entries("errors", "Condition handling and cleanup")
+```
+
+## Interrupts
+
+Follows [WRE §6.14, Allowing interrupts](https://cran.r-project.org/doc/manuals/R-exts.html#Allowing-interrupts-1)
+closely.
+
+```{r}
+#| results: asis
+#| echo: false
+render_entries("errors", "Interrupts")
+```
+
+## C stack checking
+
+Follows [WRE §6.15, C stack checking](https://cran.r-project.org/doc/manuals/R-exts.html#C-stack-checking-1)
+closely.
+
+```{r}
+#| results: asis
+#| echo: false
+render_entries("errors", "C stack checking")
+```

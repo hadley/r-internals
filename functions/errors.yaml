@@ -14,7 +14,7 @@
     Use `Rf_errorcall(R_NilValue, ...)` to suppress display of the call.
   see_also: []
   chapter: errors
-  section: "Errors, warnings, and printing"
+  section: Signalling
 - name: Rf_warning
   family:
     - Rf_warningcall
@@ -31,7 +31,7 @@
   r_equivalent: warning()
   see_also: []
   chapter: errors
-  section: "Errors, warnings, and printing"
+  section: Signalling
 - name: error_return
   family: errorcall_return
   summary: "Eliminate compiler warnings about non-void functions that don't return."
@@ -53,5 +53,146 @@
     however, most compilers do not detect this when providing warnings.
   see_also: Rf_error
   chapter: errors
-  section: "Errors, warnings, and printing"
+  section: Signalling
+- name: R_UnwindProtect
+  family: []
+  summary: Run a C function, guaranteeing a cleanup action runs on normal return and on longjmp.
+  signature: |
+    SEXP R_UnwindProtect(SEXP (*fun)(void *data), void *data,
+                         void (*clean)(void *cdata, Rboolean jump), void *cdata,
+                         SEXP cont);
+  status: api
+  header: Rinternals.h
+  protect: result
+  errors: can-throw
+  args:
+    fun: function to run; its return value is passed through.
+    clean: "cleanup function, called with `jump = FALSE` after a normal return and `jump = TRUE` before a non-local transfer of control resumes."
+    cont: "continuation token from `R_MakeUnwindCont()`, or `R_NilValue` for plain C use."
+  notes: |
+    This is the primary tool for making C (and C++) code longjmp-safe: free
+    `R_Calloc()` memory, close files, and restore state in `clean`. With a
+    continuation token, `clean` can throw a C++ exception to unwind the C++
+    stack and then call `R_ContinueUnwind()` to resume R's longjmp.
+  see_also: [R_MakeUnwindCont, R_ExecWithCleanup]
+  chapter: errors
+  section: Condition handling and cleanup
+- name: R_MakeUnwindCont
+  family: R_ContinueUnwind
+  summary: Allocate a continuation token for C++ stack unwinding, and resume the unwind.
+  signature: |
+    SEXP R_MakeUnwindCont(void);
+    NORET void R_ContinueUnwind(SEXP cont);
+  status: api
+  header: Rinternals.h
+  protect: result
+  errors: can-throw
+  notes: |
+    `PROTECT` the token before passing it to `R_UnwindProtect()`. Only needed
+    when C++ code sits between R and the cleanup handler; plain C code should
+    pass `R_NilValue` as `cont` instead.
+  see_also: R_UnwindProtect
+  chapter: errors
+  section: Condition handling and cleanup
+- name: R_ExecWithCleanup
+  family: []
+  summary: "Execute a C function in a protected context, with cleanup before teardown."
+  signature: |
+    SEXP R_ExecWithCleanup(SEXP (*fun)(void *), void *data,
+                           void (*cleanfun)(void *),
+                           void *cleandata);
+  status: api
+  header: Rinternals.h
+  protect: result
+  errors: can-throw
+  args:
+    fun: "C function to call after context setup. Passed `*data`."
+    cleanfun: "C function to call before context teardown. Passed `*data`."
+  notes: |
+    Older, simpler variant of `R_UnwindProtect()`; the cleanup function is
+    not told whether the exit was a normal return or a longjmp.
+  see_also: R_UnwindProtect
+  chapter: errors
+  section: Condition handling and cleanup
+- name: R_tryCatchError
+  family: R_withCallingErrorHandler
+  summary: Call a C function with a handler installed for R error conditions.
+  signature: |
+    SEXP R_tryCatchError(SEXP (*fun)(void *data), void *data,
+                         SEXP (*hndlr)(SEXP cond, void *hdata), void *hdata);
+    SEXP R_withCallingErrorHandler(SEXP (*fun)(void *data), void *data,
+                                   SEXP (*hndlr)(SEXP cond, void *hdata), void *hdata);
+  status: api
+  header: Rinternals.h
+  protect: result
+  errors: can-throw
+  r_equivalent: tryCatch()
+  args:
+    hndlr: "handler called with the condition object; its return value becomes the result."
+  notes: |
+    `R_tryCatchError()` installs an exiting handler (like
+    `tryCatch(error = ...)`); `R_withCallingErrorHandler()` installs a
+    calling handler (like `withCallingHandlers(error = ...)`) and avoids
+    calling back into R, so it is more efficient. `R_tryCatchError()` is
+    implemented via R-level `tryCatch()` and has some overhead.
+  see_also: [R_tryCatch, R_tryEval]
+  chapter: errors
+  section: Condition handling and cleanup
+- name: R_tryCatch
+  family: []
+  summary: Call a C function with handlers for arbitrary condition classes and a cleanup action.
+  signature: |
+    SEXP R_tryCatch(SEXP (*fun)(void *data), void *data,
+                    SEXP conds,
+                    SEXP (*hndlr)(SEXP cond, void *hdata), void *hdata,
+                    void (*clean)(void *cdata), void *cdata);
+  status: api
+  header: Rinternals.h
+  protect: result
+  errors: can-throw
+  r_equivalent: tryCatch()
+  args:
+    conds: condition classes to handle, as a character vector (`STRSXP`).
+  notes: |
+    `NULL` may be passed for `fun` or `clean` if condition handling or
+    cleanup is not needed. Implemented via R-level `tryCatch()`, so it has
+    some overhead.
+  see_also: [R_tryCatchError, R_UnwindProtect]
+  chapter: errors
+  section: Condition handling and cleanup
+- name: R_CheckUserInterrupt
+  family: []
+  summary: Check for a pending user interrupt, signalling an error if one occurred.
+  signature: |
+    void R_CheckUserInterrupt(void);
+  status: api
+  header: R_ext/Utils.h
+  protect: n/a
+  errors: can-throw
+  notes: |
+    Call periodically from long-running loops; R cannot interrupt compiled
+    code that never checks. On interrupt it longjmps, so the same cleanup
+    obligations as for `Rf_error()` apply.
+  see_also: []
+  chapter: errors
+  section: Interrupts
+- name: R_CheckStack
+  family: R_CheckStack2
+  summary: Signal an error if the C stack is (nearly) exhausted.
+  signature: |
+    void R_CheckStack(void);
+    void R_CheckStack2(R_SIZE_T extra);
+  status: api
+  header: R_ext/Utils.h
+  protect: n/a
+  errors: can-throw
+  args:
+    extra: "`R_CheckStack2()` errors when fewer than `extra` bytes remain."
+  notes: |
+    Call before deep C recursion; better still, avoid deep recursion or
+    write it tail-recursively so the compiler can optimize it away. Stack
+    checking is not available on all platforms.
+  see_also: []
+  chapter: errors
+  section: C stack checking
 ...

@@ -80,23 +80,4 @@
   see_also: []
   chapter: evaluation
   section: Protected evaluation
-- name: R_ExecWithCleanup
-  family: []
-  summary: "Execute a C function in a protected context, with cleanup before teardown."
-  signature: |
-    SEXP R_ExecWithCleanup(SEXP (*fun)(void *), void *data,
-                           void (*cleanfun)(void *),
-                           void *cleandata);
-  status: api
-  header: Rinternals.h
-  protect: result
-  errors: can-throw
-  args:
-    fun: "C function to call after context setup. Passed `*data`."
-    cleanfun: "C function to call before context teardown. Passed `*data`."
-  notes: |
-    Not used anywhere in R source.
-  see_also: R_ToplevelExec
-  chapter: evaluation
-  section: Protected evaluation
 ...
