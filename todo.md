@@ -19,7 +19,7 @@ brief; explain R-specific surprises, not C basics.
 - [x] GitHub Action (`.github/workflows/publish.yml`): render + publish to gh-pages
 - [x] Rewrite README.md for the new layout + contribution workflow
 - [x] Site renders cleanly (`quarto render`, no warnings); placeholder stubs for all planned chapters
-- [ ] Push and verify the site goes live on gh-pages (needs a push to `main`)
+- [x] Push and verify the site goes live on gh-pages — live at https://hadley.github.io/r-internals/ (required: orphan `gh-pages` branch + R/knitr/yaml12 in the workflow for the asis chunks)
 
 ## Phase 2 — Function metadata pipeline ✔ (branch `function-metadata`)
 
