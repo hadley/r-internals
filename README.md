@@ -25,12 +25,3 @@ quarto render
     markdown copies post-render.
 - `sources/` — raw mined material (e.g. `r-api.md`). **Not rendered**; treat
   as source to rewrite, not copy.
-
-## Contributing
-
-Every documented C entry point gets exactly one canonical entry in the
-standard format (heading with `{#anchor}` equal to the C identifier,
-one-sentence summary, signature block, metadata line with Status / Header /
-Protect / Errors / Since / R equivalent, behaviour notes, optional short
-example, see-also links). See `plan.md` for the full specification, and
-`todo.md` for the current work plan.
