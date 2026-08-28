@@ -341,13 +341,23 @@ Mechanical steps:
   2. Build the metadata pipeline: define `functions.yaml` schema, seed it
      with a handful of entries, and write `tools/render-entries.R` so
      chapters can inject entries via asis chunks. Validate end-to-end on
-     one chapter before scaling up.
-  3. Write Part I foundations (mostly new, brief prose).
-  4. Convert Part II chapters: extract function metadata into
-     `functions.yaml`, mining r-api.md §6.23 for the modern replacements;
-     chapters keep only prose + asis chunk calls.
-  5. Write Parts III–IV by reorganising r-api.md content into YAML records.
-  6. Turn on the coverage audit; fill gaps until the API-status diff is
+     one chapter before scaling up. ✔
+  3. **Assemble a clean `functions.yaml`.** Mechanically extract every
+     hand-written function definition from the existing chapters into YAML
+     records (summary, signature, status, protect/errors, chapter/section),
+     replacing each with an asis chunk call. This is a *move*, not a
+     rewrite: keep the existing text as-is where it doesn't fit the schema
+     (park it in `notes`), don't fix stale claims yet, and don't touch the
+     surrounding prose. Goal: one machine-readable inventory of everything
+     we currently document.
+  4. Clean up `functions.yaml` in place: verify signatures against current
+     headers, assign/correct statuses, mine r-api.md §6.23 for modern
+     replacements, fix stale claims, tighten summaries and notes to the
+     brief reference style. Prose in chapters still untouched.
+  5. Write Part I foundations (mostly new, brief prose) and revise chapter
+     prose around the generated entries.
+  6. Write Parts III–IV by reorganising r-api.md content into YAML records.
+  7. Turn on the coverage audit; fill gaps until the API-status diff is
      clean.
-  7. Add LLM outputs + function index last (they fall out of
+  8. Add LLM outputs + function index last (they fall out of
      `functions.yaml`).
