@@ -6,7 +6,17 @@ aliases: [save-load.html]
 
 {{< include _setup.qmd >}}
 
+R's serialisation format converts an R object to a byte stream (and back)
+that can be written to a file, a connection, or a database. From C you can
+drive the same machinery `serialize()`/`unserialize()` use at the R level,
+either over a `FILE *` or over a custom byte source/sink you provide.
+
 ## XDR encoding
+
+XDR is the default binary serialisation format: big-endian and
+platform-independent, so streams are portable across architectures. These
+helpers encode and decode individual values when you implement a custom
+stream.
 
 ```{r}
 #| results: asis
@@ -15,6 +25,20 @@ render_entries("serialisation", "XDR encoding")
 ```
 
 ## Persistence streams
+
+A persistence stream pairs a byte source/sink with optional persistence
+hooks. The hook function (`phook`, with its data `pdata`) is called for
+objects that can't be serialised by value — external pointers and weak
+references — letting you substitute a placeholder on output and
+reconstruct the object on input; pass `NULL` to refuse such objects with
+an error. The `version` argument selects the serialisation format version
+(2, or 3 which supports ALTREP; version 3 output requires R >= 3.6.0 to
+read).
+
+Note that WRE describes this framework as **highly experimental** for
+package use: it may change or be dropped in a future R release. Don't
+depend on the fields of the stream structs directly — initialise them with
+the functions below.
 
 ```c
 typedef void *R_pstream_data_t;
@@ -49,13 +73,9 @@ struct R_inpstream_st {
 };
 ```
 
-```{r}
-#| results: asis
-#| echo: false
-render_entries("serialisation", "Persistence streams")
-```
-
-The connection interface is not available to packages. To allow limited use of connection pointers, defining `NEED_CONNECTION_PSTREAMS` before including `Rinternals.h` defines the opaque pointer type:
+The connection interface is not available to packages. To allow limited
+use of connection pointers, defining `NEED_CONNECTION_PSTREAMS` before
+including `Rinternals.h` defines the opaque pointer type:
 
 ```c
 #ifdef NEED_CONNECTION_PSTREAMS
@@ -66,7 +86,15 @@ typedef struct Rconn  *Rconnection;
 #endif
 ```
 
+```{r}
+#| results: asis
+#| echo: false
+render_entries("serialisation", "Persistence streams")
+```
+
 ## Serialising objects
+
+With a stream initialised, these two functions do the actual work:
 
 ```{r}
 #| results: asis
