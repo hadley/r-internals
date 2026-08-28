@@ -95,7 +95,7 @@
   status: non-api
   replacement: R_ExternalPtrAddr
   header: Rinternals.h
-  protect: n/a
+  protect: not-needed
   errors: never
   notes: |
     Read the fields directly from the underlying cons cell. Use

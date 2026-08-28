@@ -7,7 +7,7 @@
     R_len_t Rf_length(SEXP x);
   status: api
   header: Rinternals.h
-  protect: not-needed
+  protect: n/a
   errors: never
   r_equivalent: length()
   args:
@@ -72,7 +72,7 @@
   replacement: Rf_lengthgets
   header: Rinternals.h
   protect: n/a
-  errors: never
+  errors: can-throw
   r_equivalent: length<-
   args:
     x: a vector.
@@ -80,6 +80,7 @@
   notes: |
     Uppercase, macro variant of `Rf_lengthgets()`. For resizable (growable)
     vectors, see `R_allocResizableVector()` and `R_resizeVector()` (R 4.6.0).
+    `SETLENGTH()` errors if applied to an ALTREP vector.
   see_also:
     - Rf_lengthgets
     - LENGTH
@@ -145,7 +146,9 @@
     x: the C value to wrap.
   notes: |
     For strings, use [`Rf_ScalarString()`](#Rf_ScalarString) or
-    [`Rf_mkString()`](#Rf_mkString) instead.
+    [`Rf_mkString()`](#Rf_mkString) instead. `Rf_ScalarLogical()` returns cached
+    singletons and never allocates; the other `Rf_Scalar*()` variants always
+    allocate.
   see_also:
     - Rf_allocVector
     - Rf_ScalarString
@@ -229,7 +232,7 @@
     Rbyte*    RAW(SEXP x);
   status: api
   header: Rinternals.h
-  protect: not-needed
+  protect: n/a
   errors: never
   args:
     x: a vector of the corresponding type.
@@ -298,7 +301,7 @@
   status: non-api
   replacement: STRING_PTR_RO
   header: Rinternals.h
-  protect: not-needed
+  protect: n/a
   errors: never
   args:
     x: "a `STRSXP`."
@@ -339,7 +342,7 @@
     Rcomplex Rf_asComplex(SEXP x);
   status: api
   header: Rinternals.h
-  protect: not-needed
+  protect: n/a
   errors: can-throw
   r_equivalent: as.logical()
   args:
@@ -470,7 +473,7 @@
     Rboolean Rf_isExpression(SEXP s);
   status: api
   header: Rinternals.h
-  protect: not-needed
+  protect: n/a
   errors: never
   r_equivalent: is.logical()
   args:
@@ -502,7 +505,7 @@
     Rboolean Rf_isNumeric(SEXP s);
   status: api
   header: Rinternals.h
-  protect: not-needed
+  protect: n/a
   errors: never
   args:
     s: any SEXP.
@@ -578,7 +581,7 @@
     Rboolean Rf_isVectorizable(SEXP x);
   status: api
   header: Rinternals.h
-  protect: not-needed
+  protect: n/a
   errors: never
   args:
     x: a list or pairlist.

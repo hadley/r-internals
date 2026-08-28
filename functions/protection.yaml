@@ -84,12 +84,14 @@
   status: api
   header: Rinternals.h
   protect: n/a
-  errors: never
+  errors: can-throw
   notes: |
     Objects are added to `R_PreciousList`, a pairlist walked by the garbage
-    collector. `R_ReleaseObject()` performs a linear search of this list, so
-    repeatedly preserving and releasing many objects in the same order can
-    cause quadratic slowdowns.
+    collector. `R_PreserveObject()` allocates (it conses the object onto
+    `R_PreciousList`), so it can throw on out-of-memory; `R_ReleaseObject()`
+    performs a linear search of this list to remove the entry and does not
+    allocate, but repeatedly preserving and releasing many objects in the
+    same order can cause quadratic slowdowns.
   see_also: PROTECT
   chapter: protection
   section: "R_PreserveObject, R_ReleaseObject"

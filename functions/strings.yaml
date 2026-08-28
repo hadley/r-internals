@@ -34,7 +34,7 @@
     cetype_t Rf_getCharCE(SEXP);
   status: api
   header: Rinternals.h
-  protect: not-needed
+  protect: n/a
   errors: never
   see_also: cetype_t
   chapter: strings
@@ -101,7 +101,7 @@
     #define CHAR(x) R_CHAR(x)
   status: api
   header: Rinternals.h
-  protect: not-needed
+  protect: n/a
   errors: never
   notes: |
     Named `CHAR()` for consistency with the other vector accessors
@@ -120,7 +120,7 @@
     const char* Rf_translateCharUTF8(SEXP x);
   status: api
   header: Rinternals.h
-  protect: not-needed
+  protect: n/a
   errors: can-throw
   notes: |
     `Rf_translateChar()` translates to the native encoding;
@@ -172,7 +172,7 @@
     Rboolean Rf_isBlankString(const char *);
   status: api
   header: Rinternals.h
-  protect: not-needed
+  protect: n/a
   errors: never
   notes: |
     `Rf_StringBlank()` takes a `SEXP`; `Rf_isBlankString()` takes a
@@ -188,7 +188,7 @@
     Rboolean Rf_StringTrue(const char *);
   status: non-api
   header: R_ext/Utils.h
-  protect: not-needed
+  protect: n/a
   errors: never
   see_also: []
   chapter: strings
@@ -201,7 +201,7 @@
     Rboolean Rf_isValidStringF(SEXP);
   status: api
   header: Rinternals.h
-  protect: not-needed
+  protect: n/a
   errors: never
   notes: |
     `Rf_isValidString(x)` is `TYPEOF(x) == STRSXP && LENGTH(x) > 0 &&
@@ -219,7 +219,7 @@
       Rboolean allowNA, Rboolean keepNA, const char* msg_name);
   status: api
   header: Rinternals.h
-  protect: not-needed
+  protect: n/a
   errors: can-throw
   r_equivalent: nchar()
   notes: |
@@ -234,7 +234,7 @@
     char* Rf_acopy_string(const char *);
   status: api
   header: Rinternals.h
-  protect: not-needed
+  protect: n/a
   errors: can-throw
   notes: |
     The copy is freed automatically at the next garbage collection.
@@ -261,7 +261,7 @@
     Rboolean Rf_NonNullStringMatch(SEXP s, SEXP t);
   status: api
   header: Rinternals.h
-  protect: not-needed
+  protect: n/a
   errors: can-throw
   notes: |
     Translates both strings to UTF-8 before comparing.
@@ -275,7 +275,7 @@
     const char *Rf_reEnc(const char *x, cetype_t ce_in, cetype_t ce_out, int subst);
   status: api
   header: Rinternals.h
-  protect: not-needed
+  protect: n/a
   errors: can-throw
   see_also: cetype_t
   chapter: strings
@@ -287,8 +287,8 @@
     const char *R_ExpandFileName(const char *);
   status: api
   header: R_ext/Utils.h
-  protect: not-needed
-  errors: can-throw
+  protect: n/a
+  errors: never
   r_equivalent: path.expand()
   notes: |
     Needed because most C APIs don't understand `~`.
@@ -302,8 +302,8 @@
     SEXPTYPE Rf_str2type(const char *);
   status: api
   header: Rinternals.h
-  protect: not-needed
-  errors: can-throw
+  protect: n/a
+  errors: never
   see_also: Rf_type2str
   chapter: strings
   section: Types

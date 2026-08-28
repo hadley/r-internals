@@ -81,7 +81,7 @@
   status: non-api
   header: Rinternals.h
   protect: n/a
-  errors: never
+  errors: can-throw
   notes: |
     The connection interface is not available to packages. Define
     `NEED_CONNECTION_PSTREAMS` before including `Rinternals.h` to get the
@@ -114,7 +114,7 @@
   status: non-api
   header: Rinternals.h
   protect: n/a
-  errors: can-throw
+  errors: never
   see_also: []
   chapter: serialisation
   section: Serialising objects

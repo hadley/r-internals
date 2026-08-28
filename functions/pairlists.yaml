@@ -10,7 +10,7 @@
     Rboolean Rf_isList(SEXP x);     // LISTSXP, NILSXP
   status: api
   header: Rinternals.h
-  protect: not-needed
+  protect: n/a
   errors: never
   see_also: []
   chapter: pairlists
@@ -124,8 +124,12 @@
     SEXP Rf_listAppend(SEXP source, SEXP target);
   status: api
   header: Rinternals.h
-  protect: result
-  errors: can-throw
+  protect: not-needed
+  errors: never
+  notes: |
+    Mutates `source` in place by walking to its last cell and setting its
+    `CDR` to `target`; no new cells are allocated and the returned pairlist
+    is the (mutated) `source` you already hold.
   see_also: []
   chapter: pairlists
   section: Creation
@@ -263,10 +267,11 @@
   status: api
   header: Rinternals.h
   protect: not-needed
-  errors: never
+  errors: can-throw
   notes: |
     Treats the pairlist as if it were a vector; repeated calls can become
     O(n^2), though this is unlikely to matter at typical pairlist sizes.
+    Errors if `x` is not a pairlist or has fewer than `n` elements.
   see_also:
     - Rf_allocList
     - CDR

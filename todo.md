@@ -63,7 +63,7 @@ Known issues from extraction, re-verified after Phase 4:
 - [x] `Rf_mkString`/`Rf_ScalarString` duplication → record lives in strings.yaml only
 - [x] `R_MissingArg` duplication → record lives in symbols.yaml only
 - [x] Stray trailing space in rendered output → no longer reproducible (0/3733 lines)
-- [ ] `errors`/`protect` fields are educated guesses in many records — needs a systematic audit against R's behaviour
+- [x] `errors`/`protect` fields are educated guesses in many records — audited all 268 records against R trunk sources; conventions: `protect: n/a` for non-SEXP returns, `errors: can-throw` only when a longjmp is reachable in correct documented usage (allocation, evaluation, coercion, documented error conditions), misuse-only defensive checks stay `never`
 
 ## Phase 3.5 — Verification against `sources/r-api.md` ✔
 
@@ -78,7 +78,7 @@ Diffed prototype-style function names in r-api.md (95) against
 - Modern §6.23 API (→ Part II chapters): `R_mkClosure`, `R_ClosureEnv`, `R_ClosureFormals`, `Rf_allocLang`, `Rf_isDataFrame`, `R_Dots*` (6), binding functions (`R_GetBindingType`, `R_MakeDelayedBinding`, `R_MakeForcedBinding`, `R_MakeMissingBinding`, `R_DelayedBinding*`, `R_DotDelayed*`, `R_ForcedBindingExpression`, `R_findDotsEnv`), `R_envSymbols`, `R_ParentEnv`, `R_class`, `R_mapAttrib`
 - Experimental resizable vectors: `R_allocResizableVector`, `R_duplicateAsResizable`, `R_resizeVector`, `SET_GROWABLE_BIT`
 
-## Phase 4 — Clean up `functions/*.yaml` in place
+## Phase 4 — Clean up `functions/*.yaml` in place ✔ (branch `phase-4-tightening`)
 
 Now that everything is machine-readable, fix the data — prose still untouched.
 
@@ -90,8 +90,7 @@ Now that everything is machine-readable, fix the data — prose still untouched.
 - [x] Deduplicate: `R_MissingArg` (symbols only), `Rf_ScalarString`/`Rf_mkString` (strings only)
 - [x] Reassign `chapter`/`section` to the final chapter map: attributes (from pairlists + vectors arrays/matrices/factors/data-frames), evaluation + printing (from errors), weak references (utilities → external-pointers); qmd sections moved to match
 - [x] Tighten summaries to one imperative sentence; notes to ≤1 short paragraph (done systematically across all 268 records, one `functions/<chapter>.yaml` file at a time)
-- [ ] Re-add `since:` fields for APIs introduced in R 4.2 or later (dropped wholesale with pre-4.2 references; only post-4.2 introductions need the field, per the version policy in `index.qmd`)
-- [ ] Add records for the §6.23 replacement functions that lack them (list reported by the mining pass: `R_getVar` family, `R_ClosureFormals/Body/Env`, `STRING_PTR_RO`, `R_getAttributes` family, `R_nrow`/`R_ncol`, R 4.6.0 binding/dots API, etc.) — overlaps with the Phase 3.5 gap list; fold into Phase 7
+- [x] Re-add `since:` fields for APIs introduced in R 4.2 or later — audit found no existing record needs one (all 4.2+ APIs are Phase 7 gaps); new records added in Phase 7 must carry `since:` when introduced in 4.2+
 
 ## Phase 5 — Part I: Foundations prose (mostly new; adv-r chapter is the model)
 
@@ -144,7 +143,7 @@ match the final `chapter`/`section` assignments from Phase 4.
 - [ ] `math.qmd` — Rmath: distribution functions (d/p/q/r table), mathematical functions (bessel, gamma, beta...), numerical utilities (`R_pow`, `fmax2`, `imin2`, `expm1`-style helpers), constants (`M_PI` etc.), standalone Rmath (§6.20 folded in)
 - [ ] `numerical.qmd` — optimization (§6.8), integration (§6.9), linear algebra / BLAS / LAPACK headers and `FCONE` (§6.11), `findInterval`, `R_max_col`
 - [ ] `utilities.qmd` — sorting/ordering (`R_qsort`, `R_orderVector`), matching (`Rf_match`, `Rf_pmatch`), `R_compute_identical`, `Rf_duplicated`/`Rf_any_duplicated`, options (`Rf_GetOption1`), numeric parsing (`R_atof`/`R_strtod`), paths/tempfiles (`R_ExpandFileName`, `R_tmpnam2`), platform info (§6.17)
-- [ ] Fill the 46 gaps found in the Phase 3.5 r-api.md diff (listed above) as records in the appropriate chapters
+- [ ] Fill the 46 gaps found in the Phase 3.5 r-api.md diff (listed above) as records in the appropriate chapters — includes the §6.23 replacement functions that lack records (`R_getVar` family, `R_ClosureFormals/Body/Env`, `STRING_PTR_RO`, `R_getAttributes` family, `R_nrow`/`R_ncol`, R 4.6.0 binding/dots API, etc.); give each a `since:` field when introduced in R 4.2+
 - [x] `r-version.qmd` — R version: `Rversion.h` and version-check macros (renamed from other-headers.md; moved to Part IV)
 
 ## Phase 8 — Appendices

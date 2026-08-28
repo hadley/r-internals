@@ -189,7 +189,7 @@
     Rboolean Rf_isEnvironment(SEXP x);
   status: api
   header: Rinternals.h
-  protect: not-needed
+  protect: n/a
   errors: never
   notes: |
     Equivalent to `TYPEOF(x) == ENVSXP`.
@@ -253,7 +253,7 @@
   status: api
   header: Rinternals.h
   protect: n/a
-  errors: never
+  errors: can-throw
   see_also: R_LockBinding
   chapter: environments
   section: Miscellaneous
@@ -266,7 +266,7 @@
   status: api
   header: Rinternals.h
   protect: n/a
-  errors: never
+  errors: can-throw
   see_also: R_LockEnvironment
   chapter: environments
   section: Miscellaneous
@@ -290,8 +290,8 @@
     Rboolean R_BindingIsActive(SEXP sym, SEXP env);
   status: api
   header: Rinternals.h
-  protect: not-needed
-  errors: never
+  protect: n/a
+  errors: can-throw
   see_also: R_MakeActiveBinding
   chapter: environments
   section: Miscellaneous
@@ -302,7 +302,7 @@
     Rboolean R_HasFancyBindings(SEXP rho);
   status: api
   header: Rinternals.h
-  protect: not-needed
+  protect: n/a
   errors: never
   see_also: []
   chapter: environments
@@ -314,7 +314,7 @@
     Rboolean R_envHasNoSpecialSymbols(SEXP);
   status: non-api
   header: Rinternals.h
-  protect: not-needed
+  protect: n/a
   errors: never
   see_also: []
   chapter: environments
@@ -367,7 +367,7 @@
   status: non-api
   replacement: R_EnvironmentIsLocked
   header: Rinternals.h
-  protect: not-needed
+  protect: n/a
   errors: never
   notes: |
     Use `R_EnvironmentIsLocked()` and `R_LockEnvironment()` instead.
@@ -385,7 +385,7 @@
     void (SET_TRUELENGTH)(SEXP x, int v);
   status: non-api
   header: Rinternals.h
-  protect: not-needed
+  protect: n/a
   errors: never
   notes: |
     Rarely used, mainly for hash tables of environments (`VECSXP`s), where
@@ -424,7 +424,7 @@
     void SET_HASHASH(SEXP x, int v);
   status: non-api
   header: Rinternals.h
-  protect: not-needed
+  protect: n/a
   errors: never
   see_also: HASHTAB
   chapter: environments
@@ -437,7 +437,7 @@
     void SET_HASHVALUE(SEXP x, int v);
   status: non-api
   header: Rinternals.h
-  protect: not-needed
+  protect: n/a
   errors: never
   see_also: HASHTAB
   chapter: environments

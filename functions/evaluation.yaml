@@ -74,7 +74,7 @@
     const char *R_curErrorBuf();
   status: api
   header: Rinternals.h
-  protect: not-needed
+  protect: n/a
   errors: never
   r_equivalent: geterrmessage()
   see_also: []
@@ -90,7 +90,7 @@
   status: api
   header: Rinternals.h
   protect: result
-  errors: never
+  errors: can-throw
   args:
     fun: "C function to call after context setup. Passed `*data`."
     cleanfun: "C function to call before context teardown. Passed `*data`."

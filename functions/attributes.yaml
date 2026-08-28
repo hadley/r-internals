@@ -71,7 +71,7 @@
     Rboolean Rf_isArray(SEXP x);
   status: api
   header: Rinternals.h
-  protect: not-needed
+  protect: n/a
   errors: never
   r_equivalent: is.array()
   args:
@@ -125,7 +125,7 @@
     SEXP Rf_dimnamesgets(SEXP x, SEXP v);
   status: api
   header: Rinternals.h
-  protect: result
+  protect: not-needed
   errors: can-throw
   r_equivalent: dim<-
   args:
@@ -143,7 +143,7 @@
     SEXP Rf_DropDims(SEXP x);
   status: api
   header: Rinternals.h
-  protect: result
+  protect: not-needed
   errors: can-throw
   r_equivalent: drop()
   args:
@@ -191,7 +191,7 @@
     Rboolean Rf_isMatrix(SEXP x);
   status: api
   header: Rinternals.h
-  protect: not-needed
+  protect: n/a
   errors: never
   r_equivalent: is.matrix()
   args:
@@ -243,7 +243,7 @@
     int Rf_nrows(SEXP x);
   status: api
   header: Rinternals.h
-  protect: not-needed
+  protect: n/a
   errors: never
   r_equivalent: ncol()
   args:
@@ -279,7 +279,7 @@
     Rboolean Rf_isUnordered(SEXP x);
   status: api
   header: Rinternals.h
-  protect: not-needed
+  protect: n/a
   errors: never
   r_equivalent: is.factor()
   args:
@@ -296,7 +296,7 @@
     int Rf_nlevels(SEXP x);
   status: api
   header: Rinternals.h
-  protect: not-needed
+  protect: n/a
   errors: never
   r_equivalent: nlevels()
   args:
@@ -327,7 +327,7 @@
   status: non-api
   replacement: Rf_isDataFrame
   header: Rinternals.h
-  protect: not-needed
+  protect: n/a
   errors: never
   r_equivalent: is.data.frame()
   args:

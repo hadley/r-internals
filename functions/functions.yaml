@@ -7,7 +7,7 @@
     Rboolean Rf_isPrimitive(SEXP);
   status: api
   header: Rinternals.h
-  protect: not-needed
+  protect: n/a
   errors: never
   r_equivalent: is.function()
   notes: |
@@ -50,7 +50,7 @@
   status: non-api
   replacement: R_mkClosure
   header: Rinternals.h
-  protect: not-needed
+  protect: n/a
   errors: never
   r_equivalent: formals<-()
   notes: |
@@ -70,7 +70,7 @@
     int  (RTRACE)(SEXP x);
   status: non-api
   header: Rinternals.h
-  protect: not-needed
+  protect: n/a
   errors: never
   notes: |
     Internal macros for querying closure debugging flags.
@@ -88,7 +88,7 @@
     void (SET_RTRACE)(SEXP x, int v);
   status: non-api
   header: Rinternals.h
-  protect: not-needed
+  protect: n/a
   errors: never
   notes: |
     Internal macros for setting closure debugging flags.
@@ -138,7 +138,7 @@
     void SET_PRSEEN(SEXP x, int v);
   status: non-api
   header: Rinternals.h
-  protect: not-needed
+  protect: n/a
   errors: never
   notes: |
     Used to detect recursive promise evaluation.
@@ -156,7 +156,7 @@
     void SET_PRCODE(SEXP x, SEXP v);
   status: non-api
   header: Rinternals.h
-  protect: not-needed
+  protect: n/a
   errors: never
   notes: |
     Superseded by the R 4.6.0 binding-access API: `R_MakeForcedBinding()`,

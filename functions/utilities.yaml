@@ -25,7 +25,7 @@
   status: non-api
   header: none (internal)
   protect: n/a
-  errors: never
+  errors: can-throw
   see_also: []
   chapter: utilities
   section: "Byte code (`BCODESXP`)"
@@ -154,7 +154,7 @@
   status: api
   header: Rinternals.h
   protect: n/a
-  errors: never
+  errors: can-throw
   r_equivalent: order()
   notes: |
     C equivalent of `order(..., na.last, decreasing)`; build `arglist` with
@@ -189,7 +189,7 @@
   status: api
   header: Rinternals.h
   protect: n/a
-  errors: never
+  errors: can-throw
   r_equivalent: anyDuplicated()
   see_also: []
   chapter: utilities
@@ -225,7 +225,7 @@
     SEXP Rf_CreateTag(SEXP);
   status: non-api
   header: none (internal)
-  protect: result
+  protect: not-needed
   errors: can-throw
   see_also: []
   chapter: utilities
@@ -282,7 +282,7 @@
   status: non-api
   header: none (internal)
   protect: not-needed
-  errors: never
+  errors: can-throw
   see_also: []
   chapter: utilities
   section: Misc
@@ -306,7 +306,7 @@
   status: api
   header: Rinternals.h
   protect: n/a
-  errors: never
+  errors: can-throw
   r_equivalent: is.unsorted()
   see_also: []
   chapter: utilities
@@ -318,7 +318,7 @@
     SEXP Rf_namesgets(SEXP, SEXP);
   status: api
   header: Rinternals.h
-  protect: result
+  protect: not-needed
   errors: can-throw
   r_equivalent: names<-()
   see_also: []
@@ -333,7 +333,7 @@
   status: api
   header: Rinternals.h
   protect: n/a
-  errors: never
+  errors: can-throw
   r_equivalent: pmatch()
   notes: |
     `Rf_psmatch()` is the variant for C strings.
@@ -348,7 +348,7 @@
   status: non-api
   header: none (internal)
   protect: n/a
-  errors: never
+  errors: can-throw
   see_also: []
   chapter: utilities
   section: Misc
@@ -437,7 +437,7 @@
   status: api
   header: Rinternals.h
   protect: n/a
-  errors: never
+  errors: can-throw
   r_equivalent: identical()
   notes: |
     The third argument is a bitmask of flags for non-default options (set a
@@ -455,7 +455,7 @@
   status: api
   header: Rinternals.h
   protect: n/a
-  errors: never
+  errors: can-throw
   see_also: []
   chapter: utilities
   section: Misc
@@ -480,7 +480,7 @@
   status: api
   header: Rinternals.h
   protect: n/a
-  errors: never
+  errors: can-throw
   r_equivalent: is.ts()
   see_also: []
   chapter: utilities
@@ -517,7 +517,7 @@
   status: api
   header: Rinternals.h
   protect: n/a
-  errors: never
+  errors: can-throw
   see_also: []
   chapter: utilities
   section: Misc
@@ -586,7 +586,7 @@
   status: api
   header: R_ext/Utils.h
   protect: n/a
-  errors: never
+  errors: can-throw
   r_equivalent: tempfile()
   see_also: []
   chapter: utilities

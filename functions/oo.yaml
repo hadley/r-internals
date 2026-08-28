@@ -37,7 +37,7 @@
     SEXP Rf_S3Class(SEXP);
   status: api
   header: Rinternals.h
-  protect: result
+  protect: not-needed
   errors: never
   r_equivalent: class()
   notes: |
@@ -53,7 +53,7 @@
   status: api
   header: Rinternals.h
   protect: n/a
-  errors: never
+  errors: can-throw
   notes: |
     Basic classes are the built-in pseudo-classes (e.g. `"numeric"`, `"matrix"`) known to the methods package.
   see_also: []
@@ -66,7 +66,7 @@
     SEXP Rf_classgets(SEXP, SEXP);
   status: api
   header: Rinternals.h
-  protect: result
+  protect: not-needed
   errors: can-throw
   r_equivalent: class<-()
   see_also: []
@@ -107,7 +107,7 @@
   status: api
   header: Rinternals.h
   protect: result
-  errors: never
+  errors: can-throw
   notes: |
     Allocates a bare S4 object (type `S4SXP`) with the S4 flag set.
   see_also: []
@@ -181,7 +181,7 @@
   status: api
   header: Rinternals.h
   protect: n/a
-  errors: never
+  errors: can-throw
   see_also: []
   chapter: oo
   section: "S4 (`S4SXP`)"
@@ -207,7 +207,7 @@
   status: api
   header: Rinternals.h
   protect: n/a
-  errors: never
+  errors: can-throw
   r_equivalent: is()
   notes: |
     Checks whether `x` matches or extends one of the classes in the
