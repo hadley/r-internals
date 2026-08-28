@@ -227,3 +227,18 @@
   see_also: []
   chapter: environments
   section: Miscellaneous
+- name: Rf_setVar
+  family: Rf_gsetVar
+  summary: Assign a value to a symbol in an environment.
+  signature: |
+    void Rf_setVar(SEXP, SEXP, SEXP);
+    void Rf_gsetVar(SEXP, SEXP, SEXP);
+  status: api
+  header: Rinternals.h
+  protect: n/a
+  errors: can-throw
+  r_equivalent: assign()
+  see_also: []
+  chapter: environments
+  section: Set values
+...

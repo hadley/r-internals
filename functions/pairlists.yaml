@@ -262,3 +262,41 @@
     - CDR
   chapter: pairlists
   section: Pretending it's a vector
+- name: Rf_elt
+  family: Rf_lastElt
+  summary: Get an element of a pairlist by index, or the last element.
+  signature: |
+    SEXP Rf_elt(SEXP, int);
+    SEXP Rf_lastElt(SEXP);
+  status: api
+  header: Rinternals.h
+  protect: not-needed
+  errors: never
+  see_also: []
+  chapter: pairlists
+  section: Pretending it's a vector
+- name: Rf_isUserBinop
+  family: []
+  summary: Test whether a call is a user-defined binary operator.
+  signature: |
+    Rboolean Rf_isUserBinop(SEXP);
+  status: api
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  see_also: []
+  chapter: pairlists
+  section: Test
+- name: Rf_lcons
+  family: []
+  summary: Prepend a value to a language object.
+  signature: |
+    SEXP Rf_lcons(SEXP, SEXP);
+  status: api
+  header: Rinternals.h
+  protect: result
+  errors: can-throw
+  see_also: Rf_cons
+  chapter: pairlists
+  section: Creation
+...

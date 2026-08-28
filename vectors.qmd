@@ -194,6 +194,34 @@ Because of this confusion, prefer writing your own wrappers around
 render_entries("vectors", "Test")
 ```
 
+## Sorting and ordering
+
+Follows [WRE §6.10, Utility functions](https://cran.r-project.org/doc/manuals/R-exts.html#Utility-functions-1)
+closely.
+
+Two families: the `R_*sort` functions sort C arrays in place (the
+`R_qsort*` variants use 1-based `i:j` ranges and don't handle `NA`;
+`R_isort`/`R_rsort`/`R_csort` sort `NA`s last), while `R_orderVector()`
+computes an ordering permutation of R vectors, like `order()` — note it
+returns 0-based indices. None of the in-place sorts are stable.
+
+```{r}
+#| results: asis
+#| echo: false
+render_entries("vectors", "Sorting and ordering")
+```
+
+## Matching and duplication
+
+Vector-level equivalents of `match()`, `duplicated()`, and
+`anyDuplicated()`.
+
+```{r}
+#| results: asis
+#| echo: false
+render_entries("vectors", "Matching and duplication")
+```
+
 ## Miscellaneous helpers
 
 A couple of macros test whether an object is a "scalar" (a vector of

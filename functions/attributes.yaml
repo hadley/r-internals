@@ -305,3 +305,48 @@
   see_also: Rf_isFactor
   chapter: attributes
   section: Factors
+- name: Rf_namesgets
+  family: []
+  summary: Set the names of a vector.
+  signature: |
+    SEXP Rf_namesgets(SEXP, SEXP);
+  status: api
+  header: Rinternals.h
+  protect: not-needed
+  errors: can-throw
+  r_equivalent: names<-()
+  see_also: []
+  chapter: attributes
+  section: Get and set
+- name: Rf_conformable
+  family: []
+  summary: Test whether two objects have conformable dimensions.
+  signature: |
+    Rboolean Rf_conformable(SEXP, SEXP);
+  status: api
+  header: Rinternals.h
+  protect: n/a
+  errors: can-throw
+  see_also: []
+  chapter: attributes
+  section: Matrices
+- name: Rf_isTs
+  family: []
+  summary: Test whether an object is a time series.
+  signature: |
+    Rboolean Rf_isTs(SEXP);
+  status: api
+  header: Rinternals.h
+  protect: n/a
+  errors: can-throw
+  r_equivalent: is.ts()
+  notes: |
+    Tests for the `"ts"` class. Mostly of historical interest: the `ts`
+    class (a numeric vector or matrix with a `tsp` attribute) is base R's
+    original time series representation, but most modern time series
+    packages use their own classes.
+  see_also: []
+  chapter: attributes
+  section: Time series
+...
+...

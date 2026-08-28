@@ -62,4 +62,16 @@
   see_also: []
   chapter: printing
   section: Printing
+- name: IndexWidth
+  family: []
+  summary: Compute the character width needed to print a vector index.
+  signature: |
+    #define IndexWidth    Rf_IndexWidth
+  status: api
+  header: R_ext/Utils.h
+  protect: n/a
+  errors: never
+  see_also: []
+  chapter: printing
+  section: Printing
 ...

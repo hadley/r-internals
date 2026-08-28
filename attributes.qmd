@@ -79,3 +79,16 @@ INTEGER(rn)[1] = -n;  // n rows
 Rf_setAttrib(df, R_RowNamesSymbol, rn);
 UNPROTECT(1);
 ```
+
+## Time series
+
+A `ts` object is a numeric vector or matrix with a `tsp` attribute
+holding `c(start, end, frequency)`. This is mostly of historical
+interest — most modern time series packages use their own classes — but
+base R's `is.ts()` is available:
+
+```{r}
+#| results: asis
+#| echo: false
+render_entries("attributes", "Time series")
+```

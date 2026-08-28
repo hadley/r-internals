@@ -81,6 +81,14 @@ render_entries("strings", "Convert to C string")
 render_entries("strings", "Special values")
 ```
 
+## Searching and matching
+
+```{r}
+#| results: asis
+#| echo: false
+render_entries("strings", "Searching and matching")
+```
+
 ## Helper functions
 
 ```{r}

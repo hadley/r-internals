@@ -80,4 +80,17 @@
   see_also: []
   chapter: evaluation
   section: Protected evaluation
+- name: Rf_substitute
+  family: []
+  summary: Substitute values for variables in an expression.
+  signature: |
+    SEXP Rf_substitute(SEXP,SEXP);
+  status: api
+  header: Rinternals.h
+  protect: result
+  errors: can-throw
+  r_equivalent: substitute()
+  see_also: []
+  chapter: evaluation
+  section: Evaluation
 ...

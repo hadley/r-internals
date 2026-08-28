@@ -6,36 +6,18 @@ aliases: [misc.html]
 
 {{< include _setup.qmd >}}
 
-Assorted entry points that don't fit elsewhere: sorting, matching,
-options, parsing, and file paths. Most are declared in `R_ext/Utils.h`
-(included by `<R.h>`); the vector-operating ones are in `Rinternals.h`.
+Assorted entry points that don't fit elsewhere: options, parsing, and
+file paths. Most are declared in `R_ext/Utils.h` (included by `<R.h>`).
+For sorting, ordering, matching, and duplication, see
+[Vectors](vectors.qmd); for string searching, see
+[Strings](strings.qmd).
 
-## Sorting and ordering
-
-Follows [WRE §6.10, Utility functions](https://cran.r-project.org/doc/manuals/R-exts.html#Utility-functions-1)
-closely.
-
-Two families: the `R_*sort` functions sort C arrays in place (the
-`R_qsort*` variants use 1-based `i:j` ranges and don't handle `NA`;
-`R_isort`/`R_rsort`/`R_csort` sort `NA`s last), while `R_orderVector()`
-computes an ordering permutation of R vectors, like `order()` — note it
-returns 0-based indices. None of the in-place sorts are stable.
+## Testing
 
 ```{r}
 #| results: asis
 #| echo: false
-render_entries("utilities", "Sorting")
-```
-
-## Matching and testing
-
-Vector-level operations equivalent to `match()`, `pmatch()`,
-`duplicated()`, `identical()`, and `is.unsorted()`.
-
-```{r}
-#| results: asis
-#| echo: false
-render_entries("utilities", "Matching and testing")
+render_entries("utilities", "Testing")
 ```
 
 ## Options
@@ -78,11 +60,3 @@ compiler that built R, not necessarily yours. For compile-time R version
 checks (`R_VERSION`, `R_Version()`), see [R version](r-version.qmd). If
 you use `alloca`, define it portably via `Rconfig.h`'s `HAVE_ALLOCA_H`
 as shown in WRE §6.17.
-
-## Miscellaneous
-
-```{r}
-#| results: asis
-#| echo: false
-render_entries("utilities", "Misc")
-```

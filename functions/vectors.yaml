@@ -537,3 +537,167 @@
   see_also: []
   chapter: vectors
   section: Miscellaneous helpers
+- name: R_qsort
+  family:
+    - R_qsort_I
+    - R_qsort_int
+    - R_qsort_int_I
+  summary: Sort a numeric array in place using quicksort.
+  signature: |
+    void R_qsort    (double *v,         size_t i, size_t j);
+    void R_qsort_I  (double *v, int *II, int i, int j);
+    void R_qsort_int  (int *iv,         size_t i, size_t j);
+    void R_qsort_int_I(int *iv, int *II, int i, int j);
+  status: api
+  header: R_ext/Utils.h
+  protect: n/a
+  errors: never
+  r_equivalent: sort()
+  notes: |
+    The dummy index argument is renamed to `II` to avoid problems with
+    g++ on Solaris.
+  see_also:
+    - R_isort
+    - R_orderVector
+  chapter: vectors
+  section: Sorting and ordering
+- name: R_isort
+  family:
+    - R_rsort
+    - R_csort
+  summary: Sort an int, double, or complex array in place.
+  signature: |
+    void R_isort(int*, int);
+    void R_rsort(double*, int);
+    void R_csort(Rcomplex*, int);
+  status: api
+  header: R_ext/Utils.h
+  protect: n/a
+  errors: never
+  r_equivalent: sort()
+  see_also: R_qsort
+  chapter: vectors
+  section: Sorting and ordering
+- name: rsort_with_index
+  family: []
+  summary: Sort a double array in place, reordering an index array alongside.
+  signature: |
+    void rsort_with_index(double *, int *, int);
+  status: api
+  header: R_ext/Utils.h
+  protect: n/a
+  errors: never
+  see_also: revsort
+  chapter: vectors
+  section: Sorting and ordering
+- name: revsort
+  family: []
+  summary: >-
+    Sort a double array in reverse order, reordering an index array alongside.
+  signature: |
+    void revsort(double*, int*, int);
+  status: api
+  header: R_ext/Utils.h
+  protect: n/a
+  errors: never
+  see_also: rsort_with_index
+  chapter: vectors
+  section: Sorting and ordering
+- name: iPsort
+  family:
+    - rPsort
+    - cPsort
+  summary: >-
+    Partially sort an int, double, or complex array around the k-th element.
+  signature: |
+    void iPsort(int*,    int, int);
+    void rPsort(double*, int, int);
+    void cPsort(Rcomplex*, int, int);
+  status: api
+  header: R_ext/Utils.h
+  protect: n/a
+  errors: never
+  see_also: R_qsort
+  chapter: vectors
+  section: Sorting and ordering
+- name: R_orderVector
+  family: R_orderVector1
+  summary: Compute an ordering permutation into an index array.
+  signature: |
+    void R_orderVector (int *indx, int n, SEXP arglist, Rboolean nalast, Rboolean decreasing);
+    void R_orderVector1(int *indx, int n, SEXP x,       Rboolean nalast, Rboolean decreasing);
+  status: api
+  header: Rinternals.h
+  protect: n/a
+  errors: can-throw
+  r_equivalent: order()
+  notes: |
+    C equivalent of `order(..., na.last, decreasing)`; build `arglist` with
+    `Rf_lang2()` or `Rf_lang3()`. `R_orderVector1()` is the single-vector
+    version, equivalent to `order(x, na.last, decreasing)`.
+  see_also: R_qsort
+  chapter: vectors
+  section: Sorting and ordering
+- name: Rf_any_duplicated
+  family: Rf_any_duplicated3
+  summary: Find the position of the first duplicated element of a vector.
+  signature: |
+    R_xlen_t Rf_any_duplicated(SEXP x, Rboolean from_last);
+    R_xlen_t Rf_any_duplicated3(SEXP x, SEXP incomp, Rboolean from_last);
+  status: api
+  header: Rinternals.h
+  protect: n/a
+  errors: can-throw
+  r_equivalent: anyDuplicated()
+  see_also: []
+  chapter: vectors
+  section: Matching and duplication
+- name: Rf_isUnsorted
+  family: []
+  summary: Test whether a vector may be unsorted.
+  signature: |
+    Rboolean Rf_isUnsorted(SEXP, Rboolean);
+  status: api
+  header: Rinternals.h
+  protect: n/a
+  errors: can-throw
+  r_equivalent: is.unsorted()
+  see_also: []
+  chapter: vectors
+  section: Sorting and ordering
+- name: Rf_match
+  family: Rf_matchE
+  summary: Find the positions of first matches between two vectors.
+  signature: |
+    SEXP Rf_match(SEXP itable, SEXP ix, int no_match);
+    SEXP Rf_matchE(SEXP itable, SEXP ix, int no_match, SEXP env);
+  status: api
+  header: Rinternals.h
+  protect: result
+  errors: can-throw
+  r_equivalent: match()
+  notes: |
+    In `Rf_matchE()`, `env` is used to look up `as.character` when
+    translating `POSIXlt`; rarely needed directly.
+  see_also: Rf_pmatch
+  chapter: vectors
+  section: Matching and duplication
+- name: Rf_duplicated
+  family: []
+  summary: Identify duplicated elements of a vector.
+  signature: |
+    SEXP Rf_duplicated(SEXP x, Rboolean from_last);
+  status: api
+  header: Rinternals.h
+  protect: result
+  errors: can-throw
+  r_equivalent: duplicated()
+  args:
+    x: a vector.
+    from_last: if `TRUE`, search from the last element.
+  notes: |
+    Returns an `LGLSXP` the same length as `x`.
+  see_also: []
+  chapter: vectors
+  section: Matching and duplication
+...

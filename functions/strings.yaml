@@ -304,3 +304,32 @@
   see_also: Rf_str2type
   chapter: strings
   section: Types
+- name: Rf_pmatch
+  family: Rf_psmatch
+  summary: Perform partial matching of strings.
+  signature: |
+    Rboolean Rf_pmatch(SEXP, SEXP, Rboolean);
+    Rboolean Rf_psmatch(const char *, const char *, Rboolean);
+  status: api
+  header: Rinternals.h
+  protect: n/a
+  errors: can-throw
+  r_equivalent: pmatch()
+  notes: |
+    `Rf_psmatch()` is the variant for C strings.
+  see_also: Rf_match
+  chapter: strings
+  section: Searching and matching
+- name: Rf_stringPositionTr
+  family: []
+  summary: Find the position of a string within a character vector.
+  signature: |
+    int Rf_stringPositionTr(SEXP, const char *);
+  status: api
+  header: Rinternals.h
+  protect: n/a
+  errors: can-throw
+  see_also: []
+  chapter: strings
+  section: Searching and matching
+...
