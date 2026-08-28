@@ -52,7 +52,7 @@ A number of symbols are so commonly used, they're predefined and exported:
 * `R_SortListSymbol`: "sort.list"
 * `R_SourceSymbol`: "source"
 * `R_SpecSymbol`: "spec"
-* `R_TripleColonSymbol`:  ":::"
+* `R_TripleColonSymbol`:  `":::"`
 * `R_TspSymbol`: "tsp"
 
 ## Internals
