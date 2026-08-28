@@ -1,0 +1,48 @@
+---
+# Non-API records parked here for the Phase 8 compliance appendix.
+# Nothing renders from this file until compliance.qmd calls render_entries().
+- name: R_cycle_detected
+  family: []
+  summary: Detect a reference cycle between two objects.
+  signature: |
+    Rboolean R_cycle_detected(SEXP s, SEXP child);
+  status: non-api
+  header: Defn.h
+  protect: n/a
+  errors: never
+  see_also: []
+  chapter: compliance
+  section: Internals
+- name: UNPROTECT_PTR
+  family: Rf_unprotect_ptr
+  summary: Unprotect a specific object by pointer.
+  signature: |
+    #define UNPROTECT_PTR(s) Rf_unprotect_ptr(s)
+    void Rf_unprotect_ptr(SEXP);
+  status: non-api
+  replacement: UNPROTECT
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  notes: |
+    Searches the protection stack from the top to find and remove the
+    matching entry, rather than assuming it is the most recent one.
+  see_also: PROTECT
+  chapter: compliance
+  section: Internals
+- name: IS_GETTER_CALL
+  family: []
+  summary: Test whether a call is a getter call in complex assignment support.
+  signature: |
+    #define IS_GETTER_CALL(call) (CADR(call) == R_TmpvalSymbol)
+  status: non-api
+  header: Defn.h
+  protect: n/a
+  errors: never
+  notes: |
+    Used internally to distinguish getter from setter calls in complex
+    assignment support.
+  see_also: []
+  chapter: compliance
+  section: Internals
+...

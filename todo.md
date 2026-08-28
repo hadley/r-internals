@@ -92,36 +92,14 @@ Now that everything is machine-readable, fix the data — prose still untouched.
 - [x] Tighten summaries to one imperative sentence; notes to ≤1 short paragraph (done systematically across all 268 records, one `functions/<chapter>.yaml` file at a time)
 - [x] Re-add `since:` fields for APIs introduced in R 4.2 or later — audit found no existing record needs one (all 4.2+ APIs are Phase 7 gaps); new records added in Phase 7 must carry `since:` when introduced in 4.2+
 
-## Phase 5 — Part I: Foundations prose (mostly new; adv-r chapter is the model)
+## Phase 5 — Part I: Foundations prose ✔
 
-- [ ] `index.qmd` — Introduction
-  - [ ] What this site is; relationship to WRE / R Internals / adv-r
-  - [ ] Audience and prerequisites: experienced C programmers; C basics not explained
-  - [ ] Conventions: always `R_NO_REMAP` + `Rf_`/`R_` prefixes, C not C++, `.Call` only
-  - [ ] API status taxonomy (API / experimental / embedding / non-API) and what "don't use non-API" means in practice (`R CMD check` NOTEs, CRAN policy)
-  - [ ] Which headers to include; why `<Rinternals.h>` is fine
-  - [ ] Explicitly state out-of-scope: `.C`/`.Fortran` as a recommended approach, embedding R, graphics engine API, non-API entry points (except compliance appendix)
-- [ ] `calling-c.qmd` — Calling C from R
-  - [ ] `.Call` and `.External`
-  - [ ] Routine registration: `R_registerRoutines`, `R_CallMethodDef`, `useDynLib`
-  - [ ] The C function contract: main thread only, may longjmp on error, borrowed references, inputs must not be modified
-  - [ ] Minimal package skeleton + fast iteration workflow (cpp11/Rcpp mention, `callme`-style; replaces adv-r's `inline` approach)
-  - [ ] Mine WRE ch. 5
-- [ ] `sexps.qmd` — SEXPs
-  - [ ] The uniform object model; complete SEXPTYPE table (with which chapter covers each)
-  - [ ] `TYPEOF()`; header/data layout at a conceptual level
-  - [ ] Attributes exist on (almost) every object
-  - [ ] Copy-on-modify, `NAMED`/reference counting, why you must not mutate inputs (`MAYBE_SHARED`, `Rf_duplicate`/`Rf_shallow_duplicate`)
-  - [ ] Type testing philosophy (prefer `TYPEOF(x) == ...`)
-- [ ] `protection.qmd` — Protection and the garbage collector
-  - [ ] When GC can run
-  - [ ] What needs protecting and what doesn't (arguments, symbols, values reachable from protected objects)
-  - [ ] `R_PreserveObject`/`R_ReleaseObject` for cross-call lifetimes
-  - [ ] Common protection bugs and how to find them (`gctorture`, rchk)
-- [ ] `memory.qmd` — Memory allocation
-  - [ ] Transient `R_alloc`/`vmaxget`/`vmaxset`
-  - [ ] `R_Calloc`/`R_Realloc`/`R_Free` and cleanup-on-error obligations
-  - [ ] Alignment; when to prefer a `RAWSXP` instead
+- [x] `index.qmd` — Introduction (site purpose, audience, conventions, API status taxonomy, headers, out-of-scope)
+- [x] `calling-c.qmd` — `.Call`/`.External`, routine registration, the C function contract, minimal package skeleton, iteration workflow
+- [x] `sexps.qmd` — uniform object model, complete SEXPTYPE table, `TYPEOF()` philosophy, attributes, copy-on-modify
+- [x] `protection.qmd` — retitled "Protection and the garbage collector"; rewritten prose around existing entries (when GC runs, what needs protecting, PreserveObject, gctorture/rchk)
+- [x] `memory.qmd` — transient vs user-controlled allocation, alignment, RAWSXP alternative; `R_alloc`/`S_alloc`/`vmaxget` records moved from `functions/protection.yaml` to new `functions/memory.yaml`, and `R_Calloc`/`R_Realloc`/`R_Free` record added (one Phase 7 gap closed early)
+- [x] Conventions applied: non-API records (`R_cycle_detected`, `UNPROTECT_PTR`, `IS_GETTER_CALL`) moved out of Part I chapters into `functions/compliance.yaml` (parked for Phase 8, not rendered); no prose blocks after `render_entries()` chunks — prose goes before the chunk or into YAML `notes`
 
 ## Phase 6 — Chapter prose revisions (Part II)
 

@@ -1,0 +1,76 @@
+---
+- name: R_alloc
+  family: R_allocLD
+  summary: Allocate temporary memory that R reclaims automatically.
+  signature: |
+    char* R_alloc(size_t, int);
+    long double *R_allocLD(size_t nelem);
+  status: api
+  header: R_ext/Memory.h
+  protect: n/a
+  errors: can-throw
+  notes: |
+    Memory is freed automatically when the `.Call` entry point returns
+    (including on error or interrupt). `R_allocLD()` additionally
+    guarantees the 16-byte alignment some platforms need for
+    `long double`.
+  see_also: vmaxget
+  chapter: memory
+  section: Transient allocation
+- name: S_alloc
+  family: S_realloc
+  summary: Allocate and reallocate temporary memory using the legacy S interface.
+  signature: |
+    char* S_alloc(long, int);
+    char* S_realloc(char *, long, long, int);
+  status: api
+  header: R_ext/Memory.h
+  protect: n/a
+  errors: can-throw
+  notes: |
+    Best avoided: `long` is limited to 2^31 - 1 bytes on 64-bit Windows,
+    so these cannot handle large allocations there. Prefer `R_alloc()`.
+  see_also: R_alloc
+  chapter: memory
+  section: Transient allocation
+- name: vmaxget
+  family: vmaxset
+  summary: "Get and set the high-water mark of R's temporary allocation arena."
+  signature: |
+    void* vmaxget(void);
+    void vmaxset(const void *);
+  status: api
+  header: R_ext/Memory.h
+  protect: n/a
+  errors: never
+  notes: |
+    `vmaxset()` releases everything allocated by `R_alloc()` since the
+    matching `vmaxget()`. Useful to bound memory growth when calling
+    `R_alloc()` in a loop, but easy to get wrong — for experts only.
+  see_also: R_alloc
+  chapter: memory
+  section: Transient allocation
+- name: R_Calloc
+  family:
+    - R_Realloc
+    - R_Free
+  summary: Allocate, reallocate, and free user-controlled memory with R error handling.
+  signature: |
+    type* R_Calloc(size_t n, type);
+    type* R_Realloc(any *p, size_t n, type);
+    void R_Free(any *p);
+  status: api
+  header: R_ext/RS.h
+  protect: n/a
+  errors: can-throw
+  notes: |
+    Analogues of `calloc()`/`realloc()`/`free()`; on allocation failure R
+    throws an error, so a returned pointer is always valid. You must
+    `R_Free()` on every path, including error paths (see
+    `R_UnwindProtect()`). Never mix with `malloc()`/`free()`, and never
+    call the underlying `R_chk_calloc()` etc. directly. The legacy
+    `Calloc`/`Realloc`/`Free` spellings were removed in R 4.5.0.
+  see_also: R_alloc
+  chapter: memory
+  section: User-controlled memory
+...

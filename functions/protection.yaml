@@ -13,18 +13,6 @@
   see_also: []
   chapter: protection
   section: GC
-- name: R_cycle_detected
-  family: []
-  summary: Detect a reference cycle between two objects.
-  signature: |
-    Rboolean R_cycle_detected(SEXP s, SEXP child);
-  status: non-api
-  header: Defn.h
-  protect: n/a
-  errors: never
-  see_also: []
-  chapter: protection
-  section: GC
 - name: Rf_protect
   family: Rf_unprotect
   summary: Protect and unprotect objects from garbage collection.
@@ -58,23 +46,6 @@
   see_also: PROTECT
   chapter: protection
   section: Protect
-- name: UNPROTECT_PTR
-  family: Rf_unprotect_ptr
-  summary: Unprotect a specific object by pointer.
-  signature: |
-    #define UNPROTECT_PTR(s) Rf_unprotect_ptr(s)
-    void Rf_unprotect_ptr(SEXP);
-  status: non-api
-  replacement: UNPROTECT
-  header: Rinternals.h
-  protect: n/a
-  errors: never
-  notes: |
-    Searches the protection stack from the top to find and remove the
-    matching entry, rather than assuming it is the most recent one.
-  see_also: PROTECT
-  chapter: protection
-  section: Protect
 - name: R_PreserveObject
   family: R_ReleaseObject
   summary: "Preserve an object across C calls by adding it to R's precious list."
@@ -95,45 +66,6 @@
   see_also: PROTECT
   chapter: protection
   section: "R_PreserveObject, R_ReleaseObject"
-- name: vmaxget
-  family: vmaxset
-  summary: "Get and set the high-water mark of R's temporary allocation arena."
-  signature: |
-    void* vmaxget(void);
-    void vmaxset(const void *);
-  status: api
-  header: R_ext/Memory.h
-  protect: n/a
-  errors: never
-  see_also: R_alloc
-  chapter: protection
-  section: Memory size
-- name: R_alloc
-  family: R_allocLD
-  summary: Allocate temporary memory that R reclaims automatically.
-  signature: |
-    char* R_alloc(size_t, int);
-    long double *R_allocLD(size_t nelem);
-  status: api
-  header: R_ext/Memory.h
-  protect: n/a
-  errors: can-throw
-  see_also: vmaxget
-  chapter: protection
-  section: Manual memory management
-- name: S_alloc
-  family: S_realloc
-  summary: Allocate and reallocate temporary memory using the legacy S interface.
-  signature: |
-    char* S_alloc(long, int);
-    char* S_realloc(char *, long, long, int);
-  status: api
-  header: R_ext/Memory.h
-  protect: n/a
-  errors: can-throw
-  see_also: R_alloc
-  chapter: protection
-  section: Manual memory management
 - name: MAYBE_SHARED
   family:
     - NO_REFERENCES
@@ -142,9 +74,9 @@
     - MARK_NOT_MUTABLE
   summary: "Test or set an object's reference-count flags before modifying it in place."
   signature: |
-    #define MAYBE_SHARED(x) (NAMED(x) > 1)
-    #define NO_REFERENCES(x) (NAMED(x) == 0)
-    #define MARK_NOT_MUTABLE(x) SET_NAMED(x, NAMEDMAX)
+    int MAYBE_SHARED(SEXP x);
+    int NO_REFERENCES(SEXP x);
+    void MARK_NOT_MUTABLE(SEXP x);
     #define MAYBE_REFERENCED(x) (! NO_REFERENCES(x))
     #define NOT_SHARED(x) (! MAYBE_SHARED(x))
   status: api
@@ -152,24 +84,13 @@
   protect: n/a
   errors: never
   notes: |
-    These macros test the `NAMED` reference count so you can check whether
-    an object may be shared before modifying it in place.
+    Package code sees these as plain functions, not macros (that expansion
+    is only visible inside R's own build, where `USE_RINTERNALS` is
+    defined). By default they test the `REFCNT` reference count, since R
+    defines `SWITCH_TO_REFCNT` unless a package opts out with
+    `SWITCH_TO_NAMED`; the legacy `NAMED` counter is what they test in that
+    (rare) opt-out case.
   see_also: Rf_duplicate
-  chapter: protection
-  section: Reference counting
-- name: IS_GETTER_CALL
-  family: []
-  summary: Test whether a call is a getter call in complex assignment support.
-  signature: |
-    #define IS_GETTER_CALL(call) (CADR(call) == R_TmpvalSymbol)
-  status: non-api
-  header: Defn.h
-  protect: n/a
-  errors: never
-  notes: |
-    Used internally to distinguish getter from setter calls in complex
-    assignment support.
-  see_also: []
   chapter: protection
   section: Reference counting
 - name: Rf_duplicate
@@ -191,26 +112,20 @@
   see_also: MAYBE_SHARED
   chapter: protection
   section: Efficient copying
-- name: OBJECT
+- name: TYPEOF
   family:
     - MARK
-    - TYPEOF
     - NAMED
     - REFCNT
-    - SET_OBJECT
-    - SET_TYPEOF
     - SET_NAMED
     - LEVELS
     - SETLEVELS
-  summary: Read and write the general attribute flags of a cons cell.
+  summary: Read an object's type tag and header flags.
   signature: |
-    int  (OBJECT)(SEXP x);
-    int  (MARK)(SEXP x);
     int  (TYPEOF)(SEXP x);
+    int  (MARK)(SEXP x);
     int  (NAMED)(SEXP x);
     int  (REFCNT)(SEXP x);
-    void (SET_OBJECT)(SEXP x, int v);
-    void (SET_TYPEOF)(SEXP x, int v);
     void (SET_NAMED)(SEXP x, int v);
     int  (LEVELS)(SEXP x);
     int  (SETLEVELS)(SEXP x, int v);
@@ -219,13 +134,14 @@
   protect: n/a
   errors: never
   notes: |
-    `OBJECT()`/`SET_OBJECT()` are not part of the API; prefer `Rf_isObject()`
-    and `Rf_setAttrib()` (or `CLEAR_ATTRIB()`, added in R 4.5.0). `SET_TYPEOF()`
-    will also stop being available to packages; use a constructor such as
-    `Rf_allocLang()` (added in R 4.4.1) instead.
+    `TYPEOF()` is the canonical way to test an object's type. The flag
+    accessors are mostly needed only for the reference-count checks
+    described above. There are no API setters for the type or object
+    flags — use constructors (e.g. `Rf_allocLang()`) and `Rf_setAttrib()`
+    instead.
   see_also:
+    - MAYBE_SHARED
     - Rf_isObject
-    - Rf_getAttrib
   chapter: protection
   section: Internals
 - name: PROTECT

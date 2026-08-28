@@ -1,12 +1,118 @@
 # Calling C from R
 
-::: {.callout-warning}
-Placeholder. Planned content:
+R packages call C code through `.Call()`. On the R side you pass R objects;
+on the C side you receive and return `SEXP`s. This chapter covers the
+mechanics: writing the C function, registering it, and the contract you
+sign up to.
 
-- `.Call` and `.External`
-- Routine registration: `R_registerRoutines`, `R_CallMethodDef`, `useDynLib`
-- The contract your C function signs up to: main thread only, may longjmp on
-  error, arguments are borrowed references, inputs must not be modified
-- Minimal package skeleton plus how to iterate quickly (cpp11/Rcpp mention,
-  `callme`-style workflow)
-:::
+## .Call
+
+A `.Call`-able C function takes some number of `SEXP` arguments and returns
+a `SEXP`:
+
+```c
+#define R_NO_REMAP
+#include <R.h>
+#include <Rinternals.h>
+
+SEXP add_one(SEXP x) {
+  if (TYPEOF(x) != REALSXP) {
+    Rf_error("x must be a numeric vector");
+  }
+  R_xlen_t n = Rf_xlength(x);
+  SEXP out = PROTECT(Rf_allocVector(REALSXP, n));
+  for (R_xlen_t i = 0; i < n; i++) {
+    REAL(out)[i] = REAL(x)[i] + 1;
+  }
+  UNPROTECT(1);
+  return out;
+}
+```
+
+Call it from R with `.Call()`, passing the registered native symbol (see
+below) followed by the arguments:
+
+```r
+add_one <- function(x) .Call(C_add_one, x)
+```
+
+`.External` is a variant in which the C function receives a single
+`SEXP` holding an unevaluated argument list (a pairlist) that it walks
+itself. It exists to support variable-argument and call-level tricks; new
+code almost never needs it.
+
+## Routine registration
+
+Every native routine a package calls should be registered. Registration
+gives you speed (R skips symbol lookup), safety (R checks the argument
+count), and lets you hide all other symbols from the dynamic library.
+Create `src/init.c`:
+
+```c
+#define R_NO_REMAP
+#include <R.h>
+#include <Rinternals.h>
+#include <R_ext/Rdynload.h>
+
+SEXP add_one(SEXP x);
+
+static const R_CallMethodDef callMethods[] = {
+  {"add_one", (DL_FUNC) &add_one, 1},
+  {NULL, NULL, 0}
+};
+
+void R_init_mypkg(DllInfo *dll) {
+  R_registerRoutines(dll, NULL, callMethods, NULL, NULL);
+  R_useDynamicSymbols(dll, FALSE);
+}
+```
+
+`R_useDynamicSymbols(dll, FALSE)` means only registered routines are
+visible, so `.Call("add_one", ...)` by string fails and you must use the
+symbol object. Generate the R-side registration with
+`tools::package_native_routine_registration_skeleton("src")`, then put
+`useDynLib(mypkg, .registration = TRUE)` in `NAMESPACE`, which makes the
+symbol object `C_add_one` available to your R code.
+
+## The contract
+
+A C function called from R signs up to four rules:
+
+1. **Main thread only.** R's API is not thread-safe. Call it only from the
+   thread R called you on; do your own threading only on memory R doesn't
+   know about.
+2. **Errors longjmp.** `Rf_error()`, failed allocations, and user
+   interrupts unwind the C stack with `longjmp` — destructors don't run
+   and `free()` doesn't happen. Use `R_UnwindProtect()` or transient
+   allocation ([Memory allocation](memory.qmd)) when you hold resources.
+3. **Arguments are borrowed.** The `SEXP`s you receive are owned by R. You
+   must not modify them (they may be shared — see [SEXPs](sexps.qmd)), and
+   you must not store pointers to their contents beyond the call.
+4. **Protect what you allocate.** Any `SEXP` you create can be collected
+   by the garbage collector at the next allocation unless you `PROTECT`
+   it — see [Protection](protection.qmd).
+
+## A minimal package
+
+The smallest working package has six files:
+
+```
+mypkg/
+  DESCRIPTION          # Package: mypkg ...
+  NAMESPACE            # useDynLib(mypkg, .registration = TRUE); export(add_one)
+  R/add_one.R          # the .Call wrapper
+  src/add_one.c        # the C code
+  src/init.c           # registration
+  src/Makevars         # PKG_CPPFLAGS = -DR_NO_REMAP
+```
+
+`usethis::create_package()` + `usethis::use_c()` sets this up for you.
+
+## Iterating quickly
+
+For fast iteration, `pkgload::load_all()` recompiles and reloads the
+package's DLL in place. For one-off experiments without a package, the
+`callme` package compiles a string of C code and calls it directly —
+the modern replacement for the old `inline` package. If you want C++
+with automatic wrappers, look at cpp11 or Rcpp; the underlying rules in
+this book still apply.

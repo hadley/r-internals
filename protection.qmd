@@ -2,11 +2,24 @@
 aliases: [gc-rc.html]
 ---
 
-# Garbage collection and reference counting
+# Protection and the garbage collector
 
 {{< include _setup.qmd >}}
 
-## GC
+R's garbage collector reclaims `SEXP`s that are no longer reachable. That
+creates a hazard unique to writing C against R: a `SEXP` you just allocated
+can be freed out from under you at the *next allocation*, unless you tell R
+you're still using it. Telling R is called **protection**, and getting it
+right is the single most important discipline in R C programming.
+
+## When the garbage collector runs
+
+GC can only run when R allocates — `Rf_allocVector()`, `Rf_cons()`,
+`Rf_install()`, `Rf_mkString()`, and anything else that creates an object.
+Pure accessors (`REAL()`, `TYPEOF()`, `CAR()`) never trigger it. The
+corollary: an unprotected `SEXP` is safe only until the next allocation,
+which makes protection bugs easy to miss — they surface only when GC
+happens to run at the wrong moment.
 
 ```{r}
 #| results: asis
@@ -14,18 +27,29 @@ aliases: [gc-rc.html]
 render_entries("protection", "GC")
 ```
 
-You might wonder what all the `PROTECT()` calls do. They tell R that the object is in use and shouldn't be deleted if the garbage collector is activated. (We don't need to protect objects that R already knows we're using, like function arguments.)
+## What needs protecting
 
-You also need to make sure that every protected object is unprotected. `UNPROTECT()` takes a single integer argument, `n`, and unprotects the last n objects that were protected. The number of protects and unprotects must match. If not, R will warn about a "stack imbalance in .Call".  Other specialised forms of protection are needed in some circumstances: 
+Protect every `SEXP` you allocate, unless it is immediately stored inside
+an already-protected object. You do **not** need to protect:
 
-* `UNPROTECT_PTR()` unprotects the object pointed to by the `SEXP`,
+- **Function arguments** — R is holding them for the duration of the call.
+- **Symbols** — interned symbols are permanently reachable.
+- **Values reachable from a protected object** — e.g. once you've
+  `SET_VECTOR_ELT(protected_list, i, x)`, `x` is safe.
+- **`R_NilValue`** and other R-owned constants.
 
-* `PROTECT_WITH_INDEX()` saves an index of the protection location that can 
-  be used to replace the protected value using `REPROTECT()`. 
-  
-Consult the R externals section on [garbage collection](http://cran.r-project.org/doc/manuals/R-exts.html#Garbage-Collection) for more details.
+When in doubt, protect: an extra `PROTECT` is cheap, a missing one is a
+crash.
 
-## Protect
+## PROTECT and UNPROTECT
+
+`PROTECT()` pushes the object onto a protection stack (an internal array of
+`SEXP`s); `UNPROTECT(n)` pops the `n` most recent entries. Protects and
+unprotects must balance exactly — R warns about a "stack imbalance" when
+they don't. Because the stack is only reset when your `.Call` entry point
+returns, protecting inside a loop without unprotecting can overflow it;
+use `PROTECT_WITH_INDEX()`/`REPROTECT()` to reuse one stack slot across
+iterations.
 
 ```{r}
 #| results: asis
@@ -33,17 +57,16 @@ Consult the R externals section on [garbage collection](http://cran.r-project.or
 render_entries("protection", "Protect")
 ```
 
-## How PROTECT works
+## Preserving objects across calls
 
-Objects protected by `PROTECT()` are placed on a protection stack (internally called `R_PPStack`), which itself is just an array of `SEXP`s. A protection index, called `R_PPStackTop`, denotes the top of the protection stack. When `UNPROTECT()`ing a (number) of objects, the stack top is decremented, and so all `SEXP`s 'overflowing' the `R_PPStack` are considered unprotected and hence eligible for garbage collection.
-
-Note that this implies that `PROTECT_WITH_INDEX()` and `REPROTECT()` are merely APIs for modifying elements within the protection stack. `UNPROTECT_PTR()` performs a search (from the top of the stack) to find the element to unprotect.
-
-## Using PROTECT
-
-Properly protecting the R objects you allocate is extremely important! Improper protection leads to difficulty diagnosing errors, typically segfaults, but other corruption is possible as well. In general, if you allocate a new R object, you must `PROTECT` it.
-
-### R_PreserveObject, R_ReleaseObject
+`PROTECT` only lasts until your `.Call` returns. To keep an object alive
+across multiple calls from R (typically stashed in a static variable or an
+external pointer), add it to R's precious list. The precious list is a
+pairlist walked by the GC; because `R_ReleaseObject()` searches it
+linearly, preserving and releasing many objects in the same order can
+degrade to quadratic time — see
+[this dplyr issue](https://github.com/tidyverse/dplyr/issues/1396) for a
+real-world manifestation.
 
 ```{r}
 #| results: asis
@@ -51,27 +74,14 @@ Properly protecting the R objects you allocate is extremely important! Improper 
 render_entries("protection", "R_PreserveObject, R_ReleaseObject")
 ```
 
-The primary structure that R uses for protecting objects is the so-called `R_PreciousList`, which is just a pairlist of `SEXP`s. The aforementioned `R_PPStack` is part of this `R_PreciousList` (and hence is the mechanism by which those `SEXP`s become protected). `R_PreserveObject()` and `R_ReleaseObject()` are mechanisms for inserting and removing `SEXP`s from this precious list.
+## Modifying inputs and reference counting
 
-These functions need to be used with care: because `R_ReleaseObject()` will perform a recursive search for the object to protect, if many `SEXP`s are inserted and later removed in the same order, this can cause performance regressions. See [this dplyr issue](https://github.com/hadley/dplyr/issues/1396) for an interesting manifestation of this problem.
-
-## Memory size
-
-```{r}
-#| results: asis
-#| echo: false
-render_entries("protection", "Memory size")
-```
-
-## Manual memory management
-
-```{r}
-#| results: asis
-#| echo: false
-render_entries("protection", "Manual memory management")
-```
-
-## Reference counting
+You must not modify a function argument in place: it may be shared with
+the caller (see [SEXPs](sexps.qmd)). Duplicate first — for lists,
+`Rf_shallow_duplicate()` copies only the top level, while `Rf_duplicate()`
+copies every element. `MAYBE_SHARED()` and friends let you check the
+reference-count flags before modifying an object you *did* create, which
+is the optimisation R's own internals use.
 
 ```{r}
 #| results: asis
@@ -79,17 +89,30 @@ render_entries("protection", "Manual memory management")
 render_entries("protection", "Reference counting")
 ```
 
-You must be very careful when modifying function inputs. If you're working with lists, use `shallow_duplicate()` to make a shallow copy; `duplicate()` will also copy every element in the list.
-
-### Efficient copying
-
 ```{r}
 #| results: asis
 #| echo: false
 render_entries("protection", "Efficient copying")
 ```
 
-### Internals
+## Finding protection bugs
+
+Protection bugs typically manifest as intermittent segfaults or corrupted
+objects. Two tools make them reproducible:
+
+- `gctorture(TRUE)` (or `gctorture2()` for finer control) forces a GC at
+  every allocation, so a missing `PROTECT` fails immediately instead of
+  randomly. Combine with `gctorture(TRUE); <your test>` under
+  `R CMD check`.
+- [rchk](https://github.com/kalibera/rchk) statically analyses your
+  compiled package for protect/unprotect imbalances and unprotected
+  uses. It has false positives, but every report is worth reading.
+
+## Header flags
+
+The macros below read and write the flags in an object's header. You
+rarely need them directly — prefer the higher-level accessors noted in
+the entry.
 
 ```{r}
 #| results: asis
