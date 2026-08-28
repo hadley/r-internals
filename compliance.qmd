@@ -1,0 +1,9 @@
+# Migrating to API compliance {.unnumbered}
+
+::: {.callout-warning}
+Placeholder. Planned content:
+
+- The non-API → API replacement tables and recipes
+- Backports
+- How to check a package (`R CMD check`, `tools::checkFF`-era tooling)
+:::

@@ -2,7 +2,7 @@
 aliases: [error-eval.html]
 ---
 
-# Errors and Evaluation
+# Errors and evaluation
 
 Use `Rf_errorcall(R_NilValue, ...)` to suppress display of call.
 

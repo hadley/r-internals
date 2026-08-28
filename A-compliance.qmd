@@ -1,7 +1,0 @@
-# Migrating to API compliance {.unnumbered}
-
-::: {.callout-warning}
-Placeholder. Planned: the non-API → API replacement tables and recipes,
-backports, and how to check a package (`R CMD check`,
-`tools::checkFF`-era tooling).
-:::

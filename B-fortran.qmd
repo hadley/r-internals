@@ -1,6 +1,0 @@
-# Fortran interop {.unnumbered}
-
-::: {.callout-warning}
-Placeholder. Planned: `F77_CALL`/`F77_SUB`, character
-strings/`FC_LEN_T`/`FCONE`, LOGICAL, printing and RNG from Fortran.
-:::

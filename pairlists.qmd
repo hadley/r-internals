@@ -1,4 +1,4 @@
-# Pairlists (`LISTSXP`, `DOTSXP` & `LANGSXP`)
+# Pairlists
 
 Pairlists are linked lists used for calls, unevaluated arguments, attributes, and in `...`. 
 

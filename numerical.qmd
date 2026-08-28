@@ -1,6 +1,10 @@
 # Numerical methods
 
 ::: {.callout-warning}
-Placeholder. Planned: optimization, integration, linear algebra / BLAS /
-LAPACK headers and `FCONE`, `findInterval`, `R_max_col`.
+Placeholder. Planned content:
+
+- Optimization
+- Integration
+- Linear algebra: BLAS / LAPACK headers and `FCONE`
+- `findInterval`, `R_max_col`
 :::

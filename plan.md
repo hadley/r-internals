@@ -27,9 +27,9 @@ Three sources feed the content:
    finding C source) are exactly what `r-api.md` lacks and this site needs.
 
 Out of scope (state this explicitly in the intro): the `.C`/`.Fortran`
-interface as a recommended approach, embedding R / writing front-ends, the
-graphics engine API, and non-API entry points except where the "compliance"
-appendix maps them to replacements. Fortran interop is demoted to an appendix.
+interface as a recommended approach, Fortran interop, embedding R / writing
+front-ends, the graphics engine API, and non-API entry points except where
+the "compliance" appendix maps them to replacements.
 
 ## Chapter organisation
 
@@ -73,13 +73,13 @@ is one `.qmd`. Existing files map onto this with modest reshuffling.
 
 ### Part II — Objects (one chapter per SEXPTYPE cluster; the existing organisation)
 
-6. `vectors.qmd` — atomic vectors + `VECSXP` lists: types, length
+6. `vectors.qmd` — atomic vectors and lists: types, length
    (`R_xlen_t`), creation, data access (`REAL()` etc., `*_ELT`,
    `*_RO` const pointers — add these), missing values (fold in the
    NA/NaN/Inf material from r-api.md §6.4), coercion, tests, scalars.
    Move arrays/matrices/factors/data-frames material to `attributes.qmd`.
    *Source: vectors.md.*
-7. `strings.qmd` — `CHARSXP`s, the string pool, encodings (`cetype_t`,
+7. `strings.qmd` — character strings, the string pool, encodings (`cetype_t`,
    `Rf_charIsUTF8` etc. from §6.23.6), creating and reading strings,
    translation, plus re-encoding via `Riconv` (r-api.md §6.12).
    *Source: strings.md.*
@@ -93,7 +93,7 @@ is one `.qmd`. Existing files map onto this with modest reshuffling.
    namespaces. *Source: environments.md + r-api.md §6.23.*
 10. `symbols.qmd` — `Rf_install` & friends, interning, predefined symbols,
     `R_MissingArg`/`R_UnboundValue`. *Source: symbols.md.*
-11. `pairlists.qmd` — `LISTSXP`/`LANGSXP`/`DOTSXP`/`NILSXP`; CAR/CDR;
+11. `pairlists.qmd` — pairlists, calls, and `...`; CAR/CDR;
     constructing calls (`Rf_lang1..6`, `R_mkCall*` replacements from
     §6.23.4); walking `...`. *Source: pairlists.md minus attributes.*
 12. `functions.qmd` — closures (creation via `R_mkClosure`, §6.23.5),
@@ -135,22 +135,18 @@ is one `.qmd`. Existing files map onto this with modest reshuffling.
     matching (`Rf_match`, `Rf_pmatch`), `R_compute_identical`,
     `Rf_duplicated`/`Rf_any_duplicated`, options (`Rf_GetOption1`),
     numeric parsing (`R_atof`/`R_strtod`), paths and tempfiles
-    (`R_ExpandFileName`, `R_tmpnam2`), platform & version info (§6.17,
-    `other-headers.md`'s `Rversion.h`). *Sources: misc.md + r-api.md §6.10, §6.17.*
+    (`R_ExpandFileName`, `R_tmpnam2`), platform info (§6.17).
+    *Sources: misc.md + r-api.md §6.10, §6.17.*
+23. `r-version.qmd` — **R version**: `Rversion.h` and the `R_Version`
+    version-check macros. *Source: other-headers.md.*
 
 ### Appendices
 
-- `A-compliance.qmd` — **Migrating to API compliance.** The non-API →
+- `compliance.qmd` — **Migrating to API compliance.** The non-API →
   API replacement tables and recipes (r-api.md §6.23), backports, and how
   to check a package (`R CMD check`, `tools::checkFF`-era tooling).
   Likely a high-traffic page; keep it table-heavy.
-- `B-fortran.qmd` — Fortran interop: `F77_CALL`/`F77_SUB`, character
-  strings/`FC_LEN_T`/`FCONE`, LOGICAL, printing and RNG from Fortran.
-  *Source: r-api.md §6.2.1, §6.3.1, §6.5.1, §6.6.*
-- `C-headers.qmd` — Header-file map: what each installed header provides,
-  what `R.h` pulls in, inlining (§6.18) and visibility (§6.19) notes.
-  *Source: r-api.md §6.21 + other-headers.md.*
-- `D-index.qmd` — **Function index**: alphabetical table of every
+- `function-index.qmd` — **Function index**: alphabetical table of every
   documented entry point → chapter + anchor + status. *Generated* (see
   below), never hand-edited.
 

@@ -1,4 +1,4 @@
-# Environments (`ENVSXP`)
+# Environments
 
 ```c
 Rboolean Rf_isEnvironment(SEXP x); // (TYPEOF(x) == ENVSXP)

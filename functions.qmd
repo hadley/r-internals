@@ -1,4 +1,4 @@
-# Functions (`CLOSXP`, `BUILTINSXP`, `SPECIALSXP`, `FUNSXP`)
+# Functions
 
 ```c
 Rboolean Rf_isFunction(SEXP);

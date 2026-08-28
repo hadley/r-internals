@@ -1,4 +1,4 @@
-# Strings (`CHARSXP`)
+# Strings
 
 A character vector (`STRSXP`) is effectively an array of pointers to `CHARSXP`s, which are stored in a global string pool. This design allows individual `CHARSXP`'s to be shared between multiple character vectors, reducing memory usage. 
 

@@ -1,8 +1,11 @@
 # Evaluation
 
 ::: {.callout-warning}
-Placeholder. Planned: `Rf_eval`, `R_tryEval`/`R_tryEvalSilent`,
-`R_forceAndCall`, `Rf_applyClosure`; building and evaluating calls end-to-end
-(worked example). To be split out of the current
-[errors chapter](errors.qmd).
+Placeholder. Planned content:
+
+- `Rf_eval`, `R_tryEval`/`R_tryEvalSilent`
+- `R_forceAndCall`, `Rf_applyClosure`
+- Building and evaluating calls end-to-end (worked example)
+
+To be split out of the current [errors chapter](errors.qmd).
 :::

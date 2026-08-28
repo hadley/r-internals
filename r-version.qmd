@@ -2,7 +2,7 @@
 aliases: [other-headers.html]
 ---
 
-## Other header files
+# R version
 
 ### `Rversion.h`
 

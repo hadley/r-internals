@@ -39,12 +39,11 @@ book:
         - math.qmd
         - numerical.qmd
         - utilities.qmd
+        - r-version.qmd
     - part: "Appendices"
       chapters:
-        - A-compliance.qmd
-        - B-fortran.qmd
-        - C-headers.qmd
-        - D-index.qmd
+        - compliance.qmd
+        - function-index.qmd
 
 format:
   html:

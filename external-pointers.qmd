@@ -1,4 +1,4 @@
-# External pointers (`EXTPTRSXP`)
+# External pointers
 
 ```c
 SEXP R_MakeExternalPtr(void *p, SEXP tag, SEXP prot);

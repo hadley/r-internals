@@ -51,13 +51,13 @@ then Part I, Part II, Parts III–IV, coverage audit, then index/LLM outputs.
 
 ## Phase 3 — Part II: Objects (convert to standard entry format; mine r-api.md §6.23 for modern replacements)
 
-- [ ] `vectors.qmd` — atomic vectors + `VECSXP` lists
+- [ ] `vectors.qmd` — atomic vectors and lists
   - [ ] Types, length (`R_xlen_t`), creation, data access (`REAL()` etc., `*_ELT`, add `*_RO` const pointers)
   - [ ] Missing values (fold in NA/NaN/Inf material from r-api.md §6.4)
   - [ ] Coercion, tests, scalars
   - [ ] Move arrays/matrices/factors/data-frames material to `attributes.qmd`
   - [ ] Fix stale claims (e.g. `Rboolean` for LGLSXP — it's `int`)
-- [ ] `strings.qmd` — `CHARSXP`s, string pool, encodings (`cetype_t`, `Rf_charIsUTF8` etc. from §6.23.6), creating/reading strings, translation, re-encoding via `Riconv` (§6.12)
+- [ ] `strings.qmd` — character strings, string pool, encodings (`cetype_t`, `Rf_charIsUTF8` etc. from §6.23.6), creating/reading strings, translation, re-encoding via `Riconv` (§6.12)
 - [ ] `attributes.qmd` — promote to its own chapter (currently buried in pairlists.md)
   - [ ] `Rf_getAttrib`/`Rf_setAttrib`, API-compliant helpers from §6.23.7
   - [ ] names/dim/dimnames/class
@@ -65,7 +65,7 @@ then Part I, Part II, Parts III–IV, coverage audit, then index/LLM outputs.
 - [ ] `environments.qmd` — get/set/remove bindings (modern `R_getVar`/`R_existsVarInFrame` family, binding functions from §6.23.3/6.23.8), creation (`R_NewEnv`), locking, active bindings, namespaces
   - [ ] Fix stale claims (`Rf_findVarInFrame3` no longer recommended)
 - [ ] `symbols.qmd` — `Rf_install` & friends, interning, predefined symbols, `R_MissingArg`/`R_UnboundValue`
-- [ ] `pairlists.qmd` — `LISTSXP`/`LANGSXP`/`DOTSXP`/`NILSXP`; CAR/CDR; constructing calls (`Rf_lang1..6`, `R_mkCall*` replacements from §6.23.4); walking `...`; remove attributes material
+- [ ] `pairlists.qmd` — pairlists, calls, and `...`; CAR/CDR; constructing calls (`Rf_lang1..6`, `R_mkCall*` replacements from §6.23.4); walking `...`; remove attributes material
 - [ ] `functions.qmd` — closures (creation via `R_mkClosure`, §6.23.5), builtins/specials, promises, srcrefs
 - [ ] `external-pointers.qmd` — external pointers, finalizers, weak references (moved from misc.md)
 - [ ] `oo.qmd` — `Rf_isObject`, S3 (`Rf_inherits`, class get/set, dispatch helpers), S4 (slots, class checks), brief S7-at-C-level note if applicable
@@ -82,25 +82,26 @@ then Part I, Part II, Parts III–IV, coverage audit, then index/LLM outputs.
 - [ ] `rng.qmd` — `GetRNGstate`/`PutRNGstate`, `unif_rand` family, `R_unif_index`; relationship to `.Random.seed`
 - [ ] `math.qmd` — Rmath: distribution functions (d/p/q/r table), mathematical functions (bessel, gamma, beta...), numerical utilities (`R_pow`, `fmax2`, `imin2`, `expm1`-style helpers), constants (`M_PI` etc.), standalone Rmath (§6.20 folded in)
 - [ ] `numerical.qmd` — optimization (§6.8), integration (§6.9), linear algebra / BLAS / LAPACK headers and `FCONE` (§6.11), `findInterval`, `R_max_col`
-- [ ] `utilities.qmd` — sorting/ordering (`R_qsort`, `R_orderVector`), matching (`Rf_match`, `Rf_pmatch`), `R_compute_identical`, `Rf_duplicated`/`Rf_any_duplicated`, options (`Rf_GetOption1`), numeric parsing (`R_atof`/`R_strtod`), paths/tempfiles (`R_ExpandFileName`, `R_tmpnam2`), platform & version info (§6.17, `Rversion.h`)
+- [ ] `utilities.qmd` — sorting/ordering (`R_qsort`, `R_orderVector`), matching (`Rf_match`, `Rf_pmatch`), `R_compute_identical`, `Rf_duplicated`/`Rf_any_duplicated`, options (`Rf_GetOption1`), numeric parsing (`R_atof`/`R_strtod`), paths/tempfiles (`R_ExpandFileName`, `R_tmpnam2`), platform info (§6.17)
+- [x] `r-version.qmd` — R version: `Rversion.h` and version-check macros (renamed from other-headers.md; moved to Part IV)
 
 ## Phase 6 — Appendices
 
-- [ ] `A-compliance.qmd` — Migrating to API compliance: non-API → API replacement tables and recipes (§6.23), backports, how to check a package (`R CMD check`, `tools::checkFF`-era tooling). Table-heavy
-- [ ] `B-fortran.qmd` — Fortran interop: `F77_CALL`/`F77_SUB`, character strings/`FC_LEN_T`/`FCONE`, LOGICAL, printing and RNG from Fortran (§6.2.1, §6.3.1, §6.5.1, §6.6)
-- [ ] `C-headers.qmd` — Header-file map: what each installed header provides, what `R.h` pulls in, inlining (§6.18) and visibility (§6.19) notes
+- [ ] `compliance.qmd` — Migrating to API compliance: non-API → API replacement tables and recipes (§6.23), backports, how to check a package (`R CMD check`, `tools::checkFF`-era tooling). Table-heavy
+- [x] ~~`B-fortran.qmd`~~ — Fortran interop dropped from scope
+- [x] ~~`C-headers.qmd`~~ — header-map appendix dropped; other-headers.md renamed to `r-version.qmd` and moved to Part IV
 - [ ] Handle internals-only material (`SET_ENVFLAGS`, `HASHTAB`, `BCODESXP` internals, `SETLENGTH`, etc.): move into clearly-marked "Internals — non-API, do not use in packages" call-out boxes, or cut; every retained entry gets an explicit status
 
 ## Phase 7 — Tooling, coverage audit, and generated outputs
 
-- [ ] `tools/build-index.R` — parse entries → `D-index.qmd` data, `functions.json`, coverage report
+- [ ] `tools/build-index.R` — parse entries → `function-index.qmd` data, `functions.json`, coverage report
   - [ ] Parse function names declared in installed headers (`R.home("include")`)
   - [ ] Use API-status metadata R publishes (WRE `@apifun` annotations / `tools:::funAPI()`)
   - [ ] Diff against documented entries; emit report: undocumented API functions (gaps), documented entries that no longer exist (rot), status mismatches
   - [ ] Wire into CI: fail on rot, warn on gaps
 - [ ] Turn on the coverage audit; fill gaps until the API-status diff is clean
 - [ ] `tools/llms.R` — post-render: `llms.txt`, `llms-full.txt`, per-page `.md` copies
-- [ ] `D-index.qmd` — generated alphabetical function index (entry point → chapter + anchor + status); never hand-edited
+- [ ] `function-index.qmd` — generated alphabetical function index (entry point → chapter + anchor + status); never hand-edited
 - [ ] (Optional, later) CI job that extracts entry examples and compiles them against R headers
 
 ## Cross-cutting (applies to every chapter)

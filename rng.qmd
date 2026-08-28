@@ -1,6 +1,9 @@
 # Random number generation
 
 ::: {.callout-warning}
-Placeholder. Planned: `GetRNGstate`/`PutRNGstate`, `unif_rand` family,
-`R_unif_index`; relationship to `.Random.seed`.
+Placeholder. Planned content:
+
+- `GetRNGstate`/`PutRNGstate`
+- `unif_rand` family, `R_unif_index`
+- Relationship to `.Random.seed`
 :::
