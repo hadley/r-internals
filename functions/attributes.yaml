@@ -6,15 +6,9 @@
     SEXP Rf_getAttrib(SEXP x, SEXP symbol);
     SEXP Rf_setAttrib(SEXP x, SEXP symbol, SEXP value);
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: not-needed
   errors: can-throw
-  since: ~
-  r_equivalent: ~
-  args: ~
-  notes: ~
-  example: ~
   see_also:
     - Rf_copyMostAttrib
     - ATTRIB
@@ -26,15 +20,9 @@
   signature: |
     void Rf_copyMostAttrib(SEXP source, SEXP target);
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: n/a
   errors: can-throw
-  since: ~
-  r_equivalent: ~
-  args: ~
-  notes: ~
-  example: ~
   see_also:
     - Rf_getAttrib
     - DUPLICATE_ATTRIB
@@ -51,9 +39,6 @@
   header: Rinternals.h
   protect: not-needed
   errors: never
-  since: ~
-  r_equivalent: ~
-  args: ~
   notes: |
     Not part of the API, since it exposes the internal linked-list
     representation of attributes. Use `Rf_getAttrib()`/`Rf_setAttrib()` for
@@ -61,7 +46,6 @@
     to copy attributes between objects, `CLEAR_ATTRIB()` (R 4.5.0) to remove
     all attributes, `ANY_ATTRIB()` (R 4.5.0) to test for any attributes, and
     `R_mapAttrib()` (R 4.6.0) to iterate over attributes.
-  example: ~
   see_also:
     - Rf_getAttrib
     - DUPLICATE_ATTRIB
@@ -74,15 +58,9 @@
     void DUPLICATE_ATTRIB(SEXP to, SEXP from);
     void SHALLOW_DUPLICATE_ATTRIB(SEXP to, SEXP from);
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: n/a
   errors: can-throw
-  since: ~
-  r_equivalent: ~
-  args: ~
-  notes: ~
-  example: ~
   see_also: Rf_copyMostAttrib
   chapter: attributes
   section: Get and set
@@ -92,17 +70,14 @@
   signature: |
     Rboolean Rf_isArray(SEXP x);
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: not-needed
   errors: never
-  since: ~
   r_equivalent: is.array()
   args:
     x: any SEXP.
   notes: |
     Arrays are vectors with a dim attribute.
-  example: ~
   see_also:
     - Rf_allocArray
     - Rf_isMatrix
@@ -115,17 +90,13 @@
     SEXP Rf_allocArray(SEXPTYPE type, SEXP dims);
     SEXP Rf_alloc3DArray(SEXPTYPE type, int, int, int);
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: result
   errors: can-throw
-  since: ~
   r_equivalent: array()
   args:
     type: "any vector `SEXPTYPE`."
     dims: an integer vector of dimensions.
-  notes: ~
-  example: ~
   see_also:
     - Rf_allocMatrix
     - Rf_dimgets
@@ -137,16 +108,12 @@
   signature: |
     SEXP Rf_GetArrayDimnames(SEXP x);
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: not-needed
   errors: never
-  since: ~
   r_equivalent: dimnames()
   args:
     x: an array.
-  notes: ~
-  example: ~
   see_also: Rf_dimgets
   chapter: attributes
   section: Arrays
@@ -157,17 +124,13 @@
     SEXP Rf_dimgets(SEXP x, SEXP v);
     SEXP Rf_dimnamesgets(SEXP x, SEXP v);
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: result
   errors: can-throw
-  since: ~
   r_equivalent: dim<-
   args:
     x: an array.
     v: the new dim (an integer vector) or dimnames (a list).
-  notes: ~
-  example: ~
   see_also:
     - Rf_GetArrayDimnames
     - Rf_DropDims
@@ -179,16 +142,12 @@
   signature: |
     SEXP Rf_DropDims(SEXP x);
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: result
   errors: can-throw
-  since: ~
   r_equivalent: drop()
   args:
     x: an array.
-  notes: ~
-  example: ~
   see_also: Rf_dimgets
   chapter: attributes
   section: Arrays
@@ -198,15 +157,9 @@
   signature: |
     SEXP Rf_arraySubscript(int, SEXP, SEXP, SEXP (*)(SEXP,SEXP), SEXP (*)(SEXP, int), SEXP);
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: result
   errors: can-throw
-  since: ~
-  r_equivalent: ~
-  args: ~
-  notes: ~
-  example: ~
   see_also: []
   chapter: attributes
   section: Arrays
@@ -216,11 +169,9 @@
   signature: |
     SEXP Rf_allocMatrix(SEXPTYPE type, int nrow, int ncol);
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: result
   errors: can-throw
-  since: ~
   r_equivalent: matrix()
   args:
     type: "any vector `SEXPTYPE`."
@@ -228,7 +179,6 @@
     ncol: number of columns.
   notes: |
     Matrices are arrays with exactly 2 dimensions.
-  example: ~
   see_also:
     - Rf_allocArray
     - Rf_ncols
@@ -240,16 +190,12 @@
   signature: |
     Rboolean Rf_isMatrix(SEXP x);
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: not-needed
   errors: never
-  since: ~
   r_equivalent: is.matrix()
   args:
     x: any SEXP.
-  notes: ~
-  example: ~
   see_also: Rf_isArray
   chapter: attributes
   section: Matrices
@@ -260,16 +206,12 @@
     SEXP Rf_GetColNames(SEXP dimnames);
     SEXP Rf_GetRowNames(SEXP dimnames);
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: not-needed
   errors: never
-  since: ~
   r_equivalent: colnames()
   args:
     dimnames: a dimnames object.
-  notes: ~
-  example: ~
   see_also: Rf_GetMatrixDimnames
   chapter: attributes
   section: Matrices
@@ -280,11 +222,9 @@
     void Rf_GetMatrixDimnames(SEXP x, SEXP* rl, SEXP* cl,
       const char** rownames, const char** colnames);
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: n/a
   errors: never
-  since: ~
   r_equivalent: dimnames()
   args:
     x: a matrix.
@@ -292,8 +232,6 @@
     cl: output parameter for the column names as a SEXP.
     rownames: output parameter for the row names as C strings.
     colnames: output parameter for the column names as C strings.
-  notes: ~
-  example: ~
   see_also: Rf_GetColNames
   chapter: attributes
   section: Matrices
@@ -304,16 +242,12 @@
     int Rf_ncols(SEXP x);
     int Rf_nrows(SEXP x);
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: not-needed
   errors: never
-  since: ~
   r_equivalent: ncol()
   args:
     x: a matrix.
-  notes: ~
-  example: ~
   see_also: Rf_allocMatrix
   chapter: attributes
   section: Matrices
@@ -324,18 +258,13 @@
     void Rf_copyMatrix(SEXP source, SEXP target, Rboolean byrow);
     void Rf_copyListMatrix(SEXP source, SEXP target, Rboolean byrow);
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: n/a
   errors: can-throw
-  since: ~
-  r_equivalent: ~
   args:
     source: the matrix to copy from.
     target: the matrix to copy to.
     byrow: "if `TRUE`, copy by rows."
-  notes: ~
-  example: ~
   see_also: Rf_copyVector
   chapter: attributes
   section: Matrices
@@ -349,16 +278,12 @@
     Rboolean Rf_isOrdered(SEXP x);
     Rboolean Rf_isUnordered(SEXP x);
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: not-needed
   errors: never
-  since: ~
   r_equivalent: is.factor()
   args:
     x: any SEXP.
-  notes: ~
-  example: ~
   see_also:
     - Rf_nlevels
     - Rf_asCharacterFactor
@@ -370,16 +295,12 @@
   signature: |
     int Rf_nlevels(SEXP x);
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: not-needed
   errors: never
-  since: ~
   r_equivalent: nlevels()
   args:
     x: a factor.
-  notes: ~
-  example: ~
   see_also: Rf_isFactor
   chapter: attributes
   section: Factors
@@ -389,16 +310,12 @@
   signature: |
     SEXP Rf_asCharacterFactor(SEXP x);
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: result
   errors: can-throw
-  since: ~
   r_equivalent: as.character()
   args:
     x: a factor.
-  notes: ~
-  example: ~
   see_also: Rf_isFactor
   chapter: attributes
   section: Factors
@@ -412,13 +329,11 @@
   header: Rinternals.h
   protect: not-needed
   errors: never
-  since: ~
   r_equivalent: is.data.frame()
   args:
     x: any SEXP.
   notes: |
     Prefer `Rf_isDataFrame()` (added in R 4.5.0) in new code.
-  example: ~
   see_also: []
   chapter: attributes
   section: Data frames

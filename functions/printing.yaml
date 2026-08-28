@@ -5,15 +5,10 @@
   signature: |
     void R_ShowMessage(const char *s);
   status: api
-  replacement: ~
   header: R_ext/Error.h
   protect: n/a
   errors: never
-  since: ~
   r_equivalent: message()
-  args: ~
-  notes: ~
-  example: ~
   see_also: []
   chapter: printing
   section: Printing
@@ -24,15 +19,10 @@
     void Rprintf(const char *, ...);
     void REprintf(const char *, ...);
   status: api
-  replacement: ~
   header: R_ext/Print.h
   protect: n/a
   errors: never
-  since: ~
   r_equivalent: cat()
-  args: ~
-  notes: ~
-  example: ~
   see_also: []
   chapter: printing
   section: Printing
@@ -42,15 +32,10 @@
   signature: |
     void Rf_PrintValue(SEXP);
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: n/a
   errors: can-throw
-  since: ~
   r_equivalent: print()
-  args: ~
-  notes: ~
-  example: ~
   see_also: []
   chapter: printing
   section: Printing
@@ -60,15 +45,10 @@
   signature: |
     void R_FlushConsole(void);
   status: api
-  replacement: ~
   header: R.h
   protect: n/a
   errors: never
-  since: ~
   r_equivalent: flush.console()
-  args: ~
-  notes: ~
-  example: ~
   see_also: []
   chapter: printing
   section: Printing

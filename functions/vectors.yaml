@@ -6,11 +6,9 @@
     R_xlen_t Rf_xlength(SEXP x);
     R_len_t Rf_length(SEXP x);
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: not-needed
   errors: never
-  since: ~
   r_equivalent: length()
   args:
     x: any vector.
@@ -18,7 +16,6 @@
     `Rf_xlength()` uses `R_xlen_t` and supports long vectors (length up to
     2^64 - 1, since R 3.0.0); `Rf_length()` is limited to `int` (2^31 - 1).
     Also works on pairlists, where it is O(n).
-  example: ~
   see_also:
     - Rf_lengthgets
     - LENGTH
@@ -31,11 +28,9 @@
     SEXP Rf_lengthgets(SEXP x, R_len_t n);
     SEXP Rf_xlengthgets(SEXP x, R_xlen_t n);
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: result
   errors: can-throw
-  since: ~
   r_equivalent: length<-
   args:
     x: a vector.
@@ -43,7 +38,6 @@
   notes: |
     `Rf_xlengthgets()` is the `R_xlen_t`-based variant for long vectors
     (since R 3.0.0).
-  example: ~
   see_also:
     - Rf_xlength
     - SETLENGTH
@@ -56,18 +50,15 @@
     int LENGTH(SEXP x);
     R_xlen_t XLENGTH(SEXP x);
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: n/a
   errors: never
-  since: ~
   r_equivalent: length()
   args:
     x: any vector.
   notes: |
     Uppercase variants of `Rf_length()`/`Rf_xlength()`, implemented as
     macros in base R for efficiency.
-  example: ~
   see_also:
     - Rf_xlength
     - SETLENGTH
@@ -83,7 +74,6 @@
   header: Rinternals.h
   protect: n/a
   errors: never
-  since: ~
   r_equivalent: length<-
   args:
     x: a vector.
@@ -91,7 +81,6 @@
   notes: |
     Uppercase, macro variant of `Rf_lengthgets()`. For resizable (growable)
     vectors, see `R_allocResizableVector()` and `R_resizeVector()` (R 4.6.0).
-  example: ~
   see_also:
     - Rf_lengthgets
     - LENGTH
@@ -103,18 +92,15 @@
   signature: |
     int IS_LONG_VEC(SEXP x);
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: n/a
   errors: never
   since: R 3.0.0
-  r_equivalent: ~
   args:
     x: any vector.
   notes: |
     True when a vector's length exceeds the `int`-based limit of 2^31 - 1
     (long vectors have been supported since R 3.0.0).
-  example: ~
   see_also: Rf_xlength
   chapter: vectors
   section: Length
@@ -124,11 +110,9 @@
   signature: |
     SEXP Rf_allocVector(SEXPTYPE type, R_xlen_t n);
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: result
   errors: can-throw
-  since: ~
   r_equivalent: vector()
   args:
     type: "any vector `SEXPTYPE` (`LGLSXP`, `INTSXP`, `REALSXP`, `CPLXSXP`, `STRSXP`, `VECSXP`, `RAWSXP`, `EXPRSXP`)."
@@ -157,18 +141,14 @@
     SEXP Rf_ScalarComplex(Rcomplex x);
     SEXP Rf_ScalarRaw(Rbyte x);
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: result
   errors: can-throw
-  since: ~
-  r_equivalent: ~
   args:
     x: the C value to wrap.
   notes: |
     For strings, use [`Rf_ScalarString()`](#Rf_ScalarString) or
     [`Rf_mkString()`](#Rf_mkString) instead.
-  example: ~
   see_also:
     - Rf_allocVector
     - Rf_ScalarString
@@ -181,18 +161,15 @@
   signature: |
     SEXP Rf_coerceVector(SEXP x, SEXPTYPE newtype);
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: result
   errors: can-throw
-  since: ~
   r_equivalent: as.vector()
   args:
     x: a vector.
     newtype: "the `SEXPTYPE` to coerce to."
   notes: |
     Errors if it can't coerce between `TYPEOF(x)` and `newtype`.
-  example: ~
   see_also:
     - Rf_allocVector
     - Rf_asLogical
@@ -204,11 +181,9 @@
   signature: |
     SEXP Rf_mkNamed(SEXPTYPE type, const char **names);
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: result
   errors: can-throw
-  since: ~
   r_equivalent: setNames()
   args:
     type: "any vector `SEXPTYPE`."
@@ -232,18 +207,14 @@
   signature: |
     SEXP Rf_allocVector3(SEXPTYPE type, R_xlen_t n, R_allocator_t *allocator);
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: result
   errors: can-throw
   since: R 3.4.0
-  r_equivalent: ~
-  args: ~
   notes: |
     Like `Rf_allocVector()`, but memory for the data payload comes from
     `allocator`; pass `NULL` for plain `Rf_allocVector()` behaviour. Rarely
     needed in package code.
-  example: ~
   see_also: Rf_allocVector
   chapter: vectors
   section: Create
@@ -261,12 +232,9 @@
     Rcomplex* COMPLEX(SEXP x);
     Rbyte*    RAW(SEXP x);
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: not-needed
   errors: never
-  since: ~
-  r_equivalent: ~
   args:
     x: a vector of the corresponding type.
   notes: |
@@ -289,12 +257,9 @@
     SEXP STRING_ELT(SEXP x, R_xlen_t i);
     void SET_STRING_ELT(SEXP x, R_xlen_t i, SEXP v);
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: not-needed
   errors: can-throw
-  since: ~
-  r_equivalent: ~
   args:
     x: "a `STRSXP`."
     i: zero-based element index.
@@ -302,7 +267,6 @@
   notes: |
     `STRING_ELT()` returns a `CHARSXP`, not an ordinary `SEXP` value; strings
     use a pair of accessor functions rather than a plain C array.
-  example: ~
   see_also:
     - VECTOR_ELT
     - STRING_PTR
@@ -315,12 +279,9 @@
     SEXP VECTOR_ELT(SEXP x, R_xlen_t i);
     SEXP SET_VECTOR_ELT(SEXP x, R_xlen_t i, SEXP v);
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: not-needed
   errors: can-throw
-  since: ~
-  r_equivalent: ~
   args:
     x: "a `VECSXP`."
     i: zero-based element index.
@@ -328,7 +289,6 @@
   notes: |
     `VECTOR_ELT()` may return any `SEXPTYPE`; lists use a pair of accessor
     functions rather than a plain C array.
-  example: ~
   see_also:
     - STRING_ELT
     - VECTOR_PTR
@@ -344,15 +304,12 @@
   header: Rinternals.h
   protect: not-needed
   errors: never
-  since: ~
-  r_equivalent: ~
   args:
     x: "a `STRSXP`."
   notes: |
     A writable pointer to character vector data can violate the memory
     manager's integrity assumptions and is not supported; use
     `STRING_PTR_RO()` instead.
-  example: ~
   see_also: STRING_ELT
   chapter: vectors
   section: Get and set values
@@ -366,13 +323,10 @@
   header: Rinternals.h
   protect: not-needed
   errors: can-throw
-  since: ~
-  r_equivalent: ~
   args:
     x: "a `VECSXP`."
   notes: |
     A deprecated interface that now throws an error.
-  example: ~
   see_also: VECTOR_ELT
   chapter: vectors
   section: Get and set values
@@ -388,16 +342,12 @@
     double Rf_asReal(SEXP x);
     Rcomplex Rf_asComplex(SEXP x);
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: not-needed
   errors: can-throw
-  since: ~
   r_equivalent: as.logical()
   args:
     x: a vector.
-  notes: ~
-  example: ~
   see_also: Rf_coerceVector
   chapter: vectors
   section: Scalars
@@ -411,17 +361,13 @@
     #define NA_INTEGER R_NaInt
     #define NA_STRING  R_NaString
   status: api
-  replacement: ~
   header: R_ext/Arith.h
   protect: n/a
   errors: never
-  since: ~
   r_equivalent: NA
-  args: ~
   notes: |
     `NA_LOGICAL` and `NA_INTEGER` are both `R_NaInt` (currently `INT_MIN`);
     `NA_STRING` is `R_NaString`.
-  example: ~
   see_also: NA_REAL
   chapter: vectors
   section: Special values
@@ -432,17 +378,13 @@
     double R_NaReal;
     #define NA_REAL R_NaReal
   status: api
-  replacement: ~
   header: R_ext/Arith.h
   protect: n/a
   errors: never
-  since: ~
   r_equivalent: NA_real_
-  args: ~
   notes: |
     Represented as an `NaN` with a specific bit pattern, per the IEEE 754
     floating-point standard.
-  example: ~
   see_also:
     - R_NaN
     - ISNA
@@ -459,17 +401,13 @@
     double R_PosInf;
     double R_NegInf;
   status: api
-  replacement: ~
   header: R_ext/Arith.h
   protect: n/a
   errors: never
-  since: ~
   r_equivalent: "NaN"
-  args: ~
   notes: |
     Use these constants, together with `NA_REAL`, for cross-platform-safe
     NaN, infinite, and missing values.
-  example: ~
   see_also:
     - NA_REAL
     - ISNA
@@ -485,18 +423,15 @@
     int ISNAN(double x);
     int R_FINITE(double x);
   status: api
-  replacement: ~
   header: R_ext/Arith.h
   protect: n/a
   errors: never
-  since: ~
   r_equivalent: is.na()
   args:
     x: the double to check.
   notes: |
     These are macros; `R_IsNA()`, `R_IsNaN()`, and `R_finite()` are the
     equivalent functions. Check `!R_FINITE()` for non-finite values.
-  example: ~
   see_also:
     - R_IsNA
     - NA_REAL
@@ -512,17 +447,13 @@
     int R_IsNaN(double);
     int R_finite(double);
   status: api
-  replacement: ~
   header: R_ext/Arith.h
   protect: n/a
   errors: never
-  since: ~
   r_equivalent: is.finite()
-  args: ~
   notes: |
     Function equivalents of the `ISNA()`, `ISNAN()`, and `R_FINITE()` macros.
     `R_finite()` is false for `NA`, `NaN`, `Inf`, and `-Inf`.
-  example: ~
   see_also: ISNA
   chapter: vectors
   section: Special values
@@ -542,11 +473,9 @@
     Rboolean Rf_isString(SEXP s);
     Rboolean Rf_isExpression(SEXP s);
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: not-needed
   errors: never
-  since: ~
   r_equivalent: is.logical()
   args:
     s: any SEXP.
@@ -555,7 +484,6 @@
     `TYPEOF(x) == VECSXP` instead. Factors are also `INTSXP`s, so
     `TYPEOF(x) == INTSXP` accepts both plain integer vectors and factors;
     combine `Rf_isInteger()` with `Rf_isFactor()` to distinguish them.
-  example: ~
   see_also:
     - Rf_isNewList
     - Rf_isFactor
@@ -577,12 +505,9 @@
     Rboolean Rf_isNumber(SEXP s);
     Rboolean Rf_isNumeric(SEXP s);
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: not-needed
   errors: never
-  since: ~
-  r_equivalent: ~
   args:
     s: any SEXP.
   notes: |
@@ -594,7 +519,6 @@
     equivalents: `Rf_isVectorAtomic(R_NilValue)` is false (`is.atomic(NULL)`
     is true) while `Rf_isNewList(R_NilValue)` is true (`is.list(NULL)` is
     false); consider writing your own wrapper around `TYPEOF(x)` instead.
-  example: ~
   see_also: Rf_isLogical
   chapter: vectors
   section: Test
@@ -604,19 +528,15 @@
   signature: |
     void Rf_copyVector(SEXP source, SEXP target);
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: n/a
   errors: can-throw
-  since: ~
-  r_equivalent: ~
   args:
     source: the vector to copy from.
     target: the vector to copy to.
   notes: |
     Use `Rf_duplicate()` instead if you just want to duplicate a vector
     without recycling.
-  example: ~
   see_also: Rf_copyMatrix
   chapter: vectors
   section: Miscellaneous helpers
@@ -626,17 +546,13 @@
   signature: |
     SEXP Rf_stringSuffix(SEXP string, int fromIndex);
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: result
   errors: can-throw
-  since: ~
   r_equivalent: substring()
   args:
     string: "a `STRSXP`."
     fromIndex: the index to start the suffix from.
-  notes: ~
-  example: ~
   see_also: []
   chapter: vectors
   section: Miscellaneous helpers
@@ -647,19 +563,15 @@
     #define IS_SCALAR(x, type) (TYPEOF(x) == (type) && XLENGTH(x) == 1)
     #define IS_SIMPLE_SCALAR(x, type) (IS_SCALAR(x, type) && ATTRIB(x) == R_NilValue)
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: n/a
   errors: never
-  since: ~
-  r_equivalent: ~
   args:
     x: any SEXP.
     type: "a `SEXPTYPE`."
   notes: |
     `IS_SIMPLE_SCALAR()` additionally requires that the object has no
     attributes.
-  example: ~
   see_also: []
   chapter: vectors
   section: Miscellaneous helpers
@@ -669,18 +581,14 @@
   signature: |
     Rboolean Rf_isVectorizable(SEXP x);
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: not-needed
   errors: never
-  since: ~
-  r_equivalent: ~
   args:
     x: a list or pairlist.
   notes: |
     True when every element of the list or pairlist is a vector of length 0
     or 1.
-  example: ~
   see_also: []
   chapter: vectors
   section: Miscellaneous helpers
@@ -690,18 +598,15 @@
   signature: |
     SEXP Rf_duplicated(SEXP x, Rboolean from_last);
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: result
   errors: can-throw
-  since: ~
   r_equivalent: duplicated()
   args:
     x: a vector.
     from_last: "if `TRUE`, search from the last element."
   notes: |
     Returns an `LGLSXP` the same length as `x`.
-  example: ~
   see_also: []
   chapter: vectors
   section: Miscellaneous helpers

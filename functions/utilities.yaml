@@ -11,15 +11,9 @@
     #define BCODE_EXPR(x)   TAG(x)
     #define isByteCode(x)   (TYPEOF(x)==BCODESXP)
   status: non-api
-  replacement: ~
   header: none (internal)
   protect: not-needed
   errors: never
-  since: ~
-  r_equivalent: ~
-  args: ~
-  notes: ~
-  example: ~
   see_also: []
   chapter: utilities
   section: "Byte code (`BCODESXP`)"
@@ -29,15 +23,9 @@
   signature: |
     void R_initialize_bcode(void);
   status: non-api
-  replacement: ~
   header: none (internal)
   protect: n/a
   errors: never
-  since: ~
-  r_equivalent: ~
-  args: ~
-  notes: ~
-  example: ~
   see_also: []
   chapter: utilities
   section: "Byte code (`BCODESXP`)"
@@ -48,15 +36,9 @@
     SEXP R_bcEncode(SEXP);
     SEXP R_bcDecode(SEXP);
   status: non-api
-  replacement: ~
   header: none (internal)
   protect: result
   errors: can-throw
-  since: ~
-  r_equivalent: ~
-  args: ~
-  notes: ~
-  example: ~
   see_also: []
   chapter: utilities
   section: "Byte code (`BCODESXP`)"
@@ -72,18 +54,13 @@
     #define PREXPR(e) R_PromiseExpr(e)
     #define BODY_EXPR(e) R_ClosureExpr(e)
   status: non-api
-  replacement: ~
   header: Rinternals.h
   protect: not-needed
   errors: never
-  since: ~
-  r_equivalent: ~
-  args: ~
   notes: |
     `R_PromiseExpr()` is not part of the API; use the binding access API
     added in R 4.6.0 (e.g. `R_DelayedBindingExpression()`) to inspect
     promise bindings.
-  example: ~
   see_also: []
   chapter: utilities
   section: "Byte code (`BCODESXP`)"
@@ -99,17 +76,13 @@
     void R_qsort_int  (int *iv,         size_t i, size_t j);
     void R_qsort_int_I(int *iv, int *II, int i, int j);
   status: api
-  replacement: ~
   header: R_ext/Utils.h
   protect: n/a
   errors: never
-  since: ~
   r_equivalent: sort()
-  args: ~
   notes: |
     The dummy index argument is renamed to `II` to avoid problems with
     g++ on Solaris.
-  example: ~
   see_also:
     - R_isort
     - R_orderVector
@@ -125,15 +98,10 @@
     void R_rsort(double*, int);
     void R_csort(Rcomplex*, int);
   status: api
-  replacement: ~
   header: R_ext/Utils.h
   protect: n/a
   errors: never
-  since: ~
   r_equivalent: sort()
-  args: ~
-  notes: ~
-  example: ~
   see_also: R_qsort
   chapter: utilities
   section: Sorting
@@ -143,15 +111,9 @@
   signature: |
     void rsort_with_index(double *, int *, int);
   status: api
-  replacement: ~
   header: R_ext/Utils.h
   protect: n/a
   errors: never
-  since: ~
-  r_equivalent: ~
-  args: ~
-  notes: ~
-  example: ~
   see_also: revsort
   chapter: utilities
   section: Sorting
@@ -161,15 +123,9 @@
   signature: |
     void revsort(double*, int*, int);
   status: api
-  replacement: ~
   header: R_ext/Utils.h
   protect: n/a
   errors: never
-  since: ~
-  r_equivalent: ~
-  args: ~
-  notes: ~
-  example: ~
   see_also: rsort_with_index
   chapter: utilities
   section: Sorting
@@ -183,15 +139,9 @@
     void rPsort(double*, int, int);
     void cPsort(Rcomplex*, int, int);
   status: api
-  replacement: ~
   header: R_ext/Utils.h
   protect: n/a
   errors: never
-  since: ~
-  r_equivalent: ~
-  args: ~
-  notes: ~
-  example: ~
   see_also: R_qsort
   chapter: utilities
   section: Sorting
@@ -202,18 +152,14 @@
     void R_orderVector (int *indx, int n, SEXP arglist, Rboolean nalast, Rboolean decreasing);
     void R_orderVector1(int *indx, int n, SEXP x,       Rboolean nalast, Rboolean decreasing);
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: n/a
   errors: never
-  since: ~
   r_equivalent: order()
-  args: ~
   notes: |
     C equivalent of `order(..., na.last, decreasing)`; build `arglist` with
     `Rf_lang2()` or `Rf_lang3()`. `R_orderVector1()` is the single-vector
     version, equivalent to `order(x, na.last, decreasing)`.
-  example: ~
   see_also: R_qsort
   chapter: utilities
   section: Sorting
@@ -223,19 +169,14 @@
   signature: |
     SEXP Rf_allocSExp(SEXPTYPE);
   status: non-api
-  replacement: ~
   header: Rinternals.h
   protect: result
   errors: can-throw
-  since: ~
-  r_equivalent: ~
-  args: ~
   notes: |
     Not part of the API, as it exposes internal structure that might need to
     change. Use an appropriate constructor instead: `R_NewEnv()` for
     environments, `R_mkClosure()` for closures (added in R 4.5.0), or
     `Rf_allocLang()` for call expressions (added in R 4.4.1).
-  example: ~
   see_also: R_NewEnv
   chapter: utilities
   section: Misc
@@ -246,15 +187,10 @@
     R_xlen_t Rf_any_duplicated(SEXP x, Rboolean from_last);
     R_xlen_t Rf_any_duplicated3(SEXP x, SEXP incomp, Rboolean from_last);
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: n/a
   errors: never
-  since: ~
   r_equivalent: anyDuplicated()
-  args: ~
-  notes: ~
-  example: ~
   see_also: []
   chapter: utilities
   section: Misc
@@ -264,15 +200,9 @@
   signature: |
     SEXP Rf_applyClosure(SEXP, SEXP, SEXP, SEXP, SEXP);
   status: non-api
-  replacement: ~
   header: none (internal)
   protect: result
   errors: can-throw
-  since: ~
-  r_equivalent: ~
-  args: ~
-  notes: ~
-  example: ~
   see_also: []
   chapter: utilities
   section: Misc
@@ -282,15 +212,9 @@
   signature: |
     int Rf_countContexts(int, int);
   status: non-api
-  replacement: ~
   header: none (internal)
   protect: n/a
   errors: never
-  since: ~
-  r_equivalent: ~
-  args: ~
-  notes: ~
-  example: ~
   see_also: []
   chapter: utilities
   section: Misc
@@ -300,15 +224,9 @@
   signature: |
     SEXP Rf_CreateTag(SEXP);
   status: non-api
-  replacement: ~
   header: none (internal)
   protect: result
   errors: can-throw
-  since: ~
-  r_equivalent: ~
-  args: ~
-  notes: ~
-  example: ~
   see_also: []
   chapter: utilities
   section: Misc
@@ -319,17 +237,13 @@
     SEXP Rf_GetOption(SEXP, SEXP); /* pre-2.13.0 compatibility */
     SEXP Rf_GetOption1(SEXP);
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: not-needed
   errors: never
-  since: ~
   r_equivalent: getOption()
-  args: ~
   notes: |
     `Rf_GetOption()` is kept for pre-2.13.0 compatibility; use
     `Rf_GetOption1()`.
-  example: ~
   see_also: Rf_GetOptionDigits
   chapter: utilities
   section: Misc
@@ -340,15 +254,10 @@
     int Rf_GetOptionDigits(void);
     int Rf_GetOptionWidth(void);
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: n/a
   errors: never
-  since: ~
   r_equivalent: getOption()
-  args: ~
-  notes: ~
-  example: ~
   see_also: Rf_GetOption
   chapter: utilities
   section: Misc
@@ -359,15 +268,10 @@
     void Rf_setVar(SEXP, SEXP, SEXP);
     void Rf_gsetVar(SEXP, SEXP, SEXP);
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: n/a
   errors: can-throw
-  since: ~
   r_equivalent: assign()
-  args: ~
-  notes: ~
-  example: ~
   see_also: []
   chapter: utilities
   section: Misc
@@ -377,15 +281,9 @@
   signature: |
     SEXP Rf_installS3Signature(const char *, const char *);
   status: non-api
-  replacement: ~
   header: none (internal)
   protect: not-needed
   errors: never
-  since: ~
-  r_equivalent: ~
-  args: ~
-  notes: ~
-  example: ~
   see_also: []
   chapter: utilities
   section: Misc
@@ -395,15 +293,9 @@
   signature: |
     Rboolean Rf_isFree(SEXP);
   status: non-api
-  replacement: ~
   header: none (internal)
   protect: n/a
   errors: never
-  since: ~
-  r_equivalent: ~
-  args: ~
-  notes: ~
-  example: ~
   see_also: []
   chapter: utilities
   section: Misc
@@ -413,15 +305,10 @@
   signature: |
     Rboolean Rf_isUnsorted(SEXP, Rboolean);
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: n/a
   errors: never
-  since: ~
   r_equivalent: is.unsorted()
-  args: ~
-  notes: ~
-  example: ~
   see_also: []
   chapter: utilities
   section: Misc
@@ -431,15 +318,10 @@
   signature: |
     SEXP Rf_namesgets(SEXP, SEXP);
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: result
   errors: can-throw
-  since: ~
   r_equivalent: names<-()
-  args: ~
-  notes: ~
-  example: ~
   see_also: []
   chapter: utilities
   section: Misc
@@ -450,16 +332,12 @@
     Rboolean Rf_pmatch(SEXP, SEXP, Rboolean);
     Rboolean Rf_psmatch(const char *, const char *, Rboolean);
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: n/a
   errors: never
-  since: ~
   r_equivalent: pmatch()
-  args: ~
   notes: |
     `Rf_psmatch()` is the variant for C strings.
-  example: ~
   see_also: Rf_match
   chapter: utilities
   section: Misc
@@ -469,15 +347,9 @@
   signature: |
     void Rf_readS3VarsFromFrame(SEXP, SEXP*, SEXP*, SEXP*, SEXP*, SEXP*, SEXP*);
   status: non-api
-  replacement: ~
   header: none (internal)
   protect: n/a
   errors: never
-  since: ~
-  r_equivalent: ~
-  args: ~
-  notes: ~
-  example: ~
   see_also: []
   chapter: utilities
   section: Misc
@@ -487,15 +359,9 @@
   signature: |
     void Rf_setSVector(SEXP*, int, SEXP);
   status: non-api
-  replacement: ~
   header: none (internal)
   protect: n/a
   errors: never
-  since: ~
-  r_equivalent: ~
-  args: ~
-  notes: ~
-  example: ~
   see_also: []
   chapter: utilities
   section: Misc
@@ -505,15 +371,10 @@
   signature: |
     SEXP Rf_substitute(SEXP,SEXP);
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: result
   errors: can-throw
-  since: ~
   r_equivalent: substitute()
-  args: ~
-  notes: ~
-  example: ~
   see_also: []
   chapter: utilities
   section: Misc
@@ -524,17 +385,13 @@
     SEXP Rf_match(SEXP itable, SEXP ix, int no_match);
     SEXP Rf_matchE(SEXP itable, SEXP ix, int no_match, SEXP env);
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: result
   errors: can-throw
-  since: ~
   r_equivalent: match()
-  args: ~
   notes: |
     In `Rf_matchE()`, `env` is used to look up `as.character` when
     translating `POSIXlt`; rarely needed directly.
-  example: ~
   see_also: Rf_pmatch
   chapter: utilities
   section: Misc
@@ -545,18 +402,13 @@
     void R_dot_Last(void);
     void R_RunExitFinalizers(void);
   status: embedding
-  replacement: ~
   header: Rinternals.h
   protect: n/a
   errors: can-throw
-  since: ~
-  r_equivalent: ~
-  args: ~
   notes: |
     Shutdown actions: `R_dot_Last()` runs the `.Last()` function (in
     main.c); `R_RunExitFinalizers()` runs finalizers registered for exit
     (in memory.c).
-  example: ~
   see_also: []
   chapter: utilities
   section: Misc
@@ -569,16 +421,12 @@
     #endif
     int R_system(const char *);
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: n/a
   errors: never
-  since: ~
   r_equivalent: system()
-  args: ~
   notes: |
     `R_popen()` is only available when `HAVE_POPEN` is defined.
-  example: ~
   see_also: []
   chapter: utilities
   section: Misc
@@ -588,19 +436,15 @@
   signature: |
     Rboolean R_compute_identical(SEXP, SEXP, int);
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: n/a
   errors: never
-  since: ~
   r_equivalent: identical()
-  args: ~
   notes: |
     The third argument is a bitmask of flags for non-default options (set a
     bit to get the FALSE behaviour): 1 = !NUM_EQ, 2 = !SINGLE_NA,
     4 = !ATTR_AS_SET, 8 = !IGNORE_BYTECODE, 16 = !IGNORE_ENV,
     32 = !IGNORE_SRCREF. R's `identical()` default corresponds to 16.
-  example: ~
   see_also: []
   chapter: utilities
   section: Misc
@@ -610,15 +454,9 @@
   signature: |
     Rboolean Rf_conformable(SEXP, SEXP);
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: n/a
   errors: never
-  since: ~
-  r_equivalent: ~
-  args: ~
-  notes: ~
-  example: ~
   see_also: []
   chapter: utilities
   section: Misc
@@ -629,15 +467,9 @@
     SEXP Rf_elt(SEXP, int);
     SEXP Rf_lastElt(SEXP);
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: not-needed
   errors: never
-  since: ~
-  r_equivalent: ~
-  args: ~
-  notes: ~
-  example: ~
   see_also: []
   chapter: utilities
   section: Misc
@@ -647,15 +479,10 @@
   signature: |
     Rboolean Rf_isTs(SEXP);
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: n/a
   errors: never
-  since: ~
   r_equivalent: is.ts()
-  args: ~
-  notes: ~
-  example: ~
   see_also: []
   chapter: utilities
   section: Misc
@@ -665,15 +492,9 @@
   signature: |
     Rboolean Rf_isUserBinop(SEXP);
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: n/a
   errors: never
-  since: ~
-  r_equivalent: ~
-  args: ~
-  notes: ~
-  example: ~
   see_also: []
   chapter: utilities
   section: Misc
@@ -683,15 +504,9 @@
   signature: |
     SEXP Rf_lcons(SEXP, SEXP);
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: result
   errors: can-throw
-  since: ~
-  r_equivalent: ~
-  args: ~
-  notes: ~
-  example: ~
   see_also: Rf_cons
   chapter: utilities
   section: Misc
@@ -701,15 +516,9 @@
   signature: |
     int Rf_stringPositionTr(SEXP, const char *);
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: n/a
   errors: never
-  since: ~
-  r_equivalent: ~
-  args: ~
-  notes: ~
-  example: ~
   see_also: []
   chapter: utilities
   section: Misc
@@ -719,15 +528,9 @@
   signature: |
     SEXP R_FixupRHS(SEXP x, SEXP y);
   status: non-api
-  replacement: ~
   header: none (internal)
   protect: result
   errors: can-throw
-  since: ~
-  r_equivalent: ~
-  args: ~
-  notes: ~
-  example: ~
   see_also: []
   chapter: utilities
   section: Misc
@@ -737,15 +540,9 @@
   signature: |
     #define IndexWidth    Rf_IndexWidth
   status: api
-  replacement: ~
   header: R_ext/Utils.h
   protect: n/a
   errors: never
-  since: ~
-  r_equivalent: ~
-  args: ~
-  notes: ~
-  example: ~
   see_also: []
   chapter: utilities
   section: Misc
@@ -758,15 +555,9 @@
     #define setRVector    Rf_setRVector
     void setRVector(double*, int, double);
   status: non-api
-  replacement: ~
   header: R_ext/Utils.h
   protect: n/a
   errors: never
-  since: ~
-  r_equivalent: ~
-  args: ~
-  notes: ~
-  example: ~
   see_also: Rf_setSVector
   chapter: utilities
   section: Misc
@@ -777,17 +568,13 @@
     double R_atof(const char *str);
     double R_strtod(const char *c, char **end);
   status: api
-  replacement: ~
   header: R_ext/Utils.h
   protect: n/a
   errors: never
-  since: ~
   r_equivalent: as.numeric()
-  args: ~
   notes: |
     These two are guaranteed to use '.' as the decimal point,
     and to accept "NA".
-  example: ~
   see_also: []
   chapter: utilities
   section: Misc
@@ -798,15 +585,10 @@
     char *R_tmpnam(const char *prefix, const char *tempdir);
     char *R_tmpnam2(const char *prefix, const char *tempdir, const char *fileext);
   status: api
-  replacement: ~
   header: R_ext/Utils.h
   protect: n/a
   errors: never
-  since: ~
   r_equivalent: tempfile()
-  args: ~
-  notes: ~
-  example: ~
   see_also: []
   chapter: utilities
   section: Misc
@@ -816,15 +598,9 @@
   signature: |
     void R_CheckUserInterrupt(void);
   status: api
-  replacement: ~
   header: R_ext/Utils.h
   protect: n/a
   errors: can-throw
-  since: ~
-  r_equivalent: ~
-  args: ~
-  notes: ~
-  example: ~
   see_also: R_CheckStack
   chapter: utilities
   section: Misc
@@ -835,15 +611,9 @@
     void R_CheckStack(void);
     void R_CheckStack2(size_t);
   status: api
-  replacement: ~
   header: R_ext/Utils.h
   protect: n/a
   errors: can-throw
-  since: ~
-  r_equivalent: ~
-  args: ~
-  notes: ~
-  example: ~
   see_also: R_CheckUserInterrupt
   chapter: utilities
   section: Misc
@@ -858,16 +628,12 @@
     void find_interv_vec(double *xt, int *n, double *x,   int *nx,
       int *rightmost_closed, int *all_inside, int *indx);
   status: api
-  replacement: ~
   header: R_ext/Utils.h
   protect: n/a
   errors: never
-  since: ~
   r_equivalent: findInterval()
-  args: ~
   notes: |
     Also in Applic.h.
-  example: ~
   see_also: []
   chapter: utilities
   section: Misc
@@ -877,16 +643,12 @@
   signature: |
     void R_max_col(double *matrix, int *nr, int *nc, int *maxes, int *ties_meth);
   status: api
-  replacement: ~
   header: R_ext/Utils.h
   protect: n/a
   errors: never
-  since: ~
   r_equivalent: max.col()
-  args: ~
   notes: |
     Also in Applic.h.
-  example: ~
   see_also: []
   chapter: utilities
   section: Misc

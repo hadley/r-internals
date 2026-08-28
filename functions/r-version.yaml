@@ -7,13 +7,10 @@
     #define R_Version(major, minor, patch) \
       (((major) * 65536) + ((minor) * 256) + (patch))
   status: api
-  replacement: ~
   header: Rversion.h
   protect: n/a
   errors: never
-  since: ~
   r_equivalent: R.version
-  args: ~
   notes: |
     `R_VERSION` is the packed version number of the R being compiled
     against; `R_Version()` packs a `major.minor.patch` triple into the

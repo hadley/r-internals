@@ -183,12 +183,12 @@ hand-edited in the `.qmd` source.
   signature: |
     SEXP Rf_allocVector(SEXPTYPE type, R_xlen_t n);
   status: api                 # api | experimental | embedding | non-api
-  replacement: ~              # for non-api: name of preferred alternative
+  # replacement: omit unless non-api; name of preferred alternative
   header: Rinternals.h
   protect: result             # result | not needed | n/a (+ note, e.g. "can allocate")
   errors: can-throw           # can-throw | never
-  since: ~                    # R version when it matters for portability
-  r_equivalent: vector()      # closest R-level function, or ~
+  # since: omit unless it matters for portability; R version
+  r_equivalent: vector()      # closest R-level function; omit if none
   args:                       # only when non-obvious from the signature
     type: any vector `SEXPTYPE` (`LGLSXP`, ..., `VECSXP`, `RAWSXP`, `EXPRSXP`).
     n: number of elements.

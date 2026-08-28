@@ -6,16 +6,12 @@
     Rboolean Rf_isFunction(SEXP);
     Rboolean Rf_isPrimitive(SEXP);
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: not-needed
   errors: never
-  since: ~
   r_equivalent: is.function()
-  args: ~
   notes: |
     `FUNSXP` is an abstract union type.
-  example: ~
   see_also: []
   chapter: functions
   section: Testing functions
@@ -33,13 +29,10 @@
   header: Rinternals.h
   protect: not-needed
   errors: never
-  since: ~
   r_equivalent: formals()
-  args: ~
   notes: |
     Superseded by `R_ClosureFormals()`, `R_ClosureBody()`, and
     `R_ClosureEnv()` (R 4.5.0).
-  example: ~
   see_also:
     - R_ClosureBody
     - R_ClosureEnv
@@ -59,13 +52,10 @@
   header: Rinternals.h
   protect: not-needed
   errors: never
-  since: ~
   r_equivalent: formals<-()
-  args: ~
   notes: |
     Superseded by the constructor `R_mkClosure()` (R 4.5.0); prefer building
     a closure over allocating and mutating one.
-  example: ~
   see_also: []
   chapter: functions
   section: Internals
@@ -79,16 +69,11 @@
     int  (RSTEP)(SEXP x);
     int  (RTRACE)(SEXP x);
   status: non-api
-  replacement: ~
   header: Rinternals.h
   protect: not-needed
   errors: never
-  since: ~
-  r_equivalent: ~
-  args: ~
   notes: |
     Internal macros for querying closure debugging flags.
-  example: ~
   see_also: []
   chapter: functions
   section: Internals
@@ -102,16 +87,11 @@
     void (SET_RSTEP)(SEXP x, int v);
     void (SET_RTRACE)(SEXP x, int v);
   status: non-api
-  replacement: ~
   header: Rinternals.h
   protect: not-needed
   errors: never
-  since: ~
-  r_equivalent: ~
-  args: ~
   notes: |
     Internal macros for setting closure debugging flags.
-  example: ~
   see_also: []
   chapter: functions
   section: Internals
@@ -121,16 +101,11 @@
   signature: |
     LibExtern SEXP	R_UnboundValue;	    /* Unbound marker */
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: n/a
   errors: never
-  since: ~
-  r_equivalent: ~
-  args: ~
   notes: |
     `R_UnboundValue` marks an unbound symbol or an unread promise value.
-  example: ~
   see_also: R_MissingArg
   chapter: functions
   section: "Promises (`PROMSXP`)"
@@ -144,18 +119,13 @@
     SEXP (PRENV)(SEXP x);
     SEXP (PRVALUE)(SEXP x);
   status: non-api
-  replacement: ~
   header: Rinternals.h
   protect: not-needed
   errors: never
-  since: ~
-  r_equivalent: ~
-  args: ~
   notes: |
     Superseded by the R 4.6.0 binding-access API: `R_GetBindingType()`,
     `R_ForcedBindingExpression()`, `R_DelayedBindingExpression()`, and
     `R_DelayedBindingEnvironment()`.
-  example: ~
   see_also: R_GetBindingType
   chapter: functions
   section: "Promises (`PROMSXP`)"
@@ -167,16 +137,11 @@
     void (SET_PRSEEN)(SEXP x, int v);
     void SET_PRSEEN(SEXP x, int v);
   status: non-api
-  replacement: ~
   header: Rinternals.h
   protect: not-needed
   errors: never
-  since: ~
-  r_equivalent: ~
-  args: ~
   notes: |
     Used to detect recursive promise evaluation.
-  example: ~
   see_also: []
   chapter: functions
   section: "Promises (`PROMSXP`)"
@@ -190,17 +155,12 @@
     void SET_PRVALUE(SEXP x, SEXP v);
     void SET_PRCODE(SEXP x, SEXP v);
   status: non-api
-  replacement: ~
   header: Rinternals.h
   protect: not-needed
   errors: never
-  since: ~
-  r_equivalent: ~
-  args: ~
   notes: |
     Superseded by the R 4.6.0 binding-access API: `R_MakeForcedBinding()`,
     `R_MakeDelayedBinding()`, and `R_MakeMissingBinding()`.
-  example: ~
   see_also: R_MakeDelayedBinding
   chapter: functions
   section: "Promises (`PROMSXP`)"
@@ -210,15 +170,9 @@
   signature: |
     LibExtern SEXP	R_Srcref;           /* Current srcref, for debuggers */
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: n/a
   errors: never
-  since: ~
-  r_equivalent: ~
-  args: ~
-  notes: ~
-  example: ~
   see_also: []
   chapter: functions
   section: Srcrefs
@@ -229,15 +183,9 @@
     SEXP R_GetCurrentSrcref(int);
     SEXP R_GetSrcFilename(SEXP);
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: result
   errors: never
-  since: ~
-  r_equivalent: ~
-  args: ~
-  notes: ~
-  example: ~
   see_also: []
   chapter: functions
   section: Srcrefs

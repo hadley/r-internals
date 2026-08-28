@@ -9,15 +9,9 @@
     Rboolean Rf_isLanguage(SEXP x); // LANGSXP
     Rboolean Rf_isList(SEXP x);     // LISTSXP, NILSXP
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: not-needed
   errors: never
-  since: ~
-  r_equivalent: ~
-  args: ~
-  notes: ~
-  example: ~
   see_also: []
   chapter: pairlists
   section: Test
@@ -28,16 +22,11 @@
     SEXP Rf_cons(SEXP a, SEXP b);   // function arguments
     SEXP Rf_lcons(SEXP a, SEXP b);  // calls
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: result
   errors: can-throw
-  since: ~
-  r_equivalent: ~
-  args: ~
   notes: |
     The `CDR` of the final value must be `R_NilValue`.
-  example: ~
   see_also:
     - Rf_list1
     - Rf_lang1
@@ -57,16 +46,11 @@
     SEXP Rf_list4(SEXP x1, SEXP x2, SEXP x3, SEXP x4);
     SEXP Rf_list5(SEXP x1, SEXP x2, SEXP x3, SEXP x4, SEXP x5);
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: result
   errors: can-throw
-  since: ~
-  r_equivalent: ~
-  args: ~
   notes: |
     These automatically add the terminating `R_NilValue`.
-  example: ~
   see_also:
     - Rf_cons
     - Rf_lang1
@@ -88,16 +72,11 @@
     SEXP Rf_lang5(SEXP x1, SEXP x2, SEXP x3, SEXP x4, SEXP x5);
     SEXP Rf_lang6(SEXP x1, SEXP x2, SEXP x3, SEXP x4, SEXP x5, SEXP x6);
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: result
   errors: can-throw
-  since: ~
-  r_equivalent: ~
-  args: ~
   notes: |
     These automatically add the terminating `R_NilValue`.
-  example: ~
   see_also:
     - Rf_cons
     - Rf_list1
@@ -117,16 +96,11 @@
     SEXP Rf_allocFormalsList5(SEXP x1, SEXP x2, SEXP x3, SEXP x4, SEXP x5);
     SEXP Rf_allocFormalsList6(SEXP x1, SEXP x2, SEXP x3, SEXP x4, SEXP x5, SEXP x6);
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: result
   errors: can-throw
-  since: ~
-  r_equivalent: ~
-  args: ~
   notes: |
     These automatically add the terminating `R_NilValue`.
-  example: ~
   see_also: []
   chapter: pairlists
   section: Creation
@@ -137,15 +111,9 @@
     SEXP Rf_PairToVectorList(SEXP x);
     SEXP Rf_VectorToPairList(SEXP x);
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: result
   errors: can-throw
-  since: ~
-  r_equivalent: ~
-  args: ~
-  notes: ~
-  example: ~
   see_also: []
   chapter: pairlists
   section: Creation
@@ -155,15 +123,9 @@
   signature: |
     SEXP Rf_listAppend(SEXP source, SEXP target);
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: result
   errors: can-throw
-  since: ~
-  r_equivalent: ~
-  args: ~
-  notes: ~
-  example: ~
   see_also: []
   chapter: pairlists
   section: Creation
@@ -191,19 +153,14 @@
     SEXP CADDDR(SEXP e);
     SEXP CAD4R(SEXP e);
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: not-needed
   errors: never
-  since: ~
-  r_equivalent: ~
-  args: ~
   notes: |
     Pairlists can't be indexed directly, so these accessors navigate the
     linked list instead. `CAR()` returns the first element and `CDR()` the
     rest; they compose to give `CAAR()`, `CDAR()`, `CADDR()`, `CADDDR()`, and
     so on.
-  example: ~
   see_also:
     - SETCAR
     - TAG
@@ -225,16 +182,11 @@
     SEXP SETCADDDR(SEXP x, SEXP y);
     SEXP SETCAD4R(SEXP e, SEXP y);
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: not-needed
   errors: never
-  since: ~
-  r_equivalent: ~
-  args: ~
   notes: |
     Mirror the `CAR()`/`CDR()` family of getters.
-  example: ~
   see_also:
     - CAR
     - SET_TAG
@@ -247,15 +199,9 @@
     SEXP TAG(SEXP e);
     void SET_TAG(SEXP x, SEXP y);
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: not-needed
   errors: never
-  since: ~
-  r_equivalent: ~
-  args: ~
-  notes: ~
-  example: ~
   see_also: CAR
   chapter: pairlists
   section: Accessors
@@ -269,12 +215,8 @@
   header: Rinternals.h
   protect: result
   errors: can-throw
-  since: ~
-  r_equivalent: ~
-  args: ~
   notes: |
     CONS with no-refcounting?
-  example: ~
   see_also: Rf_cons
   chapter: pairlists
   section: Accessors
@@ -285,16 +227,11 @@
     int MISSING(SEXP x);
     void SET_MISSING(SEXP x, int v);
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: n/a
   errors: never
-  since: ~
-  r_equivalent: ~
-  args: ~
   notes: |
     Used for missing values in function calls?
-  example: ~
   see_also: []
   chapter: pairlists
   section: Accessors
@@ -304,20 +241,15 @@
   signature: |
     SEXP Rf_allocList(int n);
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: result
   errors: can-throw
-  since: ~
-  r_equivalent: ~
-  args: ~
   notes: |
     Treats the pairlist as if it were a vector, which is easy to get O(n^2)
     from, but is unlikely to be a bottleneck at typical pairlist sizes. To
     create a call expression, use `Rf_allocLang()` (added in R 4.4.1) or
     `Rf_lcons()` rather than `Rf_allocList()` plus `SET_TYPEOF()`, which
     will not be available to packages in the future.
-  example: ~
   see_also:
     - Rf_nthcdr
     - Rf_lcons
@@ -329,17 +261,12 @@
   signature: |
     SEXP Rf_nthcdr(SEXP x, int n);
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: not-needed
   errors: never
-  since: ~
-  r_equivalent: ~
-  args: ~
   notes: |
     Treats the pairlist as if it were a vector; repeated calls can become
     O(n^2), though this is unlikely to matter at typical pairlist sizes.
-  example: ~
   see_also:
     - Rf_allocList
     - CDR

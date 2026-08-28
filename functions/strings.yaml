@@ -18,17 +18,12 @@
       CE_ANY    = 99
     } cetype_t;
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: n/a
   errors: never
-  since: ~
-  r_equivalent: ~
-  args: ~
   notes: |
     One of `CE_NATIVE`, `CE_UTF8`, `CE_LATIN1`, `CE_BYTES`, `CE_SYMBOL`, or
     `CE_ANY`.
-  example: ~
   see_also: Rf_getCharCE
   chapter: strings
   section: Encodings
@@ -38,15 +33,9 @@
   signature: |
     cetype_t Rf_getCharCE(SEXP);
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: not-needed
   errors: never
-  since: ~
-  r_equivalent: ~
-  args: ~
-  notes: ~
-  example: ~
   see_also: cetype_t
   chapter: strings
   section: Encodings
@@ -57,19 +46,14 @@
     SEXP Rf_mkChar(const char* x);
     SEXP Rf_mkCharLen(const char* x, int n);
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: result
   errors: can-throw
-  since: ~
-  r_equivalent: ~
-  args: ~
   notes: |
     `Rf_mkChar()` takes a null-terminated string; `Rf_mkCharLen()` takes an
     explicit length. Protection is rarely needed since the result is usually
     assigned immediately into a `STRSXP`. Both crash R on `NULL` input, so
     check for it yourself and substitute `""` or `NA_STRING`.
-  example: ~
   see_also:
     - Rf_mkCharCE
     - Rf_ScalarString
@@ -82,17 +66,12 @@
     SEXP Rf_mkCharCE(const char* x, cetype_t encoding);
     SEXP Rf_mkCharLenCE(const char* x, int n, cetype_t encoding);
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: result
   errors: can-throw
-  since: ~
-  r_equivalent: ~
-  args: ~
   notes: |
     Prefer these over `Rf_mkChar()` and `Rf_mkString()` when the input is
     UTF-8, which is typical for modern C code.
-  example: ~
   see_also:
     - cetype_t
     - Rf_mkChar
@@ -105,17 +84,12 @@
     SEXP Rf_ScalarString(SEXP);
     SEXP Rf_mkString(const char*);
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: result
   errors: can-throw
-  since: ~
-  r_equivalent: ~
-  args: ~
   notes: |
     `Rf_ScalarString()` builds a `STRSXP` from a `CHARSXP`; `Rf_mkString()`
     builds one from a C string. Both crash R on `NULL` input.
-  example: ~
   see_also: Rf_mkChar
   chapter: strings
   section: Creating from C strings
@@ -126,17 +100,12 @@
     const char* R_CHAR(SEXP x);
     #define CHAR(x) R_CHAR(x)
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: not-needed
   errors: never
-  since: ~
-  r_equivalent: ~
-  args: ~
   notes: |
     Named `CHAR()` for consistency with the other vector accessors
     (`LOGICAL()`, `INTEGER()`, ...).
-  example: ~
   see_also: Rf_translateCharUTF8
   chapter: strings
   section: Convert to C string
@@ -150,13 +119,9 @@
     const char* Rf_translateChar0(SEXP x);
     const char* Rf_translateCharUTF8(SEXP x);
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: not-needed
   errors: can-throw
-  since: ~
-  r_equivalent: ~
-  args: ~
   notes: |
     `Rf_translateChar()` translates to the native encoding;
     `Rf_translateChar0()` leaves bytes-encoded strings alone and otherwise
@@ -164,7 +129,6 @@
     is what most modern C APIs want. A re-encoded `char*` is allocated with
     `R_alloc()` and freed automatically after the `.C`/`.Call`/`.External`
     returns; copy it if you need to keep it longer.
-  example: ~
   see_also: CHAR
   chapter: strings
   section: Convert to C string
@@ -175,16 +139,12 @@
     SEXP R_NaString; // Singleton CHARSXP
     #define NA_STRING R_NaString
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: n/a
   errors: never
-  since: ~
   r_equivalent: NA_character_
-  args: ~
   notes: |
     `R_NaString` is a singleton `CHARSXP`; `NA_STRING` is the macro alias.
-  example: ~
   see_also: R_BlankString
   chapter: strings
   section: Special values
@@ -195,16 +155,12 @@
     SEXP R_BlankString; // CHARSXP
     SEXP R_BlankScalarString; // STRSXP
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: n/a
   errors: never
-  since: ~
   r_equivalent: "\"\""
-  args: ~
   notes: |
     `R_BlankString` is a `CHARSXP`; `R_BlankScalarString` is a `STRSXP`.
-  example: ~
   see_also: NA_STRING
   chapter: strings
   section: Special values
@@ -215,17 +171,12 @@
     Rboolean Rf_StringBlank(SEXP);
     Rboolean Rf_isBlankString(const char *);
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: not-needed
   errors: never
-  since: ~
-  r_equivalent: ~
-  args: ~
   notes: |
     `Rf_StringBlank()` takes a `SEXP`; `Rf_isBlankString()` takes a
     `const char*`.
-  example: ~
   see_also: R_BlankString
   chapter: strings
   section: Special values
@@ -236,15 +187,9 @@
     Rboolean Rf_StringFalse(const char *);
     Rboolean Rf_StringTrue(const char *);
   status: non-api
-  replacement: ~
   header: R_ext/Utils.h
   protect: not-needed
   errors: never
-  since: ~
-  r_equivalent: ~
-  args: ~
-  notes: ~
-  example: ~
   see_also: []
   chapter: strings
   section: Special values
@@ -255,18 +200,13 @@
     Rboolean Rf_isValidString(SEXP);
     Rboolean Rf_isValidStringF(SEXP);
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: not-needed
   errors: never
-  since: ~
-  r_equivalent: ~
-  args: ~
   notes: |
     `Rf_isValidString(x)` is `TYPEOF(x) == STRSXP && LENGTH(x) > 0 &&
     TYPEOF(STRING_ELT(x, 0)) != NILSXP`; `Rf_isValidStringF(x)` is
     `isValidString(x) && CHAR(STRING_ELT(x, 0))[0]`.
-  example: ~
   see_also: []
   chapter: strings
   section: Special values
@@ -278,16 +218,12 @@
     int R_nchar(SEXP string, nchar_type type_,
       Rboolean allowNA, Rboolean keepNA, const char* msg_name);
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: not-needed
   errors: can-throw
-  since: ~
   r_equivalent: nchar()
-  args: ~
   notes: |
     `nchar_type` is one of `Bytes`, `Chars`, or `Width`.
-  example: ~
   see_also: []
   chapter: strings
   section: Helper functions
@@ -297,16 +233,11 @@
   signature: |
     char* Rf_acopy_string(const char *);
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: not-needed
   errors: can-throw
-  since: ~
-  r_equivalent: ~
-  args: ~
   notes: |
     The copy is freed automatically at the next garbage collection.
-  example: ~
   see_also: []
   chapter: strings
   section: Helper functions
@@ -316,15 +247,10 @@
   signature: |
     SEXP Rf_asChar(SEXP x);
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: result
   errors: can-throw
-  since: ~
   r_equivalent: as.character()
-  args: ~
-  notes: ~
-  example: ~
   see_also: []
   chapter: strings
   section: Helper functions
@@ -334,16 +260,11 @@
   signature: |
     Rboolean Rf_NonNullStringMatch(SEXP s, SEXP t);
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: not-needed
   errors: can-throw
-  since: ~
-  r_equivalent: ~
-  args: ~
   notes: |
     Translates both strings to UTF-8 before comparing.
-  example: ~
   see_also: []
   chapter: strings
   section: Helper functions
@@ -353,15 +274,9 @@
   signature: |
     const char *Rf_reEnc(const char *x, cetype_t ce_in, cetype_t ce_out, int subst);
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: not-needed
   errors: can-throw
-  since: ~
-  r_equivalent: ~
-  args: ~
-  notes: ~
-  example: ~
   see_also: cetype_t
   chapter: strings
   section: Helper functions
@@ -371,16 +286,12 @@
   signature: |
     const char *R_ExpandFileName(const char *);
   status: api
-  replacement: ~
   header: R_ext/Utils.h
   protect: not-needed
   errors: can-throw
-  since: ~
   r_equivalent: path.expand()
-  args: ~
   notes: |
     Needed because most C APIs don't understand `~`.
-  example: ~
   see_also: []
   chapter: strings
   section: Paths
@@ -390,15 +301,9 @@
   signature: |
     SEXPTYPE Rf_str2type(const char *);
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: not-needed
   errors: can-throw
-  since: ~
-  r_equivalent: ~
-  args: ~
-  notes: ~
-  example: ~
   see_also: Rf_type2str
   chapter: strings
   section: Types
@@ -414,18 +319,14 @@
     SEXP Rf_type2str(SEXPTYPE);
     SEXP Rf_type2str_nowarn(SEXPTYPE);
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: result
   errors: never
-  since: ~
   r_equivalent: typeof()
-  args: ~
   notes: |
     `Rf_type2char()` returns a C string; `Rf_type2rstr()` returns a
     `STRSXP`; `Rf_type2str()` returns a `CHARSXP`. Only the `SEXP`-returning
     members need protection.
-  example: ~
   see_also: Rf_str2type
   chapter: strings
   section: Types

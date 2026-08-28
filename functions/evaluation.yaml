@@ -5,16 +5,12 @@
   signature: |
     SEXP Rf_eval(SEXP expression, SEXP environment);
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: result
   errors: can-throw
-  since: ~
   r_equivalent: eval()
-  args: ~
   notes: |
     Expression can be anything - non-language objects are returned as is.
-  example: ~
   see_also: []
   chapter: evaluation
   section: Evaluation
@@ -24,18 +20,14 @@
   signature: |
     SEXP R_forceAndCall(SEXP expression, int n, SEXP environment);
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: result
   errors: can-throw
-  since: ~
-  r_equivalent: ~
   args:
     n: The number of arguments to force.
   notes: |
     `n` is the number of leading arguments in the call to force before
     evaluating.
-  example: ~
   see_also: Rf_eval
   chapter: evaluation
   section: Evaluation
@@ -46,11 +38,9 @@
     SEXP R_tryEval(SEXP expression, SEXP environment, int* pOutError);
     SEXP R_tryEvalSilent(SEXP expression, SEXP environment, int* pOutError);
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: result
   errors: never
-  since: ~
   r_equivalent: try()
   args:
     pOutError: "On error, the function returns NULL and sets the contents of `pOutError` to 1."
@@ -58,7 +48,6 @@
     `R_tryEvalSilent()` behaves like `R_tryEval()` but suppresses printing
     of error messages. Both ignore existing condition handlers, so R-level
     `tryCatch()` and `suppressWarnings()` have no effect on the evaluation.
-  example: ~
   see_also: R_ToplevelExec
   chapter: evaluation
   section: Protected evaluation
@@ -68,17 +57,13 @@
   signature: |
     Rboolean R_ToplevelExec(void (*fun)(void *), void *data);
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: n/a
   errors: never
-  since: ~
-  r_equivalent: ~
   args:
     fun: "C function to call after context setup. Passed `*data`."
   notes: |
     Both `R_tryEval()` and `R_tryEvalSilent()` call `R_ToplevelExec` under the hood.
-  example: ~
   see_also: R_tryEval
   chapter: evaluation
   section: Protected evaluation
@@ -88,15 +73,10 @@
   signature: |
     const char *R_curErrorBuf();
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: not-needed
   errors: never
-  since: ~
   r_equivalent: geterrmessage()
-  args: ~
-  notes: ~
-  example: ~
   see_also: []
   chapter: evaluation
   section: Protected evaluation
@@ -108,18 +88,14 @@
                            void (*cleanfun)(void *),
                            void *cleandata);
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: result
   errors: never
-  since: ~
-  r_equivalent: ~
   args:
     fun: "C function to call after context setup. Passed `*data`."
     cleanfun: "C function to call before context teardown. Passed `*data`."
   notes: |
     Not used anywhere in R source.
-  example: ~
   see_also: R_ToplevelExec
   chapter: evaluation
   section: Protected evaluation

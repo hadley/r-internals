@@ -5,16 +5,11 @@
   signature: |
     SEXP R_GlobalEnv;
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: n/a
   errors: never
-  since: ~
-  r_equivalent: ~
-  args: ~
   notes: |
     The "global" environment.
-  example: ~
   see_also: []
   chapter: environments
   section: Predefined environments
@@ -24,16 +19,11 @@
   signature: |
     SEXP R_EmptyEnv;
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: n/a
   errors: never
-  since: ~
-  r_equivalent: ~
-  args: ~
   notes: |
     An empty environment at the root of the environment tree.
-  example: ~
   see_also: []
   chapter: environments
   section: Predefined environments
@@ -43,16 +33,11 @@
   signature: |
     SEXP R_BaseEnv;
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: n/a
   errors: never
-  since: ~
-  r_equivalent: ~
-  args: ~
   notes: |
     The base environment; formerly `R_NilValue`.
-  example: ~
   see_also: []
   chapter: environments
   section: Predefined environments
@@ -62,16 +47,11 @@
   signature: |
     SEXP R_BaseNamespace;
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: n/a
   errors: never
-  since: ~
-  r_equivalent: ~
-  args: ~
   notes: |
     The (fake) namespace for base.
-  example: ~
   see_also: []
   chapter: environments
   section: Predefined environments
@@ -85,13 +65,9 @@
   header: Rinternals.h
   protect: n/a
   errors: never
-  since: ~
-  r_equivalent: ~
-  args: ~
   notes: |
     Not part of the API; use `R_getRegisteredNamespace()` to find a
     registered namespace.
-  example: ~
   see_also: []
   chapter: environments
   section: Predefined environments
@@ -101,15 +77,10 @@
   signature: |
     SEXP R_NewEnv(SEXP enclos, int hash, int size);
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: result
   errors: can-throw
   since: R 4.1.0
-  r_equivalent: ~
-  args: ~
-  notes: ~
-  example: ~
   see_also: []
   chapter: environments
   section: Creation (R >= 4.1.0)
@@ -123,14 +94,10 @@
   header: Rinternals.h
   protect: result
   errors: can-throw
-  since: ~
-  r_equivalent: ~
-  args: ~
   notes: |
     May allocate, since the binding it finds could be an active binding.
     Too low level to be part of the API; prefer `R_getVar()` or
     `R_getVarEx()` (added in R 4.5.0) in new code.
-  example: ~
   see_also:
     - Rf_findFun
     - Rf_findVarInFrame3
@@ -142,16 +109,11 @@
   signature: |
     SEXP Rf_findFun(SEXP symbol, SEXP environment);
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: result
   errors: can-throw
-  since: ~
-  r_equivalent: ~
-  args: ~
   notes: |
     Like `Rf_findVar()`, but ignores non-functions.
-  example: ~
   see_also: Rf_findVar
   chapter: environments
   section: Get values
@@ -166,8 +128,6 @@
   header: Rinternals.h
   protect: result
   errors: can-throw
-  since: ~
-  r_equivalent: ~
   args:
     doGet: "if `TRUE`, returns the value; if `FALSE`, just checks for presence."
   notes: |
@@ -175,7 +135,6 @@
     for `Rf_findVarInFrame3(rho, symbol, TRUE)`. Too low level to be part of
     the API; prefer `R_getVar()` or `R_getVarEx()` (added in R 4.5.0) to
     retrieve a value and `R_existsVarInFrame()` to test for existence.
-  example: ~
   see_also: Rf_findVar
   chapter: environments
   section: Get values
@@ -185,16 +144,11 @@
   signature: |
     void Rf_defineVar(SEXP symbol, SEXP value, SEXP env);
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: n/a
   errors: can-throw
-  since: ~
-  r_equivalent: ~
-  args: ~
   notes: |
     To remove a binding, set its value to `R_UnboundSymbol`.
-  example: ~
   see_also: []
   chapter: environments
   section: Set values
@@ -204,16 +158,11 @@
   signature: |
     void Rf_addMissingVarsToNewEnv(SEXP to, SEXP from);
   status: non-api
-  replacement: ~
   header: Rinternals.h
   protect: n/a
   errors: can-throw
-  since: ~
-  r_equivalent: ~
-  args: ~
   notes: |
     Copies variables from `from` (a `VECSXP`) unless already present in `to`.
-  example: ~
   see_also: []
   chapter: environments
   section: Set values
@@ -224,18 +173,13 @@
     SEXP R_lsInternal3(SEXP env, Rboolean all_names, Rboolean sorted);
     SEXP R_lsInternal(SEXP, Rboolean);
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: result
   errors: can-throw
-  since: ~
-  r_equivalent: ~
-  args: ~
   notes: |
     Returns a character vector. `R_lsInternal(env, all)` is shorthand for
     `R_lsInternal3(env, all, TRUE)` but is not part of the API; prefer
     `R_lsInternal3()` directly.
-  example: ~
   see_also: []
   chapter: environments
   section: Check for presence
@@ -245,16 +189,11 @@
   signature: |
     Rboolean Rf_isEnvironment(SEXP x);
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: not-needed
   errors: never
-  since: ~
-  r_equivalent: ~
-  args: ~
   notes: |
     Equivalent to `TYPEOF(x) == ENVSXP`.
-  example: ~
   see_also: []
   chapter: environments
   section: Miscellaneous
@@ -264,17 +203,14 @@
   signature: |
     SEXP R_GetCurrentEnv(void);
   status: non-api
-  replacement: ~
   header: Rinternals.h
   protect: not-needed
   errors: never
   since: R 3.6.0
   r_equivalent: environment()
-  args: ~
   notes: |
     Not part of the API; call `environment()` at the R level and pass the
     result as an argument to your C function.
-  example: ~
   see_also: []
   chapter: environments
   section: Miscellaneous
@@ -288,15 +224,9 @@
     SEXP R_PackageEnvName(SEXP rho);
     SEXP R_FindPackageEnv(SEXP info);
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: result
   errors: can-throw
-  since: ~
-  r_equivalent: ~
-  args: ~
-  notes: ~
-  example: ~
   see_also: R_IsNamespaceEnv
   chapter: environments
   section: Miscellaneous
@@ -310,15 +240,9 @@
     SEXP R_NamespaceEnvSpec(SEXP rho);
     SEXP R_FindNamespace(SEXP info);
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: result
   errors: can-throw
-  since: ~
-  r_equivalent: ~
-  args: ~
-  notes: ~
-  example: ~
   see_also: R_IsPackageEnv
   chapter: environments
   section: Miscellaneous
@@ -329,15 +253,9 @@
     void R_LockEnvironment(SEXP env, Rboolean bindings);
     Rboolean R_EnvironmentIsLocked(SEXP env);
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: n/a
   errors: never
-  since: ~
-  r_equivalent: ~
-  args: ~
-  notes: ~
-  example: ~
   see_also: R_LockBinding
   chapter: environments
   section: Miscellaneous
@@ -348,15 +266,9 @@
     void R_LockBinding(SEXP sym, SEXP env);
     void R_unLockBinding(SEXP sym, SEXP env);
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: n/a
   errors: never
-  since: ~
-  r_equivalent: ~
-  args: ~
-  notes: ~
-  example: ~
   see_also: R_LockEnvironment
   chapter: environments
   section: Miscellaneous
@@ -366,15 +278,9 @@
   signature: |
     void R_MakeActiveBinding(SEXP sym, SEXP fun, SEXP env);
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: n/a
   errors: can-throw
-  since: ~
-  r_equivalent: ~
-  args: ~
-  notes: ~
-  example: ~
   see_also: R_BindingIsLocked
   chapter: environments
   section: Miscellaneous
@@ -385,15 +291,9 @@
     Rboolean R_BindingIsLocked(SEXP sym, SEXP env);
     Rboolean R_BindingIsActive(SEXP sym, SEXP env);
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: not-needed
   errors: never
-  since: ~
-  r_equivalent: ~
-  args: ~
-  notes: ~
-  example: ~
   see_also: R_MakeActiveBinding
   chapter: environments
   section: Miscellaneous
@@ -403,15 +303,9 @@
   signature: |
     Rboolean R_HasFancyBindings(SEXP rho);
   status: api
-  replacement: ~
   header: Rinternals.h
   protect: not-needed
   errors: never
-  since: ~
-  r_equivalent: ~
-  args: ~
-  notes: ~
-  example: ~
   see_also: []
   chapter: environments
   section: Miscellaneous
@@ -421,15 +315,9 @@
   signature: |
     Rboolean R_envHasNoSpecialSymbols(SEXP);
   status: non-api
-  replacement: ~
   header: Rinternals.h
   protect: not-needed
   errors: never
-  since: ~
-  r_equivalent: ~
-  args: ~
-  notes: ~
-  example: ~
   see_also: []
   chapter: environments
   section: Miscellaneous
@@ -440,17 +328,12 @@
     SEXP FRAME(SEXP x);
     void SET_FRAME(SEXP x, SEXP v);
   status: non-api
-  replacement: ~
   header: Rinternals.h
   protect: not-needed
   errors: never
-  since: ~
-  r_equivalent: ~
-  args: ~
   notes: |
     `SET_FRAME()` is not part of the API; create environments with the
     constructor `R_NewEnv()` instead of mutating an environment's frame.
-  example: ~
   see_also:
     - ENCLOS
     - HASHTAB
@@ -468,14 +351,10 @@
   header: Rinternals.h
   protect: not-needed
   errors: never
-  since: ~
-  r_equivalent: ~
-  args: ~
   notes: |
     Use `R_ParentEnv()` (added in R 4.5.0) instead of `ENCLOS()`. To choose
     the enclosing environment of a new environment, use the constructor
     `R_NewEnv()` rather than `SET_ENCLOS()`.
-  example: ~
   see_also:
     - FRAME
     - R_NewEnv
@@ -492,12 +371,8 @@
   header: Rinternals.h
   protect: not-needed
   errors: never
-  since: ~
-  r_equivalent: ~
-  args: ~
   notes: |
     Use `R_EnvironmentIsLocked()` and `R_LockEnvironment()` instead.
-  example: ~
   see_also: R_LockEnvironment
   chapter: environments
   section: Internals
@@ -511,19 +386,14 @@
     R_xlen_t (XTRUELENGTH)(SEXP x);
     void (SET_TRUELENGTH)(SEXP x, int v);
   status: non-api
-  replacement: ~
   header: Rinternals.h
   protect: not-needed
   errors: never
-  since: ~
-  r_equivalent: ~
-  args: ~
   notes: |
     Rarely used, mainly for hash tables of environments (`VECSXP`s), where
     length is the table size and truelength is the number of primary slots
     in use, and for the reference hash tables used in serialization, where
     truelength is the number of slots in use.
-  example: ~
   see_also: []
   chapter: environments
   section: Truelength
@@ -534,20 +404,15 @@
     SEXP HASHTAB(SEXP x);
     void SET_HASHTAB(SEXP x, SEXP v);
   status: non-api
-  replacement: ~
   header: Rinternals.h
   protect: not-needed
   errors: never
-  since: ~
-  r_equivalent: ~
-  args: ~
   notes: |
     Hashing speeds up searching environments that are added to often but
     rarely deleted from; removed bindings are not actually deleted but have
     their value set to `R_UnboundValue`. `SET_HASHTAB()` is not part of the
     API; create hash-based environments with the constructor `R_NewEnv()`
     instead.
-  example: ~
   see_also:
     - HASHASH
     - HASHVALUE
@@ -560,15 +425,9 @@
     int HASHASH(SEXP x);
     void SET_HASHASH(SEXP x, int v);
   status: non-api
-  replacement: ~
   header: Rinternals.h
   protect: not-needed
   errors: never
-  since: ~
-  r_equivalent: ~
-  args: ~
-  notes: ~
-  example: ~
   see_also: HASHTAB
   chapter: environments
   section: Hash
@@ -579,15 +438,9 @@
     int HASHVALUE(SEXP x);
     void SET_HASHVALUE(SEXP x, int v);
   status: non-api
-  replacement: ~
   header: Rinternals.h
   protect: not-needed
   errors: never
-  since: ~
-  r_equivalent: ~
-  args: ~
-  notes: ~
-  example: ~
   see_also: HASHTAB
   chapter: environments
   section: Hash
