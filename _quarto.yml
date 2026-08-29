@@ -50,6 +50,7 @@ book:
 format:
   html:
     theme: cosmo
+    css: badges.css
     code-copy: true
     toc: true
 

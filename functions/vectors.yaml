@@ -399,20 +399,10 @@
   chapter: vectors
   section: Special values
 - name: Rf_isLogical
-  family:
-    - Rf_isInteger
-    - Rf_isReal
-    - Rf_isComplex
-    - Rf_isString
-    - Rf_isExpression
-  summary: Test if an SEXP is a vector of the given type.
+  family: []
+  summary: Test if an SEXP is a logical vector.
   signature: |
     Rboolean Rf_isLogical(SEXP s);
-    Rboolean Rf_isInteger(SEXP s);
-    Rboolean Rf_isReal(SEXP s);
-    Rboolean Rf_isComplex(SEXP s);
-    Rboolean Rf_isString(SEXP s);
-    Rboolean Rf_isExpression(SEXP s);
   status: api
   header: Rinternals.h
   protect: n/a
@@ -422,29 +412,130 @@
     s: any SEXP.
   notes: |
     No function tests for `RAWSXP` or `VECSXP`; use `TYPEOF(x) == RAWSXP` or
-    `TYPEOF(x) == VECSXP` instead. Factors are also `INTSXP`s, so
-    `TYPEOF(x) == INTSXP` accepts both plain integer vectors and factors;
-    combine `Rf_isInteger()` with `Rf_isFactor()` to distinguish them.
+    `TYPEOF(x) == VECSXP` instead.
   see_also:
     - Rf_isNewList
     - Rf_isFactor
   chapter: vectors
   section: Test
+- name: Rf_isInteger
+  family: []
+  summary: Test if an SEXP is an integer vector.
+  signature: |
+    Rboolean Rf_isInteger(SEXP s);
+  status: api
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  r_equivalent: is.integer()
+  args:
+    s: any SEXP.
+  notes: |
+    Factors are also `INTSXP`s, so `Rf_isInteger()` accepts both plain
+    integer vectors and factors; combine with `Rf_isFactor()` to distinguish
+    them.
+  see_also: Rf_isFactor
+  chapter: vectors
+  section: Test
+- name: Rf_isReal
+  family: []
+  summary: Test if an SEXP is a double vector.
+  signature: |
+    Rboolean Rf_isReal(SEXP s);
+  status: api
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  r_equivalent: is.double()
+  args:
+    s: any SEXP.
+  chapter: vectors
+  section: Test
+- name: Rf_isComplex
+  family: []
+  summary: Test if an SEXP is a complex vector.
+  signature: |
+    Rboolean Rf_isComplex(SEXP s);
+  status: api
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  r_equivalent: is.complex()
+  args:
+    s: any SEXP.
+  chapter: vectors
+  section: Test
+- name: Rf_isString
+  family: []
+  summary: Test if an SEXP is a character vector.
+  signature: |
+    Rboolean Rf_isString(SEXP s);
+  status: api
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  r_equivalent: is.character()
+  args:
+    s: any SEXP.
+  chapter: vectors
+  section: Test
+- name: Rf_isExpression
+  family: []
+  summary: Test if an SEXP is an expression vector.
+  signature: |
+    Rboolean Rf_isExpression(SEXP s);
+  status: api
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  r_equivalent: is.expression()
+  args:
+    s: any SEXP.
+  chapter: vectors
+  section: Test
 - name: Rf_isNewList
-  family:
-    - Rf_isVectorAtomic
-    - Rf_isVectorList
-    - Rf_isVector
-    - Rf_isNumber
-    - Rf_isNumeric
-  summary: Test for frequently used combinations of vector types.
+  family: []
+  summary: Test if an SEXP is a list (`VECSXP`) or `NULL`.
   signature: |
     Rboolean Rf_isNewList(SEXP s);
+  status: api
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  r_equivalent: is.list()
+  args:
+    s: any SEXP.
+  notes: |
+    Matches `NILSXP`/`VECSXP`, so the result diverges from `is.list()` on
+    `NULL`: `Rf_isNewList(R_NilValue)` is true while `is.list(NULL)` is
+    false. Consider writing your own wrapper around `TYPEOF(x)` instead.
+  see_also: Rf_isLogical
+  chapter: vectors
+  section: Test
+- name: Rf_isVectorAtomic
+  family: []
+  summary: Test if an SEXP is an atomic vector.
+  signature: |
     Rboolean Rf_isVectorAtomic(SEXP s);
+  status: api
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  r_equivalent: is.atomic()
+  args:
+    s: any SEXP.
+  notes: |
+    Matches `LGLSXP`/`INTSXP`/`REALSXP`/`CPLXSXP`/`STRSXP`/`RAWSXP`, so the
+    result diverges from `is.atomic()` on `NULL`:
+    `Rf_isVectorAtomic(R_NilValue)` is false while `is.atomic(NULL)` is
+    true. Consider writing your own wrapper around `TYPEOF(x)` instead.
+  chapter: vectors
+  section: Test
+- name: Rf_isVectorList
+  family: []
+  summary: Test if an SEXP is a pairlist or expression vector.
+  signature: |
     Rboolean Rf_isVectorList(SEXP s);
-    Rboolean Rf_isVector(SEXP s);
-    Rboolean Rf_isNumber(SEXP s);
-    Rboolean Rf_isNumeric(SEXP s);
   status: api
   header: Rinternals.h
   protect: n/a
@@ -452,15 +543,58 @@
   args:
     s: any SEXP.
   notes: |
-    `Rf_isNewList()` matches `NILSXP`/`VECSXP`; `Rf_isVectorAtomic()` matches
-    `LGLSXP`/`INTSXP`/`REALSXP`/`CPLXSXP`/`STRSXP`/`RAWSXP`;
-    `Rf_isVectorList()` matches `LISTSXP`/`EXPRSXP`; `Rf_isVector()` is their
-    union; `Rf_isNumber()` and `Rf_isNumeric()` match `LGLSXP`/`REALSXP`/
-    `CPLXSXP` and non-factor `INTSXP`. Results can diverge from their R
-    equivalents: `Rf_isVectorAtomic(R_NilValue)` is false (`is.atomic(NULL)`
-    is true) while `Rf_isNewList(R_NilValue)` is true (`is.list(NULL)` is
-    false); consider writing your own wrapper around `TYPEOF(x)` instead.
-  see_also: Rf_isLogical
+    Matches `LISTSXP`/`EXPRSXP`.
+  chapter: vectors
+  section: Test
+- name: Rf_isVector
+  family: []
+  summary: Test if an SEXP is any kind of vector.
+  signature: |
+    Rboolean Rf_isVector(SEXP s);
+  status: api
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  args:
+    s: any SEXP.
+  notes: |
+    The union of `Rf_isVectorAtomic()` and `Rf_isVectorList()`.
+  see_also:
+    - Rf_isVectorAtomic
+    - Rf_isVectorList
+  chapter: vectors
+  section: Test
+- name: Rf_isNumber
+  family: []
+  summary: Test if an SEXP is a numeric-like vector.
+  signature: |
+    Rboolean Rf_isNumber(SEXP s);
+  status: api
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  args:
+    s: any SEXP.
+  notes: |
+    Matches `LGLSXP`/`REALSXP`/`CPLXSXP` and non-factor `INTSXP`.
+  see_also: Rf_isNumeric
+  chapter: vectors
+  section: Test
+- name: Rf_isNumeric
+  family: []
+  summary: Test if an SEXP is a numeric-like vector.
+  signature: |
+    Rboolean Rf_isNumeric(SEXP s);
+  status: api
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  r_equivalent: is.numeric()
+  args:
+    s: any SEXP.
+  notes: |
+    Matches `LGLSXP`/`REALSXP`/`CPLXSXP` and non-factor `INTSXP`.
+  see_also: Rf_isNumber
   chapter: vectors
   section: Test
 - name: Rf_copyVector
@@ -716,32 +850,91 @@
   chapter: vectors
   section: Get and set values
 - name: R_allocResizableVector
-  family:
-    - R_duplicateAsResizable
-    - R_resizeVector
-    - R_isResizable
-    - R_maxLength
-  summary: Create and resize vectors that can grow in place.
+  family: []
+  summary: Create a vector that can grow in place up to a maximum length.
   signature: |
     SEXP R_allocResizableVector(SEXPTYPE type, R_xlen_t maxlen);
-    SEXP R_duplicateAsResizable(SEXP x);
-    void R_resizeVector(SEXP x, R_xlen_t newlen);
-    bool R_isResizable(SEXP x);
-    R_xlen_t R_maxLength(SEXP x);
   status: experimental
   header: Rinternals.h
   protect: result
   errors: can-throw
   since: 4.6.0
   args:
+    type: any vector `SEXPTYPE`.
     maxlen: maximum length the vector can grow to.
-    newlen: new length, at most `maxlen`.
   notes: |
-    A resizable vector allocates `maxlen` up front and can be resized in
-    place with `R_resizeVector()` — the API replacement for the non-API
-    `SETLENGTH()`/`SET_TRUELENGTH()` idiom. Experimental: the interface
-    may change in future R releases.
-  see_also: [Rf_allocVector]
+    Allocates `maxlen` elements up front; the vector starts at length 0 and
+    can be resized in place with `R_resizeVector()`. Experimental: the
+    interface may change in future R releases.
+  see_also: [Rf_allocVector, R_resizeVector]
+  chapter: vectors
+  section: Resizable vectors
+- name: R_duplicateAsResizable
+  family: []
+  summary: Duplicate a vector as a resizable vector.
+  signature: |
+    SEXP R_duplicateAsResizable(SEXP x);
+  status: experimental
+  header: Rinternals.h
+  protect: result
+  errors: can-throw
+  since: 4.6.0
+  args:
+    x: a vector.
+  notes: |
+    The copy keeps its current length and can grow up to that length with
+    `R_resizeVector()`. Experimental: the interface may change in future R
+    releases.
+  see_also: [R_allocResizableVector, R_resizeVector]
+  chapter: vectors
+  section: Resizable vectors
+- name: R_resizeVector
+  family: []
+  summary: Resize a resizable vector in place.
+  signature: |
+    void R_resizeVector(SEXP x, R_xlen_t newlen);
+  status: experimental
+  header: Rinternals.h
+  protect: n/a
+  errors: can-throw
+  since: 4.6.0
+  args:
+    x: a resizable vector.
+    newlen: new length, at most the vector's maximum length.
+  notes: |
+    The API replacement for the non-API `SETLENGTH()`/`SET_TRUELENGTH()`
+    idiom. Experimental: the interface may change in future R releases.
+  see_also: [R_allocResizableVector, R_maxLength]
+  chapter: vectors
+  section: Resizable vectors
+- name: R_isResizable
+  family: []
+  summary: Test if a vector is resizable.
+  signature: |
+    bool R_isResizable(SEXP x);
+  status: experimental
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  since: 4.6.0
+  args:
+    x: any SEXP.
+  see_also: [R_allocResizableVector]
+  chapter: vectors
+  section: Resizable vectors
+- name: R_maxLength
+  family: []
+  summary: Get the maximum length a resizable vector can grow to.
+  signature: |
+    R_xlen_t R_maxLength(SEXP x);
+  status: experimental
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  since: 4.6.0
+  args:
+    x: a resizable vector.
+  see_also: [R_resizeVector]
   chapter: vectors
   section: Resizable vectors
 - name: DATAPTR_RO

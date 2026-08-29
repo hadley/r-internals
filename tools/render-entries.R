@@ -21,27 +21,33 @@ status_label <- function(status) {
   )
 }
 
-fmt_value <- function(x, dash = "\u2014") {
-  if (is.null(x)) dash else as.character(x)
-}
-
 render_entry <- function(entry) {
   all_names <- c(entry$name, unlist(entry$family))
 
-  # Metadata line: fixed keys, fixed order
-  status <- status_label(entry$status)
-  if (!is.null(entry$replacement)) {
-    status <- paste0(status, " (use [`", entry$replacement, "()`](#", entry$replacement, "))")
+  # Badges: styled spans, shown only when informative
+  badge <- function(label, class) {
+    paste0("[", label, "]{.badge .badge-", class, "}")
   }
-  meta <- paste0(
-    "**Status:** ", status,
-    " \u00b7 **Header:** `", entry$header, "`",
-    " \u00b7 **Protect:** ", gsub("-", " ", fmt_value(entry$protect, "n/a")),
-    " \u00b7 **Errors:** ", gsub("-", " ", fmt_value(entry$errors)),
-    " \u00b7 **Since:** ", fmt_value(entry$since),
-    " \u00b7 **R equivalent:** ",
-    if (is.null(entry$r_equivalent)) "\u2014" else paste0("`", entry$r_equivalent, "`")
-  )
+  badges <- NULL
+  if (entry$status != "api") {
+    badges <- c(badges, badge(status_label(entry$status), entry$status))
+  }
+  if (!is.null(entry$protect) && !entry$protect %in% c("n/a", "not-needed")) {
+    badges <- c(badges, badge("needs protect", "protect"))
+  }
+  if (identical(entry$errors, "can-throw")) {
+    badges <- c(badges, badge("throws", "errors"))
+  }
+  meta <- paste0("**Header:** `", entry$header, "`")
+  if (!is.null(entry$replacement)) {
+    meta <- paste0(meta, "  \n**Replacement:** [`", entry$replacement, "()`](#", entry$replacement, ")")
+  }
+  if (!is.null(entry$since)) {
+    meta <- paste0(meta, "  \n**Since:** ", entry$since)
+  }
+  if (!is.null(entry$r_equivalent)) {
+    meta <- paste0(meta, "  \n**R equivalent:** `", entry$r_equivalent, "`")
+  }
 
   args <- NULL
   if (!is.null(entry$args)) {
@@ -60,21 +66,20 @@ render_entry <- function(entry) {
   }
 
   heading <- paste0(
-    "### `", entry$name, "()`",
-    if (length(all_names) > 1) {
-      paste0(" (", paste(paste0("`", all_names[-1], "()`"), collapse = ", "), ")")
-    },
+    "### ", paste0("`", all_names, "()`", collapse = ", "),
     " {#", entry$name, "}"
   )
 
   paste(c(
     heading,
     "",
+    badges,
+    "",
+    meta,
+    "",
     entry$summary,
     "",
     paste0("```c\n", trimws(entry$signature, "right"), "\n```"),
-    "",
-    meta,
     "",
     args,
     if (!is.null(args)) "",
