@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Migrating to API compliance – R’s C API</title>
+<title>23&nbsp; Migrating to API compliance – R's C API</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -25,6 +25,41 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -88,7 +123,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./compliance.html">Appendices</a></li><li class="breadcrumb-item"><a href="./compliance.html">Migrating to API compliance</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./compliance.html">Appendices</a></li><li class="breadcrumb-item"><a href="./compliance.html"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Migrating to API compliance</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -240,7 +275,7 @@ ul.task-list li input[type="checkbox"] {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./errors.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Errors</span></span></a>
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Errors and conditions</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -310,7 +345,7 @@ ul.task-list li input[type="checkbox"] {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./compliance.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text">Migrating to API compliance</span></a>
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Migrating to API compliance</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -326,15 +361,28 @@ ul.task-list li input[type="checkbox"] {
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#checking-a-package" id="toc-checking-a-package" class="nav-link active" data-scroll-target="#checking-a-package"><span class="header-section-number">23.1</span> Checking a package</a></li>
+  <li><a href="#replacements" id="toc-replacements" class="nav-link" data-scroll-target="#replacements"><span class="header-section-number">23.2</span> Replacements</a></li>
+  <li><a href="#recipes" id="toc-recipes" class="nav-link" data-scroll-target="#recipes"><span class="header-section-number">23.3</span> Recipes</a>
+  <ul class="collapse">
+  <li><a href="#creating-environments-calls-and-closures" id="toc-creating-environments-calls-and-closures" class="nav-link" data-scroll-target="#creating-environments-calls-and-closures"><span class="header-section-number">23.3.1</span> Creating environments, calls, and closures</a></li>
+  <li><a href="#working-with-variable-bindings" id="toc-working-with-variable-bindings" class="nav-link" data-scroll-target="#working-with-variable-bindings"><span class="header-section-number">23.3.2</span> Working with variable bindings</a></li>
+  </ul></li>
+  <li><a href="#backports" id="toc-backports" class="nav-link" data-scroll-target="#backports"><span class="header-section-number">23.4</span> Backports</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/hadley/r-internals/edit/main/compliance.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/hadley/r-internals/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./compliance.html">Appendices</a></li><li class="breadcrumb-item"><a href="./compliance.html">Migrating to API compliance</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./compliance.html">Appendices</a></li><li class="breadcrumb-item"><a href="./compliance.html"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Migrating to API compliance</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">Migrating to API compliance</h1>
+<h1 class="title"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Migrating to API compliance</span></h1>
 </div>
 
 
@@ -351,26 +399,179 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<div class="callout callout-style-default callout-warning callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Warning
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Placeholder. Planned content:</p>
-<ul>
-<li>The non-API → API replacement tables and recipes</li>
-<li>Backports</li>
-<li>How to check a package (<code>R CMD check</code>, <code>tools::checkFF</code>-era tooling)</li>
-</ul>
-</div>
-</div>
+<p>(<a href="https://cran.r-project.org/doc/manuals/R-exts.html#Moving-into-C-API-compliance-1">WRE §6.23</a>)</p>
+<p>R is progressively clarifying and tightening its C API: entry points intended for internal use are being removed from the installed headers or hidden, and replaced by more robust API entry points. This appendix collects what you need to bring a package that uses non-API entry points into compliance: how to find problems, the API replacements, recipes for common idioms, and backports for packages that must compile against older R versions.</p>
+<section id="checking-a-package" class="level2" data-number="23.1">
+<h2 data-number="23.1" class="anchored" data-anchor-id="checking-a-package"><span class="header-section-number">23.1</span> Checking a package</h2>
+<p><code>R CMD check</code> reports calls to non-API entry points in the <em>checking compiled code</em> step, and <code>R CMD check --as-cran</code> treats them more strictly. You can also inspect a package’s compiled objects directly:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>tools<span class="sc">::</span><span class="fu">checkFF</span>(<span class="st">"mypackage"</span>, <span class="at">package =</span> <span class="st">"mypackage"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The <code>tools</code> package carries R’s own list of non-API entry points (<code>tools:::nonAPI</code>), which is what the check compares against.</p>
+</section>
+<section id="replacements" class="level2" data-number="23.2">
+<h2 data-number="23.2" class="anchored" data-anchor-id="replacements"><span class="header-section-number">23.2</span> Replacements</h2>
+<p>The table below is generated from this book’s records: every non-API entry point that has a direct API replacement. For entry points with no drop-in replacement, see the <a href="#recipes">recipes</a> below.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Non-API</th>
+<th>API replacement</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>UNPROTECT_PTR()</code>, <code>Rf_unprotect_ptr()</code></td>
+<td><a href="./protection.html#PROTECT"><code>UNPROTECT()</code></a></td>
+</tr>
+<tr class="even">
+<td><code>ATTRIB()</code>, <code>SET_ATTRIB()</code></td>
+<td><a href="./attributes.html#Rf_getAttrib"><code>Rf_getAttrib()</code></a></td>
+</tr>
+<tr class="odd">
+<td><code>Rf_isFrame()</code></td>
+<td><code>Rf_isDataFrame()</code></td>
+</tr>
+<tr class="even">
+<td><code>R_NamespaceRegistry()</code></td>
+<td><code>R_getRegisteredNamespace()</code></td>
+</tr>
+<tr class="odd">
+<td><code>Rf_findVar()</code></td>
+<td><a href="./environments.html#R_getVar"><code>R_getVar()</code></a></td>
+</tr>
+<tr class="even">
+<td><code>Rf_findVarInFrame3()</code>, <code>Rf_findVarInFrame()</code></td>
+<td><a href="./environments.html#R_getVar"><code>R_getVar()</code></a></td>
+</tr>
+<tr class="odd">
+<td><code>ENCLOS()</code>, <code>SET_ENCLOS()</code></td>
+<td><a href="./environments.html#R_ParentEnv"><code>R_ParentEnv()</code></a></td>
+</tr>
+<tr class="even">
+<td><code>ENVFLAGS()</code>, <code>SET_ENVFLAGS()</code></td>
+<td><a href="./environments.html#R_LockEnvironment"><code>R_EnvironmentIsLocked()</code></a></td>
+</tr>
+<tr class="odd">
+<td><code>EXTPTR_PTR()</code>, <code>EXTPTR_PROT()</code>, <code>EXTPTR_TAG()</code></td>
+<td><a href="./external-pointers.html#R_ExternalPtrAddr"><code>R_ExternalPtrAddr()</code></a></td>
+</tr>
+<tr class="even">
+<td><code>FORMALS()</code>, <code>BODY()</code>, <code>CLOENV()</code></td>
+<td><a href="./functions.html#R_ClosureFormals"><code>R_ClosureFormals()</code></a></td>
+</tr>
+<tr class="odd">
+<td><code>SET_FORMALS()</code>, <code>SET_BODY()</code>, <code>SET_CLOENV()</code></td>
+<td><a href="./functions.html#R_mkClosure"><code>R_mkClosure()</code></a></td>
+</tr>
+<tr class="even">
+<td><code>IS_S4_OBJECT()</code>, <code>SET_S4_OBJECT()</code>, <code>UNSET_S4_OBJECT()</code></td>
+<td><a href="./oo.html#Rf_isS4"><code>Rf_isS4()</code></a></td>
+</tr>
+<tr class="odd">
+<td><code>CONS_NR()</code></td>
+<td><a href="./pairlists.html#Rf_cons"><code>Rf_cons()</code></a></td>
+</tr>
+<tr class="even">
+<td><code>SETLENGTH()</code></td>
+<td><a href="./vectors.html#Rf_lengthgets"><code>Rf_lengthgets()</code></a></td>
+</tr>
+<tr class="odd">
+<td><code>STRING_PTR()</code></td>
+<td><a href="./vectors.html#STRING_PTR_RO"><code>STRING_PTR_RO()</code></a></td>
+</tr>
+<tr class="even">
+<td><code>VECTOR_PTR()</code></td>
+<td><a href="./vectors.html#VECTOR_ELT"><code>VECTOR_ELT()</code></a></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="recipes" class="level2" data-number="23.3">
+<h2 data-number="23.3" class="anchored" data-anchor-id="recipes"><span class="header-section-number">23.3</span> Recipes</h2>
+<p>Common non-API idioms and how to rewrite them.</p>
+<section id="creating-environments-calls-and-closures" class="level3" data-number="23.3.1">
+<h3 data-number="23.3.1" class="anchored" data-anchor-id="creating-environments-calls-and-closures"><span class="header-section-number">23.3.1</span> Creating environments, calls, and closures</h3>
+<p>(<a href="https://cran.r-project.org/doc/manuals/R-exts.html#Creating-environments-1">WRE §6.23.3–6.23.5</a>)</p>
+<p>A widespread idiom allocates a raw object with <code>Rf_allocSExp()</code> (or allocates a pairlist and retypes it with <code>SET_TYPEOF()</code>) and then mutates its fields:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>SEXP env <span class="op">=</span> Rf_allocSExp<span class="op">(</span>ENVSXP<span class="op">);</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>SET_ENCLOS<span class="op">(</span>env<span class="op">,</span> parent<span class="op">);</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>SEXP expr <span class="op">=</span> Rf_allocList<span class="op">(</span><span class="dv">3</span><span class="op">);</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>SET_TYPEOF<span class="op">(</span>expr<span class="op">,</span> LANGSXP<span class="op">);</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>SEXP fun <span class="op">=</span> Rf_allocSExp<span class="op">(</span>CLOSXP<span class="op">);</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>SET_FORMALS<span class="op">(</span>fun<span class="op">,</span> formals<span class="op">);</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>SET_BODY<span class="op">(</span>fun<span class="op">,</span> body<span class="op">);</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>SET_CLOENV<span class="op">(</span>fun<span class="op">,</span> env<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>Rf_allocSExp()</code>, <code>SET_TYPEOF()</code>, and the mutation macros (<code>SET_ENCLOS()</code>, <code>SET_FORMALS()</code>, …) are not part of the API because they expose internal structure. Use the constructors instead:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>SEXP env  <span class="op">=</span> R_NewEnv<span class="op">(</span>parent<span class="op">,</span> FALSE<span class="op">,</span> <span class="dv">0</span><span class="op">);</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>SEXP expr <span class="op">=</span> Rf_allocLang<span class="op">(</span><span class="dv">3</span><span class="op">);</span>            <span class="co">// R 4.4.1</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>SEXP fun  <span class="op">=</span> R_mkClosure<span class="op">(</span>formals<span class="op">,</span> body<span class="op">,</span> env<span class="op">);</span>  <span class="co">// R 4.5.0</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>See <a href="./environments.html#R_NewEnv"><code>R_NewEnv()</code></a>, <a href="./pairlists.html#Rf_allocLang"><code>Rf_allocLang()</code></a>, and <a href="./functions.html#R_mkClosure"><code>R_mkClosure()</code></a>. On any R version, a call expression can also be built with <code>LCONS(R_NilValue, Rf_allocList(n - 1))</code>.</p>
+</section>
+<section id="working-with-variable-bindings" class="level3" data-number="23.3.2">
+<h3 data-number="23.3.2" class="anchored" data-anchor-id="working-with-variable-bindings"><span class="header-section-number">23.3.2</span> Working with variable bindings</h3>
+<p>(<a href="https://cran.r-project.org/doc/manuals/R-exts.html#Working-with-variable-bindings-1">WRE §6.23.8</a>)</p>
+<p><code>Rf_findVar()</code> and <code>Rf_findVarInFrame()</code> are too low level for the API; use <a href="./environments.html#R_getVar"><code>R_getVar()</code> / <code>R_getVarEx()</code></a> (R 4.5.0), analogous to <code>get()</code>/<code>get0()</code>, and <code>R_existsVarInFrame()</code> to test for existence. To inspect or create delayed, forced, missing, or active bindings — previously done by poking at <code>PROMSXP</code> fields — use the experimental binding-access API added in R 4.6.0, documented in <a href="./environments.html#inspecting-bindings">Inspecting bindings</a>.</p>
+</section>
+</section>
+<section id="backports" class="level2" data-number="23.4">
+<h2 data-number="23.4" class="anchored" data-anchor-id="backports"><span class="header-section-number">23.4</span> Backports</h2>
+<p>(<a href="https://cran.r-project.org/doc/manuals/R-exts.html#Some-backports-1">WRE §6.23.9</a>)</p>
+<p>Packages that must also compile under older R versions can define the newer entry points conditionally. The block below covers every recent addition referenced above:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#if R_VERSION &lt; R_Version(4, 4, 1)</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>SEXP Rf_allocLang<span class="op">(</span><span class="dt">int</span> n<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="op">(</span>n <span class="op">&gt;</span> <span class="dv">0</span><span class="op">)</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> LCONS<span class="op">(</span>R_NilValue<span class="op">,</span> Rf_allocList<span class="op">(</span>n <span class="op">-</span> <span class="dv">1</span><span class="op">));</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="cf">else</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> R_NilValue<span class="op">;</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="pp">#endif</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="pp">#if R_VERSION &lt; R_Version(4, 5, 0)</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="pp"># define Rf_isDataFrame</span><span class="op">(</span><span class="pp">x</span><span class="op">)</span><span class="pp">   </span>Rf_isFrame<span class="op">(</span><span class="pp">x</span><span class="op">)</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="pp"># define R_ClosureFormals</span><span class="op">(</span><span class="pp">x</span><span class="op">)</span><span class="pp"> FORMALS</span><span class="op">(</span><span class="pp">x</span><span class="op">)</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="pp"># define R_ClosureBody</span><span class="op">(</span><span class="pp">x</span><span class="op">)</span><span class="pp">    BODY</span><span class="op">(</span><span class="pp">x</span><span class="op">)</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="pp"># define R_ClosureEnv</span><span class="op">(</span><span class="pp">x</span><span class="op">)</span><span class="pp">     CLOENV</span><span class="op">(</span><span class="pp">x</span><span class="op">)</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="pp"># define R_ParentEnv</span><span class="op">(</span><span class="pp">x</span><span class="op">)</span><span class="pp">      ENCLOS</span><span class="op">(</span><span class="pp">x</span><span class="op">)</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>SEXP R_mkClosure<span class="op">(</span>SEXP formals<span class="op">,</span> SEXP body<span class="op">,</span> SEXP env<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>  SEXP fun <span class="op">=</span> Rf_allocSExp<span class="op">(</span>CLOSXP<span class="op">);</span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>  SET_FORMALS<span class="op">(</span>fun<span class="op">,</span> formals<span class="op">);</span></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>  SET_BODY<span class="op">(</span>fun<span class="op">,</span> body<span class="op">);</span></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>  SET_CLOENV<span class="op">(</span>fun<span class="op">,</span> env<span class="op">);</span></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> fun<span class="op">;</span></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> CLEAR_ATTRIB<span class="op">(</span>SEXP x<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>  SET_ATTRIB<span class="op">(</span>x<span class="op">,</span> R_NilValue<span class="op">);</span></span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>  SET_OBJECT<span class="op">(</span>x<span class="op">,</span> <span class="dv">0</span><span class="op">);</span></span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>  UNSET_S4_OBJECT<span class="op">(</span>x<span class="op">);</span></span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a><span class="pp">#endif</span></span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a><span class="pp">#if R_VERSION &lt; R_Version(4, 6, 0)</span></span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a><span class="pp"># define DATAPTR_RW</span><span class="op">(</span><span class="pp">x</span><span class="op">)</span><span class="pp">        DATAPTR</span><span class="op">(</span><span class="pp">x</span><span class="op">)</span></span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a><span class="pp"># define R_class</span><span class="op">(</span><span class="pp">x</span><span class="op">)</span><span class="pp">           </span>R_data_class<span class="op">(</span><span class="pp">x</span><span class="op">,</span><span class="pp"> FALSE</span><span class="op">)</span></span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a><span class="pp"># define R_resizeVector</span><span class="op">(</span><span class="pp">x</span><span class="op">,</span><span class="pp"> n</span><span class="op">)</span><span class="pp"> SETLENGTH</span><span class="op">(</span><span class="pp">x</span><span class="op">,</span><span class="pp"> n</span><span class="op">)</span></span>
+<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a>SEXP R_allocResizableVector<span class="op">(</span>SEXPTYPE type<span class="op">,</span> R_xlen_t maxlen<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a>  SEXP ret <span class="op">=</span> Rf_allocVector<span class="op">(</span>type<span class="op">,</span> maxlen<span class="op">);</span></span>
+<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a>  SET_TRUELENGTH<span class="op">(</span>ret<span class="op">,</span> maxlen<span class="op">);</span></span>
+<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a>  SET_GROWABLE_BIT<span class="op">(</span>ret<span class="op">);</span></span>
+<span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> ret<span class="op">;</span></span>
+<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-44"><a href="#cb4-44" aria-hidden="true" tabindex="-1"></a>SEXP R_duplicateAsResizable<span class="op">(</span>SEXP x<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb4-45"><a href="#cb4-45" aria-hidden="true" tabindex="-1"></a>  SEXP ret <span class="op">=</span> Rf_duplicate<span class="op">(</span>x<span class="op">);</span></span>
+<span id="cb4-46"><a href="#cb4-46" aria-hidden="true" tabindex="-1"></a>  SET_TRUELENGTH<span class="op">(</span>ret<span class="op">,</span> Rf_xlength<span class="op">(</span>x<span class="op">));</span></span>
+<span id="cb4-47"><a href="#cb4-47" aria-hidden="true" tabindex="-1"></a>  SET_GROWABLE_BIT<span class="op">(</span>ret<span class="op">);</span></span>
+<span id="cb4-48"><a href="#cb4-48" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> ret<span class="op">;</span></span>
+<span id="cb4-49"><a href="#cb4-49" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb4-50"><a href="#cb4-50" aria-hidden="true" tabindex="-1"></a><span class="pp">#endif</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Note the irony: a backport for an old R version necessarily uses the non-API idioms it emulates. Guard each backport with the version check so it only compiles where the real API is missing, and drop it once your minimum supported R version catches up.</p>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -790,4 +991,4 @@ Warning
 
 
 
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions"><ul><li><a href="https://github.com/hadley/r-internals/edit/main/compliance.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/hadley/r-internals/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/hadley/r-internals/edit/main/compliance.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/hadley/r-internals/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>

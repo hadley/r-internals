@@ -275,7 +275,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./errors.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Errors</span></span></a>
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Errors and conditions</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -345,7 +345,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./compliance.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Migrating to API compliance</span></a>
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Migrating to API compliance</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -383,7 +383,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#R_WeakRefKey" id="toc-R_WeakRefKey" class="nav-link" data-scroll-target="#R_WeakRefKey"><span class="header-section-number">12.3.2</span> <code>R_WeakRefKey()</code> (<code>R_WeakRefValue()</code>)</a></li>
   <li><a href="#R_RunWeakRefFinalizer" id="toc-R_RunWeakRefFinalizer" class="nav-link" data-scroll-target="#R_RunWeakRefFinalizer"><span class="header-section-number">12.3.3</span> <code>R_RunWeakRefFinalizer()</code></a></li>
   </ul></li>
-  <li><a href="#internals" id="toc-internals" class="nav-link" data-scroll-target="#internals"><span class="header-section-number">12.4</span> Internals</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/hadley/r-internals/edit/main/external-pointers.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/hadley/r-internals/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -409,6 +408,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
+<p>An external pointer (<code>EXTPTRSXP</code>) wraps a C <code>void*</code> so it can be passed through R code. R treats the pointer as opaque; you use it to manage C-side resources (handles, connections, data structures) that outlive a single <code>.Call</code>. Because R can’t see what the pointer owns, you register a finalizer to release the resource when the SEXP is garbage collected.</p>
 <section id="create-and-access" class="level2" data-number="12.1">
 <h2 data-number="12.1" class="anchored" data-anchor-id="create-and-access"><span class="header-section-number">12.1</span> Create and access</h2>
 <section id="R_MakeExternalPtr" class="level3" data-number="12.1.1">
@@ -438,6 +438,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="finalization" class="level2" data-number="12.2">
 <h2 data-number="12.2" class="anchored" data-anchor-id="finalization"><span class="header-section-number">12.2</span> Finalization</h2>
+<p>A finalizer has the signature:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">typedef</span> <span class="dt">void</span> <span class="op">(*</span>R_CFinalizer_t<span class="op">)(</span>SEXP<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <section id="R_RegisterCFinalizer" class="level3" data-number="12.2.1">
 <h3 data-number="12.2.1" class="anchored" data-anchor-id="R_RegisterCFinalizer"><span class="header-section-number">12.2.1</span> <code>R_RegisterCFinalizer()</code> (<code>R_RegisterFinalizer()</code>, <code>R_RegisterFinalizerEx()</code>, <code>R_RegisterCFinalizerEx()</code>)</h3>
@@ -458,6 +459,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="weak-references" class="level2" data-number="12.3">
 <h2 data-number="12.3" class="anchored" data-anchor-id="weak-references"><span class="header-section-number">12.3</span> Weak references</h2>
+<p>Weak references (<code>WEAKREFXP</code>) reference an object without keeping it alive; they’re used with finalizers to run code when an object is collected.</p>
 <section id="R_MakeWeakRef" class="level3" data-number="12.3.1">
 <h3 data-number="12.3.1" class="anchored" data-anchor-id="R_MakeWeakRef"><span class="header-section-number">12.3.1</span> <code>R_MakeWeakRef()</code> (<code>R_MakeWeakRefC()</code>)</h3>
 <p>Create a weak reference.</p>
@@ -478,13 +480,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Run the finalizer attached to a weak reference.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> R_RunWeakRefFinalizer<span class="op">(</span>SEXP w<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
-</section>
-</section>
-<section id="internals" class="level2" data-number="12.4">
-<h2 data-number="12.4" class="anchored" data-anchor-id="internals"><span class="header-section-number">12.4</span> Internals</h2>
-<p>#| results: asis #| echo: false render_entries(“external-pointers”, “Internals”)</p>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->

@@ -275,7 +275,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./errors.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Errors</span></span></a>
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Errors and conditions</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -345,7 +345,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./compliance.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Migrating to API compliance</span></a>
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Migrating to API compliance</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -414,13 +414,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#R_TripleColonSymbol" id="toc-R_TripleColonSymbol" class="nav-link" data-scroll-target="#R_TripleColonSymbol"><span class="header-section-number">9.4.32</span> <code>R_TripleColonSymbol()</code></a></li>
   <li><a href="#R_TspSymbol" id="toc-R_TspSymbol" class="nav-link" data-scroll-target="#R_TspSymbol"><span class="header-section-number">9.4.33</span> <code>R_TspSymbol()</code></a></li>
   </ul></li>
-  <li><a href="#internals" id="toc-internals" class="nav-link" data-scroll-target="#internals"><span class="header-section-number">9.5</span> Internals</a>
-  <ul class="collapse">
-  <li><a href="#PRINTNAME" id="toc-PRINTNAME" class="nav-link" data-scroll-target="#PRINTNAME"><span class="header-section-number">9.5.1</span> <code>PRINTNAME()</code> (<code>SET_PRINTNAME()</code>)</a></li>
-  <li><a href="#SYMVALUE" id="toc-SYMVALUE" class="nav-link" data-scroll-target="#SYMVALUE"><span class="header-section-number">9.5.2</span> <code>SYMVALUE()</code> (<code>SET_SYMVALUE()</code>)</a></li>
-  <li><a href="#INTERNAL" id="toc-INTERNAL" class="nav-link" data-scroll-target="#INTERNAL"><span class="header-section-number">9.5.3</span> <code>INTERNAL()</code> (<code>SET_INTERNAL()</code>)</a></li>
-  <li><a href="#DDVAL" id="toc-DDVAL" class="nav-link" data-scroll-target="#DDVAL"><span class="header-section-number">9.5.4</span> <code>DDVAL()</code> (<code>SET_DDVAL()</code>, <code>Rf_installDDVAL()</code>)</a></li>
-  </ul></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/hadley/r-internals/edit/main/symbols.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/hadley/r-internals/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -446,6 +439,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
+<p>A symbol (<code>SYMSXP</code>) is a name, like <code>x</code> or <code>+</code>. Symbols are interned: there is exactly one <code>SYMSXP</code> per name, stored in a global table, so two symbols are equal iff they are the same pointer. Because they’re never garbage collected, symbols don’t need protection, and if you use one repeatedly it’s worth caching the result of <code>Rf_install()</code>.</p>
 <section id="test" class="level2" data-number="9.1">
 <h2 data-number="9.1" class="anchored" data-anchor-id="test"><span class="header-section-number">9.1</span> Test</h2>
 <section id="Rf_isSymbol" class="level3" data-number="9.1.1">
@@ -457,7 +451,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="create" class="level2" data-number="9.2">
 <h2 data-number="9.2" class="anchored" data-anchor-id="create"><span class="header-section-number">9.2</span> Create</h2>
-<p>If symbol exists, return it; otherwise create it. <code>SYMSXP</code>s don’t need to be protected because symbols are not currently reclaimed by the garbage collector. If you are using a symbol many times, it may be worth caching it to avoid repeated lookups.</p>
+<p><code>Rf_install()</code> returns the existing symbol for a name, or creates it if it doesn’t exist yet.</p>
 <section id="Rf_install" class="level3" data-number="9.2.1">
 <h3 data-number="9.2.1" class="anchored" data-anchor-id="Rf_install"><span class="header-section-number">9.2.1</span> <code>Rf_install()</code> (<code>Rf_installChar()</code>)</h3>
 <p>Create the symbol for a name, returning the existing symbol if already present.</p>
@@ -469,7 +463,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="missing-symbol" class="level2" data-number="9.3">
 <h2 data-number="9.3" class="anchored" data-anchor-id="missing-symbol"><span class="header-section-number">9.3</span> Missing symbol</h2>
-<p><code>R_MissingArg</code> represents the missing/empty symbol, i.e.&nbsp;the second argument in this call <code>f(x, )</code>.</p>
+<p><code>R_MissingArg</code> represents the missing/empty symbol, i.e.&nbsp;the second argument in the call <code>f(x, )</code>.</p>
 <section id="R_MissingArg" class="level3" data-number="9.3.1">
 <h3 data-number="9.3.1" class="anchored" data-anchor-id="R_MissingArg"><span class="header-section-number">9.3.1</span> <code>R_MissingArg()</code></h3>
 <p>Access the missing/empty symbol.</p>
@@ -480,42 +474,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="predefined-symbols" class="level2" data-number="9.4">
 <h2 data-number="9.4" class="anchored" data-anchor-id="predefined-symbols"><span class="header-section-number">9.4</span> Predefined symbols</h2>
-<p>A number of symbols are so commonly used, they’re predefined and exported:</p>
-<ul>
-<li><code>R_dot_defined</code>: “.defined”</li>
-<li><code>R_dot_Method</code>: “.Method”</li>
-<li><code>R_dot_packageName</code>: “.packageName”</li>
-<li><code>R_dot_target</code>: “.target”</li>
-<li><code>R_BaseSymbol</code>: “base”</li>
-<li><code>R_BraceSymbol</code>: “{”</li>
-<li><code>R_Bracket2Symbol</code>: “[[”</li>
-<li><code>R_BracketSymbol</code>: “[”</li>
-<li><code>R_ClassSymbol</code>: “class”</li>
-<li><code>R_DeviceSymbol</code>: “.Device”</li>
-<li><code>R_DimNamesSymbol</code>: “dimnames”</li>
-<li><code>R_DimSymbol</code>: “dim”</li>
-<li><code>R_DollarSymbol</code>: “$”</li>
-<li><code>R_DotsSymbol</code>: “…”</li>
-<li><code>R_DoubleColonSymbol</code>: “::”</li>
-<li><code>R_DropSymbol</code>: “drop”</li>
-<li><code>R_LastvalueSymbol</code>: “.Last.value”</li>
-<li><code>R_LevelsSymbol</code>: “levels”</li>
-<li><code>R_ModeSymbol</code>: “mode”</li>
-<li><code>R_NaRmSymbol</code>: “na.rm”</li>
-<li><code>R_NameSymbol</code>: “name”</li>
-<li><code>R_NamesSymbol</code>: “names”</li>
-<li><code>R_NamespaceEnvSymbol</code>: “.__NAMESPACE__.”</li>
-<li><code>R_PackageSymbol</code>: “package”</li>
-<li><code>R_PreviousSymbol</code>: “previous”</li>
-<li><code>R_QuoteSymbol</code>: “quote”</li>
-<li><code>R_RowNamesSymbol</code>: “row.names”</li>
-<li><code>R_SeedsSymbol</code>: “.Random.seed”</li>
-<li><code>R_SortListSymbol</code>: “sort.list”</li>
-<li><code>R_SourceSymbol</code>: “source”</li>
-<li><code>R_SpecSymbol</code>: “spec”</li>
-<li><code>R_TripleColonSymbol</code>: <code>":::"</code></li>
-<li><code>R_TspSymbol</code>: “tsp”</li>
-</ul>
+<p>A number of symbols are so commonly used that they’re predefined and exported as global constants — use these instead of calling <code>Rf_install()</code> yourself.</p>
 <section id="R_dot_defined" class="level3" data-number="9.4.1">
 <h3 data-number="9.4.1" class="anchored" data-anchor-id="R_dot_defined"><span class="header-section-number">9.4.1</span> <code>R_dot_defined()</code></h3>
 <p>Access the predefined symbol for “.defined”.</p>
@@ -713,39 +672,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Access the predefined symbol for “tsp”.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb36"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>SEXP R_TspSymbol<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
-</section>
-</section>
-<section id="internals" class="level2" data-number="9.5">
-<h2 data-number="9.5" class="anchored" data-anchor-id="internals"><span class="header-section-number">9.5</span> Internals</h2>
-<section id="PRINTNAME" class="level3" data-number="9.5.1">
-<h3 data-number="9.5.1" class="anchored" data-anchor-id="PRINTNAME"><span class="header-section-number">9.5.1</span> <code>PRINTNAME()</code> (<code>SET_PRINTNAME()</code>)</h3>
-<p>Get or set the print name of a symbol.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb37"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>SEXP <span class="op">(</span>PRINTNAME<span class="op">)(</span>SEXP x<span class="op">);</span></span>
-<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> SET_PRINTNAME<span class="op">(</span>SEXP x<span class="op">,</span> SEXP v<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> non-API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
-<p>The value of the symbol, as a CHARSXP. Use <code>CHAR(PRINTNAME(x))</code> to get the name as a <code>const char*</code>.</p>
-</section>
-<section id="SYMVALUE" class="level3" data-number="9.5.2">
-<h3 data-number="9.5.2" class="anchored" data-anchor-id="SYMVALUE"><span class="header-section-number">9.5.2</span> <code>SYMVALUE()</code> (<code>SET_SYMVALUE()</code>)</h3>
-<p>Get or set the value of a symbol.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb38"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>SEXP <span class="op">(</span>SYMVALUE<span class="op">)(</span>SEXP x<span class="op">);</span></span>
-<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> SET_SYMVALUE<span class="op">(</span>SEXP x<span class="op">,</span> SEXP v<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> non-API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
-</section>
-<section id="INTERNAL" class="level3" data-number="9.5.3">
-<h3 data-number="9.5.3" class="anchored" data-anchor-id="INTERNAL"><span class="header-section-number">9.5.3</span> <code>INTERNAL()</code> (<code>SET_INTERNAL()</code>)</h3>
-<p>Get or set the internal function a symbol points to.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb39"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>SEXP <span class="op">(</span>INTERNAL<span class="op">)(</span>SEXP x<span class="op">);</span></span>
-<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> SET_INTERNAL<span class="op">(</span>SEXP x<span class="op">,</span> SEXP v<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> non-API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
-</section>
-<section id="DDVAL" class="level3" data-number="9.5.4">
-<h3 data-number="9.5.4" class="anchored" data-anchor-id="DDVAL"><span class="header-section-number">9.5.4</span> <code>DDVAL()</code> (<code>SET_DDVAL()</code>, <code>Rf_installDDVAL()</code>)</h3>
-<p>Get or set a symbol’s <code>...</code> index, or install the symbol for a <code>...</code> element.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb40"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span>  <span class="op">(</span>DDVAL<span class="op">)(</span>SEXP x<span class="op">);</span></span>
-<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> <span class="op">(</span>SET_DDVAL<span class="op">)(</span>SEXP x<span class="op">,</span> <span class="dt">int</span> v<span class="op">);</span></span>
-<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>SEXP Rf_installDDVAL<span class="op">(</span><span class="dt">int</span> i<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> non-API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 
 
 </section>

@@ -275,7 +275,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./errors.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Errors</span></span></a>
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Errors and conditions</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -345,7 +345,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./compliance.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Migrating to API compliance</span></a>
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Migrating to API compliance</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -375,12 +375,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul class="collapse">
   <li><a href="#R_InitInPStream" id="toc-R_InitInPStream" class="nav-link" data-scroll-target="#R_InitInPStream"><span class="header-section-number">17.2.1</span> <code>R_InitInPStream()</code> (<code>R_InitOutPStream()</code>)</a></li>
   <li><a href="#R_InitFileInPStream" id="toc-R_InitFileInPStream" class="nav-link" data-scroll-target="#R_InitFileInPStream"><span class="header-section-number">17.2.2</span> <code>R_InitFileInPStream()</code> (<code>R_InitFileOutPStream()</code>)</a></li>
-  <li><a href="#R_InitConnOutPStream" id="toc-R_InitConnOutPStream" class="nav-link" data-scroll-target="#R_InitConnOutPStream"><span class="header-section-number">17.2.3</span> <code>R_InitConnOutPStream()</code> (<code>R_InitConnInPStream()</code>)</a></li>
   </ul></li>
   <li><a href="#serialising-objects" id="toc-serialising-objects" class="nav-link" data-scroll-target="#serialising-objects"><span class="header-section-number">17.3</span> Serialising objects</a>
   <ul class="collapse">
   <li><a href="#R_Serialize" id="toc-R_Serialize" class="nav-link" data-scroll-target="#R_Serialize"><span class="header-section-number">17.3.1</span> <code>R_Serialize()</code> (<code>R_Unserialize()</code>)</a></li>
-  <li><a href="#R_RestoreHashCount" id="toc-R_RestoreHashCount" class="nav-link" data-scroll-target="#R_RestoreHashCount"><span class="header-section-number">17.3.2</span> <code>R_RestoreHashCount()</code></a></li>
   </ul></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/hadley/r-internals/edit/main/serialisation.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/hadley/r-internals/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
@@ -407,8 +405,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
+<p>R’s serialisation format converts an R object to a byte stream (and back) that can be written to a file, a connection, or a database. From C you can drive the same machinery <code>serialize()</code>/<code>unserialize()</code> use at the R level, either over a <code>FILE *</code> or over a custom byte source/sink you provide.</p>
 <section id="xdr-encoding" class="level2" data-number="17.1">
 <h2 data-number="17.1" class="anchored" data-anchor-id="xdr-encoding"><span class="header-section-number">17.1</span> XDR encoding</h2>
+<p>XDR is the default binary serialisation format: big-endian and platform-independent, so streams are portable across architectures. These helpers encode and decode individual values when you implement a custom stream.</p>
 <section id="R_XDR_DOUBLE_SIZE" class="level3" data-number="17.1.1">
 <h3 data-number="17.1.1" class="anchored" data-anchor-id="R_XDR_DOUBLE_SIZE"><span class="header-section-number">17.1.1</span> <code>R_XDR_DOUBLE_SIZE()</code> (<code>R_XDR_INTEGER_SIZE()</code>)</h3>
 <p>Specify the byte sizes of doubles and integers in XDR serialisation format.</p>
@@ -428,6 +428,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="persistence-streams" class="level2" data-number="17.2">
 <h2 data-number="17.2" class="anchored" data-anchor-id="persistence-streams"><span class="header-section-number">17.2</span> Persistence streams</h2>
+<p>A persistence stream pairs a byte source/sink with optional persistence hooks. The hook function (<code>phook</code>, with its data <code>pdata</code>) is called for objects that can’t be serialised by value — external pointers and weak references — letting you substitute a placeholder on output and reconstruct the object on input; pass <code>NULL</code> to refuse such objects with an error. The <code>version</code> argument selects the serialisation format version (2, or 3 which supports ALTREP; version 3 output requires R &gt;= 3.6.0 to read).</p>
+<p>Note that WRE describes this framework as <strong>highly experimental</strong> for package use: it may change or be dropped in a future R release. Don’t depend on the fields of the stream structs directly — initialise them with the functions below.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">typedef</span> <span class="dt">void</span> <span class="op">*</span>R_pstream_data_t<span class="op">;</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="kw">typedef</span> <span class="kw">enum</span> <span class="op">{</span></span>
@@ -458,67 +460,50 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>  SEXP <span class="op">(*</span>InPersistHookFunc<span class="op">)(</span>SEXP<span class="op">,</span> SEXP<span class="op">);</span></span>
 <span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>  SEXP InPersistHookData<span class="op">;</span></span>
 <span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The connection interface is not available to packages. To allow limited use of connection pointers, defining <code>NEED_CONNECTION_PSTREAMS</code> before including <code>Rinternals.h</code> defines the opaque pointer type:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#ifdef NEED_CONNECTION_PSTREAMS</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#ifndef HAVE_RCONNECTION_TYPEDEF</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="kw">typedef</span> <span class="kw">struct</span> Rconn  <span class="op">*</span>Rconnection<span class="op">;</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="pp">#define HAVE_RCONNECTION_TYPEDEF</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="pp">#endif</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="pp">#endif</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <section id="R_InitInPStream" class="level3" data-number="17.2.1">
 <h3 data-number="17.2.1" class="anchored" data-anchor-id="R_InitInPStream"><span class="header-section-number">17.2.1</span> <code>R_InitInPStream()</code> (<code>R_InitOutPStream()</code>)</h3>
 <p>Initialise a custom input or output persistence stream.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> R_InitInPStream<span class="op">(</span>R_inpstream_t stream<span class="op">,</span> R_pstream_data_t data<span class="op">,</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  R_pstream_format_t type<span class="op">,</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span> <span class="op">(*</span>inchar<span class="op">)(</span>R_inpstream_t<span class="op">),</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">void</span> <span class="op">(*</span>inbytes<span class="op">)(</span>R_inpstream_t<span class="op">,</span> <span class="dt">void</span> <span class="op">*,</span> <span class="dt">int</span><span class="op">),</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  SEXP <span class="op">(*</span>phook<span class="op">)(</span>SEXP<span class="op">,</span> SEXP<span class="op">),</span> SEXP pdata<span class="op">);</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> R_InitOutPStream<span class="op">(</span>R_outpstream_t stream<span class="op">,</span> R_pstream_data_t data<span class="op">,</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  R_pstream_format_t type<span class="op">,</span> <span class="dt">int</span> version<span class="op">,</span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="dt">void</span> <span class="op">(*</span>outchar<span class="op">)(</span>R_outpstream_t<span class="op">,</span> <span class="dt">int</span><span class="op">),</span></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  <span class="dt">void</span> <span class="op">(*</span>outbytes<span class="op">)(</span>R_outpstream_t<span class="op">,</span> <span class="dt">void</span> <span class="op">*,</span> <span class="dt">int</span><span class="op">),</span></span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  SEXP <span class="op">(*</span>phook<span class="op">)(</span>SEXP<span class="op">,</span> SEXP<span class="op">),</span> SEXP pdata<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> R_InitInPStream<span class="op">(</span>R_inpstream_t stream<span class="op">,</span> R_pstream_data_t data<span class="op">,</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  R_pstream_format_t type<span class="op">,</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span> <span class="op">(*</span>inchar<span class="op">)(</span>R_inpstream_t<span class="op">),</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">void</span> <span class="op">(*</span>inbytes<span class="op">)(</span>R_inpstream_t<span class="op">,</span> <span class="dt">void</span> <span class="op">*,</span> <span class="dt">int</span><span class="op">),</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  SEXP <span class="op">(*</span>phook<span class="op">)(</span>SEXP<span class="op">,</span> SEXP<span class="op">),</span> SEXP pdata<span class="op">);</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> R_InitOutPStream<span class="op">(</span>R_outpstream_t stream<span class="op">,</span> R_pstream_data_t data<span class="op">,</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  R_pstream_format_t type<span class="op">,</span> <span class="dt">int</span> version<span class="op">,</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  <span class="dt">void</span> <span class="op">(*</span>outchar<span class="op">)(</span>R_outpstream_t<span class="op">,</span> <span class="dt">int</span><span class="op">),</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  <span class="dt">void</span> <span class="op">(*</span>outbytes<span class="op">)(</span>R_outpstream_t<span class="op">,</span> <span class="dt">void</span> <span class="op">*,</span> <span class="dt">int</span><span class="op">),</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  SEXP <span class="op">(*</span>phook<span class="op">)(</span>SEXP<span class="op">,</span> SEXP<span class="op">),</span> SEXP pdata<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 </section>
 <section id="R_InitFileInPStream" class="level3" data-number="17.2.2">
 <h3 data-number="17.2.2" class="anchored" data-anchor-id="R_InitFileInPStream"><span class="header-section-number">17.2.2</span> <code>R_InitFileInPStream()</code> (<code>R_InitFileOutPStream()</code>)</h3>
 <p>Initialise a persistence stream that reads from or writes to a file.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> R_InitFileInPStream<span class="op">(</span>R_inpstream_t stream<span class="op">,</span> <span class="dt">FILE</span> <span class="op">*</span>fp<span class="op">,</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  R_pstream_format_t type<span class="op">,</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  SEXP <span class="op">(*</span>phook<span class="op">)(</span>SEXP<span class="op">,</span> SEXP<span class="op">),</span> SEXP pdata<span class="op">);</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> R_InitFileOutPStream<span class="op">(</span>R_outpstream_t stream<span class="op">,</span> <span class="dt">FILE</span> <span class="op">*</span>fp<span class="op">,</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  R_pstream_format_t type<span class="op">,</span> <span class="dt">int</span> version<span class="op">,</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  SEXP <span class="op">(*</span>phook<span class="op">)(</span>SEXP<span class="op">,</span> SEXP<span class="op">),</span> SEXP pdata<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
-</section>
-<section id="R_InitConnOutPStream" class="level3" data-number="17.2.3">
-<h3 data-number="17.2.3" class="anchored" data-anchor-id="R_InitConnOutPStream"><span class="header-section-number">17.2.3</span> <code>R_InitConnOutPStream()</code> (<code>R_InitConnInPStream()</code>)</h3>
-<p>Initialise a persistence stream that reads from or writes to a connection.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> R_InitConnOutPStream<span class="op">(</span>R_outpstream_t stream<span class="op">,</span> Rconnection con<span class="op">,</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  R_pstream_format_t type<span class="op">,</span> <span class="dt">int</span> version<span class="op">,</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> R_InitFileInPStream<span class="op">(</span>R_inpstream_t stream<span class="op">,</span> <span class="dt">FILE</span> <span class="op">*</span>fp<span class="op">,</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  R_pstream_format_t type<span class="op">,</span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  SEXP <span class="op">(*</span>phook<span class="op">)(</span>SEXP<span class="op">,</span> SEXP<span class="op">),</span> SEXP pdata<span class="op">);</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> R_InitConnInPStream<span class="op">(</span>R_inpstream_t stream<span class="op">,</span>  Rconnection con<span class="op">,</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  R_pstream_format_t type<span class="op">,</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> R_InitFileOutPStream<span class="op">(</span>R_outpstream_t stream<span class="op">,</span> <span class="dt">FILE</span> <span class="op">*</span>fp<span class="op">,</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  R_pstream_format_t type<span class="op">,</span> <span class="dt">int</span> version<span class="op">,</span></span>
 <span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  SEXP <span class="op">(*</span>phook<span class="op">)(</span>SEXP<span class="op">,</span> SEXP<span class="op">),</span> SEXP pdata<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> non-API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
-<p>The connection interface is not available to packages. Define <code>NEED_CONNECTION_PSTREAMS</code> before including <code>Rinternals.h</code> to get the opaque <code>Rconnection</code> pointer type.</p>
-<p>The connection interface is not available to packages. To allow limited use of connection pointers, defining <code>NEED_CONNECTION_PSTREAMS</code> before including <code>Rinternals.h</code> defines the opaque pointer type:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#ifdef NEED_CONNECTION_PSTREAMS</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#ifndef HAVE_RCONNECTION_TYPEDEF</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="kw">typedef</span> <span class="kw">struct</span> Rconn  <span class="op">*</span>Rconnection<span class="op">;</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="pp">#define HAVE_RCONNECTION_TYPEDEF</span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="pp">#endif</span></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="pp">#endif</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 </section>
 </section>
 <section id="serialising-objects" class="level2" data-number="17.3">
 <h2 data-number="17.3" class="anchored" data-anchor-id="serialising-objects"><span class="header-section-number">17.3</span> Serialising objects</h2>
+<p>With a stream initialised, these two functions do the actual work:</p>
 <section id="R_Serialize" class="level3" data-number="17.3.1">
 <h3 data-number="17.3.1" class="anchored" data-anchor-id="R_Serialize"><span class="header-section-number">17.3.1</span> <code>R_Serialize()</code> (<code>R_Unserialize()</code>)</h3>
 <p>Serialise an R object to an output stream, or unserialise it from an input stream.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> R_Serialize<span class="op">(</span>SEXP s<span class="op">,</span> R_outpstream_t ops<span class="op">);</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>SEXP R_Unserialize<span class="op">(</span>R_inpstream_t ips<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> R_Serialize<span class="op">(</span>SEXP s<span class="op">,</span> R_outpstream_t ops<span class="op">);</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>SEXP R_Unserialize<span class="op">(</span>R_inpstream_t ips<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> result · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>serialize()</code></p>
 <p>The <code>SEXP</code> returned by <code>R_Unserialize()</code> is freshly allocated and must be protected from garbage collection.</p>
-</section>
-<section id="R_RestoreHashCount" class="level3" data-number="17.3.2">
-<h3 data-number="17.3.2" class="anchored" data-anchor-id="R_RestoreHashCount"><span class="header-section-number">17.3.2</span> <code>R_RestoreHashCount()</code></h3>
-<p>Restore the hash count of a hashed environment after unserialisation.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> R_RestoreHashCount<span class="op">(</span>SEXP rho<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> non-API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 
 
 </section>

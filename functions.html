@@ -275,7 +275,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./errors.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Errors</span></span></a>
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Errors and conditions</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -345,7 +345,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./compliance.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Migrating to API compliance</span></a>
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Migrating to API compliance</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -366,23 +366,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#testing-functions" id="toc-testing-functions" class="nav-link active" data-scroll-target="#testing-functions"><span class="header-section-number">11.1</span> Testing functions</a>
+  <li><a href="#closures" id="toc-closures" class="nav-link active" data-scroll-target="#closures"><span class="header-section-number">11.1</span> Closures</a>
   <ul class="collapse">
-  <li><a href="#Rf_isFunction" id="toc-Rf_isFunction" class="nav-link" data-scroll-target="#Rf_isFunction"><span class="header-section-number">11.1.1</span> <code>Rf_isFunction()</code> (<code>Rf_isPrimitive()</code>)</a></li>
+  <li><a href="#R_mkClosure" id="toc-R_mkClosure" class="nav-link" data-scroll-target="#R_mkClosure"><span class="header-section-number">11.1.1</span> <code>R_mkClosure()</code></a></li>
+  <li><a href="#R_ClosureFormals" id="toc-R_ClosureFormals" class="nav-link" data-scroll-target="#R_ClosureFormals"><span class="header-section-number">11.1.2</span> <code>R_ClosureFormals()</code> (<code>R_ClosureBody()</code>, <code>R_ClosureEnv()</code>)</a></li>
   </ul></li>
-  <li><a href="#internals" id="toc-internals" class="nav-link" data-scroll-target="#internals"><span class="header-section-number">11.2</span> Internals</a>
+  <li><a href="#testing-functions" id="toc-testing-functions" class="nav-link" data-scroll-target="#testing-functions"><span class="header-section-number">11.2</span> Testing functions</a>
   <ul class="collapse">
-  <li><a href="#FORMALS" id="toc-FORMALS" class="nav-link" data-scroll-target="#FORMALS"><span class="header-section-number">11.2.1</span> <code>FORMALS()</code> (<code>BODY()</code>, <code>CLOENV()</code>)</a></li>
-  <li><a href="#SET_FORMALS" id="toc-SET_FORMALS" class="nav-link" data-scroll-target="#SET_FORMALS"><span class="header-section-number">11.2.2</span> <code>SET_FORMALS()</code> (<code>SET_BODY()</code>, <code>SET_CLOENV()</code>)</a></li>
-  <li><a href="#RDEBUG" id="toc-RDEBUG" class="nav-link" data-scroll-target="#RDEBUG"><span class="header-section-number">11.2.3</span> <code>RDEBUG()</code> (<code>RSTEP()</code>, <code>RTRACE()</code>)</a></li>
-  <li><a href="#SET_RDEBUG" id="toc-SET_RDEBUG" class="nav-link" data-scroll-target="#SET_RDEBUG"><span class="header-section-number">11.2.4</span> <code>SET_RDEBUG()</code> (<code>SET_RSTEP()</code>, <code>SET_RTRACE()</code>)</a></li>
+  <li><a href="#Rf_isFunction" id="toc-Rf_isFunction" class="nav-link" data-scroll-target="#Rf_isFunction"><span class="header-section-number">11.2.1</span> <code>Rf_isFunction()</code> (<code>Rf_isPrimitive()</code>)</a></li>
   </ul></li>
   <li><a href="#promises-promsxp" id="toc-promises-promsxp" class="nav-link" data-scroll-target="#promises-promsxp"><span class="header-section-number">11.3</span> Promises (<code>PROMSXP</code>)</a>
   <ul class="collapse">
   <li><a href="#R_UnboundValue" id="toc-R_UnboundValue" class="nav-link" data-scroll-target="#R_UnboundValue"><span class="header-section-number">11.3.1</span> <code>R_UnboundValue()</code></a></li>
-  <li><a href="#PRCODE" id="toc-PRCODE" class="nav-link" data-scroll-target="#PRCODE"><span class="header-section-number">11.3.2</span> <code>PRCODE()</code> (<code>PRENV()</code>, <code>PRVALUE()</code>)</a></li>
-  <li><a href="#PRSEEN" id="toc-PRSEEN" class="nav-link" data-scroll-target="#PRSEEN"><span class="header-section-number">11.3.3</span> <code>PRSEEN()</code> (<code>SET_PRSEEN()</code>)</a></li>
-  <li><a href="#SET_PRENV" id="toc-SET_PRENV" class="nav-link" data-scroll-target="#SET_PRENV"><span class="header-section-number">11.3.4</span> <code>SET_PRENV()</code> (<code>SET_PRVALUE()</code>, <code>SET_PRCODE()</code>)</a></li>
   </ul></li>
   <li><a href="#srcrefs" id="toc-srcrefs" class="nav-link" data-scroll-target="#srcrefs"><span class="header-section-number">11.4</span> Srcrefs</a>
   <ul class="collapse">
@@ -414,96 +409,50 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="testing-functions" class="level2" data-number="11.1">
-<h2 data-number="11.1" class="anchored" data-anchor-id="testing-functions"><span class="header-section-number">11.1</span> Testing functions</h2>
-<p><code>FUNSXP</code> is an abstract union type.</p>
-<section id="Rf_isFunction" class="level3" data-number="11.1.1">
-<h3 data-number="11.1.1" class="anchored" data-anchor-id="Rf_isFunction"><span class="header-section-number">11.1.1</span> <code>Rf_isFunction()</code> (<code>Rf_isPrimitive()</code>)</h3>
+<p>R has three function types: closures (<code>CLOSXP</code>, functions written in R), builtins (<code>BUILTINSXP</code>), and specials (<code>SPECIALSXP</code>, both implemented in C). They differ in how arguments are evaluated: builtins evaluate their arguments before the call, specials don’t.</p>
+<section id="closures" class="level2" data-number="11.1">
+<h2 data-number="11.1" class="anchored" data-anchor-id="closures"><span class="header-section-number">11.1</span> Closures</h2>
+<p>Create closures with <code>R_mkClosure()</code> — the old idiom of allocating a <code>CLOSXP</code> with <code>Rf_allocSExp()</code> and filling it with <code>SET_FORMALS</code>/<code>SET_BODY</code>/<code>SET_CLOENV</code> is no longer part of the API.</p>
+<section id="R_mkClosure" class="level3" data-number="11.1.1">
+<h3 data-number="11.1.1" class="anchored" data-anchor-id="R_mkClosure"><span class="header-section-number">11.1.1</span> <code>R_mkClosure()</code></h3>
+<p>Create a closure from formals, body, and environment.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>SEXP R_mkClosure<span class="op">(</span>SEXP formals<span class="op">,</span> SEXP body<span class="op">,</span> SEXP env<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> result · <strong>Errors:</strong> can throw · <strong>Since:</strong> 4.5.0 · <strong>R equivalent:</strong> <code>as.function()</code></p>
+<p>The API replacement for the non-API idiom <code>Rf_allocSExp(CLOSXP)</code> + <code>SET_FORMALS</code>/<code>SET_BODY</code>/<code>SET_CLOENV</code>. Checks that <code>formals</code> is a well-formed pairlist of formal arguments.</p>
+<p><strong>See also:</strong> <a href="#R_ClosureFormals"><code>R_ClosureFormals()</code></a></p>
+</section>
+<section id="R_ClosureFormals" class="level3" data-number="11.1.2">
+<h3 data-number="11.1.2" class="anchored" data-anchor-id="R_ClosureFormals"><span class="header-section-number">11.1.2</span> <code>R_ClosureFormals()</code> (<code>R_ClosureBody()</code>, <code>R_ClosureEnv()</code>)</h3>
+<p>Access the formals, body, or environment of a closure.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>SEXP R_ClosureFormals<span class="op">(</span>SEXP x<span class="op">);</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>SEXP R_ClosureBody<span class="op">(</span>SEXP x<span class="op">);</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>SEXP R_ClosureEnv<span class="op">(</span>SEXP x<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> never · <strong>Since:</strong> 4.5.0 · <strong>R equivalent:</strong> <code>formals()</code></p>
+<p>The API replacements for <code>FORMALS()</code>, <code>BODY()</code>, and <code>CLOENV()</code>.</p>
+<p><strong>See also:</strong> <a href="#R_mkClosure"><code>R_mkClosure()</code></a></p>
+</section>
+</section>
+<section id="testing-functions" class="level2" data-number="11.2">
+<h2 data-number="11.2" class="anchored" data-anchor-id="testing-functions"><span class="header-section-number">11.2</span> Testing functions</h2>
+<section id="Rf_isFunction" class="level3" data-number="11.2.1">
+<h3 data-number="11.2.1" class="anchored" data-anchor-id="Rf_isFunction"><span class="header-section-number">11.2.1</span> <code>Rf_isFunction()</code> (<code>Rf_isPrimitive()</code>)</h3>
 <p>Test whether an object is a function or a primitive function.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>Rboolean Rf_isFunction<span class="op">(</span>SEXP<span class="op">);</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>Rboolean Rf_isPrimitive<span class="op">(</span>SEXP<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>Rboolean Rf_isFunction<span class="op">(</span>SEXP<span class="op">);</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>Rboolean Rf_isPrimitive<span class="op">(</span>SEXP<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>is.function()</code></p>
 <p><code>FUNSXP</code> is an abstract union type.</p>
 </section>
 </section>
-<section id="internals" class="level2" data-number="11.2">
-<h2 data-number="11.2" class="anchored" data-anchor-id="internals"><span class="header-section-number">11.2</span> Internals</h2>
-<section id="FORMALS" class="level3" data-number="11.2.1">
-<h3 data-number="11.2.1" class="anchored" data-anchor-id="FORMALS"><span class="header-section-number">11.2.1</span> <code>FORMALS()</code> (<code>BODY()</code>, <code>CLOENV()</code>)</h3>
-<p>Access the formal arguments, body, or environment of a closure.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>SEXP <span class="op">(</span>FORMALS<span class="op">)(</span>SEXP x<span class="op">);</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>SEXP <span class="op">(</span>BODY<span class="op">)(</span>SEXP x<span class="op">);</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>SEXP <span class="op">(</span>CLOENV<span class="op">)(</span>SEXP x<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> non-API (use <a href="#R_ClosureFormals"><code>R_ClosureFormals()</code></a>) · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>formals()</code></p>
-<p>Superseded by <code>R_ClosureFormals()</code>, <code>R_ClosureBody()</code>, and <code>R_ClosureEnv()</code> (R 4.5.0).</p>
-<p><strong>See also:</strong> <a href="#R_ClosureBody"><code>R_ClosureBody()</code></a>, <a href="#R_ClosureEnv"><code>R_ClosureEnv()</code></a></p>
-</section>
-<section id="SET_FORMALS" class="level3" data-number="11.2.2">
-<h3 data-number="11.2.2" class="anchored" data-anchor-id="SET_FORMALS"><span class="header-section-number">11.2.2</span> <code>SET_FORMALS()</code> (<code>SET_BODY()</code>, <code>SET_CLOENV()</code>)</h3>
-<p>Set the formal arguments, body, or environment of a closure.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> SET_FORMALS<span class="op">(</span>SEXP x<span class="op">,</span> SEXP v<span class="op">);</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> SET_BODY<span class="op">(</span>SEXP x<span class="op">,</span> SEXP v<span class="op">);</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> SET_CLOENV<span class="op">(</span>SEXP x<span class="op">,</span> SEXP v<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> non-API (use <a href="#R_mkClosure"><code>R_mkClosure()</code></a>) · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>formals&lt;-()</code></p>
-<p>Superseded by the constructor <code>R_mkClosure()</code> (R 4.5.0); prefer building a closure over allocating and mutating one.</p>
-</section>
-<section id="RDEBUG" class="level3" data-number="11.2.3">
-<h3 data-number="11.2.3" class="anchored" data-anchor-id="RDEBUG"><span class="header-section-number">11.2.3</span> <code>RDEBUG()</code> (<code>RSTEP()</code>, <code>RTRACE()</code>)</h3>
-<p>Query the debug, step, or trace flags of a closure.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span>  <span class="op">(</span>RDEBUG<span class="op">)(</span>SEXP x<span class="op">);</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span>  <span class="op">(</span>RSTEP<span class="op">)(</span>SEXP x<span class="op">);</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span>  <span class="op">(</span>RTRACE<span class="op">)(</span>SEXP x<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> non-API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
-<p>Internal macros for querying closure debugging flags.</p>
-</section>
-<section id="SET_RDEBUG" class="level3" data-number="11.2.4">
-<h3 data-number="11.2.4" class="anchored" data-anchor-id="SET_RDEBUG"><span class="header-section-number">11.2.4</span> <code>SET_RDEBUG()</code> (<code>SET_RSTEP()</code>, <code>SET_RTRACE()</code>)</h3>
-<p>Set the debug, step, or trace flags of a closure.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> <span class="op">(</span>SET_RDEBUG<span class="op">)(</span>SEXP x<span class="op">,</span> <span class="dt">int</span> v<span class="op">);</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> <span class="op">(</span>SET_RSTEP<span class="op">)(</span>SEXP x<span class="op">,</span> <span class="dt">int</span> v<span class="op">);</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> <span class="op">(</span>SET_RTRACE<span class="op">)(</span>SEXP x<span class="op">,</span> <span class="dt">int</span> v<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> non-API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
-<p>Internal macros for setting closure debugging flags.</p>
-</section>
-</section>
 <section id="promises-promsxp" class="level2" data-number="11.3">
 <h2 data-number="11.3" class="anchored" data-anchor-id="promises-promsxp"><span class="header-section-number">11.3</span> Promises (<code>PROMSXP</code>)</h2>
+<p>A promise bundles an unevaluated expression with the environment it should be evaluated in; it’s how R implements lazy evaluation of function arguments.</p>
 <section id="R_UnboundValue" class="level3" data-number="11.3.1">
 <h3 data-number="11.3.1" class="anchored" data-anchor-id="R_UnboundValue"><span class="header-section-number">11.3.1</span> <code>R_UnboundValue()</code></h3>
 <p>Access the unbound-value marker constant.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>LibExtern SEXP  R_UnboundValue<span class="op">;</span>     <span class="co">/* Unbound marker */</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>LibExtern SEXP  R_UnboundValue<span class="op">;</span>     <span class="co">/* Unbound marker */</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 <p><code>R_UnboundValue</code> marks an unbound symbol or an unread promise value.</p>
 <p><strong>See also:</strong> <a href="symbols.html#R_MissingArg"><code>R_MissingArg()</code></a></p>
-</section>
-<section id="PRCODE" class="level3" data-number="11.3.2">
-<h3 data-number="11.3.2" class="anchored" data-anchor-id="PRCODE"><span class="header-section-number">11.3.2</span> <code>PRCODE()</code> (<code>PRENV()</code>, <code>PRVALUE()</code>)</h3>
-<p>Access the code, environment, or value of a promise.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>SEXP <span class="op">(</span>PRCODE<span class="op">)(</span>SEXP x<span class="op">);</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>SEXP <span class="op">(</span>PRENV<span class="op">)(</span>SEXP x<span class="op">);</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>SEXP <span class="op">(</span>PRVALUE<span class="op">)(</span>SEXP x<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> non-API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
-<p>Superseded by the R 4.6.0 binding-access API: <code>R_GetBindingType()</code>, <code>R_ForcedBindingExpression()</code>, <code>R_DelayedBindingExpression()</code>, and <code>R_DelayedBindingEnvironment()</code>.</p>
-<p><strong>See also:</strong> <a href="#R_GetBindingType"><code>R_GetBindingType()</code></a></p>
-</section>
-<section id="PRSEEN" class="level3" data-number="11.3.3">
-<h3 data-number="11.3.3" class="anchored" data-anchor-id="PRSEEN"><span class="header-section-number">11.3.3</span> <code>PRSEEN()</code> (<code>SET_PRSEEN()</code>)</h3>
-<p>Query or set the seen flag of a promise.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span>  <span class="op">(</span>PRSEEN<span class="op">)(</span>SEXP x<span class="op">);</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> <span class="op">(</span>SET_PRSEEN<span class="op">)(</span>SEXP x<span class="op">,</span> <span class="dt">int</span> v<span class="op">);</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> SET_PRSEEN<span class="op">(</span>SEXP x<span class="op">,</span> <span class="dt">int</span> v<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> non-API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
-<p>Used to detect recursive promise evaluation.</p>
-</section>
-<section id="SET_PRENV" class="level3" data-number="11.3.4">
-<h3 data-number="11.3.4" class="anchored" data-anchor-id="SET_PRENV"><span class="header-section-number">11.3.4</span> <code>SET_PRENV()</code> (<code>SET_PRVALUE()</code>, <code>SET_PRCODE()</code>)</h3>
-<p>Set the environment, value, or code of a promise.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> SET_PRENV<span class="op">(</span>SEXP x<span class="op">,</span> SEXP v<span class="op">);</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> SET_PRVALUE<span class="op">(</span>SEXP x<span class="op">,</span> SEXP v<span class="op">);</span></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> SET_PRCODE<span class="op">(</span>SEXP x<span class="op">,</span> SEXP v<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> non-API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
-<p>Superseded by the R 4.6.0 binding-access API: <code>R_MakeForcedBinding()</code>, <code>R_MakeDelayedBinding()</code>, and <code>R_MakeMissingBinding()</code>.</p>
-<p><strong>See also:</strong> <a href="#R_MakeDelayedBinding"><code>R_MakeDelayedBinding()</code></a></p>
 </section>
 </section>
 <section id="srcrefs" class="level2" data-number="11.4">
@@ -511,14 +460,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="R_Srcref" class="level3" data-number="11.4.1">
 <h3 data-number="11.4.1" class="anchored" data-anchor-id="R_Srcref"><span class="header-section-number">11.4.1</span> <code>R_Srcref()</code></h3>
 <p>Access the current srcref, for debuggers.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>LibExtern SEXP  R_Srcref<span class="op">;</span>           <span class="co">/* Current srcref, for debuggers */</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>LibExtern SEXP  R_Srcref<span class="op">;</span>           <span class="co">/* Current srcref, for debuggers */</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 </section>
 <section id="R_GetCurrentSrcref" class="level3" data-number="11.4.2">
 <h3 data-number="11.4.2" class="anchored" data-anchor-id="R_GetCurrentSrcref"><span class="header-section-number">11.4.2</span> <code>R_GetCurrentSrcref()</code> (<code>R_GetSrcFilename()</code>)</h3>
 <p>Get the current srcref or the source filename of a srcref.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>SEXP R_GetCurrentSrcref<span class="op">(</span><span class="dt">int</span><span class="op">);</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>SEXP R_GetSrcFilename<span class="op">(</span>SEXP<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>SEXP R_GetCurrentSrcref<span class="op">(</span><span class="dt">int</span><span class="op">);</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>SEXP R_GetSrcFilename<span class="op">(</span>SEXP<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> result · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 
 

@@ -275,7 +275,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./errors.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Errors</span></span></a>
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Errors and conditions</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -345,7 +345,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./compliance.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Migrating to API compliance</span></a>
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Migrating to API compliance</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -389,10 +389,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#R_isVirtualClass" id="toc-R_isVirtualClass" class="nav-link" data-scroll-target="#R_isVirtualClass"><span class="header-section-number">13.3.8</span> <code>R_isVirtualClass()</code></a></li>
   <li><a href="#R_do_new_object" id="toc-R_do_new_object" class="nav-link" data-scroll-target="#R_do_new_object"><span class="header-section-number">13.3.9</span> <code>R_do_new_object()</code></a></li>
   <li><a href="#R_check_class_and_super" id="toc-R_check_class_and_super" class="nav-link" data-scroll-target="#R_check_class_and_super"><span class="header-section-number">13.3.10</span> <code>R_check_class_and_super()</code> (<code>R_check_class_etc()</code>)</a></li>
-  <li><a href="#internals" id="toc-internals" class="nav-link" data-scroll-target="#internals"><span class="header-section-number">13.3.11</span> Internals</a></li>
-  <li><a href="#IS_S4_OBJECT" id="toc-IS_S4_OBJECT" class="nav-link" data-scroll-target="#IS_S4_OBJECT"><span class="header-section-number">13.3.12</span> <code>IS_S4_OBJECT()</code> (<code>SET_S4_OBJECT()</code>, <code>UNSET_S4_OBJECT()</code>)</a></li>
-  <li><a href="#slots" id="toc-slots" class="nav-link" data-scroll-target="#slots"><span class="header-section-number">13.3.13</span> Slots</a></li>
-  <li><a href="#R_do_slot" id="toc-R_do_slot" class="nav-link" data-scroll-target="#R_do_slot"><span class="header-section-number">13.3.14</span> <code>R_do_slot()</code> (<code>R_do_slot_assign()</code>, <code>R_has_slot()</code>)</a></li>
+  <li><a href="#slots" id="toc-slots" class="nav-link" data-scroll-target="#slots"><span class="header-section-number">13.3.11</span> Slots</a></li>
+  <li><a href="#R_do_slot" id="toc-R_do_slot" class="nav-link" data-scroll-target="#R_do_slot"><span class="header-section-number">13.3.12</span> <code>R_do_slot()</code> (<code>R_do_slot_assign()</code>, <code>R_has_slot()</code>)</a></li>
   </ul></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/hadley/r-internals/edit/main/oo.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/hadley/r-internals/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
@@ -419,7 +417,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p><code>ANYSXP</code> is used internal in S4 class definitions to flag that any SEXP is ok.</p>
+<p>At the C level, R’s object systems are thin: S3 is just a <code>class</code> attribute plus conventions for dispatch, and S4 adds a bit on the object header (making it an <code>S4SXP</code>) plus slot attributes. (<code>ANYSXP</code> is used internally in S4 class definitions to flag that any SEXP is acceptable.)</p>
 <section id="object-testing" class="level2" data-number="13.1">
 <h2 data-number="13.1" class="anchored" data-anchor-id="object-testing"><span class="header-section-number">13.1</span> Object testing</h2>
 <section id="Rf_isObject" class="level3" data-number="13.1.1">
@@ -530,28 +528,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>is()</code></p>
 <p>Checks whether <code>x</code> matches or extends one of the classes in the <code>NULL</code>-terminated array <code>valid</code>. <code>R_check_class_etc()</code> omits the environment argument.</p>
 </section>
-<section id="internals" class="level3" data-number="13.3.11">
-<h3 data-number="13.3.11" class="anchored" data-anchor-id="internals"><span class="header-section-number">13.3.11</span> Internals</h3>
+<section id="slots" class="level3" data-number="13.3.11">
+<h3 data-number="13.3.11" class="anchored" data-anchor-id="slots"><span class="header-section-number">13.3.11</span> Slots</h3>
 </section>
-<section id="IS_S4_OBJECT" class="level3" data-number="13.3.12">
-<h3 data-number="13.3.12" class="anchored" data-anchor-id="IS_S4_OBJECT"><span class="header-section-number">13.3.12</span> <code>IS_S4_OBJECT()</code> (<code>SET_S4_OBJECT()</code>, <code>UNSET_S4_OBJECT()</code>)</h3>
-<p>Test, set, or clear the S4 object flag on a SEXP.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> <span class="op">(</span>IS_S4_OBJECT<span class="op">)(</span>SEXP x<span class="op">);</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> <span class="op">(</span>SET_S4_OBJECT<span class="op">)(</span>SEXP x<span class="op">);</span></span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> <span class="op">(</span>UNSET_S4_OBJECT<span class="op">)(</span>SEXP x<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> non-API (use <a href="#Rf_isS4"><code>Rf_isS4()</code></a>) · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>isS4()</code></p>
-<p>Low-level access to the S4 object flag.</p>
-<p><strong>See also:</strong> <a href="#Rf_isS4"><code>Rf_isS4()</code></a></p>
-</section>
-<section id="slots" class="level3" data-number="13.3.13">
-<h3 data-number="13.3.13" class="anchored" data-anchor-id="slots"><span class="header-section-number">13.3.13</span> Slots</h3>
-</section>
-<section id="R_do_slot" class="level3" data-number="13.3.14">
-<h3 data-number="13.3.14" class="anchored" data-anchor-id="R_do_slot"><span class="header-section-number">13.3.14</span> <code>R_do_slot()</code> (<code>R_do_slot_assign()</code>, <code>R_has_slot()</code>)</h3>
+<section id="R_do_slot" class="level3" data-number="13.3.12">
+<h3 data-number="13.3.12" class="anchored" data-anchor-id="R_do_slot"><span class="header-section-number">13.3.12</span> <code>R_do_slot()</code> (<code>R_do_slot_assign()</code>, <code>R_has_slot()</code>)</h3>
 <p>Get, assign, or test for the presence of an S4 slot.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>SEXP R_do_slot<span class="op">(</span>SEXP obj<span class="op">,</span> SEXP name<span class="op">);</span></span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>SEXP R_do_slot_assign<span class="op">(</span>SEXP obj<span class="op">,</span> SEXP name<span class="op">,</span> SEXP value<span class="op">);</span></span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> R_has_slot<span class="op">(</span>SEXP obj<span class="op">,</span> SEXP name<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>SEXP R_do_slot<span class="op">(</span>SEXP obj<span class="op">,</span> SEXP name<span class="op">);</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>SEXP R_do_slot_assign<span class="op">(</span>SEXP obj<span class="op">,</span> SEXP name<span class="op">,</span> SEXP value<span class="op">);</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> R_has_slot<span class="op">(</span>SEXP obj<span class="op">,</span> SEXP name<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> result · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>slot()</code></p>
 <p><code>R_do_slot()</code> extracts a slot, <code>R_do_slot_assign()</code> assigns it, and <code>R_has_slot()</code> tests for its presence.</p>
 

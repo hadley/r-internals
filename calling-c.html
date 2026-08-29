@@ -275,7 +275,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./errors.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Errors</span></span></a>
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Errors and conditions</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -345,7 +345,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./compliance.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Migrating to API compliance</span></a>
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Migrating to API compliance</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -367,7 +367,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#call" id="toc-call" class="nav-link active" data-scroll-target="#call"><span class="header-section-number">1.1</span> .Call</a></li>
-  <li><a href="#routine-registration" id="toc-routine-registration" class="nav-link" data-scroll-target="#routine-registration"><span class="header-section-number">1.2</span> Routine registration</a></li>
+  <li><a href="#routine-registration" id="toc-routine-registration" class="nav-link" data-scroll-target="#routine-registration"><span class="header-section-number">1.2</span> Routine registration</a>
+  <ul class="collapse">
+  <li><a href="#R_registerRoutines" id="toc-R_registerRoutines" class="nav-link" data-scroll-target="#R_registerRoutines"><span class="header-section-number">1.2.1</span> <code>R_registerRoutines()</code> (<code>R_useDynamicSymbols()</code>)</a></li>
+  </ul></li>
   <li><a href="#the-contract" id="toc-the-contract" class="nav-link" data-scroll-target="#the-contract"><span class="header-section-number">1.3</span> The contract</a></li>
   <li><a href="#a-minimal-package" id="toc-a-minimal-package" class="nav-link" data-scroll-target="#a-minimal-package"><span class="header-section-number">1.4</span> A minimal package</a></li>
   <li><a href="#iterating-quickly" id="toc-iterating-quickly" class="nav-link" data-scroll-target="#iterating-quickly"><span class="header-section-number">1.5</span> Iterating quickly</a></li>
@@ -440,6 +443,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>  R_useDynamicSymbols<span class="op">(</span>dll<span class="op">,</span> FALSE<span class="op">);</span></span>
 <span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><code>R_useDynamicSymbols(dll, FALSE)</code> means only registered routines are visible, so <code>.Call("add_one", ...)</code> by string fails and you must use the symbol object. Generate the R-side registration with <code>tools::package_native_routine_registration_skeleton("src")</code>, then put <code>useDynLib(mypkg, .registration = TRUE)</code> in <code>NAMESPACE</code>, which makes the symbol object <code>C_add_one</code> available to your R code.</p>
+<section id="R_registerRoutines" class="level3" data-number="1.2.1">
+<h3 data-number="1.2.1" class="anchored" data-anchor-id="R_registerRoutines"><span class="header-section-number">1.2.1</span> <code>R_registerRoutines()</code> (<code>R_useDynamicSymbols()</code>)</h3>
+<p>Register a package’s native routines and restrict dynamic symbol lookup.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> R_registerRoutines<span class="op">(</span>DllInfo <span class="op">*</span>info<span class="op">,</span> <span class="dt">const</span> R_CMethodDef <span class="op">*</span> <span class="dt">const</span> croutines<span class="op">,</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>                       <span class="dt">const</span> R_CallMethodDef <span class="op">*</span> <span class="dt">const</span> callRoutines<span class="op">,</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>                       <span class="dt">const</span> R_FortranMethodDef <span class="op">*</span> <span class="dt">const</span> fortranRoutines<span class="op">,</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>                       <span class="dt">const</span> R_ExternalMethodDef <span class="op">*</span> <span class="dt">const</span> externalRoutines<span class="op">);</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>Rboolean R_useDynamicSymbols<span class="op">(</span>DllInfo <span class="op">*</span>info<span class="op">,</span> Rboolean value<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Status:</strong> API · <strong>Header:</strong> <code>R_ext/Rdynload.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<ul>
+<li><code>info</code>: passed to your <code>R_init_&lt;pkgname&gt;()</code> initializer.</li>
+<li><code>callRoutines</code>: NULL-terminated array of <code>R_CallMethodDef</code> entries: name, function pointer cast to <code>DL_FUNC</code>, argument count.</li>
+<li><code>value</code>: <code>FALSE</code> hides unregistered symbols, so routines can only be reached via registration.</li>
+</ul>
+<p>Call from <code>R_init_&lt;pkgname&gt;()</code>. Generate the registration boilerplate with <code>tools::package_native_routine_registration_skeleton("src")</code>.</p>
+</section>
 </section>
 <section id="the-contract" class="level2" data-number="1.3">
 <h2 data-number="1.3" class="anchored" data-anchor-id="the-contract"><span class="header-section-number">1.3</span> The contract</h2>

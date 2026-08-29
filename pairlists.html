@@ -111,6 +111,35 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -275,7 +304,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./errors.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Errors</span></span></a>
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Errors and conditions</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -345,7 +374,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./compliance.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Migrating to API compliance</span></a>
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Migrating to API compliance</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -369,6 +398,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#test" id="toc-test" class="nav-link active" data-scroll-target="#test"><span class="header-section-number">10.1</span> Test</a>
   <ul class="collapse">
   <li><a href="#Rf_isPairList" id="toc-Rf_isPairList" class="nav-link" data-scroll-target="#Rf_isPairList"><span class="header-section-number">10.1.1</span> <code>Rf_isPairList()</code> (<code>Rf_isLanguage()</code>, <code>Rf_isList()</code>)</a></li>
+  <li><a href="#Rf_isUserBinop" id="toc-Rf_isUserBinop" class="nav-link" data-scroll-target="#Rf_isUserBinop"><span class="header-section-number">10.1.2</span> <code>Rf_isUserBinop()</code></a></li>
   </ul></li>
   <li><a href="#creation" id="toc-creation" class="nav-link" data-scroll-target="#creation"><span class="header-section-number">10.2</span> Creation</a>
   <ul class="collapse">
@@ -378,17 +408,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#Rf_allocFormalsList2" id="toc-Rf_allocFormalsList2" class="nav-link" data-scroll-target="#Rf_allocFormalsList2"><span class="header-section-number">10.2.4</span> <code>Rf_allocFormalsList2()</code> (<code>Rf_allocFormalsList3()</code>, <code>Rf_allocFormalsList4()</code>, <code>Rf_allocFormalsList5()</code>, <code>Rf_allocFormalsList6()</code>)</a></li>
   <li><a href="#Rf_PairToVectorList" id="toc-Rf_PairToVectorList" class="nav-link" data-scroll-target="#Rf_PairToVectorList"><span class="header-section-number">10.2.5</span> <code>Rf_PairToVectorList()</code> (<code>Rf_VectorToPairList()</code>)</a></li>
   <li><a href="#Rf_listAppend" id="toc-Rf_listAppend" class="nav-link" data-scroll-target="#Rf_listAppend"><span class="header-section-number">10.2.6</span> <code>Rf_listAppend()</code></a></li>
+  <li><a href="#Rf_lcons" id="toc-Rf_lcons" class="nav-link" data-scroll-target="#Rf_lcons"><span class="header-section-number">10.2.7</span> <code>Rf_lcons()</code></a></li>
+  <li><a href="#Rf_allocLang" id="toc-Rf_allocLang" class="nav-link" data-scroll-target="#Rf_allocLang"><span class="header-section-number">10.2.8</span> <code>Rf_allocLang()</code></a></li>
   </ul></li>
   <li><a href="#accessors" id="toc-accessors" class="nav-link" data-scroll-target="#accessors"><span class="header-section-number">10.3</span> Accessors</a>
   <ul class="collapse">
   <li><a href="#CAR" id="toc-CAR" class="nav-link" data-scroll-target="#CAR"><span class="header-section-number">10.3.1</span> <code>CAR()</code> (<code>CDR()</code>, <code>CAAR()</code>, <code>CDAR()</code>, <code>CADR()</code>, <code>CDDR()</code>, <code>CDDDR()</code>, <code>CADDR()</code>, <code>CADDDR()</code>, <code>CAD4R()</code>)</a></li>
   <li><a href="#SETCAR" id="toc-SETCAR" class="nav-link" data-scroll-target="#SETCAR"><span class="header-section-number">10.3.2</span> <code>SETCAR()</code> (<code>SETCDR()</code>, <code>SETCADR()</code>, <code>SETCADDR()</code>, <code>SETCADDDR()</code>, <code>SETCAD4R()</code>)</a></li>
   <li><a href="#TAG" id="toc-TAG" class="nav-link" data-scroll-target="#TAG"><span class="header-section-number">10.3.3</span> <code>TAG()</code> (<code>SET_TAG()</code>)</a></li>
-  <li><a href="#CONS_NR" id="toc-CONS_NR" class="nav-link" data-scroll-target="#CONS_NR"><span class="header-section-number">10.3.4</span> <code>CONS_NR()</code></a></li>
-  <li><a href="#MISSING" id="toc-MISSING" class="nav-link" data-scroll-target="#MISSING"><span class="header-section-number">10.3.5</span> <code>MISSING()</code> (<code>SET_MISSING()</code>)</a></li>
-  <li><a href="#pretending-its-a-vector" id="toc-pretending-its-a-vector" class="nav-link" data-scroll-target="#pretending-its-a-vector"><span class="header-section-number">10.3.6</span> Pretending it’s a vector</a></li>
-  <li><a href="#Rf_allocList" id="toc-Rf_allocList" class="nav-link" data-scroll-target="#Rf_allocList"><span class="header-section-number">10.3.7</span> <code>Rf_allocList()</code></a></li>
-  <li><a href="#Rf_nthcdr" id="toc-Rf_nthcdr" class="nav-link" data-scroll-target="#Rf_nthcdr"><span class="header-section-number">10.3.8</span> <code>Rf_nthcdr()</code></a></li>
+  <li><a href="#MISSING" id="toc-MISSING" class="nav-link" data-scroll-target="#MISSING"><span class="header-section-number">10.3.4</span> <code>MISSING()</code> (<code>SET_MISSING()</code>)</a></li>
+  <li><a href="#pretending-its-a-vector" id="toc-pretending-its-a-vector" class="nav-link" data-scroll-target="#pretending-its-a-vector"><span class="header-section-number">10.3.5</span> Pretending it’s a vector</a></li>
+  <li><a href="#Rf_allocList" id="toc-Rf_allocList" class="nav-link" data-scroll-target="#Rf_allocList"><span class="header-section-number">10.3.6</span> <code>Rf_allocList()</code></a></li>
+  <li><a href="#Rf_nthcdr" id="toc-Rf_nthcdr" class="nav-link" data-scroll-target="#Rf_nthcdr"><span class="header-section-number">10.3.7</span> <code>Rf_nthcdr()</code></a></li>
+  <li><a href="#Rf_elt" id="toc-Rf_elt" class="nav-link" data-scroll-target="#Rf_elt"><span class="header-section-number">10.3.8</span> <code>Rf_elt()</code> (<code>Rf_lastElt()</code>)</a></li>
   <li><a href="#creating-a-call" id="toc-creating-a-call" class="nav-link" data-scroll-target="#creating-a-call"><span class="header-section-number">10.3.9</span> Creating a call</a></li>
   </ul></li>
   <li><a href="#dots-dotsxp" id="toc-dots-dotsxp" class="nav-link" data-scroll-target="#dots-dotsxp"><span class="header-section-number">10.4</span> Dots (<code>DOTSXP</code>)</a></li>
@@ -418,23 +450,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>Pairlists are linked lists used for calls, unevaluated arguments, attributes, and in <code>...</code>.</p>
-<p>The terminology of pairlist comes from LISPs “dotted pairs” which is a way of describing “CONS” cells. A CONS cell is a pair of pointers:</p>
+<p>Pairlists (<code>LISTSXP</code>) are linked lists used for calls, unevaluated arguments, <a href="./attributes.html">attributes</a>, and <code>...</code>. The name comes from Lisp’s “dotted pairs”: each CONS cell is a pair of pointers:</p>
 <ul>
-<li>“CAR” (contents of address register) points to an object</li>
-<li>“CDR” (contents of decrement register) points to the next element in the list. The CDR of the last element is <code>R_NilValue</code>.</li>
+<li><code>CAR</code> (contents of address register) points to the element.</li>
+<li><code>CDR</code> (contents of decrement register) points to the next cell. The <code>CDR</code> of the last cell is <code>R_NilValue</code>.</li>
 </ul>
-<p>Graphically, this looks like:</p>
+<p>Graphically:</p>
 <p><img src="diagrams/pairlists.png" class="img-fluid"></p>
-<p>To loop over all elements of a pairlist, use this template:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> length<span class="op">(</span>SEXP s<span class="op">)</span> <span class="op">{</span></span>
+<p>To loop over a pairlist, use this template:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> pairlist_length<span class="op">(</span>SEXP x<span class="op">)</span> <span class="op">{</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span><span class="op">(</span>SEXP cons <span class="op">=</span> x<span class="op">;</span> cons <span class="op">!=</span> R_NilValue<span class="op">;</span> cons <span class="op">=</span> CDR<span class="op">(</span>nxt<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> <span class="op">(</span>SEXP cons <span class="op">=</span> x<span class="op">;</span> cons <span class="op">!=</span> R_NilValue<span class="op">;</span> cons <span class="op">=</span> CDR<span class="op">(</span>cons<span class="op">))</span> <span class="op">{</span></span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    SEXP el <span class="op">=</span> CAR<span class="op">(</span>cons<span class="op">);</span></span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    i<span class="op">++;</span></span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> i<span class="op">;</span></span>
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <section id="test" class="level2" data-number="10.1">
@@ -447,14 +478,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>Rboolean Rf_isList<span class="op">(</span>SEXP x<span class="op">);</span>     <span class="co">// LISTSXP, NILSXP</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 </section>
+<section id="Rf_isUserBinop" class="level3" data-number="10.1.2">
+<h3 data-number="10.1.2" class="anchored" data-anchor-id="Rf_isUserBinop"><span class="header-section-number">10.1.2</span> <code>Rf_isUserBinop()</code></h3>
+<p>Test whether a call is a user-defined binary operator.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>Rboolean Rf_isUserBinop<span class="op">(</span>SEXP<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+</section>
 </section>
 <section id="creation" class="level2" data-number="10.2">
 <h2 data-number="10.2" class="anchored" data-anchor-id="creation"><span class="header-section-number">10.2</span> Creation</h2>
+<p>The <code>CDR</code> of the final cell must be <code>R_NilValue</code>; the <code>Rf_list1()</code>–<code>Rf_list5()</code> helpers add the terminator for you.</p>
 <section id="Rf_cons" class="level3" data-number="10.2.1">
 <h3 data-number="10.2.1" class="anchored" data-anchor-id="Rf_cons"><span class="header-section-number">10.2.1</span> <code>Rf_cons()</code> (<code>Rf_lcons()</code>)</h3>
 <p>Create a new CONS cell linking two objects.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>SEXP Rf_cons<span class="op">(</span>SEXP a<span class="op">,</span> SEXP b<span class="op">);</span>   <span class="co">// function arguments</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>SEXP Rf_lcons<span class="op">(</span>SEXP a<span class="op">,</span> SEXP b<span class="op">);</span>  <span class="co">// calls</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>SEXP Rf_cons<span class="op">(</span>SEXP a<span class="op">,</span> SEXP b<span class="op">);</span>   <span class="co">// function arguments</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>SEXP Rf_lcons<span class="op">(</span>SEXP a<span class="op">,</span> SEXP b<span class="op">);</span>  <span class="co">// calls</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> result · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 <p>The <code>CDR</code> of the final value must be <code>R_NilValue</code>.</p>
 <p><strong>See also:</strong> <a href="#Rf_list1"><code>Rf_list1()</code></a>, <a href="#Rf_lang1"><code>Rf_lang1()</code></a></p>
@@ -462,11 +500,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="Rf_list1" class="level3" data-number="10.2.2">
 <h3 data-number="10.2.2" class="anchored" data-anchor-id="Rf_list1"><span class="header-section-number">10.2.2</span> <code>Rf_list1()</code> (<code>Rf_list2()</code>, <code>Rf_list3()</code>, <code>Rf_list4()</code>, <code>Rf_list5()</code>)</h3>
 <p>Create a pairlist of one to five elements.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>SEXP Rf_list1<span class="op">(</span>SEXP x1<span class="op">);</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>SEXP Rf_list2<span class="op">(</span>SEXP x1<span class="op">,</span> SEXP x2<span class="op">);</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>SEXP Rf_list3<span class="op">(</span>SEXP x1<span class="op">,</span> SEXP x2<span class="op">,</span> SEXP x3<span class="op">);</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>SEXP Rf_list4<span class="op">(</span>SEXP x1<span class="op">,</span> SEXP x2<span class="op">,</span> SEXP x3<span class="op">,</span> SEXP x4<span class="op">);</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>SEXP Rf_list5<span class="op">(</span>SEXP x1<span class="op">,</span> SEXP x2<span class="op">,</span> SEXP x3<span class="op">,</span> SEXP x4<span class="op">,</span> SEXP x5<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>SEXP Rf_list1<span class="op">(</span>SEXP x1<span class="op">);</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>SEXP Rf_list2<span class="op">(</span>SEXP x1<span class="op">,</span> SEXP x2<span class="op">);</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>SEXP Rf_list3<span class="op">(</span>SEXP x1<span class="op">,</span> SEXP x2<span class="op">,</span> SEXP x3<span class="op">);</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>SEXP Rf_list4<span class="op">(</span>SEXP x1<span class="op">,</span> SEXP x2<span class="op">,</span> SEXP x3<span class="op">,</span> SEXP x4<span class="op">);</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>SEXP Rf_list5<span class="op">(</span>SEXP x1<span class="op">,</span> SEXP x2<span class="op">,</span> SEXP x3<span class="op">,</span> SEXP x4<span class="op">,</span> SEXP x5<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> result · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 <p>These automatically add the terminating <code>R_NilValue</code>.</p>
 <p><strong>See also:</strong> <a href="#Rf_cons"><code>Rf_cons()</code></a>, <a href="#Rf_lang1"><code>Rf_lang1()</code></a></p>
@@ -474,12 +512,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="Rf_lang1" class="level3" data-number="10.2.3">
 <h3 data-number="10.2.3" class="anchored" data-anchor-id="Rf_lang1"><span class="header-section-number">10.2.3</span> <code>Rf_lang1()</code> (<code>Rf_lang2()</code>, <code>Rf_lang3()</code>, <code>Rf_lang4()</code>, <code>Rf_lang5()</code>, <code>Rf_lang6()</code>)</h3>
 <p>Create a call to a function with zero to five arguments.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>SEXP Rf_lang1<span class="op">(</span>SEXP x1<span class="op">);</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>SEXP Rf_lang2<span class="op">(</span>SEXP x1<span class="op">,</span> SEXP x2<span class="op">);</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>SEXP Rf_lang3<span class="op">(</span>SEXP x1<span class="op">,</span> SEXP x2<span class="op">,</span> SEXP x3<span class="op">);</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>SEXP Rf_lang4<span class="op">(</span>SEXP x1<span class="op">,</span> SEXP x2<span class="op">,</span> SEXP x3<span class="op">,</span> SEXP x4<span class="op">);</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>SEXP Rf_lang5<span class="op">(</span>SEXP x1<span class="op">,</span> SEXP x2<span class="op">,</span> SEXP x3<span class="op">,</span> SEXP x4<span class="op">,</span> SEXP x5<span class="op">);</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>SEXP Rf_lang6<span class="op">(</span>SEXP x1<span class="op">,</span> SEXP x2<span class="op">,</span> SEXP x3<span class="op">,</span> SEXP x4<span class="op">,</span> SEXP x5<span class="op">,</span> SEXP x6<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>SEXP Rf_lang1<span class="op">(</span>SEXP x1<span class="op">);</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>SEXP Rf_lang2<span class="op">(</span>SEXP x1<span class="op">,</span> SEXP x2<span class="op">);</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>SEXP Rf_lang3<span class="op">(</span>SEXP x1<span class="op">,</span> SEXP x2<span class="op">,</span> SEXP x3<span class="op">);</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>SEXP Rf_lang4<span class="op">(</span>SEXP x1<span class="op">,</span> SEXP x2<span class="op">,</span> SEXP x3<span class="op">,</span> SEXP x4<span class="op">);</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>SEXP Rf_lang5<span class="op">(</span>SEXP x1<span class="op">,</span> SEXP x2<span class="op">,</span> SEXP x3<span class="op">,</span> SEXP x4<span class="op">,</span> SEXP x5<span class="op">);</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>SEXP Rf_lang6<span class="op">(</span>SEXP x1<span class="op">,</span> SEXP x2<span class="op">,</span> SEXP x3<span class="op">,</span> SEXP x4<span class="op">,</span> SEXP x5<span class="op">,</span> SEXP x6<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> result · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 <p>These automatically add the terminating <code>R_NilValue</code>.</p>
 <p><strong>See also:</strong> <a href="#Rf_cons"><code>Rf_cons()</code></a>, <a href="#Rf_list1"><code>Rf_list1()</code></a></p>
@@ -487,46 +525,64 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="Rf_allocFormalsList2" class="level3" data-number="10.2.4">
 <h3 data-number="10.2.4" class="anchored" data-anchor-id="Rf_allocFormalsList2"><span class="header-section-number">10.2.4</span> <code>Rf_allocFormalsList2()</code> (<code>Rf_allocFormalsList3()</code>, <code>Rf_allocFormalsList4()</code>, <code>Rf_allocFormalsList5()</code>, <code>Rf_allocFormalsList6()</code>)</h3>
 <p>Allocate a formals pairlist of two to six elements.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>SEXP Rf_allocFormalsList2<span class="op">(</span>SEXP x1<span class="op">,</span> SEXP x2<span class="op">);</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>SEXP Rf_allocFormalsList3<span class="op">(</span>SEXP x1<span class="op">,</span> SEXP x2<span class="op">,</span> SEXP x3<span class="op">);</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>SEXP Rf_allocFormalsList4<span class="op">(</span>SEXP x1<span class="op">,</span> SEXP x2<span class="op">,</span> SEXP x3<span class="op">,</span> SEXP x4<span class="op">);</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>SEXP Rf_allocFormalsList5<span class="op">(</span>SEXP x1<span class="op">,</span> SEXP x2<span class="op">,</span> SEXP x3<span class="op">,</span> SEXP x4<span class="op">,</span> SEXP x5<span class="op">);</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>SEXP Rf_allocFormalsList6<span class="op">(</span>SEXP x1<span class="op">,</span> SEXP x2<span class="op">,</span> SEXP x3<span class="op">,</span> SEXP x4<span class="op">,</span> SEXP x5<span class="op">,</span> SEXP x6<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>SEXP Rf_allocFormalsList2<span class="op">(</span>SEXP x1<span class="op">,</span> SEXP x2<span class="op">);</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>SEXP Rf_allocFormalsList3<span class="op">(</span>SEXP x1<span class="op">,</span> SEXP x2<span class="op">,</span> SEXP x3<span class="op">);</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>SEXP Rf_allocFormalsList4<span class="op">(</span>SEXP x1<span class="op">,</span> SEXP x2<span class="op">,</span> SEXP x3<span class="op">,</span> SEXP x4<span class="op">);</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>SEXP Rf_allocFormalsList5<span class="op">(</span>SEXP x1<span class="op">,</span> SEXP x2<span class="op">,</span> SEXP x3<span class="op">,</span> SEXP x4<span class="op">,</span> SEXP x5<span class="op">);</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>SEXP Rf_allocFormalsList6<span class="op">(</span>SEXP x1<span class="op">,</span> SEXP x2<span class="op">,</span> SEXP x3<span class="op">,</span> SEXP x4<span class="op">,</span> SEXP x5<span class="op">,</span> SEXP x6<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> result · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 <p>These automatically add the terminating <code>R_NilValue</code>.</p>
 </section>
 <section id="Rf_PairToVectorList" class="level3" data-number="10.2.5">
 <h3 data-number="10.2.5" class="anchored" data-anchor-id="Rf_PairToVectorList"><span class="header-section-number">10.2.5</span> <code>Rf_PairToVectorList()</code> (<code>Rf_VectorToPairList()</code>)</h3>
 <p>Convert a pairlist to a list vector, or a list vector to a pairlist.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>SEXP Rf_PairToVectorList<span class="op">(</span>SEXP x<span class="op">);</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>SEXP Rf_VectorToPairList<span class="op">(</span>SEXP x<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>SEXP Rf_PairToVectorList<span class="op">(</span>SEXP x<span class="op">);</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>SEXP Rf_VectorToPairList<span class="op">(</span>SEXP x<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> result · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 </section>
 <section id="Rf_listAppend" class="level3" data-number="10.2.6">
 <h3 data-number="10.2.6" class="anchored" data-anchor-id="Rf_listAppend"><span class="header-section-number">10.2.6</span> <code>Rf_listAppend()</code></h3>
 <p>Append one pairlist to another.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>SEXP Rf_listAppend<span class="op">(</span>SEXP source<span class="op">,</span> SEXP target<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>SEXP Rf_listAppend<span class="op">(</span>SEXP source<span class="op">,</span> SEXP target<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 <p>Mutates <code>source</code> in place by walking to its last cell and setting its <code>CDR</code> to <code>target</code>; no new cells are allocated and the returned pairlist is the (mutated) <code>source</code> you already hold.</p>
-<p>The <code>CDR</code> of the final value must be <code>R_NilValue</code>.</p>
-<p>There are helpers for 5-6 arguments. These automatically add the terminating <code>R_NilValue</code>.</p>
+</section>
+<section id="Rf_lcons" class="level3" data-number="10.2.7">
+<h3 data-number="10.2.7" class="anchored" data-anchor-id="Rf_lcons"><span class="header-section-number">10.2.7</span> <code>Rf_lcons()</code></h3>
+<p>Prepend a value to a language object.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>SEXP Rf_lcons<span class="op">(</span>SEXP<span class="op">,</span> SEXP<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> result · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<p><strong>See also:</strong> <a href="#Rf_cons"><code>Rf_cons()</code></a></p>
+</section>
+<section id="Rf_allocLang" class="level3" data-number="10.2.8">
+<h3 data-number="10.2.8" class="anchored" data-anchor-id="Rf_allocLang"><span class="header-section-number">10.2.8</span> <code>Rf_allocLang()</code></h3>
+<p>Allocate a call (LANGSXP) with room for a function and n - 1 arguments.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>SEXP Rf_allocLang<span class="op">(</span><span class="dt">int</span> n<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> result · <strong>Errors:</strong> can throw · <strong>Since:</strong> 4.4.1 · <strong>R equivalent:</strong> —</p>
+<ul>
+<li><code>n</code>: total number of pairlist nodes (function plus arguments).</li>
+</ul>
+<p>The API replacement for the non-API idiom <code>Rf_allocList(n)</code> + <code>SET_TYPEOF(..., LANGSXP)</code>. Fill in the function and arguments with <code>SETCAR()</code>/<code>SETCADR()</code> etc. before evaluating.</p>
+<p><strong>See also:</strong> <a href="#Rf_lang1"><code>Rf_lang1()</code></a>, <a href="#Rf_allocList"><code>Rf_allocList()</code></a></p>
 </section>
 </section>
 <section id="accessors" class="level2" data-number="10.3">
 <h2 data-number="10.3" class="anchored" data-anchor-id="accessors"><span class="header-section-number">10.3</span> Accessors</h2>
+<p>Unlike lists (<code>VECSXP</code>), pairlists can’t be indexed directly. Instead you navigate with <code>CAR()</code> (the first element) and <code>CDR()</code> (the rest of the list), composed into <code>CAAR()</code>, <code>CADDR()</code>, and so on, with matching setters <code>SETCAR()</code>, <code>SETCDR()</code>, etc.</p>
+<p><img src="diagrams/pairlist-names.png" class="img-fluid"></p>
 <section id="CAR" class="level3" data-number="10.3.1">
 <h3 data-number="10.3.1" class="anchored" data-anchor-id="CAR"><span class="header-section-number">10.3.1</span> <code>CAR()</code> (<code>CDR()</code>, <code>CAAR()</code>, <code>CDAR()</code>, <code>CADR()</code>, <code>CDDR()</code>, <code>CDDDR()</code>, <code>CADDR()</code>, <code>CADDDR()</code>, <code>CAD4R()</code>)</h3>
 <p>Get the first element or a nested component of a CONS cell.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>SEXP CAR<span class="op">(</span>SEXP e<span class="op">);</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>SEXP CDR<span class="op">(</span>SEXP e<span class="op">);</span></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>SEXP CAAR<span class="op">(</span>SEXP e<span class="op">);</span></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>SEXP CDAR<span class="op">(</span>SEXP e<span class="op">);</span></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>SEXP CADR<span class="op">(</span>SEXP e<span class="op">);</span></span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>SEXP CDDR<span class="op">(</span>SEXP e<span class="op">);</span></span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>SEXP CDDDR<span class="op">(</span>SEXP e<span class="op">);</span></span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>SEXP CADDR<span class="op">(</span>SEXP e<span class="op">);</span></span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>SEXP CADDDR<span class="op">(</span>SEXP e<span class="op">);</span></span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>SEXP CAD4R<span class="op">(</span>SEXP e<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>SEXP CAR<span class="op">(</span>SEXP e<span class="op">);</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>SEXP CDR<span class="op">(</span>SEXP e<span class="op">);</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>SEXP CAAR<span class="op">(</span>SEXP e<span class="op">);</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>SEXP CDAR<span class="op">(</span>SEXP e<span class="op">);</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>SEXP CADR<span class="op">(</span>SEXP e<span class="op">);</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>SEXP CDDR<span class="op">(</span>SEXP e<span class="op">);</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>SEXP CDDDR<span class="op">(</span>SEXP e<span class="op">);</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>SEXP CADDR<span class="op">(</span>SEXP e<span class="op">);</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>SEXP CADDDR<span class="op">(</span>SEXP e<span class="op">);</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>SEXP CAD4R<span class="op">(</span>SEXP e<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 <p>Pairlists can’t be indexed directly, so these accessors navigate the linked list instead. <code>CAR()</code> returns the first element and <code>CDR()</code> the rest; they compose to give <code>CAAR()</code>, <code>CDAR()</code>, <code>CADDR()</code>, <code>CADDDR()</code>, and so on.</p>
 <p><strong>See also:</strong> <a href="#SETCAR"><code>SETCAR()</code></a>, <a href="#TAG"><code>TAG()</code></a></p>
@@ -534,12 +590,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="SETCAR" class="level3" data-number="10.3.2">
 <h3 data-number="10.3.2" class="anchored" data-anchor-id="SETCAR"><span class="header-section-number">10.3.2</span> <code>SETCAR()</code> (<code>SETCDR()</code>, <code>SETCADR()</code>, <code>SETCADDR()</code>, <code>SETCADDDR()</code>, <code>SETCAD4R()</code>)</h3>
 <p>Set the first element or a nested component of a CONS cell.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>SEXP SETCAR<span class="op">(</span>SEXP x<span class="op">,</span> SEXP y<span class="op">);</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>SEXP SETCDR<span class="op">(</span>SEXP x<span class="op">,</span> SEXP y<span class="op">);</span></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>SEXP SETCADR<span class="op">(</span>SEXP x<span class="op">,</span> SEXP y<span class="op">);</span></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>SEXP SETCADDR<span class="op">(</span>SEXP x<span class="op">,</span> SEXP y<span class="op">);</span></span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>SEXP SETCADDDR<span class="op">(</span>SEXP x<span class="op">,</span> SEXP y<span class="op">);</span></span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>SEXP SETCAD4R<span class="op">(</span>SEXP e<span class="op">,</span> SEXP y<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>SEXP SETCAR<span class="op">(</span>SEXP x<span class="op">,</span> SEXP y<span class="op">);</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>SEXP SETCDR<span class="op">(</span>SEXP x<span class="op">,</span> SEXP y<span class="op">);</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>SEXP SETCADR<span class="op">(</span>SEXP x<span class="op">,</span> SEXP y<span class="op">);</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>SEXP SETCADDR<span class="op">(</span>SEXP x<span class="op">,</span> SEXP y<span class="op">);</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>SEXP SETCADDDR<span class="op">(</span>SEXP x<span class="op">,</span> SEXP y<span class="op">);</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>SEXP SETCAD4R<span class="op">(</span>SEXP e<span class="op">,</span> SEXP y<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 <p>Mirror the <code>CAR()</code>/<code>CDR()</code> family of getters.</p>
 <p><strong>See also:</strong> <a href="#CAR"><code>CAR()</code></a>, <a href="#SET_TAG"><code>SET_TAG()</code></a></p>
@@ -547,82 +603,77 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="TAG" class="level3" data-number="10.3.3">
 <h3 data-number="10.3.3" class="anchored" data-anchor-id="TAG"><span class="header-section-number">10.3.3</span> <code>TAG()</code> (<code>SET_TAG()</code>)</h3>
 <p>Get or set the tag (name) attached to a node of a pairlist.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>SEXP TAG<span class="op">(</span>SEXP e<span class="op">);</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> SET_TAG<span class="op">(</span>SEXP x<span class="op">,</span> SEXP y<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>SEXP TAG<span class="op">(</span>SEXP e<span class="op">);</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> SET_TAG<span class="op">(</span>SEXP x<span class="op">,</span> SEXP y<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 <p><strong>See also:</strong> <a href="#CAR"><code>CAR()</code></a></p>
 </section>
-<section id="CONS_NR" class="level3" data-number="10.3.4">
-<h3 data-number="10.3.4" class="anchored" data-anchor-id="CONS_NR"><span class="header-section-number">10.3.4</span> <code>CONS_NR()</code></h3>
-<p>Create a CONS cell with no reference counting.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>SEXP CONS_NR<span class="op">(</span>SEXP a<span class="op">,</span> SEXP b<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> non-API (use <a href="#Rf_cons"><code>Rf_cons()</code></a>) · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> result · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
-<p>CONS with no-refcounting?</p>
-<p><strong>See also:</strong> <a href="#Rf_cons"><code>Rf_cons()</code></a></p>
-</section>
-<section id="MISSING" class="level3" data-number="10.3.5">
-<h3 data-number="10.3.5" class="anchored" data-anchor-id="MISSING"><span class="header-section-number">10.3.5</span> <code>MISSING()</code> (<code>SET_MISSING()</code>)</h3>
+<section id="MISSING" class="level3" data-number="10.3.4">
+<h3 data-number="10.3.4" class="anchored" data-anchor-id="MISSING"><span class="header-section-number">10.3.4</span> <code>MISSING()</code> (<code>SET_MISSING()</code>)</h3>
 <p>Get or set whether an element of a call is missing.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> MISSING<span class="op">(</span>SEXP x<span class="op">);</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> SET_MISSING<span class="op">(</span>SEXP x<span class="op">,</span> <span class="dt">int</span> v<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> MISSING<span class="op">(</span>SEXP x<span class="op">);</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> SET_MISSING<span class="op">(</span>SEXP x<span class="op">,</span> <span class="dt">int</span> v<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 <p>Used for missing values in function calls?</p>
-<p>Unlike lists (<code>VECSXP</code>s), pairlists (<code>LISTSXP</code>s) have no way to index into an arbitrary location. Instead, R provides a set of helper functions that navigate along a linked list. The basic helpers are <code>CAR()</code>, which extracts the first element of the list, and <code>CDR()</code>, which extracts the rest of the list. These can be composed to get <code>CAAR()</code>, <code>CDAR()</code>, <code>CADDR()</code>, <code>CADDDR()</code>, and so on. Corresponding to the getters, R provides setters <code>SETCAR()</code>, <code>SETCDR()</code>, etc.</p>
-<p><img src="diagrams/pairlist-names.png" class="img-fluid"></p>
 </section>
-<section id="pretending-its-a-vector" class="level3" data-number="10.3.6">
-<h3 data-number="10.3.6" class="anchored" data-anchor-id="pretending-its-a-vector"><span class="header-section-number">10.3.6</span> Pretending it’s a vector</h3>
+<section id="pretending-its-a-vector" class="level3" data-number="10.3.5">
+<h3 data-number="10.3.5" class="anchored" data-anchor-id="pretending-its-a-vector"><span class="header-section-number">10.3.5</span> Pretending it’s a vector</h3>
+<p>A few functions let you treat a pairlist like a vector. These make it easy to write <span class="math inline">\(O(n^2)\)</span> code, but pairlists are usually short enough that it doesn’t matter.</p>
 </section>
-<section id="Rf_allocList" class="level3" data-number="10.3.7">
-<h3 data-number="10.3.7" class="anchored" data-anchor-id="Rf_allocList"><span class="header-section-number">10.3.7</span> <code>Rf_allocList()</code></h3>
+<section id="Rf_allocList" class="level3" data-number="10.3.6">
+<h3 data-number="10.3.6" class="anchored" data-anchor-id="Rf_allocList"><span class="header-section-number">10.3.6</span> <code>Rf_allocList()</code></h3>
 <p>Create a new pairlist of the specified length.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>SEXP Rf_allocList<span class="op">(</span><span class="dt">int</span> n<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>SEXP Rf_allocList<span class="op">(</span><span class="dt">int</span> n<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> result · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 <p>Treats the pairlist as if it were a vector, which is easy to get O(n^2) from, but is unlikely to be a bottleneck at typical pairlist sizes. To create a call expression, use <code>Rf_allocLang()</code> (added in R 4.4.1) or <code>Rf_lcons()</code> rather than <code>Rf_allocList()</code> plus <code>SET_TYPEOF()</code>, which will not be available to packages in the future.</p>
-<p><strong>See also:</strong> <a href="#Rf_nthcdr"><code>Rf_nthcdr()</code></a>, <a href="utilities.html#Rf_lcons"><code>Rf_lcons()</code></a></p>
+<p><strong>See also:</strong> <a href="#Rf_nthcdr"><code>Rf_nthcdr()</code></a>, <a href="#Rf_lcons"><code>Rf_lcons()</code></a></p>
 </section>
-<section id="Rf_nthcdr" class="level3" data-number="10.3.8">
-<h3 data-number="10.3.8" class="anchored" data-anchor-id="Rf_nthcdr"><span class="header-section-number">10.3.8</span> <code>Rf_nthcdr()</code></h3>
+<section id="Rf_nthcdr" class="level3" data-number="10.3.7">
+<h3 data-number="10.3.7" class="anchored" data-anchor-id="Rf_nthcdr"><span class="header-section-number">10.3.7</span> <code>Rf_nthcdr()</code></h3>
 <p>Access the nth element of a pairlist.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>SEXP Rf_nthcdr<span class="op">(</span>SEXP x<span class="op">,</span> <span class="dt">int</span> n<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>SEXP Rf_nthcdr<span class="op">(</span>SEXP x<span class="op">,</span> <span class="dt">int</span> n<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 <p>Treats the pairlist as if it were a vector; repeated calls can become O(n^2), though this is unlikely to matter at typical pairlist sizes. Errors if <code>x</code> is not a pairlist or has fewer than <code>n</code> elements.</p>
 <p><strong>See also:</strong> <a href="#Rf_allocList"><code>Rf_allocList()</code></a>, <a href="#CDR"><code>CDR()</code></a></p>
-<p>Some functions allow you to work with a pair list as if it’s a vector:</p>
-<p>If you use these it’s easy to get O(n^2) behaviour, but for the usual size of pairlists, this is unlikely to cause a performance bottleneck.</p>
+</section>
+<section id="Rf_elt" class="level3" data-number="10.3.8">
+<h3 data-number="10.3.8" class="anchored" data-anchor-id="Rf_elt"><span class="header-section-number">10.3.8</span> <code>Rf_elt()</code> (<code>Rf_lastElt()</code>)</h3>
+<p>Get an element of a pairlist by index, or the last element.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>SEXP Rf_elt<span class="op">(</span>SEXP<span class="op">,</span> <span class="dt">int</span><span class="op">);</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>SEXP Rf_lastElt<span class="op">(</span>SEXP<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 </section>
 <section id="creating-a-call" class="level3" data-number="10.3.9">
 <h3 data-number="10.3.9" class="anchored" data-anchor-id="creating-a-call"><span class="header-section-number">10.3.9</span> Creating a call</h3>
-<p>Pairlists are most commonly used for function calls. Calls to functions with 0 to 5 arguments can be created directly via <code>Rf_lang1()</code> to <code>Rf_lang6()</code>. However, these functions do not allow for named arguments. If you need named arguments, use the following template:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co">// equivalent of:</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="co">// fun(arg1 = a, arg2 = b, arg3 = c)</span></span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>SEXP call <span class="op">=</span> PROTECT<span class="op">(</span>Rf_allocVector<span class="op">(</span>LANGSXP<span class="op">,</span> <span class="dv">4</span><span class="op">));</span> <span class="co">// 4 = # of args + 1 </span></span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>SETCAR<span class="op">(</span>call<span class="op">,</span> fun<span class="op">);</span> </span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>SEXP s <span class="op">=</span> CDR<span class="op">(</span>call<span class="op">);</span></span>
-<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>SETCAR<span class="op">(</span>s<span class="op">,</span> a<span class="op">);</span></span>
-<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>SET_TAG<span class="op">(</span>s<span class="op">,</span> Rf_install<span class="op">(</span><span class="st">"arg1"</span><span class="op">));</span></span>
-<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>s <span class="op">=</span> CDR<span class="op">(</span>s<span class="op">);</span></span>
-<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>SETCAR<span class="op">(</span>s<span class="op">,</span> b<span class="op">);</span></span>
-<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>SET_TAG<span class="op">(</span>s<span class="op">,</span> Rf_install<span class="op">(</span><span class="st">"arg2"</span><span class="op">));</span></span>
-<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>s <span class="op">=</span> CDR<span class="op">(</span>s<span class="op">);</span></span>
-<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>SETCAR<span class="op">(</span>s<span class="op">,</span> c<span class="op">);</span></span>
-<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>SET_TAG<span class="op">(</span>s<span class="op">,</span> Rf_install<span class="op">(</span><span class="st">"arg3"</span><span class="op">));</span></span>
-<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>SEXP out <span class="op">=</span> PROTECT<span class="op">(</span>Rf_eval<span class="op">(</span>call<span class="op">,</span> env<span class="op">));</span></span>
-<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a><span class="op">...</span></span>
-<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a>UNPROTECT<span class="op">(</span><span class="dv">2</span><span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Pairlists are most commonly used to build function calls. Calls with 0 to 5 unnamed arguments can be created directly with <code>Rf_lang1()</code> to <code>Rf_lang6()</code>. For named arguments, build the call and set tags yourself:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co">// equivalent of: fun(arg1 = a, arg2 = b, arg3 = c)</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>SEXP call <span class="op">=</span> PROTECT<span class="op">(</span>Rf_allocVector<span class="op">(</span>LANGSXP<span class="op">,</span> <span class="dv">4</span><span class="op">));</span> <span class="co">// 4 = # of args + 1</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>SETCAR<span class="op">(</span>call<span class="op">,</span> fun<span class="op">);</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>SEXP s <span class="op">=</span> CDR<span class="op">(</span>call<span class="op">);</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>SETCAR<span class="op">(</span>s<span class="op">,</span> a<span class="op">);</span></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>SET_TAG<span class="op">(</span>s<span class="op">,</span> Rf_install<span class="op">(</span><span class="st">"arg1"</span><span class="op">));</span></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>s <span class="op">=</span> CDR<span class="op">(</span>s<span class="op">);</span></span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>SETCAR<span class="op">(</span>s<span class="op">,</span> b<span class="op">);</span></span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>SET_TAG<span class="op">(</span>s<span class="op">,</span> Rf_install<span class="op">(</span><span class="st">"arg2"</span><span class="op">));</span></span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>s <span class="op">=</span> CDR<span class="op">(</span>s<span class="op">);</span></span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>SETCAR<span class="op">(</span>s<span class="op">,</span> c<span class="op">);</span></span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>SET_TAG<span class="op">(</span>s<span class="op">,</span> Rf_install<span class="op">(</span><span class="st">"arg3"</span><span class="op">));</span></span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a>SEXP out <span class="op">=</span> PROTECT<span class="op">(</span>Rf_eval<span class="op">(</span>call<span class="op">,</span> env<span class="op">));</span></span>
+<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a><span class="op">...</span></span>
+<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a>UNPROTECT<span class="op">(</span><span class="dv">2</span><span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 </section>
 <section id="dots-dotsxp" class="level2" data-number="10.4">
 <h2 data-number="10.4" class="anchored" data-anchor-id="dots-dotsxp"><span class="header-section-number">10.4</span> Dots (<code>DOTSXP</code>)</h2>
-<p>Represents the <code>...</code> structure in R. Easiest to get to with <code>findVar(R_DotsSymbol, env)</code> or similar. Is usually a pair list, but will have value <code>R_MissingArg</code> if there are no arguments.</p>
+<p><code>DOTSXP</code> represents the <code>...</code> structure inside a function. Retrieve it with <code>Rf_findVar(R_DotsSymbol, env)</code> or similar. It’s usually a pairlist, but is <code>R_MissingArg</code> when there are no <code>...</code> arguments.</p>
 </section>
 <section id="null-nilsxp" class="level2" data-number="10.5">
 <h2 data-number="10.5" class="anchored" data-anchor-id="null-nilsxp"><span class="header-section-number">10.5</span> Null (<code>NILSXP</code>)</h2>
-<p>There is a single value with type <code>NILSXP</code>: <code>R_NilValue</code>. This corresponds to <code>NULL</code> in R, and is often used as generic zero length vector.</p>
+<p>There is a single value of type <code>NILSXP</code>: <code>R_NilValue</code>. It corresponds to <code>NULL</code> in R and is often used as a generic zero-length vector — and as the terminator of every pairlist.</p>
 
 
 </section>

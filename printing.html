@@ -275,7 +275,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./errors.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Errors</span></span></a>
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Errors and conditions</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -345,7 +345,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./compliance.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Migrating to API compliance</span></a>
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Migrating to API compliance</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -366,13 +366,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#printing" id="toc-printing" class="nav-link active" data-scroll-target="#printing"><span class="header-section-number">16.1</span> Printing</a>
-  <ul class="collapse">
-  <li><a href="#R_ShowMessage" id="toc-R_ShowMessage" class="nav-link" data-scroll-target="#R_ShowMessage"><span class="header-section-number">16.1.1</span> <code>R_ShowMessage()</code></a></li>
-  <li><a href="#Rprintf" id="toc-Rprintf" class="nav-link" data-scroll-target="#Rprintf"><span class="header-section-number">16.1.2</span> <code>Rprintf()</code> (<code>REprintf()</code>)</a></li>
-  <li><a href="#Rf_PrintValue" id="toc-Rf_PrintValue" class="nav-link" data-scroll-target="#Rf_PrintValue"><span class="header-section-number">16.1.3</span> <code>Rf_PrintValue()</code></a></li>
-  <li><a href="#R_FlushConsole" id="toc-R_FlushConsole" class="nav-link" data-scroll-target="#R_FlushConsole"><span class="header-section-number">16.1.4</span> <code>R_FlushConsole()</code></a></li>
-  </ul></li>
+  <li><a href="#R_ShowMessage" id="toc-R_ShowMessage" class="nav-link active" data-scroll-target="#R_ShowMessage"><span class="header-section-number">16.0.1</span> <code>R_ShowMessage()</code></a></li>
+  <li><a href="#Rprintf" id="toc-Rprintf" class="nav-link" data-scroll-target="#Rprintf"><span class="header-section-number">16.0.2</span> <code>Rprintf()</code> (<code>REprintf()</code>, <code>Rvprintf()</code>, <code>REvprintf()</code>)</a></li>
+  <li><a href="#Rf_PrintValue" id="toc-Rf_PrintValue" class="nav-link" data-scroll-target="#Rf_PrintValue"><span class="header-section-number">16.0.3</span> <code>Rf_PrintValue()</code></a></li>
+  <li><a href="#R_FlushConsole" id="toc-R_FlushConsole" class="nav-link" data-scroll-target="#R_FlushConsole"><span class="header-section-number">16.0.4</span> <code>R_FlushConsole()</code></a></li>
+  <li><a href="#IndexWidth" id="toc-IndexWidth" class="nav-link" data-scroll-target="#IndexWidth"><span class="header-section-number">16.0.5</span> <code>IndexWidth()</code></a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/hadley/r-internals/edit/main/printing.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/hadley/r-internals/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -398,35 +396,42 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="printing" class="level2" data-number="16.1">
-<h2 data-number="16.1" class="anchored" data-anchor-id="printing"><span class="header-section-number">16.1</span> Printing</h2>
-<section id="R_ShowMessage" class="level3" data-number="16.1.1">
-<h3 data-number="16.1.1" class="anchored" data-anchor-id="R_ShowMessage"><span class="header-section-number">16.1.1</span> <code>R_ShowMessage()</code></h3>
+<p>Never call <code>printf()</code> or <code>fputs(..., stdout)</code> from package code: the output bypasses R’s console, so it is invisible in GUIs, ignores <code>sink()</code> redirection, and is lost on cluster nodes. Use <code>Rprintf()</code> (and friends) for output, <code>R_ShowMessage()</code> for <code>message()</code>-style notifications, and <code>Rf_PrintValue()</code> to inspect an arbitrary <code>SEXP</code> while debugging.</p>
+<section id="R_ShowMessage" class="level3" data-number="16.0.1">
+<h3 data-number="16.0.1" class="anchored" data-anchor-id="R_ShowMessage"><span class="header-section-number">16.0.1</span> <code>R_ShowMessage()</code></h3>
 <p>Display a message to the user.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> R_ShowMessage<span class="op">(</span><span class="dt">const</span> <span class="dt">char</span> <span class="op">*</span>s<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>R_ext/Error.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>message()</code></p>
 </section>
-<section id="Rprintf" class="level3" data-number="16.1.2">
-<h3 data-number="16.1.2" class="anchored" data-anchor-id="Rprintf"><span class="header-section-number">16.1.2</span> <code>Rprintf()</code> (<code>REprintf()</code>)</h3>
-<p>Print to stdout or stderr.</p>
+<section id="Rprintf" class="level3" data-number="16.0.2">
+<h3 data-number="16.0.2" class="anchored" data-anchor-id="Rprintf"><span class="header-section-number">16.0.2</span> <code>Rprintf()</code> (<code>REprintf()</code>, <code>Rvprintf()</code>, <code>REvprintf()</code>)</h3>
+<p>Print to R’s output or error stream.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> Rprintf<span class="op">(</span><span class="dt">const</span> <span class="dt">char</span> <span class="op">*,</span> <span class="op">...);</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> REprintf<span class="op">(</span><span class="dt">const</span> <span class="dt">char</span> <span class="op">*,</span> <span class="op">...);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> REprintf<span class="op">(</span><span class="dt">const</span> <span class="dt">char</span> <span class="op">*,</span> <span class="op">...);</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> Rvprintf<span class="op">(</span><span class="dt">const</span> <span class="dt">char</span> <span class="op">*,</span> R_VA_LIST<span class="op">);</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> REvprintf<span class="op">(</span><span class="dt">const</span> <span class="dt">char</span> <span class="op">*,</span> R_VA_LIST<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>R_ext/Print.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>cat()</code></p>
+<p>Unlike <code>printf()</code>, output goes to R’s console: it respects <code>sink()</code> redirection and appears in GUIs and on cluster nodes. Write complete lines (ending in <code>\n</code>) before returning to R. The <code>v</code> variants take a <code>va_list</code>; in C++ code they require C++11 or <code>R_USE_C99_IN_CXX</code>.</p>
 </section>
-<section id="Rf_PrintValue" class="level3" data-number="16.1.3">
-<h3 data-number="16.1.3" class="anchored" data-anchor-id="Rf_PrintValue"><span class="header-section-number">16.1.3</span> <code>Rf_PrintValue()</code></h3>
+<section id="Rf_PrintValue" class="level3" data-number="16.0.3">
+<h3 data-number="16.0.3" class="anchored" data-anchor-id="Rf_PrintValue"><span class="header-section-number">16.0.3</span> <code>Rf_PrintValue()</code></h3>
 <p>Print an object like print() would.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> Rf_PrintValue<span class="op">(</span>SEXP<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>print()</code></p>
 </section>
-<section id="R_FlushConsole" class="level3" data-number="16.1.4">
-<h3 data-number="16.1.4" class="anchored" data-anchor-id="R_FlushConsole"><span class="header-section-number">16.1.4</span> <code>R_FlushConsole()</code></h3>
+<section id="R_FlushConsole" class="level3" data-number="16.0.4">
+<h3 data-number="16.0.4" class="anchored" data-anchor-id="R_FlushConsole"><span class="header-section-number">16.0.4</span> <code>R_FlushConsole()</code></h3>
 <p>Flush the console.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> R_FlushConsole<span class="op">(</span><span class="dt">void</span><span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>R.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>flush.console()</code></p>
-
-
 </section>
+<section id="IndexWidth" class="level3" data-number="16.0.5">
+<h3 data-number="16.0.5" class="anchored" data-anchor-id="IndexWidth"><span class="header-section-number">16.0.5</span> <code>IndexWidth()</code></h3>
+<p>Compute the character width needed to print a vector index.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#define IndexWidth    </span>Rf_IndexWidth</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Status:</strong> API · <strong>Header:</strong> <code>R_ext/Utils.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+
+
 </section>
 
 </main> <!-- /main -->
@@ -832,8 +837,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./errors.html" class="pagination-link" aria-label="Errors">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Errors</span></span>
+      <a href="./errors.html" class="pagination-link" aria-label="Errors and conditions">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Errors and conditions</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">

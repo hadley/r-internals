@@ -26,6 +26,41 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -240,7 +275,7 @@ ul.task-list li input[type="checkbox"] {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./errors.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Errors</span></span></a>
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Errors and conditions</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -310,7 +345,7 @@ ul.task-list li input[type="checkbox"] {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./compliance.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Migrating to API compliance</span></a>
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Migrating to API compliance</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -326,8 +361,30 @@ ul.task-list li input[type="checkbox"] {
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#optimization" id="toc-optimization" class="nav-link active" data-scroll-target="#optimization"><span class="header-section-number">20.1</span> Optimization</a>
+  <ul class="collapse">
+  <li><a href="#nmmin" id="toc-nmmin" class="nav-link" data-scroll-target="#nmmin"><span class="header-section-number">20.1.1</span> <code>nmmin()</code> (<code>vmmin()</code>, <code>cgmin()</code>, <code>lbfgsb()</code>, <code>samin()</code>)</a></li>
+  </ul></li>
+  <li><a href="#integration" id="toc-integration" class="nav-link" data-scroll-target="#integration"><span class="header-section-number">20.2</span> Integration</a>
+  <ul class="collapse">
+  <li><a href="#Rdqags" id="toc-Rdqags" class="nav-link" data-scroll-target="#Rdqags"><span class="header-section-number">20.2.1</span> <code>Rdqags()</code> (<code>Rdqagi()</code>)</a></li>
+  </ul></li>
+  <li><a href="#linear-algebra" id="toc-linear-algebra" class="nav-link" data-scroll-target="#linear-algebra"><span class="header-section-number">20.3</span> Linear algebra</a>
+  <ul class="collapse">
+  <li><a href="#dqrdc2" id="toc-dqrdc2" class="nav-link" data-scroll-target="#dqrdc2"><span class="header-section-number">20.3.1</span> <code>dqrdc2()</code> (<code>dqrls()</code>, <code>dqrqty()</code>, <code>dqrqy()</code>, <code>dqrcf()</code>, <code>dqrrsd()</code>, <code>dqrxb()</code>)</a></li>
+  </ul></li>
+  <li><a href="#miscellaneous" id="toc-miscellaneous" class="nav-link" data-scroll-target="#miscellaneous"><span class="header-section-number">20.4</span> Miscellaneous</a>
+  <ul class="collapse">
+  <li><a href="#findInterval" id="toc-findInterval" class="nav-link" data-scroll-target="#findInterval"><span class="header-section-number">20.4.1</span> <code>findInterval()</code> (<code>find_interv_vec()</code>, <code>findInterval2()</code>)</a></li>
+  <li><a href="#R_max_col" id="toc-R_max_col" class="nav-link" data-scroll-target="#R_max_col"><span class="header-section-number">20.4.2</span> <code>R_max_col()</code></a></li>
+  </ul></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/hadley/r-internals/edit/main/numerical.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/hadley/r-internals/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -351,27 +408,116 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<div class="callout callout-style-default callout-warning callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Warning
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Placeholder. Planned content:</p>
+<p>R exposes the C and Fortran code behind <code>optim()</code>, <code>integrate()</code>, and its linear algebra routines, so package code can run the same algorithms without going back through R. For pure scalar mathematics (distributions, special functions), see <a href="./math.html">Mathematical functions</a>.</p>
+<section id="optimization" class="level2" data-number="20.1">
+<h2 data-number="20.1" class="anchored" data-anchor-id="optimization"><span class="header-section-number">20.1</span> Optimization</h2>
+<p>Follows <a href="https://cran.r-project.org/doc/manuals/R-exts.html#Optimization-1">WRE §6.8, Optimization</a> closely.</p>
+<p>All five minimizers take the objective as a C callback, and some take a gradient callback:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">typedef</span> <span class="dt">double</span> optimfn<span class="op">(</span><span class="dt">int</span> n<span class="op">,</span> <span class="dt">double</span> <span class="op">*</span>par<span class="op">,</span> <span class="dt">void</span> <span class="op">*</span>ex<span class="op">);</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="kw">typedef</span> <span class="dt">void</span> optimgr<span class="op">(</span><span class="dt">int</span> n<span class="op">,</span> <span class="dt">double</span> <span class="op">*</span>par<span class="op">,</span> <span class="dt">double</span> <span class="op">*</span>gr<span class="op">,</span> <span class="dt">void</span> <span class="op">*</span>ex<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>ex</code> is an opaque pointer passed straight through to your callback — use it to carry auxiliary data (including a <code>SEXP</code>, if you protect it elsewhere). If you don’t have an analytic gradient, you must finite-difference yourself; no helper is provided.</p>
+<section id="nmmin" class="level3" data-number="20.1.1">
+<h3 data-number="20.1.1" class="anchored" data-anchor-id="nmmin"><span class="header-section-number">20.1.1</span> <code>nmmin()</code> (<code>vmmin()</code>, <code>cgmin()</code>, <code>lbfgsb()</code>, <code>samin()</code>)</h3>
+<p>Minimize a function using the code underlying optim().</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> nmmin<span class="op">(</span><span class="dt">int</span> n<span class="op">,</span> <span class="dt">double</span> <span class="op">*</span>xin<span class="op">,</span> <span class="dt">double</span> <span class="op">*</span>x<span class="op">,</span> <span class="dt">double</span> <span class="op">*</span>Fmin<span class="op">,</span> optimfn fn<span class="op">,</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>           <span class="dt">int</span> <span class="op">*</span>fail<span class="op">,</span> <span class="dt">double</span> abstol<span class="op">,</span> <span class="dt">double</span> intol<span class="op">,</span> <span class="dt">void</span> <span class="op">*</span>ex<span class="op">,</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>           <span class="dt">double</span> alpha<span class="op">,</span> <span class="dt">double</span> beta<span class="op">,</span> <span class="dt">double</span> gamma<span class="op">,</span> <span class="dt">int</span> trace<span class="op">,</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>           <span class="dt">int</span> <span class="op">*</span>fncount<span class="op">,</span> <span class="dt">int</span> maxit<span class="op">);</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> vmmin<span class="op">(</span><span class="dt">int</span> n<span class="op">,</span> <span class="dt">double</span> <span class="op">*</span>x<span class="op">,</span> <span class="dt">double</span> <span class="op">*</span>Fmin<span class="op">,</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>           optimfn fn<span class="op">,</span> optimgr gr<span class="op">,</span> <span class="dt">int</span> maxit<span class="op">,</span> <span class="dt">int</span> trace<span class="op">,</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>           <span class="dt">int</span> <span class="op">*</span>mask<span class="op">,</span> <span class="dt">double</span> abstol<span class="op">,</span> <span class="dt">double</span> reltol<span class="op">,</span> <span class="dt">int</span> nREPORT<span class="op">,</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>           <span class="dt">void</span> <span class="op">*</span>ex<span class="op">,</span> <span class="dt">int</span> <span class="op">*</span>fncount<span class="op">,</span> <span class="dt">int</span> <span class="op">*</span>grcount<span class="op">,</span> <span class="dt">int</span> <span class="op">*</span>fail<span class="op">);</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> cgmin<span class="op">(</span><span class="dt">int</span> n<span class="op">,</span> <span class="dt">double</span> <span class="op">*</span>xin<span class="op">,</span> <span class="dt">double</span> <span class="op">*</span>x<span class="op">,</span> <span class="dt">double</span> <span class="op">*</span>Fmin<span class="op">,</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>           optimfn fn<span class="op">,</span> optimgr gr<span class="op">,</span> <span class="dt">int</span> <span class="op">*</span>fail<span class="op">,</span> <span class="dt">double</span> abstol<span class="op">,</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>           <span class="dt">double</span> intol<span class="op">,</span> <span class="dt">void</span> <span class="op">*</span>ex<span class="op">,</span> <span class="dt">int</span> type<span class="op">,</span> <span class="dt">int</span> trace<span class="op">,</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>           <span class="dt">int</span> <span class="op">*</span>fncount<span class="op">,</span> <span class="dt">int</span> <span class="op">*</span>grcount<span class="op">,</span> <span class="dt">int</span> maxit<span class="op">);</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> lbfgsb<span class="op">(</span><span class="dt">int</span> n<span class="op">,</span> <span class="dt">int</span> lmm<span class="op">,</span> <span class="dt">double</span> <span class="op">*</span>x<span class="op">,</span> <span class="dt">double</span> <span class="op">*</span>lower<span class="op">,</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>            <span class="dt">double</span> <span class="op">*</span>upper<span class="op">,</span> <span class="dt">int</span> <span class="op">*</span>nbd<span class="op">,</span> <span class="dt">double</span> <span class="op">*</span>Fmin<span class="op">,</span> optimfn fn<span class="op">,</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>            optimgr gr<span class="op">,</span> <span class="dt">int</span> <span class="op">*</span>fail<span class="op">,</span> <span class="dt">void</span> <span class="op">*</span>ex<span class="op">,</span> <span class="dt">double</span> factr<span class="op">,</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>            <span class="dt">double</span> pgtol<span class="op">,</span> <span class="dt">int</span> <span class="op">*</span>fncount<span class="op">,</span> <span class="dt">int</span> <span class="op">*</span>grcount<span class="op">,</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>            <span class="dt">int</span> maxit<span class="op">,</span> <span class="dt">char</span> <span class="op">*</span>msg<span class="op">,</span> <span class="dt">int</span> trace<span class="op">,</span> <span class="dt">int</span> nREPORT<span class="op">);</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> samin<span class="op">(</span><span class="dt">int</span> n<span class="op">,</span> <span class="dt">double</span> <span class="op">*</span>x<span class="op">,</span> <span class="dt">double</span> <span class="op">*</span>Fmin<span class="op">,</span> optimfn fn<span class="op">,</span> <span class="dt">int</span> maxit<span class="op">,</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>           <span class="dt">int</span> tmax<span class="op">,</span> <span class="dt">double</span> temp<span class="op">,</span> <span class="dt">int</span> trace<span class="op">,</span> <span class="dt">void</span> <span class="op">*</span>ex<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Status:</strong> API · <strong>Header:</strong> <code>R_ext/Applic.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>optim()</code></p>
+<p>Respectively Nelder–Mead, BFGS, conjugate gradients, limited-memory BFGS with box constraints, and simulated annealing. Common arguments: <code>n</code> is the number of parameters, <code>x</code>/<code>xin</code> hold the starting parameters on entry and <code>x</code> the result on exit, <code>Fmin</code> receives the final value, <code>fail</code> is a nonzero-on-failure flag, and <code>fncount</code>/ <code>grcount</code> report evaluation counts. See <code>?optim</code> for the remaining arguments and <code>src/appl/lbfgsb.c</code> for the <code>nbd</code> bounds codes. No finite-differencing or Hessian approximation is provided. (<code>optif9</code>, also declared here, is experimental and intended only for the nlme package.)</p>
+<p><strong>See also:</strong> <a href="#Rdqags"><code>Rdqags()</code></a></p>
+</section>
+</section>
+<section id="integration" class="level2" data-number="20.2">
+<h2 data-number="20.2" class="anchored" data-anchor-id="integration"><span class="header-section-number">20.2</span> Integration</h2>
+<p>Follows <a href="https://cran.r-project.org/doc/manuals/R-exts.html#Integration-1">WRE §6.9, Integration</a> closely.</p>
+<p>The integrand is a <em>vectorized</em> callback — it receives <code>n</code> points in <code>x</code> and must overwrite them with the function values:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">typedef</span> <span class="dt">void</span> integr_fn<span class="op">(</span><span class="dt">double</span> <span class="op">*</span>x<span class="op">,</span> <span class="dt">int</span> n<span class="op">,</span> <span class="dt">void</span> <span class="op">*</span>ex<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>In the current QUADPACK-based implementation <code>n</code> is always 15 or 21.</p>
+<section id="Rdqags" class="level3" data-number="20.2.1">
+<h3 data-number="20.2.1" class="anchored" data-anchor-id="Rdqags"><span class="header-section-number">20.2.1</span> <code>Rdqags()</code> (<code>Rdqagi()</code>)</h3>
+<p>Numerically integrate a function over a finite or infinite interval.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> Rdqags<span class="op">(</span>integr_fn f<span class="op">,</span> <span class="dt">void</span> <span class="op">*</span>ex<span class="op">,</span> <span class="dt">double</span> <span class="op">*</span>a<span class="op">,</span> <span class="dt">double</span> <span class="op">*</span>b<span class="op">,</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>            <span class="dt">double</span> <span class="op">*</span>epsabs<span class="op">,</span> <span class="dt">double</span> <span class="op">*</span>epsrel<span class="op">,</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>            <span class="dt">double</span> <span class="op">*</span>result<span class="op">,</span> <span class="dt">double</span> <span class="op">*</span>abserr<span class="op">,</span> <span class="dt">int</span> <span class="op">*</span>neval<span class="op">,</span> <span class="dt">int</span> <span class="op">*</span>ier<span class="op">,</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>            <span class="dt">int</span> <span class="op">*</span>limit<span class="op">,</span> <span class="dt">int</span> <span class="op">*</span>lenw<span class="op">,</span> <span class="dt">int</span> <span class="op">*</span>last<span class="op">,</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>            <span class="dt">int</span> <span class="op">*</span>iwork<span class="op">,</span> <span class="dt">double</span> <span class="op">*</span>work<span class="op">);</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> Rdqagi<span class="op">(</span>integr_fn f<span class="op">,</span> <span class="dt">void</span> <span class="op">*</span>ex<span class="op">,</span> <span class="dt">double</span> <span class="op">*</span>bound<span class="op">,</span> <span class="dt">int</span> <span class="op">*</span>inf<span class="op">,</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>            <span class="dt">double</span> <span class="op">*</span>epsabs<span class="op">,</span> <span class="dt">double</span> <span class="op">*</span>epsrel<span class="op">,</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>            <span class="dt">double</span> <span class="op">*</span>result<span class="op">,</span> <span class="dt">double</span> <span class="op">*</span>abserr<span class="op">,</span> <span class="dt">int</span> <span class="op">*</span>neval<span class="op">,</span> <span class="dt">int</span> <span class="op">*</span>ier<span class="op">,</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>            <span class="dt">int</span> <span class="op">*</span>limit<span class="op">,</span> <span class="dt">int</span> <span class="op">*</span>lenw<span class="op">,</span> <span class="dt">int</span> <span class="op">*</span>last<span class="op">,</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>            <span class="dt">int</span> <span class="op">*</span>iwork<span class="op">,</span> <span class="dt">double</span> <span class="op">*</span>work<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Status:</strong> API · <strong>Header:</strong> <code>R_ext/Applic.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>integrate()</code></p>
 <ul>
-<li>Optimization</li>
-<li>Integration</li>
-<li>Linear algebra: BLAS / LAPACK headers and <code>FCONE</code></li>
-<li><code>findInterval</code>, <code>R_max_col</code></li>
+<li><code>a</code>: <code>Rdqags</code>: lower and upper integration bounds (<code>a</code>, <code>b</code>).</li>
+<li><code>bound</code>: <code>Rdqagi</code>: the finite bound, with <code>inf</code> selecting the range: 1 for <code>(bound, Inf)</code>, −1 for <code>(-Inf, bound)</code>, 2 for <code>(-Inf, Inf)</code>.</li>
+<li><code>result</code>: outputs: value, absolute error estimate, evaluation count, error code, and number of subdivisions (<code>result</code>, <code>abserr</code>, <code>neval</code>, <code>ier</code>, <code>last</code>).</li>
+<li><code>limit</code>: maximum number of subintervals, as <code>subdivisions</code> in <code>integrate()</code>.</li>
 </ul>
-</div>
-</div>
+<p>Always allocate the work arrays as <code>iwork = R_alloc(limit, sizeof(int))</code> and <code>work = R_alloc(lenw, sizeof(double))</code> with <code>lenw = 4 * limit</code>. The comments in <code>src/appl/integrate.c</code> explain the <code>ier</code> failure codes.</p>
+<p><strong>See also:</strong> <a href="#nmmin"><code>nmmin()</code></a></p>
+</section>
+</section>
+<section id="linear-algebra" class="level2" data-number="20.3">
+<h2 data-number="20.3" class="anchored" data-anchor-id="linear-algebra"><span class="header-section-number">20.3</span> Linear algebra</h2>
+<p>Follows <a href="https://cran.r-project.org/doc/manuals/R-exts.html#Linear-algebra-1">WRE §6.11, Linear algebra</a> closely.</p>
+<p>For numerical linear algebra, call the BLAS/LAPACK routines that R itself is built on: declarations are in <code>R_ext/BLAS.h</code> and <code>R_ext/LAPACK.h</code> (the older <code>R_ext/Linpack.h</code> also exists). These are Fortran calling conventions — all arguments are pointers, and character arguments need a hidden length argument, which the <code>FCONE</code> macro (defined by these headers) appends portably. This set of routines is not formally API but changes rarely.</p>
+<section id="dqrdc2" class="level3" data-number="20.3.1">
+<h3 data-number="20.3.1" class="anchored" data-anchor-id="dqrdc2"><span class="header-section-number">20.3.1</span> <code>dqrdc2()</code> (<code>dqrls()</code>, <code>dqrqty()</code>, <code>dqrqy()</code>, <code>dqrcf()</code>, <code>dqrrsd()</code>, <code>dqrxb()</code>)</h3>
+<p>LINPACK-derived QR decomposition and least-squares routines.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> F77_NAME<span class="op">(</span>dqrdc2<span class="op">)(</span><span class="dt">double</span> <span class="op">*</span>x<span class="op">,</span> <span class="dt">int</span> <span class="op">*</span>ldx<span class="op">,</span> <span class="dt">int</span> <span class="op">*</span>n<span class="op">,</span> <span class="dt">int</span> <span class="op">*</span>p<span class="op">,</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>                      <span class="dt">double</span> <span class="op">*</span>tol<span class="op">,</span> <span class="dt">int</span> <span class="op">*</span>rank<span class="op">,</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>                      <span class="dt">double</span> <span class="op">*</span>qraux<span class="op">,</span> <span class="dt">int</span> <span class="op">*</span>pivot<span class="op">,</span> <span class="dt">double</span> <span class="op">*</span>work<span class="op">);</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> F77_NAME<span class="op">(</span>dqrls<span class="op">)(</span><span class="dt">double</span> <span class="op">*</span>x<span class="op">,</span> <span class="dt">int</span> <span class="op">*</span>n<span class="op">,</span> <span class="dt">int</span> <span class="op">*</span>p<span class="op">,</span> <span class="dt">double</span> <span class="op">*</span>y<span class="op">,</span> <span class="dt">int</span> <span class="op">*</span>ny<span class="op">,</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>                     <span class="dt">double</span> <span class="op">*</span>tol<span class="op">,</span> <span class="dt">double</span> <span class="op">*</span>b<span class="op">,</span> <span class="dt">double</span> <span class="op">*</span>rsd<span class="op">,</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>                     <span class="dt">double</span> <span class="op">*</span>qty<span class="op">,</span> <span class="dt">int</span> <span class="op">*</span>k<span class="op">,</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>                     <span class="dt">int</span> <span class="op">*</span>jpvt<span class="op">,</span> <span class="dt">double</span> <span class="op">*</span>qraux<span class="op">,</span> <span class="dt">double</span> <span class="op">*</span>work<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Status:</strong> API · <strong>Header:</strong> <code>R_ext/Applic.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<p>These Fortran routines underlie <code>lm.fit()</code>, <code>lm.wfit()</code>, and <code>qr(LAPACK = FALSE)</code>; <code>dqrdc2</code> is R’s modification of LINPACK’s <code>dqrdc</code> with column pivoting and rank computation. Prefer BLAS/LAPACK for new code; see the sources in <code>src/appl/</code> for argument details. Regarded as API for now, but may be replaced by <code>bind(C)</code> interfaces in future.</p>
+</section>
+</section>
+<section id="miscellaneous" class="level2" data-number="20.4">
+<h2 data-number="20.4" class="anchored" data-anchor-id="miscellaneous"><span class="header-section-number">20.4</span> Miscellaneous</h2>
+<section id="findInterval" class="level3" data-number="20.4.1">
+<h3 data-number="20.4.1" class="anchored" data-anchor-id="findInterval"><span class="header-section-number">20.4.1</span> <code>findInterval()</code> (<code>find_interv_vec()</code>, <code>findInterval2()</code>)</h3>
+<p>Locate the interval containing a value within a sorted vector.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> findInterval<span class="op">(</span><span class="dt">double</span> <span class="op">*</span>xt<span class="op">,</span> <span class="dt">int</span> n<span class="op">,</span> <span class="dt">double</span> x<span class="op">,</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  Rboolean rightmost_closed<span class="op">,</span>  Rboolean all_inside<span class="op">,</span> <span class="dt">int</span> ilo<span class="op">,</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span> <span class="op">*</span>mflag<span class="op">);</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> findInterval2<span class="op">(</span><span class="dt">double</span> <span class="op">*</span>xt<span class="op">,</span> <span class="dt">int</span> n<span class="op">,</span> <span class="dt">double</span> x<span class="op">,</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  Rboolean rightmost_closed<span class="op">,</span>  Rboolean all_inside<span class="op">,</span> Rboolean left_open<span class="op">,</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span> ilo<span class="op">,</span> <span class="dt">int</span> <span class="op">*</span>mflag<span class="op">);</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> find_interv_vec<span class="op">(</span><span class="dt">double</span> <span class="op">*</span>xt<span class="op">,</span> <span class="dt">int</span> <span class="op">*</span>n<span class="op">,</span> <span class="dt">double</span> <span class="op">*</span>x<span class="op">,</span>   <span class="dt">int</span> <span class="op">*</span>nx<span class="op">,</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span> <span class="op">*</span>rightmost_closed<span class="op">,</span> <span class="dt">int</span> <span class="op">*</span>all_inside<span class="op">,</span> <span class="dt">int</span> <span class="op">*</span>indx<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Status:</strong> API · <strong>Header:</strong> <code>R_ext/Utils.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>findInterval()</code></p>
+<p>Also declared in <code>R_ext/Applic.h</code>. <code>findInterval2()</code> adds a <code>left_open</code> argument for left-open intervals. The algorithm is fastest when <code>ilo</code> carries the previous result and successive <code>x</code> values are monotone.</p>
+</section>
+<section id="R_max_col" class="level3" data-number="20.4.2">
+<h3 data-number="20.4.2" class="anchored" data-anchor-id="R_max_col"><span class="header-section-number">20.4.2</span> <code>R_max_col()</code></h3>
+<p>Find the column position of the maximum in each row of a matrix.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> R_max_col<span class="op">(</span><span class="dt">double</span> <span class="op">*</span>matrix<span class="op">,</span> <span class="dt">int</span> <span class="op">*</span>nr<span class="op">,</span> <span class="dt">int</span> <span class="op">*</span>nc<span class="op">,</span> <span class="dt">int</span> <span class="op">*</span>maxes<span class="op">,</span> <span class="dt">int</span> <span class="op">*</span>ties_meth<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Status:</strong> API · <strong>Header:</strong> <code>R_ext/Utils.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>max.col()</code></p>
+<p>Also declared in <code>R_ext/Applic.h</code>.</p>
 
 
+</section>
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -791,4 +937,4 @@ Warning
 
 
 
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions"><ul><li><a href="https://github.com/hadley/r-internals/edit/main/numerical.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/hadley/r-internals/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/hadley/r-internals/edit/main/numerical.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/hadley/r-internals/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>
