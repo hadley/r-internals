@@ -7,6 +7,7 @@
                            const R_FortranMethodDef * const fortranRoutines,
                            const R_ExternalMethodDef * const externalRoutines);
     Rboolean R_useDynamicSymbols(DllInfo *info, Rboolean value);
+  returns: "`R_registerRoutines()` returns the number of routines registered; `R_useDynamicSymbols()` returns the previous setting."
   status: api
   header: R_ext/Rdynload.h
   protect: n/a
@@ -27,6 +28,7 @@
   signature: |
     void R_RegisterCCallable(const char *package, const char *name, DL_FUNC fptr);
     DL_FUNC R_GetCCallable(const char *package, const char *name);
+  returns: "`R_GetCCallable()` returns the registered function pointer, raising an error if not found."
   status: api
   header: R_ext/Rdynload.h
   protect: n/a
@@ -44,6 +46,7 @@
   summary: Look up a symbol in a loaded DLL by name.
   signature: |
     DL_FUNC R_FindSymbol(char const *name, char const *pkg, DllInfo *info);
+  returns: "The entry point for `name`, or `NULL` if not found."
   status: api
   header: R_ext/Rdynload.h
   protect: n/a
@@ -59,6 +62,7 @@
   summary: Restrict a DLL to registered (symbol) entry points.
   signature: |
     Rboolean R_forceSymbols(DllInfo *info, Rboolean value);
+  returns: "The previous setting."
   status: api
   header: R_ext/Rdynload.h
   protect: n/a

@@ -4,6 +4,7 @@
   signature: |
     R_xlen_t Rf_xlength(SEXP x);
     R_len_t Rf_length(SEXP x);
+  returns: "The length of `x`: `Rf_xlength()` returns an `R_xlen_t`, `Rf_length()` an `R_len_t`."
   status: api
   header: Rinternals.h
   protect: n/a
@@ -27,6 +28,7 @@
   signature: |
     SEXP Rf_lengthgets(SEXP x, R_len_t n);
     SEXP Rf_xlengthgets(SEXP x, R_xlen_t n);
+  returns: "A newly allocated copy of `x` with length `n`, padded or truncated as needed."
   status: api
   header: Rinternals.h
   protect: result
@@ -48,6 +50,7 @@
   signature: |
     int LENGTH(SEXP x);
     R_xlen_t XLENGTH(SEXP x);
+  returns: "The length of `x`: `LENGTH()` returns an `int`, `XLENGTH()` an `R_xlen_t`."
   status: api
   header: Rinternals.h
   protect: n/a
@@ -68,6 +71,7 @@
   summary: Test whether a vector is a long vector.
   signature: |
     int IS_LONG_VEC(SEXP x);
+  returns: "Non-zero if `x` is a long vector (length over 2^31 - 1), zero otherwise."
   status: experimental
   header: Rinternals.h
   protect: n/a
@@ -84,6 +88,7 @@
   summary: Create a new vector of the given type and length.
   signature: |
     SEXP Rf_allocVector(SEXPTYPE type, R_xlen_t n);
+  returns: "A freshly allocated vector of `type` and length `n`; atomic contents are uninitialized."
   status: api
   header: Rinternals.h
   protect: result
@@ -117,6 +122,7 @@
     SEXP Rf_ScalarReal(double x);
     SEXP Rf_ScalarComplex(Rcomplex x);
     SEXP Rf_ScalarRaw(Rbyte x);
+  returns: "A length-1 vector of the corresponding type holding `x`; `Rf_ScalarLogical()` returns a cached singleton."
   status: api
   header: Rinternals.h
   protect: result
@@ -139,6 +145,7 @@
   summary: Coerce an existing vector to a different type.
   signature: |
     SEXP Rf_coerceVector(SEXP x, SEXPTYPE newtype);
+  returns: "A freshly allocated copy of `x` coerced to `newtype`."
   status: api
   header: Rinternals.h
   protect: result
@@ -159,6 +166,7 @@
   summary: Create a named vector of the given type.
   signature: |
     SEXP Rf_mkNamed(SEXPTYPE type, const char **names);
+  returns: "A freshly allocated vector of `type` with one element per name and the names attribute set."
   status: api
   header: Rinternals.h
   protect: result
@@ -185,6 +193,7 @@
   summary: Create a new vector using a custom allocator.
   signature: |
     SEXP Rf_allocVector3(SEXPTYPE type, R_xlen_t n, R_allocator_t *allocator);
+  returns: "A freshly allocated vector of `type` and length `n`, with payload memory from `allocator`."
   status: api
   header: Rinternals.h
   protect: result
@@ -209,6 +218,7 @@
     double*   REAL(SEXP x);
     Rcomplex* COMPLEX(SEXP x);
     Rbyte*    RAW(SEXP x);
+  returns: "A writable pointer to the underlying C array of `x`."
   status: api
   header: Rinternals.h
   protect: n/a
@@ -234,6 +244,7 @@
   signature: |
     SEXP STRING_ELT(SEXP x, R_xlen_t i);
     void SET_STRING_ELT(SEXP x, R_xlen_t i, SEXP v);
+  returns: "`STRING_ELT()` returns the `CHARSXP` element at index `i` (not a copy); `SET_STRING_ELT()` returns nothing."
   status: api
   header: Rinternals.h
   protect: not-needed
@@ -256,6 +267,7 @@
   signature: |
     SEXP VECTOR_ELT(SEXP x, R_xlen_t i);
     SEXP SET_VECTOR_ELT(SEXP x, R_xlen_t i, SEXP v);
+  returns: "`VECTOR_ELT()` returns the element at index `i` (not a copy); `SET_VECTOR_ELT()` returns `v`."
   status: api
   header: Rinternals.h
   protect: not-needed
@@ -284,6 +296,7 @@
     int Rf_asInteger(SEXP x);
     double Rf_asReal(SEXP x);
     Rcomplex Rf_asComplex(SEXP x);
+  returns: "The first element of `x` coerced to the corresponding C type; may be an `NA` sentinel such as `NA_INTEGER` or `NA_REAL`."
   status: api
   header: Rinternals.h
   protect: n/a
@@ -363,6 +376,7 @@
     int ISNA(double x);
     int ISNAN(double x);
     int R_FINITE(double x);
+  returns: "Non-zero if `x` is `NA` (`ISNA()`), `NaN` or `NA` (`ISNAN()`), or finite (`R_FINITE()`); zero otherwise."
   status: api
   header: R_ext/Arith.h
   protect: n/a
@@ -387,6 +401,7 @@
     int R_IsNA(double);
     int R_IsNaN(double);
     int R_finite(double);
+  returns: "Non-zero if the argument is `NA` (`R_IsNA()`), `NaN` or `NA` (`R_IsNaN()`), or finite (`R_finite()`); zero otherwise."
   status: api
   header: R_ext/Arith.h
   protect: n/a
@@ -403,6 +418,7 @@
   summary: Test if an SEXP is a logical vector.
   signature: |
     Rboolean Rf_isLogical(SEXP s);
+  returns: "`TRUE` if `s` is an `LGLSXP`, otherwise `FALSE`."
   status: api
   header: Rinternals.h
   protect: n/a
@@ -423,6 +439,7 @@
   summary: Test if an SEXP is an integer vector.
   signature: |
     Rboolean Rf_isInteger(SEXP s);
+  returns: "`TRUE` if `s` is an `INTSXP` (including factors), otherwise `FALSE`."
   status: api
   header: Rinternals.h
   protect: n/a
@@ -442,6 +459,7 @@
   summary: Test if an SEXP is a double vector.
   signature: |
     Rboolean Rf_isReal(SEXP s);
+  returns: "`TRUE` if `s` is a `REALSXP`, otherwise `FALSE`."
   status: api
   header: Rinternals.h
   protect: n/a
@@ -456,6 +474,7 @@
   summary: Test if an SEXP is a complex vector.
   signature: |
     Rboolean Rf_isComplex(SEXP s);
+  returns: "`TRUE` if `s` is a `CPLXSXP`, otherwise `FALSE`."
   status: api
   header: Rinternals.h
   protect: n/a
@@ -470,6 +489,7 @@
   summary: Test if an SEXP is a character vector.
   signature: |
     Rboolean Rf_isString(SEXP s);
+  returns: "`TRUE` if `s` is a `STRSXP`, otherwise `FALSE`."
   status: api
   header: Rinternals.h
   protect: n/a
@@ -484,6 +504,7 @@
   summary: Test if an SEXP is an expression vector.
   signature: |
     Rboolean Rf_isExpression(SEXP s);
+  returns: "`TRUE` if `s` is an `EXPRSXP`, otherwise `FALSE`."
   status: api
   header: Rinternals.h
   protect: n/a
@@ -498,6 +519,7 @@
   summary: Test if an SEXP is a list (`VECSXP`) or `NULL`.
   signature: |
     Rboolean Rf_isNewList(SEXP s);
+  returns: "`TRUE` if `s` is a `VECSXP` or `NILSXP`, otherwise `FALSE`."
   status: api
   header: Rinternals.h
   protect: n/a
@@ -517,6 +539,7 @@
   summary: Test if an SEXP is an atomic vector.
   signature: |
     Rboolean Rf_isVectorAtomic(SEXP s);
+  returns: "`TRUE` if `s` is an atomic vector (`LGLSXP`, `INTSXP`, `REALSXP`, `CPLXSXP`, `STRSXP`, or `RAWSXP`), otherwise `FALSE`."
   status: api
   header: Rinternals.h
   protect: n/a
@@ -536,6 +559,7 @@
   summary: Test if an SEXP is a pairlist or expression vector.
   signature: |
     Rboolean Rf_isVectorList(SEXP s);
+  returns: "`TRUE` if `s` is a `LISTSXP` or `EXPRSXP`, otherwise `FALSE`."
   status: api
   header: Rinternals.h
   protect: n/a
@@ -551,6 +575,7 @@
   summary: Test if an SEXP is any kind of vector.
   signature: |
     Rboolean Rf_isVector(SEXP s);
+  returns: "`TRUE` if `s` is any kind of vector, otherwise `FALSE`."
   status: api
   header: Rinternals.h
   protect: n/a
@@ -569,6 +594,7 @@
   summary: Test if an SEXP is a numeric-like vector.
   signature: |
     Rboolean Rf_isNumber(SEXP s);
+  returns: "`TRUE` if `s` is `LGLSXP`, `REALSXP`, `CPLXSXP`, or a non-factor `INTSXP`, otherwise `FALSE`."
   status: api
   header: Rinternals.h
   protect: n/a
@@ -585,6 +611,7 @@
   summary: Test if an SEXP is a numeric-like vector.
   signature: |
     Rboolean Rf_isNumeric(SEXP s);
+  returns: "`TRUE` if `s` is `LGLSXP`, `REALSXP`, `CPLXSXP`, or a non-factor `INTSXP`, otherwise `FALSE`."
   status: api
   header: Rinternals.h
   protect: n/a
@@ -620,6 +647,7 @@
   summary: Extract the tail of a STRSXP.
   signature: |
     SEXP Rf_stringSuffix(SEXP string, int fromIndex);
+  returns: "A freshly allocated `STRSXP` with each element replaced by its suffix starting at `fromIndex`."
   status: api
   header: Rinternals.h
   protect: result
@@ -656,6 +684,7 @@
   summary: Test if a list can be converted into a vector.
   signature: |
     Rboolean Rf_isVectorizable(SEXP x);
+  returns: "`TRUE` if every element of `x` is a vector of length 0 or 1, otherwise `FALSE`."
   status: experimental
   header: Rinternals.h
   protect: n/a
@@ -775,6 +804,7 @@
   signature: |
     R_xlen_t Rf_any_duplicated(SEXP x, Rboolean from_last);
     R_xlen_t Rf_any_duplicated3(SEXP x, SEXP incomp, Rboolean from_last);
+  returns: "The one-based index of the first duplicated element, or 0 if there are no duplicates."
   status: experimental
   header: Rinternals.h
   protect: n/a
@@ -788,6 +818,7 @@
   summary: Test whether a vector may be unsorted.
   signature: |
     Rboolean Rf_isUnsorted(SEXP, Rboolean);
+  returns: "`TRUE` if `x` may be unsorted, otherwise `FALSE`."
   status: experimental
   header: Rinternals.h
   protect: n/a
@@ -802,6 +833,7 @@
   signature: |
     SEXP Rf_match(SEXP itable, SEXP ix, int no_match);
     SEXP Rf_matchE(SEXP itable, SEXP ix, int no_match, SEXP env);
+  returns: "A freshly allocated `INTSXP` the length of `ix` giving one-based match positions in `itable`, or `no_match` where unmatched."
   status: experimental
   header: Rinternals.h
   protect: result
@@ -818,6 +850,7 @@
   summary: Identify duplicated elements of a vector.
   signature: |
     SEXP Rf_duplicated(SEXP x, Rboolean from_last);
+  returns: "A freshly allocated `LGLSXP` the same length as `x`, `TRUE` at duplicated positions."
   status: experimental
   header: Rinternals.h
   protect: result
@@ -837,6 +870,7 @@
   signature: |
     const SEXP *STRING_PTR_RO(SEXP x);
     const SEXP *VECTOR_PTR_RO(SEXP x);
+  returns: "A read-only pointer to the `SEXP` element array of `x`."
   status: api
   header: Rinternals.h
   protect: n/a
@@ -854,6 +888,7 @@
   summary: Create a vector that can grow in place up to a maximum length.
   signature: |
     SEXP R_allocResizableVector(SEXPTYPE type, R_xlen_t maxlen);
+  returns: "A freshly allocated resizable vector of `type`, initially length 0, able to grow to `maxlen`."
   status: experimental
   header: Rinternals.h
   protect: result
@@ -874,6 +909,7 @@
   summary: Duplicate a vector as a resizable vector.
   signature: |
     SEXP R_duplicateAsResizable(SEXP x);
+  returns: "A freshly allocated resizable copy of `x` that can grow up to its current length."
   status: experimental
   header: Rinternals.h
   protect: result
@@ -912,6 +948,7 @@
   summary: Test if a vector is resizable.
   signature: |
     bool R_isResizable(SEXP x);
+  returns: "`true` if `x` is a resizable vector, otherwise `false`."
   status: experimental
   header: Rinternals.h
   protect: n/a
@@ -927,6 +964,7 @@
   summary: Get the maximum length a resizable vector can grow to.
   signature: |
     R_xlen_t R_maxLength(SEXP x);
+  returns: "The maximum length `x` can grow to."
   status: experimental
   header: Rinternals.h
   protect: n/a
@@ -943,6 +981,7 @@
   signature: |
     const void *(DATAPTR_RO)(SEXP x);
     void *(DATAPTR)(SEXP x);
+  returns: "An untyped pointer to the data payload of `x`; `DATAPTR()` is writable, `DATAPTR_RO()` read-only."
   status: api
   header: Rinternals.h
   protect: n/a
@@ -971,6 +1010,7 @@
     const double*   (REAL_RO)(SEXP x);
     const Rcomplex* (COMPLEX_RO)(SEXP x);
     const Rbyte*    (RAW_RO)(SEXP x);
+  returns: "A read-only pointer to the underlying C array of `x`."
   status: api
   header: Rinternals.h
   protect: n/a
@@ -1009,6 +1049,7 @@
     void SET_REAL_ELT(SEXP x, R_xlen_t i, double v);
     void SET_COMPLEX_ELT(SEXP x, R_xlen_t i, Rcomplex v);
     void SET_RAW_ELT(SEXP x, R_xlen_t i, Rbyte v);
+  returns: "The `*_ELT()` getters return the element at index `i` as the corresponding C type; the `SET_*_ELT()` setters return nothing."
   status: api
   header: Rinternals.h
   protect: n/a
@@ -1031,6 +1072,7 @@
   summary: Test whether an object is NULL.
   signature: |
     Rboolean (Rf_isNull)(SEXP s);
+  returns: "`TRUE` if `s` is `NULL` (`NILSXP`), otherwise `FALSE`."
   status: api
   header: Rinternals.h
   protect: n/a
@@ -1045,6 +1087,7 @@
   signature: |
     bool Rf_asBool(SEXP x);
     Rboolean Rf_asRboolean(SEXP x);
+  returns: "The single logical value of `x` as a C boolean; never `NA` because `NA` inputs raise an error."
   status: api
   header: Rinternals.h
   protect: n/a
@@ -1064,6 +1107,7 @@
   summary: Test for NaN in a way that is safe from C++ compiler optimisations.
   signature: |
     int R_isnancpp(double);
+  returns: "Non-zero if the argument is `NaN`, zero otherwise."
   status: api
   header: R_ext/Arith.h
   protect: n/a

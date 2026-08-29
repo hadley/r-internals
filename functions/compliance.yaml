@@ -3,6 +3,7 @@
   summary: Detect a reference cycle between two objects.
   signature: |
     Rboolean R_cycle_detected(SEXP s, SEXP child);
+  returns: "`TRUE` if there is a reference cycle between the two objects, otherwise `FALSE`."
   status: non-api
   header: Defn.h
   protect: n/a
@@ -31,6 +32,7 @@
   signature: |
     SEXP ATTRIB(SEXP x);
     void SET_ATTRIB(SEXP x, SEXP v);
+  returns: "`ATTRIB()` returns the attribute pairlist of `x`, or `R_NilValue` if it has none."
   status: non-api
   replacement: Rf_getAttrib
   header: Rinternals.h
@@ -53,6 +55,7 @@
   summary: Test if an object is a data frame.
   signature: |
     Rboolean Rf_isFrame(SEXP x);
+  returns: "`TRUE` if `x` is a data frame, otherwise `FALSE`."
   status: non-api
   replacement: Rf_isDataFrame
   header: Rinternals.h
@@ -89,6 +92,7 @@
     environments.
   signature: |
     SEXP Rf_findVar(SEXP symbol, SEXP environment);
+  returns: "The value bound to `symbol` in `environment` or its enclosing environments."
   status: non-api
   replacement: R_getVar
   header: Rinternals.h
@@ -111,6 +115,7 @@
   signature: |
     SEXP Rf_findVarInFrame3(SEXP env, SEXP symbol, Rboolean doGet);
     SEXP Rf_findVarInFrame(SEXP env, SEXP symbol);
+  returns: "The value bound to `symbol` in `env`, or `R_UnboundValue` if not found."
   status: non-api
   replacement: R_getVar
   header: Rinternals.h
@@ -145,6 +150,7 @@
   summary: Test whether an environment has no special symbols.
   signature: |
     Rboolean R_envHasNoSpecialSymbols(SEXP);
+  returns: "`TRUE` if the environment contains no special symbols, otherwise `FALSE`."
   status: non-api
   header: Rinternals.h
   protect: n/a
@@ -158,6 +164,7 @@
   signature: |
     SEXP FRAME(SEXP x);
     void SET_FRAME(SEXP x, SEXP v);
+  returns: "`FRAME()` returns the frame (binding pairlist) of environment `x`."
   status: non-api
   header: Rinternals.h
   protect: not-needed
@@ -177,6 +184,7 @@
   signature: |
     SEXP ENCLOS(SEXP x);
     void SET_ENCLOS(SEXP x, SEXP v);
+  returns: "`ENCLOS()` returns the enclosing environment of `x`."
   status: non-api
   replacement: R_ParentEnv
   header: Rinternals.h
@@ -197,6 +205,7 @@
   signature: |
     int ENVFLAGS(SEXP x);
     void SET_ENVFLAGS(SEXP x, int v);
+  returns: "`ENVFLAGS()` returns the flags of environment `x`."
   status: non-api
   replacement: R_EnvironmentIsLocked
   header: Rinternals.h
@@ -216,6 +225,7 @@
     int (TRUELENGTH)(SEXP x);
     R_xlen_t (XTRUELENGTH)(SEXP x);
     void (SET_TRUELENGTH)(SEXP x, int v);
+  returns: "`TRUELENGTH()` returns the truelength of `x` as an `int`; `XTRUELENGTH()` returns it as an `R_xlen_t`."
   status: non-api
   header: Rinternals.h
   protect: n/a
@@ -234,6 +244,7 @@
   signature: |
     SEXP HASHTAB(SEXP x);
     void SET_HASHTAB(SEXP x, SEXP v);
+  returns: "`HASHTAB()` returns the hash table of environment `x`, or `R_NilValue` if it is not hashed."
   status: non-api
   header: Rinternals.h
   protect: not-needed
@@ -255,6 +266,7 @@
   signature: |
     int HASHASH(SEXP x);
     void SET_HASHASH(SEXP x, int v);
+  returns: "`HASHASH()` returns nonzero if environment `x` uses a hash table, otherwise zero."
   status: non-api
   header: Rinternals.h
   protect: n/a
@@ -268,6 +280,7 @@
   signature: |
     int HASHVALUE(SEXP x);
     void SET_HASHVALUE(SEXP x, int v);
+  returns: "`HASHVALUE()` returns the hash value stored in `x`."
   status: non-api
   header: Rinternals.h
   protect: n/a
@@ -305,6 +318,7 @@
     SEXP (FORMALS)(SEXP x);
     SEXP (BODY)(SEXP x);
     SEXP (CLOENV)(SEXP x);
+  returns: "`FORMALS()` returns the formal argument list of closure `x`; `BODY()` returns its body; `CLOENV()` returns its environment."
   status: non-api
   replacement: R_ClosureFormals
   header: Rinternals.h
@@ -349,6 +363,7 @@
     int  (RDEBUG)(SEXP x);
     int  (RSTEP)(SEXP x);
     int  (RTRACE)(SEXP x);
+  returns: "`RDEBUG()`, `RSTEP()`, and `RTRACE()` return the debug, step, and trace flags of closure `x`, respectively."
   status: non-api
   header: Rinternals.h
   protect: n/a
@@ -385,6 +400,7 @@
     SEXP (PRCODE)(SEXP x);
     SEXP (PRENV)(SEXP x);
     SEXP (PRVALUE)(SEXP x);
+  returns: "`PRCODE()` returns the promise's code; `PRENV()` returns its environment; `PRVALUE()` returns its value, or `R_UnboundValue` if not yet forced."
   status: non-api
   header: Rinternals.h
   protect: not-needed
@@ -403,6 +419,7 @@
     int  (PRSEEN)(SEXP x);
     void (SET_PRSEEN)(SEXP x, int v);
     void SET_PRSEEN(SEXP x, int v);
+  returns: "`PRSEEN()` returns the seen flag of promise `x`."
   status: non-api
   header: Rinternals.h
   protect: n/a
@@ -440,6 +457,7 @@
     int (IS_S4_OBJECT)(SEXP x);
     void (SET_S4_OBJECT)(SEXP x);
     void (UNSET_S4_OBJECT)(SEXP x);
+  returns: "`IS_S4_OBJECT()` returns nonzero if `x` is an S4 object, otherwise zero."
   status: non-api
   replacement: Rf_isS4
   header: Rinternals.h
@@ -456,6 +474,7 @@
   summary: Create a CONS cell with no reference counting.
   signature: |
     SEXP CONS_NR(SEXP a, SEXP b);
+  returns: "A newly allocated cons cell with car `a` and cdr `b`."
   status: non-api
   replacement: Rf_cons
   header: Rinternals.h
@@ -521,6 +540,7 @@
   signature: |
     SEXP (SYMVALUE)(SEXP x);
     void SET_SYMVALUE(SEXP x, SEXP v);
+  returns: "`SYMVALUE()` returns the value bound to symbol `x`."
   status: non-api
   header: Rinternals.h
   protect: not-needed
@@ -534,6 +554,7 @@
   signature: |
     SEXP (INTERNAL)(SEXP x);
     void SET_INTERNAL(SEXP x, SEXP v);
+  returns: "`INTERNAL()` returns the internal function that symbol `x` points to."
   status: non-api
   header: Rinternals.h
   protect: not-needed
@@ -552,6 +573,7 @@
     int  (DDVAL)(SEXP x);
     void (SET_DDVAL)(SEXP x, int v);
     SEXP Rf_installDDVAL(int i);
+  returns: "`DDVAL()` returns the `...` index of symbol `x`; `Rf_installDDVAL()` returns the symbol for the `i`-th `...` element."
   status: non-api
   header: Rinternals.h
   protect: not-needed
@@ -595,6 +617,7 @@
   signature: |
     SEXP R_bcEncode(SEXP);
     SEXP R_bcDecode(SEXP);
+  returns: "`R_bcEncode()` returns the byte-code encoding of its argument; `R_bcDecode()` returns the decoded object."
   status: non-api
   header: none (internal)
   protect: result
@@ -609,6 +632,7 @@
   signature: |
     SEXP R_PromiseExpr(SEXP);
     #define PREXPR(e) R_PromiseExpr(e)
+  returns: "The unevaluated expression of the promise."
   status: non-api
   header: Rinternals.h
   protect: not-needed
@@ -625,6 +649,7 @@
   summary: Allocate a non-vector SEXP of the given type.
   signature: |
     SEXP Rf_allocSExp(SEXPTYPE);
+  returns: "A newly allocated non-vector `SEXP` of the given type."
   status: non-api
   header: Rinternals.h
   protect: result
@@ -642,6 +667,7 @@
   summary: Apply a closure to a list of arguments.
   signature: |
     SEXP Rf_applyClosure(SEXP, SEXP, SEXP, SEXP, SEXP);
+  returns: "The result of applying the closure to the arguments."
   status: non-api
   header: none (internal)
   protect: result
@@ -654,6 +680,7 @@
   summary: Count evaluation contexts on the context stack.
   signature: |
     int Rf_countContexts(int, int);
+  returns: "The number of matching contexts on the context stack."
   status: non-api
   header: none (internal)
   protect: n/a
@@ -666,6 +693,7 @@
   summary: Create the tag for a pairlist element.
   signature: |
     SEXP Rf_CreateTag(SEXP);
+  returns: "The newly created tag for a pairlist element."
   status: non-api
   header: none (internal)
   protect: not-needed
@@ -678,6 +706,7 @@
   summary: Install the signature string for an S3 method.
   signature: |
     SEXP Rf_installS3Signature(const char *, const char *);
+  returns: "The installed symbol for the S3 signature string."
   status: non-api
   header: none (internal)
   protect: not-needed
@@ -690,6 +719,7 @@
   summary: Test whether a symbol has no value binding.
   signature: |
     Rboolean Rf_isFree(SEXP);
+  returns: "`TRUE` if the symbol has no value binding, otherwise `FALSE`."
   status: non-api
   header: none (internal)
   protect: n/a
@@ -743,6 +773,7 @@
   summary: Fix up the right-hand side value of a complex assignment.
   signature: |
     SEXP R_FixupRHS(SEXP x, SEXP y);
+  returns: "The fixed-up right-hand side value of the complex assignment."
   status: non-api
   header: none (internal)
   protect: result
@@ -793,6 +824,7 @@
   summary: Get a pointer to the elements of a character vector.
   signature: |
     SEXP* STRING_PTR(SEXP x);
+  returns: "A writable pointer to the `SEXP` elements of character vector `x`."
   status: non-api
   replacement: STRING_PTR_RO
   header: Rinternals.h
@@ -812,6 +844,7 @@
   summary: Get a pointer to the elements of a list.
   signature: |
     SEXP* VECTOR_PTR(SEXP x);
+  returns: "A pointer to the `SEXP` elements of list `x`; currently always throws an error instead."
   status: non-api
   replacement: VECTOR_ELT
   header: Rinternals.h
@@ -829,6 +862,7 @@
   summary: Retrieve the value of an R option (two-argument form).
   signature: |
     SEXP Rf_GetOption(SEXP, SEXP);
+  returns: "The value of the option, or `R_NilValue` if it is not set."
   status: non-api
   replacement: Rf_GetOption1
   header: Rinternals.h
@@ -846,6 +880,7 @@
   signature: |
     FILE *R_popen(const char *, const char *);
     int R_system(const char *);
+  returns: "`R_popen()` returns a `FILE` pointer to the pipe, or `NULL` on failure; `R_system()` returns the command's exit status."
   status: non-api
   header: Rinternals.h
   protect: n/a

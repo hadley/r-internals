@@ -23,6 +23,7 @@
     double R_XDRDecodeDouble(void *buf);
     void R_XDREncodeInteger(int i, void *buf);
     int R_XDRDecodeInteger(void *buf);
+  returns: "`R_XDRDecodeDouble()` and `R_XDRDecodeInteger()` return the value decoded from `buf`."
   status: api
   header: Rinternals.h
   protect: n/a
@@ -76,6 +77,7 @@
   signature: |
     void R_Serialize(SEXP s, R_outpstream_t ops);
     SEXP R_Unserialize(R_inpstream_t ips);
+  returns: "`R_Unserialize()` returns the unserialised object; freshly allocated and unprotected."
   status: experimental
   header: Rinternals.h
   protect: result

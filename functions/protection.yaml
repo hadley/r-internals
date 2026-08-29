@@ -4,6 +4,7 @@
   signature: |
     void R_gc(void);
     int R_gc_running();
+  returns: "`R_gc_running()` returns non-zero while garbage collection is running, zero otherwise."
   status: api
   header: R_ext/Memory.h
   protect: n/a
@@ -18,6 +19,7 @@
   signature: |
     SEXP Rf_protect(SEXP);
     void Rf_unprotect(int);
+  returns: "`Rf_protect()` returns its argument, the protected `SEXP`."
   status: api
   header: Rinternals.h
   protect: n/a
@@ -78,6 +80,7 @@
     void MARK_NOT_MUTABLE(SEXP x);
     #define MAYBE_REFERENCED(x) (! NO_REFERENCES(x))
     #define NOT_SHARED(x) (! MAYBE_SHARED(x))
+  returns: "`MAYBE_SHARED()` returns non-zero if `x` may be referenced more than once; `NO_REFERENCES()` returns non-zero if `x` has no references (the `MAYBE_REFERENCED()` and `NOT_SHARED()` macros return the negations)."
   status: api
   header: Rinternals.h
   protect: n/a
@@ -101,6 +104,7 @@
     SEXP Rf_duplicate(SEXP);
     SEXP Rf_shallow_duplicate(SEXP);
     SEXP Rf_lazy_duplicate(SEXP);
+  returns: "A copy of the input `SEXP` — deep for `Rf_duplicate()`, shallow for `Rf_shallow_duplicate()`; `Rf_lazy_duplicate()` returns the input itself, marked so it is copied before modification."
   status: api
   header: Rinternals.h
   protect: result
@@ -122,6 +126,7 @@
     int  (NAMED)(SEXP x);
     int  (REFCNT)(SEXP x);
     void (SET_NAMED)(SEXP x, int v);
+  returns: "`TYPEOF()` returns the `SEXPTYPE` tag of `x`; `NAMED()` and `REFCNT()` return the corresponding header fields."
   status: api
   header: Rinternals.h
   protect: n/a
@@ -148,6 +153,7 @@
     void UNPROTECT(int n);
     PROTECT_INDEX PROTECT_WITH_INDEX(SEXP s, PROTECT_INDEX *idx);
     void REPROTECT(SEXP s, PROTECT_INDEX idx);
+  returns: "`PROTECT()` returns `s`; `PROTECT_WITH_INDEX()` returns a `PROTECT_INDEX` token for use with `REPROTECT()`."
   status: api
   header: Rinternals.h
   protect: n/a
@@ -175,6 +181,7 @@
     SEXP R_NewPreciousMSet(int n);
     void R_PreserveInMSet(SEXP x, SEXP mset);
     void R_ReleaseFromMSet(SEXP x, SEXP mset);
+  returns: "A new precious multi-set `SEXP`, which itself needs protection."
   status: api
   header: Rinternals.h
   protect: result

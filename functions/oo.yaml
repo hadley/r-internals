@@ -3,6 +3,7 @@
   summary: Test whether an object is flagged as object-oriented.
   signature: |
     Rboolean (Rf_isObject)(SEXP s);
+  returns: "`TRUE` if `s` has the object bit set (i.e. carries a class attribute), otherwise `FALSE`."
   status: api
   header: Rinternals.h
   protect: n/a
@@ -19,6 +20,7 @@
   summary: Test whether an object inherits from a given class.
   signature: |
     Rboolean Rf_inherits(SEXP, const char *);
+  returns: "`TRUE` if the object inherits from the named class, otherwise `FALSE`."
   status: api
   header: Rinternals.h
   protect: n/a
@@ -34,6 +36,7 @@
   summary: Return the S3 class of an object.
   signature: |
     SEXP Rf_S3Class(SEXP);
+  returns: "A character vector `SEXP` of the object's S3 class names."
   status: api
   header: Rinternals.h
   protect: not-needed
@@ -49,6 +52,7 @@
   summary: Test whether a class name is one of the basic classes.
   signature: |
     int Rf_isBasicClass(const char *);
+  returns: "Non-zero if the name is one of the basic classes, zero otherwise."
   status: api
   header: Rinternals.h
   protect: n/a
@@ -64,6 +68,7 @@
   summary: Set the class attribute of an object.
   signature: |
     SEXP Rf_classgets(SEXP, SEXP);
+  returns: "The object with its class attribute set to the second argument."
   status: api
   header: Rinternals.h
   protect: not-needed
@@ -77,6 +82,7 @@
   summary: Test whether an object is an S4 object.
   signature: |
     Rboolean Rf_isS4(SEXP);
+  returns: "`TRUE` if the object is an S4 object, otherwise `FALSE`."
   status: api
   header: Rinternals.h
   protect: n/a
@@ -92,6 +98,7 @@
   summary: Set or unset the S4 flag on an object.
   signature: |
     SEXP Rf_asS4(SEXP, Rboolean, int);
+  returns: "The (possibly duplicated) object with its S4 flag set or unset."
   status: experimental
   header: Rinternals.h
   protect: result
@@ -104,6 +111,7 @@
   summary: Allocate a new S4 object.
   signature: |
     SEXP Rf_allocS4Object(void);
+  returns: "A newly allocated bare S4 object (`S4SXP`)."
   status: experimental
   header: Rinternals.h
   protect: result
@@ -119,6 +127,7 @@
   signature: |
     SEXP R_S4_extends(SEXP klass, SEXP useTable);
     Rboolean R_extends(SEXP class1, SEXP class2, SEXP env);
+  returns: "`R_S4_extends()` returns a `SEXP` describing the superclasses of `klass`; `R_extends()` returns `TRUE` if `class1` extends `class2`, otherwise `FALSE`."
   status: api
   header: Rinternals.h
   protect: result
@@ -136,6 +145,7 @@
   summary: Create a new S4 class definition.
   signature: |
     SEXP R_do_MAKE_CLASS(const char *what);
+  returns: "The newly created S4 class definition `SEXP`."
   status: experimental
   header: Rinternals.h
   protect: result
@@ -150,6 +160,7 @@
   signature: |
     SEXP R_getClassDef(const char *what);
     SEXP R_getClassDef_R(SEXP what);
+  returns: "The S4 class definition `SEXP` for the named class."
   status: experimental
   header: Rinternals.h
   protect: result
@@ -166,6 +177,7 @@
   summary: Test whether methods are currently attached.
   signature: |
     Rboolean R_has_methods_attached(void);
+  returns: "`TRUE` if methods are currently attached, otherwise `FALSE`."
   status: api
   header: Rinternals.h
   protect: n/a
@@ -178,6 +190,7 @@
   summary: Test whether an S4 class definition describes a virtual class.
   signature: |
     Rboolean R_isVirtualClass(SEXP class_def, SEXP env);
+  returns: "`TRUE` if the class definition describes a virtual class, otherwise `FALSE`."
   status: api
   header: Rinternals.h
   protect: n/a
@@ -190,6 +203,7 @@
   summary: Create a new object from an S4 class definition.
   signature: |
     SEXP R_do_new_object(SEXP class_def);
+  returns: "A new instance `SEXP` of the S4 class."
   status: experimental
   header: Rinternals.h
   protect: result
@@ -204,6 +218,7 @@
   signature: |
     int R_check_class_and_super(SEXP x, const char **valid, SEXP rho);
     int R_check_class_etc(SEXP x, const char **valid);
+  returns: "The 0-based index of the matching class in `valid`, or `-1` if `x` matches none of them."
   status: api
   header: Rinternals.h
   protect: n/a
@@ -225,6 +240,7 @@
     SEXP R_do_slot(SEXP obj, SEXP name);
     SEXP R_do_slot_assign(SEXP obj, SEXP name, SEXP value);
     int R_has_slot(SEXP obj, SEXP name);
+  returns: "`R_do_slot()` returns the slot's value; `R_do_slot_assign()` returns the object with the slot assigned; `R_has_slot()` returns non-zero if the slot exists."
   status: experimental
   header: Rinternals.h
   protect: result

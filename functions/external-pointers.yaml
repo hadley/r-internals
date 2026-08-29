@@ -3,6 +3,7 @@
   summary: Create an external pointer wrapping a C pointer.
   signature: |
     SEXP R_MakeExternalPtr(void *p, SEXP tag, SEXP prot);
+  returns: "A new external pointer (`EXTPTRSXP`) wrapping `p`."
   status: api
   header: Rinternals.h
   protect: result
@@ -42,6 +43,7 @@
     void R_SetExternalPtrAddr(SEXP s, void *p);
     void R_SetExternalPtrTag(SEXP s, SEXP tag);
     void R_SetExternalPtrProtected(SEXP s, SEXP p);
+  returns: "`R_ExternalPtrAddr()` returns the stored C pointer; `R_ExternalPtrTag()` and `R_ExternalPtrProtected()` return the tag and protected fields."
   status: api
   header: Rinternals.h
   protect: not-needed
@@ -78,6 +80,7 @@
   signature: |
     SEXP R_MakeWeakRef(SEXP key, SEXP val, SEXP fin, Rboolean onexit);
     SEXP R_MakeWeakRefC(SEXP key, SEXP val, R_CFinalizer_t fin, Rboolean onexit);
+  returns: "A newly created weak reference object."
   status: api
   header: Rinternals.h
   protect: result
@@ -94,6 +97,7 @@
   signature: |
     SEXP R_WeakRefKey(SEXP w);
     SEXP R_WeakRefValue(SEXP w);
+  returns: "`R_WeakRefKey()` returns the key and `R_WeakRefValue()` the value stored in `w`."
   status: api
   header: Rinternals.h
   protect: not-needed
@@ -119,6 +123,7 @@
   signature: |
     SEXP R_MakeExternalPtrFn(DL_FUNC p, SEXP tag, SEXP prot);
     DL_FUNC R_ExternalPtrAddrFn(SEXP s);
+  returns: "`R_MakeExternalPtrFn()` returns a new external pointer wrapping `p`; `R_ExternalPtrAddrFn()` returns the stored function pointer."
   status: api
   header: Rinternals.h
   protect: result

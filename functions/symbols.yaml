@@ -3,6 +3,7 @@
   summary: Test whether an object is a symbol.
   signature: |
     Rboolean Rf_isSymbol(SEXP s);
+  returns: "`TRUE` if `s` is a symbol (`SYMSXP`), otherwise `FALSE`."
   status: api
   header: Rinternals.h
   protect: n/a
@@ -22,6 +23,7 @@
     SEXP Rf_install(const char *);
     SEXP Rf_installChar(SEXP);
     SEXP Rf_installTrChar(SEXP);
+  returns: "The symbol (`SYMSXP`) with the given name, creating it if necessary."
   status: api
   header: Rinternals.h
   protect: not-needed
@@ -450,6 +452,7 @@
   summary: Get the print name of a symbol.
   signature: |
     SEXP (PRINTNAME)(SEXP x);
+  returns: "The print name of the symbol `x` as a `CHARSXP`."
   status: api
   header: Rinternals.h
   protect: not-needed

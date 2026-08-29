@@ -54,6 +54,11 @@ render_entry <- function(entry) {
     args <- paste0("- `", names(entry$args), "`: ", unlist(entry$args), collapse = "\n")
   }
 
+  returns <- NULL
+  if (!is.null(entry$returns)) {
+    returns <- paste0("**Returns:** ", entry$returns)
+  }
+
   example <- NULL
   if (!is.null(entry$example)) {
     example <- paste0("```c\n", trimws(entry$example, "right"), "\n```")
@@ -83,6 +88,8 @@ render_entry <- function(entry) {
     "",
     args,
     if (!is.null(args)) "",
+    returns,
+    if (!is.null(returns)) "",
     entry$notes,
     "",
     example,

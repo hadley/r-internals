@@ -4,6 +4,7 @@
   signature: |
     Rboolean Rf_isFunction(SEXP);
     Rboolean Rf_isPrimitive(SEXP);
+  returns: "`TRUE` if the object is a function (respectively a primitive function), otherwise `FALSE`."
   status: api
   header: Rinternals.h
   protect: n/a
@@ -46,6 +47,7 @@
   signature: |
     SEXP R_GetCurrentSrcref(int);
     SEXP R_GetSrcFilename(SEXP);
+  returns: "`R_GetCurrentSrcref()` returns the current srcref, or `R_NilValue` if none; `R_GetSrcFilename()` returns the filename stored in a srcref."
   status: api
   header: Rinternals.h
   protect: result
@@ -58,6 +60,7 @@
   summary: Create a closure from formals, body, and environment.
   signature: |
     SEXP R_mkClosure(SEXP formals, SEXP body, SEXP env);
+  returns: "A new `CLOSXP` closure."
   status: api
   header: Rinternals.h
   protect: result
@@ -80,6 +83,7 @@
     SEXP R_ClosureFormals(SEXP x);
     SEXP R_ClosureBody(SEXP x);
     SEXP R_ClosureEnv(SEXP x);
+  returns: "The formals, body, or environment of closure `x`, respectively."
   status: api
   header: Rinternals.h
   protect: not-needed
@@ -97,6 +101,7 @@
   signature: |
     SEXP R_ClosureExpr(SEXP);
     #define BODY_EXPR(e) R_ClosureExpr(e)
+  returns: "The unevaluated body expression of the closure."
   status: api
   header: Rinternals.h
   protect: not-needed
@@ -113,6 +118,7 @@
   summary: Get the byte-compiled form of a closure's body.
   signature: |
     SEXP R_BytecodeExpr(SEXP e);
+  returns: "The byte-compiled body as a `BCODESXP`, or `R_NilValue` if the closure is not byte-compiled."
   status: api
   header: Rinternals.h
   protect: not-needed

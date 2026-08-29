@@ -9,6 +9,7 @@
     double pnorm(double x, double mu, double sigma, int lower_tail, int give_log);
     double qnorm(double p, double mu, double sigma, int lower_tail, int log_p);
     double rnorm(double mu, double sigma);
+  returns: "The density, cumulative probability, quantile, or random draw as a double; `NaN` with a warning on invalid parameters."
   status: api
   header: Rmath.h
   protect: n/a
@@ -40,6 +41,7 @@
     double pnbinom_mu(double x, double size, double mu, int lower_tail, int give_log);
     double qnbinom_mu(double p, double size, double mu, int lower_tail, int log_p);
     double rnbinom_mu(double size, double mu);
+  returns: "The density, cumulative probability, quantile, or random draw as a double; `NaN` with a warning on invalid parameters."
   status: api
   header: Rmath.h
   protect: n/a
@@ -54,6 +56,7 @@
   signature: |
     double dbinom_raw(double x, double n, double p, double q, int give_log);
     double dpois_raw(double x, double lambda, int give_log);
+  returns: "The probability mass at `x` (or its log when `give_log` is nonzero) as a double."
   status: api
   header: Rmath.h
   protect: n/a
@@ -121,6 +124,7 @@
     double tetragamma(double x);
     double pentagamma(double x);
     double psigamma(double x, double deriv);
+  returns: "The function value at `x` as a double; `NaN` with a warning on domain errors."
   status: api
   header: Rmath.h
   protect: n/a
@@ -140,6 +144,7 @@
   signature: |
     double beta(double a, double b);
     double lbeta(double a, double b);
+  returns: "`beta()` returns the value of the beta function and `lbeta()` its natural logarithm, both as a double; `NaN` with a warning if `a` or `b` is negative."
   status: api
   header: Rmath.h
   protect: n/a
@@ -154,6 +159,7 @@
   signature: |
     double choose(double n, double k);
     double lchoose(double n, double k);
+  returns: "The binomial coefficient (or its natural logarithm) as a double; 0 when `k < 0`."
   status: api
   header: Rmath.h
   protect: n/a
@@ -175,6 +181,7 @@
     double bessel_j(double x, double nu);
     double bessel_k(double x, double nu, double expo);
     double bessel_y(double x, double nu);
+  returns: "The value of the Bessel function at `x` (exponentially scaled if requested) as a double; `NaN` with a warning on domain errors."
   status: api
   header: Rmath.h
   protect: n/a
@@ -195,6 +202,7 @@
     double R_pow(double x, double y);
     double R_pow_di(double x, int i);
     double pow1p(double x, double y);
+  returns: "`x` raised to the power `y` with R's `^` edge-case semantics (`pow1p()` computes `(1 + x)^y`), as a double."
   status: api
   header: Rmath.h
   protect: n/a
@@ -217,6 +225,7 @@
     double log1pexp(double x);
     double log1mexp(double x);
     double lgamma1p(double x);
+  returns: "The computed value as a double; `NaN` with a warning outside the domain."
   status: api
   header: Rmath.h
   protect: n/a
@@ -240,6 +249,7 @@
     double sinpi(double x);
     double Rtanpi(double x);
     double tanpi(double x);
+  returns: "The value of the function at `x * pi` as a double; `NaN` where the function is undefined."
   status: api
   header: Rmath.h
   protect: n/a
@@ -262,6 +272,7 @@
     double logspace_add(double logx, double logy);
     double logspace_sub(double logx, double logy);
     double logspace_sum(const double* logx, int n);
+  returns: "The result on the log scale as a double, e.g. `log(exp(logx) + exp(logy))`."
   status: api
   header: Rmath.h
   protect: n/a
@@ -284,6 +295,7 @@
     double fmin2(double x, double y);
     int imax2(int x, int y);
     int imin2(int x, int y);
+  returns: "The larger (`fmax2()`/`imax2()`) or smaller (`fmin2()`/`imin2()`) of the two arguments; `NaN` if either is `NaN`."
   status: api
   header: Rmath.h
   protect: n/a
@@ -300,6 +312,7 @@
   signature: |
     double sign(double x);
     double fsign(double x, double y);
+  returns: "`sign()` returns 1, 0, -1, or `NaN` for `NaN` input; `fsign()` returns `|x|` with the sign of `y`."
   status: api
   header: Rmath.h
   protect: n/a
@@ -320,6 +333,7 @@
     double fround(double x, double digits);
     double fprec(double x, double digits);
     double ftrunc(double x);
+  returns: "The rounded (`fround()`/`fprec()`) or truncated (`ftrunc()`) value as a double."
   status: api
   header: Rmath.h
   protect: n/a
@@ -375,6 +389,7 @@
   signature: |
     double expm1(double x);
     double log1p(double x);
+  returns: "The value of `exp(x) - 1` or `log(1 + x)` as a double."
   status: api
   header: Rmath.h
   protect: n/a

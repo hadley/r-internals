@@ -4,6 +4,7 @@
   signature: |
     char* R_alloc(size_t, int);
     long double *R_allocLD(size_t nelem);
+  returns: "A pointer to the allocated memory, freed automatically when the `.Call` entry point returns."
   status: api
   header: R_ext/Memory.h
   protect: n/a
@@ -22,6 +23,7 @@
   signature: |
     char* S_alloc(long, int);
     char* S_realloc(char *, long, long, int);
+  returns: "A pointer to the allocated (or reallocated) temporary memory."
   status: api
   header: R_ext/Memory.h
   protect: n/a
@@ -38,6 +40,7 @@
   signature: |
     void* vmaxget(void);
     void vmaxset(const void *);
+  returns: "`vmaxget()` returns the current allocation high-water mark, for passing back to `vmaxset()`."
   status: api
   header: R_ext/Memory.h
   protect: n/a
@@ -58,6 +61,7 @@
     type* R_Calloc(size_t n, type);
     type* R_Realloc(any *p, size_t n, type);
     void R_Free(any *p);
+  returns: "`R_Calloc()` and `R_Realloc()` return a pointer to the allocated memory; never `NULL`, since failure raises an R error."
   status: api
   header: R_ext/RS.h
   protect: n/a
@@ -81,6 +85,7 @@
     void *R_malloc_gc(size_t);
     void *R_calloc_gc(size_t, size_t);
     void *R_realloc_gc(void *, size_t);
+  returns: "A pointer to the allocated memory, or `NULL` if allocation fails even after a garbage collection."
   status: api
   header: R_ext/Memory.h
   protect: n/a

@@ -7,6 +7,7 @@
     Rboolean Rf_isPairList(SEXP x); // LISTSXP
     Rboolean Rf_isLanguage(SEXP x); // LANGSXP
     Rboolean Rf_isList(SEXP x);     // LISTSXP, NILSXP
+  returns: "`TRUE` when `x` passes the test — a pairlist for `Rf_isPairList()`, a call for `Rf_isLanguage()`, a pairlist or `NULL` for `Rf_isList()`; otherwise `FALSE`."
   status: api
   header: Rinternals.h
   protect: n/a
@@ -20,6 +21,7 @@
   signature: |
     SEXP Rf_cons(SEXP a, SEXP b);   // function arguments
     SEXP Rf_lcons(SEXP a, SEXP b);  // calls
+  returns: "A freshly allocated cell with `CAR` set to `a` and `CDR` to `b`: a `LISTSXP` from `Rf_cons()`, a `LANGSXP` from `Rf_lcons()`."
   status: api
   header: Rinternals.h
   protect: result
@@ -46,6 +48,7 @@
     SEXP Rf_list4(SEXP x1, SEXP x2, SEXP x3, SEXP x4);
     SEXP Rf_list5(SEXP x1, SEXP x2, SEXP x3, SEXP x4, SEXP x5);
     SEXP Rf_list6(SEXP x1, SEXP x2, SEXP x3, SEXP x4, SEXP x5, SEXP x6);
+  returns: "A freshly allocated pairlist of one to six elements, terminated by `R_NilValue`."
   status: api
   header: Rinternals.h
   protect: result
@@ -72,6 +75,7 @@
     SEXP Rf_lang4(SEXP x1, SEXP x2, SEXP x3, SEXP x4);
     SEXP Rf_lang5(SEXP x1, SEXP x2, SEXP x3, SEXP x4, SEXP x5);
     SEXP Rf_lang6(SEXP x1, SEXP x2, SEXP x3, SEXP x4, SEXP x5, SEXP x6);
+  returns: "A freshly allocated call (`LANGSXP`) to function `x1` with the given arguments, terminated by `R_NilValue`."
   status: api
   header: Rinternals.h
   protect: result
@@ -96,6 +100,7 @@
     SEXP Rf_allocFormalsList4(SEXP x1, SEXP x2, SEXP x3, SEXP x4);
     SEXP Rf_allocFormalsList5(SEXP x1, SEXP x2, SEXP x3, SEXP x4, SEXP x5);
     SEXP Rf_allocFormalsList6(SEXP x1, SEXP x2, SEXP x3, SEXP x4, SEXP x5, SEXP x6);
+  returns: "A freshly allocated formals pairlist of two to six elements, tagged with the given symbols."
   status: api
   header: Rinternals.h
   protect: result
@@ -111,6 +116,7 @@
   signature: |
     SEXP Rf_PairToVectorList(SEXP x);
     SEXP Rf_VectorToPairList(SEXP x);
+  returns: "A freshly allocated copy of `x` converted to a list vector (`Rf_PairToVectorList()`) or a pairlist (`Rf_VectorToPairList()`)."
   status: experimental
   header: Rinternals.h
   protect: result
@@ -123,6 +129,7 @@
   summary: Append one pairlist to another.
   signature: |
     SEXP Rf_listAppend(SEXP source, SEXP target);
+  returns: "The mutated `source` pairlist, now with `target` appended; no new cells are allocated."
   status: experimental
   header: Rinternals.h
   protect: not-needed
@@ -159,6 +166,7 @@
     SEXP CADDDR(SEXP e);
     SEXP CAD4R(SEXP e);
     SEXP CAD5R(SEXP e);
+  returns: "The requested component of cell `e` — a pointer into the existing structure, not a copy."
   status: api
   header: Rinternals.h
   protect: not-needed
@@ -188,6 +196,7 @@
     SEXP SETCADDR(SEXP x, SEXP y);
     SEXP SETCADDDR(SEXP x, SEXP y);
     SEXP SETCAD4R(SEXP e, SEXP y);
+  returns: "The assigned value `y`; the cell is modified in place."
   status: api
   header: Rinternals.h
   protect: not-needed
@@ -205,6 +214,7 @@
   signature: |
     SEXP TAG(SEXP e);
     void SET_TAG(SEXP x, SEXP y);
+  returns: "`TAG()` returns the tag (name) attached to node `e`, or `R_NilValue` if it has none."
   status: api
   header: Rinternals.h
   protect: not-needed
@@ -217,6 +227,7 @@
   summary: Test whether a pairlist element is a missing argument.
   signature: |
     int MISSING(SEXP x);
+  returns: "Non-zero if `x` is a missing argument, `0` otherwise."
   status: api
   header: Rinternals.h
   protect: n/a
@@ -231,6 +242,7 @@
   summary: Create a new pairlist of the specified length.
   signature: |
     SEXP Rf_allocList(int n);
+  returns: "A freshly allocated pairlist of length `n` with all elements `R_NilValue`."
   status: api
   header: Rinternals.h
   protect: result
@@ -251,6 +263,7 @@
   summary: Access the nth element of a pairlist.
   signature: |
     SEXP Rf_nthcdr(SEXP x, int n);
+  returns: "The tail of `x` after `n` `CDR`s — a pointer into the existing pairlist, not a copy."
   status: api
   header: Rinternals.h
   protect: not-needed
@@ -270,6 +283,7 @@
   signature: |
     SEXP Rf_elt(SEXP, int);
     SEXP Rf_lastElt(SEXP);
+  returns: "`Rf_elt()` returns the element of the pairlist at the given index and `Rf_lastElt()` the last element; both are pointers into the existing structure, not copies."
   status: api
   header: Rinternals.h
   protect: not-needed
@@ -282,6 +296,7 @@
   summary: Test whether a call is a user-defined binary operator.
   signature: |
     Rboolean Rf_isUserBinop(SEXP);
+  returns: "`TRUE` if `x` is a call to a user-defined binary operator (`%...%`), otherwise `FALSE`."
   status: api
   header: Rinternals.h
   protect: n/a
@@ -294,6 +309,7 @@
   summary: Allocate a call (LANGSXP) with room for a function and n - 1 arguments.
   signature: |
     SEXP Rf_allocLang(int n);
+  returns: "A freshly allocated call (`LANGSXP`) with `n` nodes, all elements initially `R_NilValue`."
   status: api
   header: Rinternals.h
   protect: result

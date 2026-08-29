@@ -3,6 +3,7 @@
   summary: Evaluate an expression in an environment.
   signature: |
     SEXP Rf_eval(SEXP expression, SEXP environment);
+  returns: "The result of evaluating `expression` in `environment`; may be `R_NilValue`."
   status: api
   header: Rinternals.h
   protect: result
@@ -18,6 +19,7 @@
   summary: Force promises in an expression and then call it.
   signature: |
     SEXP R_forceAndCall(SEXP expression, int n, SEXP environment);
+  returns: "The result of the call after forcing the first `n` arguments."
   status: experimental
   header: Rinternals.h
   protect: result
@@ -36,6 +38,7 @@
   signature: |
     SEXP R_tryEval(SEXP expression, SEXP environment, int* pOutError);
     SEXP R_tryEvalSilent(SEXP expression, SEXP environment, int* pOutError);
+  returns: "The result of evaluating `expression`, or `NULL` on error (with `*pOutError` set to 1)."
   status: api
   header: Rinternals.h
   protect: result
@@ -55,6 +58,7 @@
   summary: "Execute a C function in a top-level context, catching any errors."
   signature: |
     Rboolean R_ToplevelExec(void (*fun)(void *), void *data);
+  returns: "`TRUE` if `fun` ran to completion, `FALSE` if an error occurred."
   status: api
   header: Rinternals.h
   protect: n/a
@@ -71,6 +75,7 @@
   summary: Access the text of the current error.
   signature: |
     const char *R_curErrorBuf();
+  returns: "The text of the current error message."
   status: experimental
   header: Rinternals.h
   protect: n/a
@@ -84,6 +89,7 @@
   summary: Substitute values for variables in an expression.
   signature: |
     SEXP Rf_substitute(SEXP,SEXP);
+  returns: "The expression with variables replaced by their values."
   status: api
   header: Rinternals.h
   protect: result
@@ -101,6 +107,7 @@
     SEXP R_ParseVector(SEXP text, int n, ParseStatus *status, SEXP srcfile);
     SEXP R_ParseString(const char *str);
     SEXP R_ParseEvalString(const char *str, SEXP env);
+  returns: "`R_ParseVector()` and `R_ParseString()` return an `EXPRSXP` vector of parsed expressions; `R_ParseEvalString()` returns the result of evaluating the parsed code in `env`."
   status: api
   header: R_ext/Parse.h
   protect: result

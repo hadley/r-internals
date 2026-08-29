@@ -4,6 +4,7 @@
   signature: |
     SEXP Rf_getAttrib(SEXP x, SEXP symbol);
     SEXP Rf_setAttrib(SEXP x, SEXP symbol, SEXP value);
+  returns: "`Rf_getAttrib()` returns the value of the attribute, or `R_NilValue` if `x` has no such attribute; `Rf_setAttrib()` returns `value`."
   status: api
   header: Rinternals.h
   protect: not-needed
@@ -53,6 +54,7 @@
   summary: Test if an object is an array.
   signature: |
     Rboolean Rf_isArray(SEXP x);
+  returns: "`TRUE` if `x` is an array (a vector with a `dim` attribute), otherwise `FALSE`."
   status: api
   header: Rinternals.h
   protect: n/a
@@ -73,6 +75,7 @@
   signature: |
     SEXP Rf_allocArray(SEXPTYPE type, SEXP dims);
     SEXP Rf_alloc3DArray(SEXPTYPE type, int, int, int);
+  returns: "A newly allocated array of the given type and dimensions."
   status: api
   header: Rinternals.h
   protect: result
@@ -91,6 +94,7 @@
   summary: Get the dimnames of an array.
   signature: |
     SEXP Rf_GetArrayDimnames(SEXP x);
+  returns: "The dimnames of `x` as a list, or `R_NilValue` if it has none."
   status: api
   header: Rinternals.h
   protect: not-needed
@@ -107,6 +111,7 @@
   signature: |
     SEXP Rf_dimgets(SEXP x, SEXP v);
     SEXP Rf_dimnamesgets(SEXP x, SEXP v);
+  returns: "The modified object `x`."
   status: api
   header: Rinternals.h
   protect: not-needed
@@ -125,6 +130,7 @@
   summary: Drop the dim attribute of an array.
   signature: |
     SEXP Rf_DropDims(SEXP x);
+  returns: "`x` with its `dim` attribute removed."
   status: api
   header: Rinternals.h
   protect: not-needed
@@ -141,6 +147,7 @@
   signature: >
     SEXP Rf_arraySubscript(int, SEXP, SEXP, SEXP (*)(SEXP,SEXP), SEXP (*)(SEXP,
     int), SEXP);
+  returns: "A newly allocated vector of offsets into the array's underlying storage."
   status: api
   header: Rinternals.h
   protect: result
@@ -153,6 +160,7 @@
   summary: Create a matrix of the given type and dimensions.
   signature: |
     SEXP Rf_allocMatrix(SEXPTYPE type, int nrow, int ncol);
+  returns: "A newly allocated matrix of the given type and dimensions."
   status: api
   header: Rinternals.h
   protect: result
@@ -174,6 +182,7 @@
   summary: Test if an object is a matrix.
   signature: |
     Rboolean Rf_isMatrix(SEXP x);
+  returns: "`TRUE` if `x` is a matrix (an array with exactly two dimensions), otherwise `FALSE`."
   status: api
   header: Rinternals.h
   protect: n/a
@@ -190,6 +199,7 @@
   signature: |
     SEXP Rf_GetColNames(SEXP dimnames);
     SEXP Rf_GetRowNames(SEXP dimnames);
+  returns: "`Rf_GetColNames()` returns the column names (second element of `dimnames`) and `Rf_GetRowNames()` the row names (first element); either may be `R_NilValue`."
   status: api
   header: Rinternals.h
   protect: not-needed
@@ -226,6 +236,7 @@
   signature: |
     int Rf_ncols(SEXP x);
     int Rf_nrows(SEXP x);
+  returns: "The number of columns (`Rf_ncols()`) or rows (`Rf_nrows()`) of `x`."
   status: api
   header: Rinternals.h
   protect: n/a
@@ -262,6 +273,7 @@
     Rboolean Rf_isFactor(SEXP x);
     Rboolean Rf_isOrdered(SEXP x);
     Rboolean Rf_isUnordered(SEXP x);
+  returns: "`TRUE` if `x` is a factor (`Rf_isFactor()`), an ordered factor (`Rf_isOrdered()`), or an unordered factor (`Rf_isUnordered()`), otherwise `FALSE`."
   status: api
   header: Rinternals.h
   protect: n/a
@@ -279,6 +291,7 @@
   summary: Get the number of levels of a factor.
   signature: |
     int Rf_nlevels(SEXP x);
+  returns: "The number of levels of the factor `x`."
   status: experimental
   header: Rinternals.h
   protect: n/a
@@ -294,6 +307,7 @@
   summary: Coerce a factor into a character vector.
   signature: |
     SEXP Rf_asCharacterFactor(SEXP x);
+  returns: "A newly allocated character vector of the factor's level labels."
   status: api
   header: Rinternals.h
   protect: result
@@ -309,6 +323,7 @@
   summary: Set the names of a vector.
   signature: |
     SEXP Rf_namesgets(SEXP, SEXP);
+  returns: "The input vector with its names set."
   status: api
   header: Rinternals.h
   protect: not-needed
@@ -322,6 +337,7 @@
   summary: Test whether two objects have conformable dimensions.
   signature: |
     Rboolean Rf_conformable(SEXP, SEXP);
+  returns: "`TRUE` if the two objects have conformable dimensions, otherwise `FALSE`."
   status: api
   header: Rinternals.h
   protect: n/a
@@ -334,6 +350,7 @@
   summary: Test whether an object is a time series.
   signature: |
     Rboolean Rf_isTs(SEXP);
+  returns: "`TRUE` if the object is of class `ts`, otherwise `FALSE`."
   status: api
   header: Rinternals.h
   protect: n/a
@@ -352,6 +369,7 @@
   summary: Test whether an object is a data frame.
   signature: |
     Rboolean Rf_isDataFrame(SEXP x);
+  returns: "`TRUE` if `x` is a data frame, otherwise `FALSE`."
   status: api
   header: Rinternals.h
   protect: n/a
@@ -372,6 +390,7 @@
     R_xlen_t R_getAttribCount(SEXP x);
     SEXP R_getAttribNames(SEXP x);
     bool R_hasAttrib(SEXP x, SEXP name);
+  returns: "`R_getAttributes()` returns the attributes of `x` as a named list (`R_NilValue` if none); `R_getAttribCount()` returns the number of attributes; `R_getAttribNames()` returns their names as a character vector; `R_hasAttrib()` returns `true` if `x` has an attribute called `name`."
   status: experimental
   header: Rinternals.h
   protect: result
@@ -391,6 +410,7 @@
   signature: |
     R_xlen_t R_nrow(SEXP x);
     R_xlen_t R_ncol(SEXP x);
+  returns: "The number of rows (`R_nrow()`) or columns (`R_ncol()`) of `x`."
   status: experimental
   header: Rinternals.h
   protect: n/a
@@ -408,6 +428,7 @@
   summary: Get the class vector of an object.
   signature: |
     SEXP R_class(SEXP x);
+  returns: "The class vector of `x`, or the implicit class if `x` has no class attribute."
   status: api
   header: Rinternals.h
   protect: not-needed
@@ -426,6 +447,7 @@
   summary: Iterate over the attributes of an object with a callback.
   signature: |
     SEXP R_mapAttrib(SEXP x, SEXP (*FUN)(SEXP, SEXP, void *), void *data);
+  returns: "The first non-`NULL` value returned by `FUN`, or `NULL` if `FUN` returned `NULL` for every attribute."
   status: experimental
   header: Rinternals.h
   protect: result
@@ -446,6 +468,7 @@
   signature: |
     int  (ANY_ATTRIB)(SEXP x);
     void CLEAR_ATTRIB(SEXP x);
+  returns: "`ANY_ATTRIB()` returns non-zero if `x` has any attributes, otherwise zero."
   status: api
   header: Rinternals.h
   protect: n/a

@@ -30,6 +30,7 @@
     double unif_rand(void);
     double norm_rand(void);
     double exp_rand(void);
+  returns: "One variate: uniform on (0, 1) for `unif_rand()`, standard normal for `norm_rand()`, unit exponential for `exp_rand()`."
   status: api
   header: R_ext/Random.h
   protect: n/a
@@ -49,6 +50,7 @@
   summary: Draw a uniform index in `[0, n)` for random sampling.
   signature: |
     double R_unif_index(double n);
+  returns: "A uniform draw in `[0, n)`; truncate to an integer type to get an index."
   status: api
   header: R_ext/Random.h
   protect: n/a
@@ -68,6 +70,7 @@
   summary: Get the current discrete-sampling algorithm.
   signature: |
     Sampletype R_sample_kind(void);
+  returns: "The current sampling algorithm, `ROUNDING` or `REJECTION`."
   status: api
   header: R_ext/Random.h
   protect: n/a

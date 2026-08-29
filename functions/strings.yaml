@@ -31,6 +31,7 @@
   summary: Get the encoding of a CHARSXP.
   signature: |
     cetype_t Rf_getCharCE(SEXP);
+  returns: "The encoding of the CHARSXP as a `cetype_t` value."
   status: api
   header: Rinternals.h
   protect: n/a
@@ -44,6 +45,7 @@
   signature: |
     SEXP Rf_mkChar(const char* x);
     SEXP Rf_mkCharLen(const char* x, int n);
+  returns: "The interned `CHARSXP` for the string as a `SEXP`; R's string cache means identical inputs return the same object."
   status: api
   header: Rinternals.h
   protect: result
@@ -64,6 +66,7 @@
   signature: |
     SEXP Rf_mkCharCE(const char* x, cetype_t encoding);
     SEXP Rf_mkCharLenCE(const char* x, int n, cetype_t encoding);
+  returns: "The interned `CHARSXP` for the string in the requested encoding as a `SEXP`."
   status: api
   header: Rinternals.h
   protect: result
@@ -82,6 +85,7 @@
   signature: |
     SEXP Rf_ScalarString(SEXP);
     SEXP Rf_mkString(const char*);
+  returns: "A freshly allocated length-1 `STRSXP` as a `SEXP`."
   status: api
   header: Rinternals.h
   protect: result
@@ -98,6 +102,7 @@
   signature: |
     const char* R_CHAR(SEXP x);
     #define CHAR(x) R_CHAR(x)
+  returns: "A pointer to the null-terminated C string stored inside the CHARSXP; owned by R, so do not modify or free it."
   status: api
   header: Rinternals.h
   protect: n/a
@@ -117,6 +122,7 @@
     const char* Rf_translateChar(SEXP x);
     const char* Rf_translateChar0(SEXP x);
     const char* Rf_translateCharUTF8(SEXP x);
+  returns: "A pointer to the translated null-terminated C string; re-encoded results are allocated with `R_alloc()` and freed automatically at the end of the call."
   status: api
   header: Rinternals.h
   protect: n/a
@@ -169,6 +175,7 @@
   signature: |
     Rboolean Rf_StringBlank(SEXP);
     Rboolean Rf_isBlankString(const char *);
+  returns: "`TRUE` if the string is empty (length zero), otherwise `FALSE`."
   status: experimental
   header: Rinternals.h
   protect: n/a
@@ -185,6 +192,7 @@
   signature: |
     Rboolean Rf_isValidString(SEXP);
     Rboolean Rf_isValidStringF(SEXP);
+  returns: "`TRUE` if the validity condition described in the notes holds, otherwise `FALSE`."
   status: api
   header: Rinternals.h
   protect: n/a
@@ -204,6 +212,7 @@
     typedef enum {Bytes, Chars, Width} nchar_type;
     int R_nchar(SEXP string, nchar_type type_,
       Rboolean allowNA, Rboolean keepNA, const char* msg_name);
+  returns: "The string length in bytes, characters, or display width as an `int`; `NA_INTEGER` for `NA_STRING` when `keepNA` is true."
   status: non-api
   header: Rinternals.h
   protect: n/a
@@ -221,6 +230,7 @@
   summary: Copy a C string into memory allocated by R_alloc().
   signature: |
     char* Rf_acopy_string(const char *);
+  returns: "A pointer to a copy of the string allocated with `R_alloc()`; freed automatically, so do not free it."
   status: api
   header: Rinternals.h
   protect: n/a
@@ -235,6 +245,7 @@
   summary: Render an R object to a CHARSXP.
   signature: |
     SEXP Rf_asChar(SEXP x);
+  returns: "A `CHARSXP` rendering of `x` as a `SEXP`, as `as.character()` would produce it."
   status: api
   header: Rinternals.h
   protect: result
@@ -248,6 +259,7 @@
   summary: Check that two strings are equal and neither NA nor empty.
   signature: |
     Rboolean Rf_NonNullStringMatch(SEXP s, SEXP t);
+  returns: "`TRUE` if the two strings are equal and neither is `NA_STRING` nor empty, otherwise `FALSE`."
   status: api
   header: Rinternals.h
   protect: n/a
@@ -263,6 +275,7 @@
   signature: >
     const char *Rf_reEnc(const char *x, cetype_t ce_in, cetype_t ce_out, int
     subst);
+  returns: "A pointer to the re-encoded null-terminated string; this may be `x` itself or an internal buffer, so copy it if it must outlive the call."
   status: api
   header: Rinternals.h
   protect: n/a
@@ -275,6 +288,7 @@
   summary: Convert a C string to a SEXPTYPE.
   signature: |
     SEXPTYPE Rf_str2type(const char *);
+  returns: "The `SEXPTYPE` named by the string, or `(SEXPTYPE) -1` if the name is not recognised."
   status: api
   header: Rinternals.h
   protect: n/a
@@ -293,6 +307,7 @@
     SEXP Rf_type2rstr(SEXPTYPE);
     SEXP Rf_type2str(SEXPTYPE);
     SEXP Rf_type2str_nowarn(SEXPTYPE);
+  returns: "`Rf_type2char()` returns a static C string naming the type; `Rf_type2str()` and `Rf_type2str_nowarn()` return a `CHARSXP`; `Rf_type2rstr()` returns a length-1 `STRSXP`."
   status: api
   header: Rinternals.h
   protect: result
@@ -311,6 +326,7 @@
   signature: |
     Rboolean Rf_pmatch(SEXP, SEXP, Rboolean);
     Rboolean Rf_psmatch(const char *, const char *, Rboolean);
+  returns: "`TRUE` if the string matches the target exactly, or partially when partial matching is allowed; otherwise `FALSE`."
   status: experimental
   header: Rinternals.h
   protect: n/a
@@ -326,6 +342,7 @@
   summary: Find the position of a string within a character vector.
   signature: |
     int Rf_stringPositionTr(SEXP, const char *);
+  returns: "The 1-based index of the string in the vector, or -1 if not found."
   status: api
   header: Rinternals.h
   protect: n/a
@@ -343,6 +360,7 @@
     size_t Riconv(void *cd, const char **inbuf, size_t *inbytesleft,
                   char **outbuf, size_t *outbytesleft);
     int Riconv_close(void *cd);
+  returns: "`Riconv_open()` returns a conversion handle (`NULL` on failure); `Riconv()` returns the number of irreversible conversions performed, or `(size_t) -1` on error; `Riconv_close()` returns 0 on success."
   status: api
   header: R_ext/Riconv.h
   protect: n/a
@@ -361,6 +379,7 @@
   signature: |
     Rboolean Rf_StringFalse(const char *);
     Rboolean Rf_StringTrue(const char *);
+  returns: "`TRUE` when the string represents false (`Rf_StringFalse()`) or true (`Rf_StringTrue()`); unrecognised strings yield `FALSE` from both."
   status: experimental
   header: R_ext/Utils.h
   protect: n/a

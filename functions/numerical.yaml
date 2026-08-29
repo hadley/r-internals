@@ -121,6 +121,7 @@
       int ilo, int *mflag);
     int F77_SUB(interv)(double *xt, int *n, double *x,
       int *rightmost_closed, int *all_inside, int *ilo, int *mflag);
+  returns: "The index of the interval in `xt` containing `x`, from 0 (below the first breakpoint) to `n`."
   status: api
   header: R_ext/Utils.h
   protect: n/a
@@ -157,6 +158,7 @@
   signature: |
     double F77_SUB(d1mach)(int *i);
     int F77_SUB(i1mach)(int *i);
+  returns: "`d1mach()` returns the requested floating-point machine constant; `i1mach()` returns the requested integer machine constant."
   status: api
   header: R_ext/Utils.h
   protect: n/a

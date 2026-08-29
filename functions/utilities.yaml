@@ -3,6 +3,7 @@
   summary: Retrieve the value of an R option.
   signature: |
     SEXP Rf_GetOption1(SEXP);
+  returns: "The option's value, or `R_NilValue` if it is not set."
   status: api
   header: Rinternals.h
   protect: not-needed
@@ -20,6 +21,7 @@
   signature: |
     int Rf_GetOptionDigits(void);
     int Rf_GetOptionWidth(void);
+  returns: "The current value of the `digits` or `width` option, respectively."
   status: api
   header: Rinternals.h
   protect: n/a
@@ -33,6 +35,7 @@
   summary: Test whether two objects are identical.
   signature: |
     Rboolean R_compute_identical(SEXP, SEXP, int);
+  returns: "`TRUE` if the objects are identical under the given flags, otherwise `FALSE`."
   status: experimental
   header: Rinternals.h
   protect: n/a
@@ -52,6 +55,7 @@
   signature: |
     double R_atof(const char *str);
     double R_strtod(const char *c, char **end);
+  returns: "The parsed `double` value; `R_strtod()` also sets `*end` to the first unparsed character."
   status: api
   header: R_ext/Utils.h
   protect: n/a
@@ -72,6 +76,7 @@
     char *R_tmpnam(const char *prefix, const char *tempdir);
     char *R_tmpnam2(const char *prefix, const char *tempdir, const char *fileext);
     void R_free_tmpnam(char *name);
+  returns: "`R_tmpnam()` and `R_tmpnam2()` return a newly allocated temporary file name to free with `R_free_tmpnam()`."
   status: api
   header: R_ext/Utils.h
   protect: n/a
@@ -89,6 +94,7 @@
   summary: Copy a string into R_alloc-allocated memory.
   signature: |
     const char *acopy_string(const char *in);
+  returns: "A copy of `in` in transient `R_alloc()` memory."
   status: experimental
   header: R_ext/Utils.h
   protect: n/a
@@ -104,6 +110,7 @@
   summary: Expand a path containing ~ to a full path.
   signature: |
     const char *R_ExpandFileName(const char *);
+  returns: "The path with any leading `~` expanded."
   status: api
   header: R_ext/Utils.h
   protect: n/a
