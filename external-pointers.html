@@ -371,11 +371,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#R_MakeExternalPtr" id="toc-R_MakeExternalPtr" class="nav-link" data-scroll-target="#R_MakeExternalPtr"><span class="header-section-number">12.1.1</span> <code>R_MakeExternalPtr()</code></a></li>
   <li><a href="#R_ClearExternalPtr" id="toc-R_ClearExternalPtr" class="nav-link" data-scroll-target="#R_ClearExternalPtr"><span class="header-section-number">12.1.2</span> <code>R_ClearExternalPtr()</code></a></li>
   <li><a href="#R_ExternalPtrAddr" id="toc-R_ExternalPtrAddr" class="nav-link" data-scroll-target="#R_ExternalPtrAddr"><span class="header-section-number">12.1.3</span> <code>R_ExternalPtrAddr()</code> (<code>R_ExternalPtrTag()</code>, <code>R_ExternalPtrProtected()</code>, <code>R_SetExternalPtrAddr()</code>, <code>R_SetExternalPtrTag()</code>, <code>R_SetExternalPtrProtected()</code>)</a></li>
+  <li><a href="#R_MakeExternalPtrFn" id="toc-R_MakeExternalPtrFn" class="nav-link" data-scroll-target="#R_MakeExternalPtrFn"><span class="header-section-number">12.1.4</span> <code>R_MakeExternalPtrFn()</code> (<code>R_ExternalPtrAddrFn()</code>)</a></li>
   </ul></li>
   <li><a href="#finalization" id="toc-finalization" class="nav-link" data-scroll-target="#finalization"><span class="header-section-number">12.2</span> Finalization</a>
   <ul class="collapse">
   <li><a href="#R_RegisterCFinalizer" id="toc-R_RegisterCFinalizer" class="nav-link" data-scroll-target="#R_RegisterCFinalizer"><span class="header-section-number">12.2.1</span> <code>R_RegisterCFinalizer()</code> (<code>R_RegisterFinalizer()</code>, <code>R_RegisterFinalizerEx()</code>, <code>R_RegisterCFinalizerEx()</code>)</a></li>
-  <li><a href="#R_RunPendingFinalizers" id="toc-R_RunPendingFinalizers" class="nav-link" data-scroll-target="#R_RunPendingFinalizers"><span class="header-section-number">12.2.2</span> <code>R_RunPendingFinalizers()</code></a></li>
   </ul></li>
   <li><a href="#weak-references" id="toc-weak-references" class="nav-link" data-scroll-target="#weak-references"><span class="header-section-number">12.3</span> Weak references</a>
   <ul class="collapse">
@@ -435,26 +435,34 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> R_SetExternalPtrProtected<span class="op">(</span>SEXP s<span class="op">,</span> SEXP p<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 </section>
+<section id="R_MakeExternalPtrFn" class="level3" data-number="12.1.4">
+<h3 data-number="12.1.4" class="anchored" data-anchor-id="R_MakeExternalPtrFn"><span class="header-section-number">12.1.4</span> <code>R_MakeExternalPtrFn()</code> (<code>R_ExternalPtrAddrFn()</code>)</h3>
+<p>Wrap a C function pointer in an external pointer.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>SEXP R_MakeExternalPtrFn<span class="op">(</span>DL_FUNC p<span class="op">,</span> SEXP tag<span class="op">,</span> SEXP prot<span class="op">);</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>DL_FUNC R_ExternalPtrAddrFn<span class="op">(</span>SEXP s<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> result · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<ul>
+<li><code>p</code>: the function pointer to wrap.</li>
+<li><code>tag</code>: an identifying tag, often <code>R_NilValue</code>.</li>
+<li><code>prot</code>: an object to protect from GC while the pointer lives.</li>
+</ul>
+<p>The function-pointer analogue of <code>R_MakeExternalPtr()</code>; storing a <code>DL_FUNC</code> directly avoids casting between object and function pointers, which is undefined behaviour in C.</p>
+<p><strong>See also:</strong> <a href="#R_MakeExternalPtr"><code>R_MakeExternalPtr()</code></a>, <a href="#R_ExternalPtrAddr"><code>R_ExternalPtrAddr()</code></a></p>
+</section>
 </section>
 <section id="finalization" class="level2" data-number="12.2">
 <h2 data-number="12.2" class="anchored" data-anchor-id="finalization"><span class="header-section-number">12.2</span> Finalization</h2>
 <p>A finalizer has the signature:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">typedef</span> <span class="dt">void</span> <span class="op">(*</span>R_CFinalizer_t<span class="op">)(</span>SEXP<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">typedef</span> <span class="dt">void</span> <span class="op">(*</span>R_CFinalizer_t<span class="op">)(</span>SEXP<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <section id="R_RegisterCFinalizer" class="level3" data-number="12.2.1">
 <h3 data-number="12.2.1" class="anchored" data-anchor-id="R_RegisterCFinalizer"><span class="header-section-number">12.2.1</span> <code>R_RegisterCFinalizer()</code> (<code>R_RegisterFinalizer()</code>, <code>R_RegisterFinalizerEx()</code>, <code>R_RegisterCFinalizerEx()</code>)</h3>
 <p>Register a finalizer to run when an external pointer is garbage collected.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> R_RegisterFinalizer<span class="op">(</span>SEXP s<span class="op">,</span> SEXP fun<span class="op">);</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> R_RegisterCFinalizer<span class="op">(</span>SEXP s<span class="op">,</span> R_CFinalizer_t fun<span class="op">);</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> R_RegisterFinalizerEx<span class="op">(</span>SEXP s<span class="op">,</span> SEXP fun<span class="op">,</span> Rboolean onexit<span class="op">);</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> R_RegisterCFinalizerEx<span class="op">(</span>SEXP s<span class="op">,</span> R_CFinalizer_t fun<span class="op">,</span> Rboolean onexit<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> R_RegisterFinalizer<span class="op">(</span>SEXP s<span class="op">,</span> SEXP fun<span class="op">);</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> R_RegisterCFinalizer<span class="op">(</span>SEXP s<span class="op">,</span> R_CFinalizer_t fun<span class="op">);</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> R_RegisterFinalizerEx<span class="op">(</span>SEXP s<span class="op">,</span> SEXP fun<span class="op">,</span> Rboolean onexit<span class="op">);</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> R_RegisterCFinalizerEx<span class="op">(</span>SEXP s<span class="op">,</span> R_CFinalizer_t fun<span class="op">,</span> Rboolean onexit<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 <p><code>R_RegisterFinalizer()</code> takes an R function and <code>R_RegisterCFinalizer()</code> a C function of type <code>R_CFinalizer_t</code>. The <code>Ex</code> variants add an <code>onexit</code> argument controlling whether the finalizer also runs when R shuts down.</p>
-</section>
-<section id="R_RunPendingFinalizers" class="level3" data-number="12.2.2">
-<h3 data-number="12.2.2" class="anchored" data-anchor-id="R_RunPendingFinalizers"><span class="header-section-number">12.2.2</span> <code>R_RunPendingFinalizers()</code></h3>
-<p>Run any pending finalizers.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> R_RunPendingFinalizers<span class="op">(</span><span class="dt">void</span><span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 </section>
 </section>
 <section id="weak-references" class="level2" data-number="12.3">

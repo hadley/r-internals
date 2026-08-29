@@ -370,6 +370,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul class="collapse">
   <li><a href="#cetype_t" id="toc-cetype_t" class="nav-link" data-scroll-target="#cetype_t"><span class="header-section-number">6.1.1</span> <code>cetype_t()</code> (<code>CE_NATIVE()</code>, <code>CE_UTF8()</code>, <code>CE_LATIN1()</code>, <code>CE_BYTES()</code>, <code>CE_SYMBOL()</code>, <code>CE_ANY()</code>)</a></li>
   <li><a href="#Rf_getCharCE" id="toc-Rf_getCharCE" class="nav-link" data-scroll-target="#Rf_getCharCE"><span class="header-section-number">6.1.2</span> <code>Rf_getCharCE()</code></a></li>
+  <li><a href="#Riconv" id="toc-Riconv" class="nav-link" data-scroll-target="#Riconv"><span class="header-section-number">6.1.3</span> <code>Riconv()</code> (<code>Riconv_open()</code>, <code>Riconv_close()</code>)</a></li>
   </ul></li>
   <li><a href="#creating-from-c-strings" id="toc-creating-from-c-strings" class="nav-link" data-scroll-target="#creating-from-c-strings"><span class="header-section-number">6.2</span> Creating from C strings</a>
   <ul class="collapse">
@@ -396,11 +397,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </ul></li>
   <li><a href="#helper-functions" id="toc-helper-functions" class="nav-link" data-scroll-target="#helper-functions"><span class="header-section-number">6.6</span> Helper functions</a>
   <ul class="collapse">
-  <li><a href="#R_nchar" id="toc-R_nchar" class="nav-link" data-scroll-target="#R_nchar"><span class="header-section-number">6.6.1</span> <code>R_nchar()</code></a></li>
-  <li><a href="#Rf_acopy_string" id="toc-Rf_acopy_string" class="nav-link" data-scroll-target="#Rf_acopy_string"><span class="header-section-number">6.6.2</span> <code>Rf_acopy_string()</code></a></li>
-  <li><a href="#Rf_asChar" id="toc-Rf_asChar" class="nav-link" data-scroll-target="#Rf_asChar"><span class="header-section-number">6.6.3</span> <code>Rf_asChar()</code></a></li>
-  <li><a href="#Rf_NonNullStringMatch" id="toc-Rf_NonNullStringMatch" class="nav-link" data-scroll-target="#Rf_NonNullStringMatch"><span class="header-section-number">6.6.4</span> <code>Rf_NonNullStringMatch()</code></a></li>
-  <li><a href="#Rf_reEnc" id="toc-Rf_reEnc" class="nav-link" data-scroll-target="#Rf_reEnc"><span class="header-section-number">6.6.5</span> <code>Rf_reEnc()</code></a></li>
+  <li><a href="#Rf_acopy_string" id="toc-Rf_acopy_string" class="nav-link" data-scroll-target="#Rf_acopy_string"><span class="header-section-number">6.6.1</span> <code>Rf_acopy_string()</code></a></li>
+  <li><a href="#Rf_asChar" id="toc-Rf_asChar" class="nav-link" data-scroll-target="#Rf_asChar"><span class="header-section-number">6.6.2</span> <code>Rf_asChar()</code></a></li>
+  <li><a href="#Rf_NonNullStringMatch" id="toc-Rf_NonNullStringMatch" class="nav-link" data-scroll-target="#Rf_NonNullStringMatch"><span class="header-section-number">6.6.3</span> <code>Rf_NonNullStringMatch()</code></a></li>
+  <li><a href="#Rf_reEnc" id="toc-Rf_reEnc" class="nav-link" data-scroll-target="#Rf_reEnc"><span class="header-section-number">6.6.4</span> <code>Rf_reEnc()</code></a></li>
+  <li><a href="#Rf_StringFalse" id="toc-Rf_StringFalse" class="nav-link" data-scroll-target="#Rf_StringFalse"><span class="header-section-number">6.6.5</span> <code>Rf_StringFalse()</code> (<code>Rf_StringTrue()</code>)</a></li>
   <li><a href="#types" id="toc-types" class="nav-link" data-scroll-target="#types"><span class="header-section-number">6.6.6</span> Types</a></li>
   <li><a href="#Rf_str2type" id="toc-Rf_str2type" class="nav-link" data-scroll-target="#Rf_str2type"><span class="header-section-number">6.6.7</span> <code>Rf_str2type()</code></a></li>
   <li><a href="#Rf_type2str" id="toc-Rf_type2str" class="nav-link" data-scroll-target="#Rf_type2str"><span class="header-section-number">6.6.8</span> <code>Rf_type2str()</code> (<code>Rf_type2char()</code>, <code>Rf_type2rstr()</code>, <code>Rf_type2str_nowarn()</code>)</a></li>
@@ -456,6 +457,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 <p><strong>See also:</strong> <a href="#cetype_t"><code>cetype_t()</code></a></p>
 </section>
+<section id="Riconv" class="level3" data-number="6.1.3">
+<h3 data-number="6.1.3" class="anchored" data-anchor-id="Riconv"><span class="header-section-number">6.1.3</span> <code>Riconv()</code> (<code>Riconv_open()</code>, <code>Riconv_close()</code>)</h3>
+<p>Convert a string between encodings.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> <span class="op">*</span>Riconv_open<span class="op">(</span><span class="dt">const</span> <span class="dt">char</span> <span class="op">*</span>tocode<span class="op">,</span> <span class="dt">const</span> <span class="dt">char</span> <span class="op">*</span>fromcode<span class="op">);</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="dt">size_t</span> Riconv<span class="op">(</span><span class="dt">void</span> <span class="op">*</span>cd<span class="op">,</span> <span class="dt">const</span> <span class="dt">char</span> <span class="op">**</span>inbuf<span class="op">,</span> <span class="dt">size_t</span> <span class="op">*</span>inbytesleft<span class="op">,</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>              <span class="dt">char</span> <span class="op">**</span>outbuf<span class="op">,</span> <span class="dt">size_t</span> <span class="op">*</span>outbytesleft<span class="op">);</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> Riconv_close<span class="op">(</span><span class="dt">void</span> <span class="op">*</span>cd<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Status:</strong> API · <strong>Header:</strong> <code>R_ext/Riconv.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<p>A wrapper over the system <code>iconv()</code>, with the same calling convention. <code>""</code> as an encoding name means the current native encoding; <code>"UTF-8"</code> is always supported. Returns <code>(size_t) -1</code> on error, with <code>errno</code> set (<code>E2BIG</code> when the output buffer is full).</p>
+<p><strong>See also:</strong> <a href="#Rf_reEnc"><code>Rf_reEnc()</code></a></p>
+</section>
 </section>
 <section id="creating-from-c-strings" class="level2" data-number="6.2">
 <h2 data-number="6.2" class="anchored" data-anchor-id="creating-from-c-strings"><span class="header-section-number">6.2</span> Creating from C strings</h2>
@@ -466,8 +478,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="Rf_mkChar" class="level3" data-number="6.2.1">
 <h3 data-number="6.2.1" class="anchored" data-anchor-id="Rf_mkChar"><span class="header-section-number">6.2.1</span> <code>Rf_mkChar()</code> (<code>Rf_mkCharLen()</code>)</h3>
 <p>Create a CHARSXP from a C string in the current encoding.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>SEXP Rf_mkChar<span class="op">(</span><span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> x<span class="op">);</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>SEXP Rf_mkCharLen<span class="op">(</span><span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> x<span class="op">,</span> <span class="dt">int</span> n<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>SEXP Rf_mkChar<span class="op">(</span><span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> x<span class="op">);</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>SEXP Rf_mkCharLen<span class="op">(</span><span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> x<span class="op">,</span> <span class="dt">int</span> n<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> result · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 <p><code>Rf_mkChar()</code> takes a null-terminated string; <code>Rf_mkCharLen()</code> takes an explicit length. Protection is rarely needed since the result is usually assigned immediately into a <code>STRSXP</code>. Both crash R on <code>NULL</code> input, so check for it yourself and substitute <code>""</code> or <code>NA_STRING</code>.</p>
 <p><strong>See also:</strong> <a href="#Rf_mkCharCE"><code>Rf_mkCharCE()</code></a>, <a href="#Rf_ScalarString"><code>Rf_ScalarString()</code></a></p>
@@ -475,8 +487,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="Rf_mkCharCE" class="level3" data-number="6.2.2">
 <h3 data-number="6.2.2" class="anchored" data-anchor-id="Rf_mkCharCE"><span class="header-section-number">6.2.2</span> <code>Rf_mkCharCE()</code> (<code>Rf_mkCharLenCE()</code>)</h3>
 <p>Create a CHARSXP from a C string in a specified encoding.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>SEXP Rf_mkCharCE<span class="op">(</span><span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> x<span class="op">,</span> cetype_t encoding<span class="op">);</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>SEXP Rf_mkCharLenCE<span class="op">(</span><span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> x<span class="op">,</span> <span class="dt">int</span> n<span class="op">,</span> cetype_t encoding<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>SEXP Rf_mkCharCE<span class="op">(</span><span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> x<span class="op">,</span> cetype_t encoding<span class="op">);</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>SEXP Rf_mkCharLenCE<span class="op">(</span><span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> x<span class="op">,</span> <span class="dt">int</span> n<span class="op">,</span> cetype_t encoding<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> result · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 <p>Prefer these over <code>Rf_mkChar()</code> and <code>Rf_mkString()</code> when the input is UTF-8, which is typical for modern C code.</p>
 <p><strong>See also:</strong> <a href="#cetype_t"><code>cetype_t()</code></a>, <a href="#Rf_mkChar"><code>Rf_mkChar()</code></a></p>
@@ -484,8 +496,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="Rf_ScalarString" class="level3" data-number="6.2.3">
 <h3 data-number="6.2.3" class="anchored" data-anchor-id="Rf_ScalarString"><span class="header-section-number">6.2.3</span> <code>Rf_ScalarString()</code> (<code>Rf_mkString()</code>)</h3>
 <p>Create a length-1 STRSXP from a CHARSXP or C string.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>SEXP Rf_ScalarString<span class="op">(</span>SEXP<span class="op">);</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>SEXP Rf_mkString<span class="op">(</span><span class="dt">const</span> <span class="dt">char</span><span class="op">*);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>SEXP Rf_ScalarString<span class="op">(</span>SEXP<span class="op">);</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>SEXP Rf_mkString<span class="op">(</span><span class="dt">const</span> <span class="dt">char</span><span class="op">*);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> result · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 <p><code>Rf_ScalarString()</code> builds a <code>STRSXP</code> from a <code>CHARSXP</code>; <code>Rf_mkString()</code> builds one from a C string. Both crash R on <code>NULL</code> input.</p>
 <p><strong>See also:</strong> <a href="#Rf_mkChar"><code>Rf_mkChar()</code></a></p>
@@ -496,14 +508,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>To access the C string stored in a <code>CHARSXP</code>, use <code>CHAR()</code>. (To match the other vector accessors like <code>INTEGER()</code>, this is typically called via the <code>Rf_</code>-less name.)</p>
 <p>The <code>Rf_translateChar*</code> functions return a <code>const char*</code> in the specified encoding; most modern C APIs use UTF-8, so you almost always want <code>Rf_translateCharUTF8()</code>.</p>
 <p>If re-encoding is necessary, the returned <code>char*</code> is allocated with <code>R_alloc()</code> and freed automatically at the end of the <code>.Call</code>; if you need it across calls, make a copy. If you make many translating calls in a loop, free the transient memory explicitly with <code>vmaxget()</code>/<code>vmaxset()</code>:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> <span class="dt">void</span> <span class="op">*</span>vmax <span class="op">=</span> vmaxget<span class="op">();</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="op">...</span> <span class="co">// one or more calls to Rf_translateCharUTF8(), etc.</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>vmaxset<span class="op">(</span>vmax<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> <span class="dt">void</span> <span class="op">*</span>vmax <span class="op">=</span> vmaxget<span class="op">();</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="op">...</span> <span class="co">// one or more calls to Rf_translateCharUTF8(), etc.</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>vmaxset<span class="op">(</span>vmax<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <section id="CHAR" class="level3" data-number="6.3.1">
 <h3 data-number="6.3.1" class="anchored" data-anchor-id="CHAR"><span class="header-section-number">6.3.1</span> <code>CHAR()</code> (<code>R_CHAR()</code>)</h3>
 <p>Access the underlying C string stored in a CHARSXP.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> R_CHAR<span class="op">(</span>SEXP x<span class="op">);</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#define CHAR</span><span class="op">(</span><span class="pp">x</span><span class="op">)</span><span class="pp"> </span>R_CHAR<span class="op">(</span><span class="pp">x</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> R_CHAR<span class="op">(</span>SEXP x<span class="op">);</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#define CHAR</span><span class="op">(</span><span class="pp">x</span><span class="op">)</span><span class="pp"> </span>R_CHAR<span class="op">(</span><span class="pp">x</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 <p>Named <code>CHAR()</code> for consistency with the other vector accessors (<code>LOGICAL()</code>, <code>INTEGER()</code>, …).</p>
 <p><strong>See also:</strong> <a href="#Rf_translateCharUTF8"><code>Rf_translateCharUTF8()</code></a></p>
@@ -511,9 +523,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="Rf_translateCharUTF8" class="level3" data-number="6.3.2">
 <h3 data-number="6.3.2" class="anchored" data-anchor-id="Rf_translateCharUTF8"><span class="header-section-number">6.3.2</span> <code>Rf_translateCharUTF8()</code> (<code>Rf_translateChar()</code>, <code>Rf_translateChar0()</code>)</h3>
 <p>Translate a CHARSXP to a C string in a specified encoding.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> Rf_translateChar<span class="op">(</span>SEXP x<span class="op">);</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> Rf_translateChar0<span class="op">(</span>SEXP x<span class="op">);</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> Rf_translateCharUTF8<span class="op">(</span>SEXP x<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> Rf_translateChar<span class="op">(</span>SEXP x<span class="op">);</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> Rf_translateChar0<span class="op">(</span>SEXP x<span class="op">);</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> Rf_translateCharUTF8<span class="op">(</span>SEXP x<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 <p><code>Rf_translateChar()</code> translates to the native encoding; <code>Rf_translateChar0()</code> leaves bytes-encoded strings alone and otherwise translates to native; <code>Rf_translateCharUTF8()</code> translates to UTF-8, which is what most modern C APIs want. A re-encoded <code>char*</code> is allocated with <code>R_alloc()</code> and freed automatically after the <code>.C</code>/<code>.Call</code>/<code>.External</code> returns; copy it if you need to keep it longer.</p>
 <p><strong>See also:</strong> <a href="#CHAR"><code>CHAR()</code></a></p>
@@ -524,8 +536,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="NA_STRING" class="level3" data-number="6.4.1">
 <h3 data-number="6.4.1" class="anchored" data-anchor-id="NA_STRING"><span class="header-section-number">6.4.1</span> <code>NA_STRING()</code> (<code>R_NaString()</code>)</h3>
 <p>Use the singleton CHARSXP representing NA.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>SEXP R_NaString<span class="op">;</span> <span class="co">// Singleton CHARSXP</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#define NA_STRING </span>R_NaString</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>SEXP R_NaString<span class="op">;</span> <span class="co">// Singleton CHARSXP</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#define NA_STRING </span>R_NaString</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>NA_character_</code></p>
 <p><code>R_NaString</code> is a singleton <code>CHARSXP</code>; <code>NA_STRING</code> is the macro alias.</p>
 <p><strong>See also:</strong> <a href="#R_BlankString"><code>R_BlankString()</code></a></p>
@@ -533,8 +545,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="R_BlankString" class="level3" data-number="6.4.2">
 <h3 data-number="6.4.2" class="anchored" data-anchor-id="R_BlankString"><span class="header-section-number">6.4.2</span> <code>R_BlankString()</code> (<code>R_BlankScalarString()</code>)</h3>
 <p>Use the global blank string objects.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>SEXP R_BlankString<span class="op">;</span> <span class="co">// CHARSXP</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>SEXP R_BlankScalarString<span class="op">;</span> <span class="co">// STRSXP</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>SEXP R_BlankString<span class="op">;</span> <span class="co">// CHARSXP</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>SEXP R_BlankScalarString<span class="op">;</span> <span class="co">// STRSXP</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>""</code></p>
 <p><code>R_BlankString</code> is a <code>CHARSXP</code>; <code>R_BlankScalarString</code> is a <code>STRSXP</code>.</p>
 <p><strong>See also:</strong> <a href="#NA_STRING"><code>NA_STRING()</code></a></p>
@@ -542,17 +554,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="Rf_StringBlank" class="level3" data-number="6.4.3">
 <h3 data-number="6.4.3" class="anchored" data-anchor-id="Rf_StringBlank"><span class="header-section-number">6.4.3</span> <code>Rf_StringBlank()</code> (<code>Rf_isBlankString()</code>)</h3>
 <p>Check whether a string is blank.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>Rboolean Rf_StringBlank<span class="op">(</span>SEXP<span class="op">);</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>Rboolean Rf_isBlankString<span class="op">(</span><span class="dt">const</span> <span class="dt">char</span> <span class="op">*);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>Rboolean Rf_StringBlank<span class="op">(</span>SEXP<span class="op">);</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>Rboolean Rf_isBlankString<span class="op">(</span><span class="dt">const</span> <span class="dt">char</span> <span class="op">*);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Status:</strong> experimental · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 <p><code>Rf_StringBlank()</code> takes a <code>SEXP</code>; <code>Rf_isBlankString()</code> takes a <code>const char*</code>.</p>
 <p><strong>See also:</strong> <a href="#R_BlankString"><code>R_BlankString()</code></a></p>
 </section>
 <section id="Rf_isValidString" class="level3" data-number="6.4.4">
 <h3 data-number="6.4.4" class="anchored" data-anchor-id="Rf_isValidString"><span class="header-section-number">6.4.4</span> <code>Rf_isValidString()</code> (<code>Rf_isValidStringF()</code>)</h3>
 <p>Check whether a STRSXP holds at least one valid string.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>Rboolean Rf_isValidString<span class="op">(</span>SEXP<span class="op">);</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>Rboolean Rf_isValidStringF<span class="op">(</span>SEXP<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>Rboolean Rf_isValidString<span class="op">(</span>SEXP<span class="op">);</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>Rboolean Rf_isValidStringF<span class="op">(</span>SEXP<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 <p><code>Rf_isValidString(x)</code> is <code>TYPEOF(x) == STRSXP &amp;&amp; LENGTH(x) &gt; 0 &amp;&amp; TYPEOF(STRING_ELT(x, 0)) != NILSXP</code>; <code>Rf_isValidStringF(x)</code> is <code>isValidString(x) &amp;&amp; CHAR(STRING_ELT(x, 0))[0]</code>.</p>
 </section>
@@ -562,56 +574,55 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="Rf_pmatch" class="level3" data-number="6.5.1">
 <h3 data-number="6.5.1" class="anchored" data-anchor-id="Rf_pmatch"><span class="header-section-number">6.5.1</span> <code>Rf_pmatch()</code> (<code>Rf_psmatch()</code>)</h3>
 <p>Perform partial matching of strings.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>Rboolean Rf_pmatch<span class="op">(</span>SEXP<span class="op">,</span> SEXP<span class="op">,</span> Rboolean<span class="op">);</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>Rboolean Rf_psmatch<span class="op">(</span><span class="dt">const</span> <span class="dt">char</span> <span class="op">*,</span> <span class="dt">const</span> <span class="dt">char</span> <span class="op">*,</span> Rboolean<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>pmatch()</code></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>Rboolean Rf_pmatch<span class="op">(</span>SEXP<span class="op">,</span> SEXP<span class="op">,</span> Rboolean<span class="op">);</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>Rboolean Rf_psmatch<span class="op">(</span><span class="dt">const</span> <span class="dt">char</span> <span class="op">*,</span> <span class="dt">const</span> <span class="dt">char</span> <span class="op">*,</span> Rboolean<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Status:</strong> experimental · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>pmatch()</code></p>
 <p><code>Rf_psmatch()</code> is the variant for C strings.</p>
 <p><strong>See also:</strong> <a href="vectors.html#Rf_match"><code>Rf_match()</code></a></p>
 </section>
 <section id="Rf_stringPositionTr" class="level3" data-number="6.5.2">
 <h3 data-number="6.5.2" class="anchored" data-anchor-id="Rf_stringPositionTr"><span class="header-section-number">6.5.2</span> <code>Rf_stringPositionTr()</code></h3>
 <p>Find the position of a string within a character vector.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> Rf_stringPositionTr<span class="op">(</span>SEXP<span class="op">,</span> <span class="dt">const</span> <span class="dt">char</span> <span class="op">*);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> Rf_stringPositionTr<span class="op">(</span>SEXP<span class="op">,</span> <span class="dt">const</span> <span class="dt">char</span> <span class="op">*);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 </section>
 </section>
 <section id="helper-functions" class="level2" data-number="6.6">
 <h2 data-number="6.6" class="anchored" data-anchor-id="helper-functions"><span class="header-section-number">6.6</span> Helper functions</h2>
-<section id="R_nchar" class="level3" data-number="6.6.1">
-<h3 data-number="6.6.1" class="anchored" data-anchor-id="R_nchar"><span class="header-section-number">6.6.1</span> <code>R_nchar()</code></h3>
-<p>Compute the length of a string in bytes, characters, or display width.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="kw">typedef</span> <span class="kw">enum</span> <span class="op">{</span>Bytes<span class="op">,</span> Chars<span class="op">,</span> Width<span class="op">}</span> nchar_type<span class="op">;</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> R_nchar<span class="op">(</span>SEXP string<span class="op">,</span> nchar_type type_<span class="op">,</span></span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  Rboolean allowNA<span class="op">,</span> Rboolean keepNA<span class="op">,</span> <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> msg_name<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>nchar()</code></p>
-<p><code>nchar_type</code> is one of <code>Bytes</code>, <code>Chars</code>, or <code>Width</code>.</p>
-</section>
-<section id="Rf_acopy_string" class="level3" data-number="6.6.2">
-<h3 data-number="6.6.2" class="anchored" data-anchor-id="Rf_acopy_string"><span class="header-section-number">6.6.2</span> <code>Rf_acopy_string()</code></h3>
+<section id="Rf_acopy_string" class="level3" data-number="6.6.1">
+<h3 data-number="6.6.1" class="anchored" data-anchor-id="Rf_acopy_string"><span class="header-section-number">6.6.1</span> <code>Rf_acopy_string()</code></h3>
 <p>Copy a C string into memory allocated by R_alloc().</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="dt">char</span><span class="op">*</span> Rf_acopy_string<span class="op">(</span><span class="dt">const</span> <span class="dt">char</span> <span class="op">*);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 <p>The copy is freed automatically at the next garbage collection.</p>
 </section>
-<section id="Rf_asChar" class="level3" data-number="6.6.3">
-<h3 data-number="6.6.3" class="anchored" data-anchor-id="Rf_asChar"><span class="header-section-number">6.6.3</span> <code>Rf_asChar()</code></h3>
+<section id="Rf_asChar" class="level3" data-number="6.6.2">
+<h3 data-number="6.6.2" class="anchored" data-anchor-id="Rf_asChar"><span class="header-section-number">6.6.2</span> <code>Rf_asChar()</code></h3>
 <p>Render an R object to a CHARSXP.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>SEXP Rf_asChar<span class="op">(</span>SEXP x<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> result · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>as.character()</code></p>
 </section>
-<section id="Rf_NonNullStringMatch" class="level3" data-number="6.6.4">
-<h3 data-number="6.6.4" class="anchored" data-anchor-id="Rf_NonNullStringMatch"><span class="header-section-number">6.6.4</span> <code>Rf_NonNullStringMatch()</code></h3>
+<section id="Rf_NonNullStringMatch" class="level3" data-number="6.6.3">
+<h3 data-number="6.6.3" class="anchored" data-anchor-id="Rf_NonNullStringMatch"><span class="header-section-number">6.6.3</span> <code>Rf_NonNullStringMatch()</code></h3>
 <p>Check that two strings are equal and neither NA nor empty.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>Rboolean Rf_NonNullStringMatch<span class="op">(</span>SEXP s<span class="op">,</span> SEXP t<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 <p>Translates both strings to UTF-8 before comparing.</p>
 </section>
-<section id="Rf_reEnc" class="level3" data-number="6.6.5">
-<h3 data-number="6.6.5" class="anchored" data-anchor-id="Rf_reEnc"><span class="header-section-number">6.6.5</span> <code>Rf_reEnc()</code></h3>
+<section id="Rf_reEnc" class="level3" data-number="6.6.4">
+<h3 data-number="6.6.4" class="anchored" data-anchor-id="Rf_reEnc"><span class="header-section-number">6.6.4</span> <code>Rf_reEnc()</code></h3>
 <p>Re-encode a C string from one encoding to another.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> <span class="dt">char</span> <span class="op">*</span>Rf_reEnc<span class="op">(</span><span class="dt">const</span> <span class="dt">char</span> <span class="op">*</span>x<span class="op">,</span> cetype_t ce_in<span class="op">,</span> cetype_t ce_out<span class="op">,</span> <span class="dt">int</span> subst<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 <p><strong>See also:</strong> <a href="#cetype_t"><code>cetype_t()</code></a></p>
+</section>
+<section id="Rf_StringFalse" class="level3" data-number="6.6.5">
+<h3 data-number="6.6.5" class="anchored" data-anchor-id="Rf_StringFalse"><span class="header-section-number">6.6.5</span> <code>Rf_StringFalse()</code> (<code>Rf_StringTrue()</code>)</h3>
+<p>Test whether a C string represents false or true.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>Rboolean Rf_StringFalse<span class="op">(</span><span class="dt">const</span> <span class="dt">char</span> <span class="op">*);</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>Rboolean Rf_StringTrue<span class="op">(</span><span class="dt">const</span> <span class="dt">char</span> <span class="op">*);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Status:</strong> experimental · <strong>Header:</strong> <code>R_ext/Utils.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<p>Recognises the strings <code>as.logical()</code> accepts (<code>"T"</code>, <code>"TRUE"</code>, <code>"false"</code>, …); anything else returns <code>FALSE</code> from both.</p>
 </section>
 <section id="types" class="level3" data-number="6.6.6">
 <h3 data-number="6.6.6" class="anchored" data-anchor-id="types"><span class="header-section-number">6.6.6</span> Types</h3>
@@ -620,17 +631,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="Rf_str2type" class="level3" data-number="6.6.7">
 <h3 data-number="6.6.7" class="anchored" data-anchor-id="Rf_str2type"><span class="header-section-number">6.6.7</span> <code>Rf_str2type()</code></h3>
 <p>Convert a C string to a SEXPTYPE.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>SEXPTYPE Rf_str2type<span class="op">(</span><span class="dt">const</span> <span class="dt">char</span> <span class="op">*);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>SEXPTYPE Rf_str2type<span class="op">(</span><span class="dt">const</span> <span class="dt">char</span> <span class="op">*);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 <p><strong>See also:</strong> <a href="#Rf_type2str"><code>Rf_type2str()</code></a></p>
 </section>
 <section id="Rf_type2str" class="level3" data-number="6.6.8">
 <h3 data-number="6.6.8" class="anchored" data-anchor-id="Rf_type2str"><span class="header-section-number">6.6.8</span> <code>Rf_type2str()</code> (<code>Rf_type2char()</code>, <code>Rf_type2rstr()</code>, <code>Rf_type2str_nowarn()</code>)</h3>
 <p>Convert a SEXPTYPE to a string.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> <span class="dt">char</span> <span class="op">*</span> Rf_type2char<span class="op">(</span>SEXPTYPE<span class="op">);</span></span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>SEXP Rf_type2rstr<span class="op">(</span>SEXPTYPE<span class="op">);</span></span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>SEXP Rf_type2str<span class="op">(</span>SEXPTYPE<span class="op">);</span></span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>SEXP Rf_type2str_nowarn<span class="op">(</span>SEXPTYPE<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> <span class="dt">char</span> <span class="op">*</span> Rf_type2char<span class="op">(</span>SEXPTYPE<span class="op">);</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>SEXP Rf_type2rstr<span class="op">(</span>SEXPTYPE<span class="op">);</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>SEXP Rf_type2str<span class="op">(</span>SEXPTYPE<span class="op">);</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>SEXP Rf_type2str_nowarn<span class="op">(</span>SEXPTYPE<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> result · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>typeof()</code></p>
 <p><code>Rf_type2char()</code> returns a C string; <code>Rf_type2rstr()</code> returns a <code>STRSXP</code>; <code>Rf_type2str()</code> returns a <code>CHARSXP</code>. Only the <code>SEXP</code>-returning members need protection.</p>
 <p><strong>See also:</strong> <a href="#Rf_str2type"><code>Rf_str2type()</code></a></p>

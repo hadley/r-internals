@@ -380,8 +380,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </ul></li>
   <li><a href="#miscellaneous" id="toc-miscellaneous" class="nav-link" data-scroll-target="#miscellaneous"><span class="header-section-number">20.4</span> Miscellaneous</a>
   <ul class="collapse">
-  <li><a href="#findInterval" id="toc-findInterval" class="nav-link" data-scroll-target="#findInterval"><span class="header-section-number">20.4.1</span> <code>findInterval()</code> (<code>find_interv_vec()</code>, <code>findInterval2()</code>)</a></li>
+  <li><a href="#findInterval" id="toc-findInterval" class="nav-link" data-scroll-target="#findInterval"><span class="header-section-number">20.4.1</span> <code>findInterval()</code> (<code>findInterval2()</code>, <code>interv()</code>)</a></li>
   <li><a href="#R_max_col" id="toc-R_max_col" class="nav-link" data-scroll-target="#R_max_col"><span class="header-section-number">20.4.2</span> <code>R_max_col()</code></a></li>
+  <li><a href="#d1mach" id="toc-d1mach" class="nav-link" data-scroll-target="#d1mach"><span class="header-section-number">20.4.3</span> <code>d1mach()</code> (<code>i1mach()</code>)</a></li>
   </ul></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/hadley/r-internals/edit/main/numerical.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/hadley/r-internals/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
@@ -494,7 +495,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="miscellaneous" class="level2" data-number="20.4">
 <h2 data-number="20.4" class="anchored" data-anchor-id="miscellaneous"><span class="header-section-number">20.4</span> Miscellaneous</h2>
 <section id="findInterval" class="level3" data-number="20.4.1">
-<h3 data-number="20.4.1" class="anchored" data-anchor-id="findInterval"><span class="header-section-number">20.4.1</span> <code>findInterval()</code> (<code>find_interv_vec()</code>, <code>findInterval2()</code>)</h3>
+<h3 data-number="20.4.1" class="anchored" data-anchor-id="findInterval"><span class="header-section-number">20.4.1</span> <code>findInterval()</code> (<code>findInterval2()</code>, <code>interv()</code>)</h3>
 <p>Locate the interval containing a value within a sorted vector.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> findInterval<span class="op">(</span><span class="dt">double</span> <span class="op">*</span>xt<span class="op">,</span> <span class="dt">int</span> n<span class="op">,</span> <span class="dt">double</span> x<span class="op">,</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  Rboolean rightmost_closed<span class="op">,</span>  Rboolean all_inside<span class="op">,</span> <span class="dt">int</span> ilo<span class="op">,</span></span>
@@ -502,11 +503,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> findInterval2<span class="op">(</span><span class="dt">double</span> <span class="op">*</span>xt<span class="op">,</span> <span class="dt">int</span> n<span class="op">,</span> <span class="dt">double</span> x<span class="op">,</span></span>
 <span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  Rboolean rightmost_closed<span class="op">,</span>  Rboolean all_inside<span class="op">,</span> Rboolean left_open<span class="op">,</span></span>
 <span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span> ilo<span class="op">,</span> <span class="dt">int</span> <span class="op">*</span>mflag<span class="op">);</span></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> find_interv_vec<span class="op">(</span><span class="dt">double</span> <span class="op">*</span>xt<span class="op">,</span> <span class="dt">int</span> <span class="op">*</span>n<span class="op">,</span> <span class="dt">double</span> <span class="op">*</span>x<span class="op">,</span>   <span class="dt">int</span> <span class="op">*</span>nx<span class="op">,</span></span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span> <span class="op">*</span>rightmost_closed<span class="op">,</span> <span class="dt">int</span> <span class="op">*</span>all_inside<span class="op">,</span> <span class="dt">int</span> <span class="op">*</span>indx<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> F77_SUB<span class="op">(</span>interv<span class="op">)(</span><span class="dt">double</span> <span class="op">*</span>xt<span class="op">,</span> <span class="dt">int</span> <span class="op">*</span>n<span class="op">,</span> <span class="dt">double</span> <span class="op">*</span>x<span class="op">,</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span> <span class="op">*</span>rightmost_closed<span class="op">,</span> <span class="dt">int</span> <span class="op">*</span>all_inside<span class="op">,</span> <span class="dt">int</span> <span class="op">*</span>ilo<span class="op">,</span> <span class="dt">int</span> <span class="op">*</span>mflag<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>R_ext/Utils.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>findInterval()</code></p>
-<p>Also declared in <code>R_ext/Applic.h</code>. <code>findInterval2()</code> adds a <code>left_open</code> argument for left-open intervals. The algorithm is fastest when <code>ilo</code> carries the previous result and successive <code>x</code> values are monotone.</p>
+<p>Also declared in <code>R_ext/Applic.h</code>. <code>findInterval2()</code> adds a <code>left_open</code> argument for left-open intervals. <code>interv</code> is the Fortran-callable predecessor, declared only under <code>R_RS_H</code>. The algorithm is fastest when <code>ilo</code> carries the previous result and successive <code>x</code> values are monotone.</p>
 </section>
 <section id="R_max_col" class="level3" data-number="20.4.2">
 <h3 data-number="20.4.2" class="anchored" data-anchor-id="R_max_col"><span class="header-section-number">20.4.2</span> <code>R_max_col()</code></h3>
@@ -514,6 +514,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> R_max_col<span class="op">(</span><span class="dt">double</span> <span class="op">*</span>matrix<span class="op">,</span> <span class="dt">int</span> <span class="op">*</span>nr<span class="op">,</span> <span class="dt">int</span> <span class="op">*</span>nc<span class="op">,</span> <span class="dt">int</span> <span class="op">*</span>maxes<span class="op">,</span> <span class="dt">int</span> <span class="op">*</span>ties_meth<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>R_ext/Utils.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>max.col()</code></p>
 <p>Also declared in <code>R_ext/Applic.h</code>.</p>
+</section>
+<section id="d1mach" class="level3" data-number="20.4.3">
+<h3 data-number="20.4.3" class="anchored" data-anchor-id="d1mach"><span class="header-section-number">20.4.3</span> <code>d1mach()</code> (<code>i1mach()</code>)</h3>
+<p>Report machine floating-point or integer constants.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="dt">double</span> F77_SUB<span class="op">(</span>d1mach<span class="op">)(</span><span class="dt">int</span> <span class="op">*</span>i<span class="op">);</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> F77_SUB<span class="op">(</span>i1mach<span class="op">)(</span><span class="dt">int</span> <span class="op">*</span>i<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Status:</strong> API · <strong>Header:</strong> <code>R_ext/Utils.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<p>Fortran-era routines kept for old numerical code. New code should use the C99 constants from <code>&lt;float.h&gt;</code>/<code>&lt;limits.h&gt;</code> or <code>R_ext/Arith.h</code> instead.</p>
 
 
 </section>

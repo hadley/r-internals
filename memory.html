@@ -375,6 +375,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#user-controlled-memory" id="toc-user-controlled-memory" class="nav-link" data-scroll-target="#user-controlled-memory"><span class="header-section-number">4.2</span> User-controlled memory</a>
   <ul class="collapse">
   <li><a href="#R_Calloc" id="toc-R_Calloc" class="nav-link" data-scroll-target="#R_Calloc"><span class="header-section-number">4.2.1</span> <code>R_Calloc()</code> (<code>R_Realloc()</code>, <code>R_Free()</code>)</a></li>
+  <li><a href="#R_malloc_gc" id="toc-R_malloc_gc" class="nav-link" data-scroll-target="#R_malloc_gc"><span class="header-section-number">4.2.2</span> <code>R_malloc_gc()</code> (<code>R_calloc_gc()</code>, <code>R_realloc_gc()</code>)</a></li>
   </ul></li>
   <li><a href="#when-to-use-a-rawsxp-instead" id="toc-when-to-use-a-rawsxp-instead" class="nav-link" data-scroll-target="#when-to-use-a-rawsxp-instead"><span class="header-section-number">4.3</span> When to use a RAWSXP instead</a></li>
   </ul>
@@ -461,6 +462,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>R_ext/RS.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 <p>Analogues of <code>calloc()</code>/<code>realloc()</code>/<code>free()</code>; on allocation failure R throws an error, so a returned pointer is always valid. You must <code>R_Free()</code> on every path, including error paths (see <code>R_UnwindProtect()</code>). Never mix with <code>malloc()</code>/<code>free()</code>, and never call the underlying <code>R_chk_calloc()</code> etc. directly. The legacy <code>Calloc</code>/<code>Realloc</code>/<code>Free</code> spellings were removed in R 4.5.0.</p>
 <p><strong>See also:</strong> <a href="#R_alloc"><code>R_alloc()</code></a></p>
+</section>
+<section id="R_malloc_gc" class="level3" data-number="4.2.2">
+<h3 data-number="4.2.2" class="anchored" data-anchor-id="R_malloc_gc"><span class="header-section-number">4.2.2</span> <code>R_malloc_gc()</code> (<code>R_calloc_gc()</code>, <code>R_realloc_gc()</code>)</h3>
+<p>Allocate memory, retrying after a garbage collection on failure.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> <span class="op">*</span>R_malloc_gc<span class="op">(</span><span class="dt">size_t</span><span class="op">);</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> <span class="op">*</span>R_calloc_gc<span class="op">(</span><span class="dt">size_t</span><span class="op">,</span> <span class="dt">size_t</span><span class="op">);</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> <span class="op">*</span>R_realloc_gc<span class="op">(</span><span class="dt">void</span> <span class="op">*,</span> <span class="dt">size_t</span><span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Status:</strong> API · <strong>Header:</strong> <code>R_ext/Memory.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<p>Like <code>malloc()</code>/<code>calloc()</code>/<code>realloc()</code>, but if the allocation fails a garbage collection is run and the allocation retried. Memory must be released with <code>free()</code>.</p>
+<p><strong>See also:</strong> <a href="#R_Calloc"><code>R_Calloc()</code></a></p>
 </section>
 </section>
 <section id="when-to-use-a-rawsxp-instead" class="level2" data-number="4.3">

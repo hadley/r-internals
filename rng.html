@@ -369,6 +369,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#GetRNGstate" id="toc-GetRNGstate" class="nav-link active" data-scroll-target="#GetRNGstate"><span class="header-section-number">18.0.1</span> <code>GetRNGstate()</code> (<code>PutRNGstate()</code>)</a></li>
   <li><a href="#unif_rand" id="toc-unif_rand" class="nav-link" data-scroll-target="#unif_rand"><span class="header-section-number">18.0.2</span> <code>unif_rand()</code> (<code>norm_rand()</code>, <code>exp_rand()</code>)</a></li>
   <li><a href="#R_unif_index" id="toc-R_unif_index" class="nav-link" data-scroll-target="#R_unif_index"><span class="header-section-number">18.0.3</span> <code>R_unif_index()</code></a></li>
+  <li><a href="#R_sample_kind" id="toc-R_sample_kind" class="nav-link" data-scroll-target="#R_sample_kind"><span class="header-section-number">18.0.4</span> <code>R_sample_kind()</code></a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/hadley/r-internals/edit/main/rng.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/hadley/r-internals/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -428,6 +429,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
 <p>Returns a <code>double</code> in <code>[0, n)</code>; truncate to <code>int</code> or <code>R_xlen_t</code> to get an index. Uses the sampling algorithm selected by R’s <code>sample.kind</code> option, so results match R-level <code>sample.int()</code>. Must be called between <code>GetRNGstate()</code> and <code>PutRNGstate()</code>.</p>
 <p><strong>See also:</strong> <a href="#unif_rand"><code>unif_rand()</code></a></p>
+</section>
+<section id="R_sample_kind" class="level3" data-number="18.0.4">
+<h3 data-number="18.0.4" class="anchored" data-anchor-id="R_sample_kind"><span class="header-section-number">18.0.4</span> <code>R_sample_kind()</code></h3>
+<p>Get the current discrete-sampling algorithm.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>Sampletype R_sample_kind<span class="op">(</span><span class="dt">void</span><span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Status:</strong> API · <strong>Header:</strong> <code>R_ext/Random.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<p>Returns <code>ROUNDING</code> or <code>REJECTION</code>, reflecting the <code>sample.kind</code> option; only relevant to code implementing its own discrete sampling.</p>
+<p><strong>See also:</strong> <a href="#R_unif_index"><code>R_unif_index()</code></a></p>
 
 
 </section>

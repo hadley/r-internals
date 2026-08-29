@@ -369,8 +369,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#R_ShowMessage" id="toc-R_ShowMessage" class="nav-link active" data-scroll-target="#R_ShowMessage"><span class="header-section-number">16.0.1</span> <code>R_ShowMessage()</code></a></li>
   <li><a href="#Rprintf" id="toc-Rprintf" class="nav-link" data-scroll-target="#Rprintf"><span class="header-section-number">16.0.2</span> <code>Rprintf()</code> (<code>REprintf()</code>, <code>Rvprintf()</code>, <code>REvprintf()</code>)</a></li>
   <li><a href="#Rf_PrintValue" id="toc-Rf_PrintValue" class="nav-link" data-scroll-target="#Rf_PrintValue"><span class="header-section-number">16.0.3</span> <code>Rf_PrintValue()</code></a></li>
-  <li><a href="#R_FlushConsole" id="toc-R_FlushConsole" class="nav-link" data-scroll-target="#R_FlushConsole"><span class="header-section-number">16.0.4</span> <code>R_FlushConsole()</code></a></li>
-  <li><a href="#IndexWidth" id="toc-IndexWidth" class="nav-link" data-scroll-target="#IndexWidth"><span class="header-section-number">16.0.5</span> <code>IndexWidth()</code></a></li>
+  <li><a href="#IndexWidth" id="toc-IndexWidth" class="nav-link" data-scroll-target="#IndexWidth"><span class="header-section-number">16.0.4</span> <code>IndexWidth()</code></a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/hadley/r-internals/edit/main/printing.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/hadley/r-internals/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -419,16 +418,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> Rf_PrintValue<span class="op">(</span>SEXP<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>print()</code></p>
 </section>
-<section id="R_FlushConsole" class="level3" data-number="16.0.4">
-<h3 data-number="16.0.4" class="anchored" data-anchor-id="R_FlushConsole"><span class="header-section-number">16.0.4</span> <code>R_FlushConsole()</code></h3>
-<p>Flush the console.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> R_FlushConsole<span class="op">(</span><span class="dt">void</span><span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>R.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>flush.console()</code></p>
-</section>
-<section id="IndexWidth" class="level3" data-number="16.0.5">
-<h3 data-number="16.0.5" class="anchored" data-anchor-id="IndexWidth"><span class="header-section-number">16.0.5</span> <code>IndexWidth()</code></h3>
+<section id="IndexWidth" class="level3" data-number="16.0.4">
+<h3 data-number="16.0.4" class="anchored" data-anchor-id="IndexWidth"><span class="header-section-number">16.0.4</span> <code>IndexWidth()</code></h3>
 <p>Compute the character width needed to print a vector index.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#define IndexWidth    </span>Rf_IndexWidth</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#define IndexWidth    </span>Rf_IndexWidth</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>R_ext/Utils.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 
 

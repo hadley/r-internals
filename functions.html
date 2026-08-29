@@ -370,6 +370,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul class="collapse">
   <li><a href="#R_mkClosure" id="toc-R_mkClosure" class="nav-link" data-scroll-target="#R_mkClosure"><span class="header-section-number">11.1.1</span> <code>R_mkClosure()</code></a></li>
   <li><a href="#R_ClosureFormals" id="toc-R_ClosureFormals" class="nav-link" data-scroll-target="#R_ClosureFormals"><span class="header-section-number">11.1.2</span> <code>R_ClosureFormals()</code> (<code>R_ClosureBody()</code>, <code>R_ClosureEnv()</code>)</a></li>
+  <li><a href="#R_ClosureExpr" id="toc-R_ClosureExpr" class="nav-link" data-scroll-target="#R_ClosureExpr"><span class="header-section-number">11.1.3</span> <code>R_ClosureExpr()</code> (<code>BODY_EXPR()</code>)</a></li>
+  <li><a href="#R_BytecodeExpr" id="toc-R_BytecodeExpr" class="nav-link" data-scroll-target="#R_BytecodeExpr"><span class="header-section-number">11.1.4</span> <code>R_BytecodeExpr()</code></a></li>
   </ul></li>
   <li><a href="#testing-functions" id="toc-testing-functions" class="nav-link" data-scroll-target="#testing-functions"><span class="header-section-number">11.2</span> Testing functions</a>
   <ul class="collapse">
@@ -431,14 +433,31 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>The API replacements for <code>FORMALS()</code>, <code>BODY()</code>, and <code>CLOENV()</code>.</p>
 <p><strong>See also:</strong> <a href="#R_mkClosure"><code>R_mkClosure()</code></a></p>
 </section>
+<section id="R_ClosureExpr" class="level3" data-number="11.1.3">
+<h3 data-number="11.1.3" class="anchored" data-anchor-id="R_ClosureExpr"><span class="header-section-number">11.1.3</span> <code>R_ClosureExpr()</code> (<code>BODY_EXPR()</code>)</h3>
+<p>Get the body expression of a closure.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>SEXP R_ClosureExpr<span class="op">(</span>SEXP<span class="op">);</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#define BODY_EXPR</span><span class="op">(</span><span class="pp">e</span><span class="op">)</span><span class="pp"> </span>R_ClosureExpr<span class="op">(</span><span class="pp">e</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<p>Returns the unevaluated body, like <code>body()</code> at the R level.</p>
+<p><strong>See also:</strong> <a href="#R_ClosureFormals"><code>R_ClosureFormals()</code></a>, <a href="#R_mkClosure"><code>R_mkClosure()</code></a></p>
+</section>
+<section id="R_BytecodeExpr" class="level3" data-number="11.1.4">
+<h3 data-number="11.1.4" class="anchored" data-anchor-id="R_BytecodeExpr"><span class="header-section-number">11.1.4</span> <code>R_BytecodeExpr()</code></h3>
+<p>Get the byte-compiled form of a closure’s body.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>SEXP R_BytecodeExpr<span class="op">(</span>SEXP e<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<p>Returns a <code>BCODESXP</code> if the closure has been byte-compiled, and <code>R_NilValue</code> otherwise.</p>
+<p><strong>See also:</strong> <a href="#R_ClosureExpr"><code>R_ClosureExpr()</code></a></p>
+</section>
 </section>
 <section id="testing-functions" class="level2" data-number="11.2">
 <h2 data-number="11.2" class="anchored" data-anchor-id="testing-functions"><span class="header-section-number">11.2</span> Testing functions</h2>
 <section id="Rf_isFunction" class="level3" data-number="11.2.1">
 <h3 data-number="11.2.1" class="anchored" data-anchor-id="Rf_isFunction"><span class="header-section-number">11.2.1</span> <code>Rf_isFunction()</code> (<code>Rf_isPrimitive()</code>)</h3>
 <p>Test whether an object is a function or a primitive function.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>Rboolean Rf_isFunction<span class="op">(</span>SEXP<span class="op">);</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>Rboolean Rf_isPrimitive<span class="op">(</span>SEXP<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>Rboolean Rf_isFunction<span class="op">(</span>SEXP<span class="op">);</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>Rboolean Rf_isPrimitive<span class="op">(</span>SEXP<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>is.function()</code></p>
 <p><code>FUNSXP</code> is an abstract union type.</p>
 </section>
@@ -449,7 +468,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="R_UnboundValue" class="level3" data-number="11.3.1">
 <h3 data-number="11.3.1" class="anchored" data-anchor-id="R_UnboundValue"><span class="header-section-number">11.3.1</span> <code>R_UnboundValue()</code></h3>
 <p>Access the unbound-value marker constant.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>LibExtern SEXP  R_UnboundValue<span class="op">;</span>     <span class="co">/* Unbound marker */</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>LibExtern SEXP  R_UnboundValue<span class="op">;</span>     <span class="co">/* Unbound marker */</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 <p><code>R_UnboundValue</code> marks an unbound symbol or an unread promise value.</p>
 <p><strong>See also:</strong> <a href="symbols.html#R_MissingArg"><code>R_MissingArg()</code></a></p>
@@ -460,14 +479,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="R_Srcref" class="level3" data-number="11.4.1">
 <h3 data-number="11.4.1" class="anchored" data-anchor-id="R_Srcref"><span class="header-section-number">11.4.1</span> <code>R_Srcref()</code></h3>
 <p>Access the current srcref, for debuggers.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>LibExtern SEXP  R_Srcref<span class="op">;</span>           <span class="co">/* Current srcref, for debuggers */</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>LibExtern SEXP  R_Srcref<span class="op">;</span>           <span class="co">/* Current srcref, for debuggers */</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 </section>
 <section id="R_GetCurrentSrcref" class="level3" data-number="11.4.2">
 <h3 data-number="11.4.2" class="anchored" data-anchor-id="R_GetCurrentSrcref"><span class="header-section-number">11.4.2</span> <code>R_GetCurrentSrcref()</code> (<code>R_GetSrcFilename()</code>)</h3>
 <p>Get the current srcref or the source filename of a srcref.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>SEXP R_GetCurrentSrcref<span class="op">(</span><span class="dt">int</span><span class="op">);</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>SEXP R_GetSrcFilename<span class="op">(</span>SEXP<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>SEXP R_GetCurrentSrcref<span class="op">(</span><span class="dt">int</span><span class="op">);</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>SEXP R_GetSrcFilename<span class="op">(</span>SEXP<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> result · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 
 

@@ -387,7 +387,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#Rf_defineVar" id="toc-Rf_defineVar" class="nav-link" data-scroll-target="#Rf_defineVar"><span class="header-section-number">8.3.6</span> <code>Rf_defineVar()</code></a></li>
   <li><a href="#Rf_setVar" id="toc-Rf_setVar" class="nav-link" data-scroll-target="#Rf_setVar"><span class="header-section-number">8.3.7</span> <code>Rf_setVar()</code> (<code>Rf_gsetVar()</code>)</a></li>
   <li><a href="#check-for-presence" id="toc-check-for-presence" class="nav-link" data-scroll-target="#check-for-presence"><span class="header-section-number">8.3.8</span> Check for presence</a></li>
-  <li><a href="#R_lsInternal3" id="toc-R_lsInternal3" class="nav-link" data-scroll-target="#R_lsInternal3"><span class="header-section-number">8.3.9</span> <code>R_lsInternal3()</code> (<code>R_lsInternal()</code>)</a></li>
+  <li><a href="#R_lsInternal3" id="toc-R_lsInternal3" class="nav-link" data-scroll-target="#R_lsInternal3"><span class="header-section-number">8.3.9</span> <code>R_lsInternal3()</code></a></li>
   </ul></li>
   <li><a href="#miscellaneous" id="toc-miscellaneous" class="nav-link" data-scroll-target="#miscellaneous"><span class="header-section-number">8.4</span> Miscellaneous</a>
   <ul class="collapse">
@@ -399,6 +399,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#R_MakeActiveBinding" id="toc-R_MakeActiveBinding" class="nav-link" data-scroll-target="#R_MakeActiveBinding"><span class="header-section-number">8.4.6</span> <code>R_MakeActiveBinding()</code></a></li>
   <li><a href="#R_BindingIsLocked" id="toc-R_BindingIsLocked" class="nav-link" data-scroll-target="#R_BindingIsLocked"><span class="header-section-number">8.4.7</span> <code>R_BindingIsLocked()</code> (<code>R_BindingIsActive()</code>)</a></li>
   <li><a href="#R_HasFancyBindings" id="toc-R_HasFancyBindings" class="nav-link" data-scroll-target="#R_HasFancyBindings"><span class="header-section-number">8.4.8</span> <code>R_HasFancyBindings()</code></a></li>
+  <li><a href="#Rf_topenv" id="toc-Rf_topenv" class="nav-link" data-scroll-target="#Rf_topenv"><span class="header-section-number">8.4.9</span> <code>Rf_topenv()</code></a></li>
+  <li><a href="#R_GetCurrentEnv" id="toc-R_GetCurrentEnv" class="nav-link" data-scroll-target="#R_GetCurrentEnv"><span class="header-section-number">8.4.10</span> <code>R_GetCurrentEnv()</code></a></li>
   </ul></li>
   <li><a href="#inspecting-bindings" id="toc-inspecting-bindings" class="nav-link" data-scroll-target="#inspecting-bindings"><span class="header-section-number">8.5</span> Inspecting bindings</a>
   <ul class="collapse">
@@ -534,12 +536,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 data-number="8.3.8" class="anchored" data-anchor-id="check-for-presence"><span class="header-section-number">8.3.8</span> Check for presence</h3>
 </section>
 <section id="R_lsInternal3" class="level3" data-number="8.3.9">
-<h3 data-number="8.3.9" class="anchored" data-anchor-id="R_lsInternal3"><span class="header-section-number">8.3.9</span> <code>R_lsInternal3()</code> (<code>R_lsInternal()</code>)</h3>
+<h3 data-number="8.3.9" class="anchored" data-anchor-id="R_lsInternal3"><span class="header-section-number">8.3.9</span> <code>R_lsInternal3()</code></h3>
 <p>List the names bound in an environment.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>SEXP R_lsInternal3<span class="op">(</span>SEXP env<span class="op">,</span> Rboolean all_names<span class="op">,</span> Rboolean sorted<span class="op">);</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>SEXP R_lsInternal<span class="op">(</span>SEXP<span class="op">,</span> Rboolean<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> result · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
-<p>Returns a character vector. <code>R_lsInternal(env, all)</code> is shorthand for <code>R_lsInternal3(env, all, TRUE)</code> but is not part of the API; prefer <code>R_lsInternal3()</code> directly.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>SEXP R_lsInternal3<span class="op">(</span>SEXP env<span class="op">,</span> Rboolean all_names<span class="op">,</span> Rboolean sorted<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Status:</strong> experimental · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> result · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<p>Returns a character vector. The older <code>R_lsInternal(env, all)</code> was removed from the headers in R 4.6.0.</p>
 </section>
 </section>
 <section id="miscellaneous" class="level2" data-number="8.4">
@@ -557,7 +558,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>Rboolean R_IsPackageEnv<span class="op">(</span>SEXP rho<span class="op">);</span></span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>SEXP R_PackageEnvName<span class="op">(</span>SEXP rho<span class="op">);</span></span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>SEXP R_FindPackageEnv<span class="op">(</span>SEXP info<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> result · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<p><strong>Status:</strong> experimental · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> result · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 <p><strong>See also:</strong> <a href="#R_IsNamespaceEnv"><code>R_IsNamespaceEnv()</code></a></p>
 </section>
 <section id="R_IsNamespaceEnv" class="level3" data-number="8.4.3">
@@ -566,7 +567,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>Rboolean R_IsNamespaceEnv<span class="op">(</span>SEXP rho<span class="op">);</span></span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>SEXP R_NamespaceEnvSpec<span class="op">(</span>SEXP rho<span class="op">);</span></span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>SEXP R_FindNamespace<span class="op">(</span>SEXP info<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> result · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<p><strong>Status:</strong> experimental · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> result · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 <p><strong>See also:</strong> <a href="#R_IsPackageEnv"><code>R_IsPackageEnv()</code></a></p>
 </section>
 <section id="R_LockEnvironment" class="level3" data-number="8.4.4">
@@ -574,7 +575,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Lock an environment, or test whether it is locked.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> R_LockEnvironment<span class="op">(</span>SEXP env<span class="op">,</span> Rboolean bindings<span class="op">);</span></span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>Rboolean R_EnvironmentIsLocked<span class="op">(</span>SEXP env<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<p><strong>Status:</strong> experimental · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 <p><strong>See also:</strong> <a href="#R_LockBinding"><code>R_LockBinding()</code></a></p>
 </section>
 <section id="R_LockBinding" class="level3" data-number="8.4.5">
@@ -582,14 +583,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Lock or unlock a binding in an environment.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> R_LockBinding<span class="op">(</span>SEXP sym<span class="op">,</span> SEXP env<span class="op">);</span></span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> R_unLockBinding<span class="op">(</span>SEXP sym<span class="op">,</span> SEXP env<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<p><strong>Status:</strong> experimental · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 <p><strong>See also:</strong> <a href="#R_LockEnvironment"><code>R_LockEnvironment()</code></a></p>
 </section>
 <section id="R_MakeActiveBinding" class="level3" data-number="8.4.6">
 <h3 data-number="8.4.6" class="anchored" data-anchor-id="R_MakeActiveBinding"><span class="header-section-number">8.4.6</span> <code>R_MakeActiveBinding()</code></h3>
 <p>Make an active binding for a symbol in an environment.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> R_MakeActiveBinding<span class="op">(</span>SEXP sym<span class="op">,</span> SEXP fun<span class="op">,</span> SEXP env<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<p><strong>Status:</strong> experimental · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 <p><strong>See also:</strong> <a href="#R_BindingIsLocked"><code>R_BindingIsLocked()</code></a></p>
 </section>
 <section id="R_BindingIsLocked" class="level3" data-number="8.4.7">
@@ -597,7 +598,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Test whether a binding is locked or active.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>Rboolean R_BindingIsLocked<span class="op">(</span>SEXP sym<span class="op">,</span> SEXP env<span class="op">);</span></span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>Rboolean R_BindingIsActive<span class="op">(</span>SEXP sym<span class="op">,</span> SEXP env<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<p><strong>Status:</strong> experimental · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 <p><strong>See also:</strong> <a href="#R_MakeActiveBinding"><code>R_MakeActiveBinding()</code></a></p>
 </section>
 <section id="R_HasFancyBindings" class="level3" data-number="8.4.8">
@@ -606,6 +607,24 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>Rboolean R_HasFancyBindings<span class="op">(</span>SEXP rho<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 </section>
+<section id="Rf_topenv" class="level3" data-number="8.4.9">
+<h3 data-number="8.4.9" class="anchored" data-anchor-id="Rf_topenv"><span class="header-section-number">8.4.9</span> <code>Rf_topenv()</code></h3>
+<p>Find the top-level environment in an environment chain.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>SEXP Rf_topenv<span class="op">(</span>SEXP<span class="op">,</span> SEXP<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>topenv()</code></p>
+<ul>
+<li><code>x</code>: the environment to start from.</li>
+<li><code>target</code>: stop when this environment is reached, usually <code>R_NilValue</code>.</li>
+</ul>
+<p><strong>See also:</strong> <a href="#R_ParentEnv"><code>R_ParentEnv()</code></a></p>
+</section>
+<section id="R_GetCurrentEnv" class="level3" data-number="8.4.10">
+<h3 data-number="8.4.10" class="anchored" data-anchor-id="R_GetCurrentEnv"><span class="header-section-number">8.4.10</span> <code>R_GetCurrentEnv()</code></h3>
+<p>Retrieve the environment of the currently executing closure.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>SEXP R_GetCurrentEnv<span class="op">(</span><span class="dt">void</span><span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Status:</strong> experimental · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>environment()</code></p>
+<p>Only meaningful while R is evaluating a call. Usually better to pass the environment explicitly as an argument to your C function.</p>
+</section>
 </section>
 <section id="inspecting-bindings" class="level2" data-number="8.5">
 <h2 data-number="8.5" class="anchored" data-anchor-id="inspecting-bindings"><span class="header-section-number">8.5</span> Inspecting bindings</h2>
@@ -613,7 +632,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="R_GetBindingType" class="level3" data-number="8.5.1">
 <h3 data-number="8.5.1" class="anchored" data-anchor-id="R_GetBindingType"><span class="header-section-number">8.5.1</span> <code>R_GetBindingType()</code></h3>
 <p>Query the type of a symbol’s binding in an environment.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>R_BindingType_t R_GetBindingType<span class="op">(</span>SEXP sym<span class="op">,</span> SEXP env<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>R_BindingType_t R_GetBindingType<span class="op">(</span>SEXP sym<span class="op">,</span> SEXP env<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> experimental · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> 4.6.0 · <strong>R equivalent:</strong> —</p>
 <p>Returns one of <code>R_BindingTypeUnbound</code>, <code>R_BindingTypeValue</code>, <code>R_BindingTypeMissing</code>, <code>R_BindingTypeDelayed</code>, <code>R_BindingTypeForced</code>, or <code>R_BindingTypeActive</code>. Part of the experimental binding API added in R 4.6.0; the interface may change.</p>
 <p><strong>See also:</strong> <a href="#R_getVar"><code>R_getVar()</code></a></p>
@@ -621,9 +640,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="R_DelayedBindingExpression" class="level3" data-number="8.5.2">
 <h3 data-number="8.5.2" class="anchored" data-anchor-id="R_DelayedBindingExpression"><span class="header-section-number">8.5.2</span> <code>R_DelayedBindingExpression()</code> (<code>R_DelayedBindingEnvironment()</code>, <code>R_ForcedBindingExpression()</code>)</h3>
 <p>Inspect the expression or environment behind a delayed or forced binding.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>SEXP R_DelayedBindingExpression<span class="op">(</span>SEXP sym<span class="op">,</span> SEXP env<span class="op">);</span></span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>SEXP R_DelayedBindingEnvironment<span class="op">(</span>SEXP sym<span class="op">,</span> SEXP env<span class="op">);</span></span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>SEXP R_ForcedBindingExpression<span class="op">(</span>SEXP sym<span class="op">,</span> SEXP env<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>SEXP R_DelayedBindingExpression<span class="op">(</span>SEXP sym<span class="op">,</span> SEXP env<span class="op">);</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>SEXP R_DelayedBindingEnvironment<span class="op">(</span>SEXP sym<span class="op">,</span> SEXP env<span class="op">);</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>SEXP R_ForcedBindingExpression<span class="op">(</span>SEXP sym<span class="op">,</span> SEXP env<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> experimental · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> never · <strong>Since:</strong> 4.6.0 · <strong>R equivalent:</strong> —</p>
 <p>Use <code>R_GetBindingType()</code> first to check the binding type.</p>
 <p><strong>See also:</strong> <a href="#R_GetBindingType"><code>R_GetBindingType()</code></a>, <a href="#R_MakeDelayedBinding"><code>R_MakeDelayedBinding()</code></a></p>
@@ -631,9 +650,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="R_MakeDelayedBinding" class="level3" data-number="8.5.3">
 <h3 data-number="8.5.3" class="anchored" data-anchor-id="R_MakeDelayedBinding"><span class="header-section-number">8.5.3</span> <code>R_MakeDelayedBinding()</code> (<code>R_MakeForcedBinding()</code>, <code>R_MakeMissingBinding()</code>)</h3>
 <p>Create a delayed, forced, or missing binding in an environment.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> R_MakeDelayedBinding<span class="op">(</span>SEXP sym<span class="op">,</span> SEXP expr<span class="op">,</span> SEXP evalEnv<span class="op">,</span> SEXP env<span class="op">);</span></span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> R_MakeForcedBinding<span class="op">(</span>SEXP sym<span class="op">,</span> SEXP expr<span class="op">,</span> SEXP value<span class="op">,</span> SEXP env<span class="op">);</span></span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> R_MakeMissingBinding<span class="op">(</span>SEXP sym<span class="op">,</span> SEXP env<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb24"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> R_MakeDelayedBinding<span class="op">(</span>SEXP sym<span class="op">,</span> SEXP expr<span class="op">,</span> SEXP evalEnv<span class="op">,</span> SEXP env<span class="op">);</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> R_MakeForcedBinding<span class="op">(</span>SEXP sym<span class="op">,</span> SEXP expr<span class="op">,</span> SEXP value<span class="op">,</span> SEXP env<span class="op">);</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> R_MakeMissingBinding<span class="op">(</span>SEXP sym<span class="op">,</span> SEXP env<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> experimental · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> can throw · <strong>Since:</strong> 4.6.0 · <strong>R equivalent:</strong> —</p>
 <ul>
 <li><code>expr</code>: the expression associated with the binding.</li>
@@ -645,14 +664,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="R_envSymbols" class="level3" data-number="8.5.4">
 <h3 data-number="8.5.4" class="anchored" data-anchor-id="R_envSymbols"><span class="header-section-number">8.5.4</span> <code>R_envSymbols()</code></h3>
 <p>List the symbols bound in an environment.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>SEXP R_envSymbols<span class="op">(</span>SEXP env<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb25"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>SEXP R_envSymbols<span class="op">(</span>SEXP env<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> experimental · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> result · <strong>Errors:</strong> can throw · <strong>Since:</strong> 4.6.0 · <strong>R equivalent:</strong> <code>ls()</code></p>
 </section>
 <section id="R_findDotsEnv" class="level3" data-number="8.5.5">
 <h3 data-number="8.5.5" class="anchored" data-anchor-id="R_findDotsEnv"><span class="header-section-number">8.5.5</span> <code>R_findDotsEnv()</code> (<code>R_DotsExist()</code>)</h3>
 <p>Find the nearest enclosing frame containing a <code>...</code> binding.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb24"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>SEXP R_findDotsEnv<span class="op">(</span>SEXP env<span class="op">);</span></span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>Rboolean R_DotsExist<span class="op">(</span>SEXP env<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>SEXP R_findDotsEnv<span class="op">(</span>SEXP env<span class="op">);</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>Rboolean R_DotsExist<span class="op">(</span>SEXP env<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> experimental · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> never · <strong>Since:</strong> 4.6.0 · <strong>R equivalent:</strong> —</p>
 <p><code>R_findDotsEnv()</code> walks parent environments and returns the first containing a proper <code>...</code> binding, or <code>R_EmptyEnv</code>. The <code>R_Dots*</code>/<code>R_Dot*</code> accessors look up <code>...</code> only in the given frame, so call this first if you need R’s inherited lookup.</p>
 <p><strong>See also:</strong> <a href="#R_DotsLength"><code>R_DotsLength()</code></a>, <a href="#R_DotsElt"><code>R_DotsElt()</code></a></p>
@@ -660,15 +679,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="R_DotsLength" class="level3" data-number="8.5.6">
 <h3 data-number="8.5.6" class="anchored" data-anchor-id="R_DotsLength"><span class="header-section-number">8.5.6</span> <code>R_DotsLength()</code> (<code>R_DotsNames()</code>)</h3>
 <p>Get the length or names of the <code>...</code> binding in a frame.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb25"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> R_DotsLength<span class="op">(</span>SEXP env<span class="op">);</span></span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>SEXP R_DotsNames<span class="op">(</span>SEXP env<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb27"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> R_DotsLength<span class="op">(</span>SEXP env<span class="op">);</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>SEXP R_DotsNames<span class="op">(</span>SEXP env<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> experimental · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> result · <strong>Errors:</strong> never · <strong>Since:</strong> 4.6.0 · <strong>R equivalent:</strong> <code>...length()</code></p>
 <p><strong>See also:</strong> <a href="#R_findDotsEnv"><code>R_findDotsEnv()</code></a></p>
 </section>
 <section id="R_GetDotType" class="level3" data-number="8.5.7">
 <h3 data-number="8.5.7" class="anchored" data-anchor-id="R_GetDotType"><span class="header-section-number">8.5.7</span> <code>R_GetDotType()</code></h3>
 <p>Query the type of an individual <code>...</code> element.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>R_DotType_t R_GetDotType<span class="op">(</span><span class="dt">int</span> i<span class="op">,</span> SEXP env<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb28"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>R_DotType_t R_GetDotType<span class="op">(</span><span class="dt">int</span> i<span class="op">,</span> SEXP env<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> experimental · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> 4.6.0 · <strong>R equivalent:</strong> —</p>
 <p>Returns one of <code>R_DotTypeValue</code>, <code>R_DotTypeMissing</code>, <code>R_DotTypeDelayed</code>, or <code>R_DotTypeForced</code>.</p>
 <p><strong>See also:</strong> <a href="#R_DotsElt"><code>R_DotsElt()</code></a></p>
@@ -676,10 +695,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="R_DotsElt" class="level3" data-number="8.5.8">
 <h3 data-number="8.5.8" class="anchored" data-anchor-id="R_DotsElt"><span class="header-section-number">8.5.8</span> <code>R_DotsElt()</code> (<code>R_DotForcedExpression()</code>, <code>R_DotDelayedExpression()</code>, <code>R_DotDelayedEnvironment()</code>)</h3>
 <p>Access an individual <code>...</code> element or its underlying expression.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb27"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>SEXP R_DotsElt<span class="op">(</span><span class="dt">int</span> i<span class="op">,</span> SEXP env<span class="op">);</span></span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>SEXP R_DotForcedExpression<span class="op">(</span><span class="dt">int</span> i<span class="op">,</span> SEXP env<span class="op">);</span></span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>SEXP R_DotDelayedExpression<span class="op">(</span><span class="dt">int</span> i<span class="op">,</span> SEXP env<span class="op">);</span></span>
-<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>SEXP R_DotDelayedEnvironment<span class="op">(</span><span class="dt">int</span> i<span class="op">,</span> SEXP env<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb29"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>SEXP R_DotsElt<span class="op">(</span><span class="dt">int</span> i<span class="op">,</span> SEXP env<span class="op">);</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>SEXP R_DotForcedExpression<span class="op">(</span><span class="dt">int</span> i<span class="op">,</span> SEXP env<span class="op">);</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>SEXP R_DotDelayedExpression<span class="op">(</span><span class="dt">int</span> i<span class="op">,</span> SEXP env<span class="op">);</span></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>SEXP R_DotDelayedEnvironment<span class="op">(</span><span class="dt">int</span> i<span class="op">,</span> SEXP env<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> experimental · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> result · <strong>Errors:</strong> can throw · <strong>Since:</strong> 4.6.0 · <strong>R equivalent:</strong> <code>...elt()</code></p>
 <ul>
 <li><code>i</code>: zero-based index into the <code>...</code> binding.</li>

@@ -480,7 +480,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  <span class="dt">void</span> <span class="op">(*</span>outchar<span class="op">)(</span>R_outpstream_t<span class="op">,</span> <span class="dt">int</span><span class="op">),</span></span>
 <span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  <span class="dt">void</span> <span class="op">(*</span>outbytes<span class="op">)(</span>R_outpstream_t<span class="op">,</span> <span class="dt">void</span> <span class="op">*,</span> <span class="dt">int</span><span class="op">),</span></span>
 <span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  SEXP <span class="op">(*</span>phook<span class="op">)(</span>SEXP<span class="op">,</span> SEXP<span class="op">),</span> SEXP pdata<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<p><strong>Status:</strong> experimental · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 </section>
 <section id="R_InitFileInPStream" class="level3" data-number="17.2.2">
 <h3 data-number="17.2.2" class="anchored" data-anchor-id="R_InitFileInPStream"><span class="header-section-number">17.2.2</span> <code>R_InitFileInPStream()</code> (<code>R_InitFileOutPStream()</code>)</h3>
@@ -491,7 +491,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> R_InitFileOutPStream<span class="op">(</span>R_outpstream_t stream<span class="op">,</span> <span class="dt">FILE</span> <span class="op">*</span>fp<span class="op">,</span></span>
 <span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  R_pstream_format_t type<span class="op">,</span> <span class="dt">int</span> version<span class="op">,</span></span>
 <span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  SEXP <span class="op">(*</span>phook<span class="op">)(</span>SEXP<span class="op">,</span> SEXP<span class="op">),</span> SEXP pdata<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<p><strong>Status:</strong> experimental · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 </section>
 </section>
 <section id="serialising-objects" class="level2" data-number="17.3">
@@ -502,7 +502,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Serialise an R object to an output stream, or unserialise it from an input stream.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> R_Serialize<span class="op">(</span>SEXP s<span class="op">,</span> R_outpstream_t ops<span class="op">);</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>SEXP R_Unserialize<span class="op">(</span>R_inpstream_t ips<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> result · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>serialize()</code></p>
+<p><strong>Status:</strong> experimental · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> result · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>serialize()</code></p>
 <p>The <code>SEXP</code> returned by <code>R_Unserialize()</code> is freshly allocated and must be protected from garbage collection.</p>
 
 

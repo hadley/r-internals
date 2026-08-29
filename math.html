@@ -371,7 +371,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#dnorm" id="toc-dnorm" class="nav-link" data-scroll-target="#dnorm"><span class="header-section-number">19.1.1</span> <code>dnorm()</code> (<code>pnorm()</code>, <code>qnorm()</code>, <code>rnorm()</code>)</a></li>
   <li><a href="#dnbinom_mu" id="toc-dnbinom_mu" class="nav-link" data-scroll-target="#dnbinom_mu"><span class="header-section-number">19.1.2</span> <code>dnbinom_mu()</code> (<code>pnbinom_mu()</code>, <code>qnbinom_mu()</code>, <code>rnbinom_mu()</code>)</a></li>
   <li><a href="#dbinom_raw" id="toc-dbinom_raw" class="nav-link" data-scroll-target="#dbinom_raw"><span class="header-section-number">19.1.3</span> <code>dbinom_raw()</code> (<code>dpois_raw()</code>)</a></li>
-  <li><a href="#Rf_rmultinom" id="toc-Rf_rmultinom" class="nav-link" data-scroll-target="#Rf_rmultinom"><span class="header-section-number">19.1.4</span> <code>Rf_rmultinom()</code></a></li>
+  <li><a href="#Rf_rmultinom" id="toc-Rf_rmultinom" class="nav-link" data-scroll-target="#Rf_rmultinom"><span class="header-section-number">19.1.4</span> <code>Rf_rmultinom()</code> (<code>rmultinom()</code>)</a></li>
   <li><a href="#wilcox_free" id="toc-wilcox_free" class="nav-link" data-scroll-target="#wilcox_free"><span class="header-section-number">19.1.5</span> <code>wilcox_free()</code> (<code>signrank_free()</code>)</a></li>
   </ul></li>
   <li><a href="#mathematical-functions" id="toc-mathematical-functions" class="nav-link" data-scroll-target="#mathematical-functions"><span class="header-section-number">19.2</span> Mathematical functions</a>
@@ -380,6 +380,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#beta" id="toc-beta" class="nav-link" data-scroll-target="#beta"><span class="header-section-number">19.2.2</span> <code>beta()</code> (<code>lbeta()</code>)</a></li>
   <li><a href="#choose" id="toc-choose" class="nav-link" data-scroll-target="#choose"><span class="header-section-number">19.2.3</span> <code>choose()</code> (<code>lchoose()</code>)</a></li>
   <li><a href="#bessel_i" id="toc-bessel_i" class="nav-link" data-scroll-target="#bessel_i"><span class="header-section-number">19.2.4</span> <code>bessel_i()</code> (<code>bessel_j()</code>, <code>bessel_k()</code>, <code>bessel_y()</code>)</a></li>
+  <li><a href="#expm1" id="toc-expm1" class="nav-link" data-scroll-target="#expm1"><span class="header-section-number">19.2.5</span> <code>expm1()</code> (<code>log1p()</code>)</a></li>
+  <li><a href="#dpsifn" id="toc-dpsifn" class="nav-link" data-scroll-target="#dpsifn"><span class="header-section-number">19.2.6</span> <code>dpsifn()</code></a></li>
   </ul></li>
   <li><a href="#numerical-utilities" id="toc-numerical-utilities" class="nav-link" data-scroll-target="#numerical-utilities"><span class="header-section-number">19.3</span> Numerical utilities</a>
   <ul class="collapse">
@@ -591,9 +593,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><strong>See also:</strong> <a href="#dnorm"><code>dnorm()</code></a></p>
 </section>
 <section id="Rf_rmultinom" class="level3" data-number="19.1.4">
-<h3 data-number="19.1.4" class="anchored" data-anchor-id="Rf_rmultinom"><span class="header-section-number">19.1.4</span> <code>Rf_rmultinom()</code></h3>
+<h3 data-number="19.1.4" class="anchored" data-anchor-id="Rf_rmultinom"><span class="header-section-number">19.1.4</span> <code>Rf_rmultinom()</code> (<code>rmultinom()</code>)</h3>
 <p>Generate one multinomial random vector.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> Rf_rmultinom<span class="op">(</span><span class="dt">int</span> n<span class="op">,</span> <span class="dt">double</span><span class="op">*</span> prob<span class="op">,</span> <span class="dt">int</span> K<span class="op">,</span> <span class="dt">int</span><span class="op">*</span> rN<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> Rf_rmultinom<span class="op">(</span><span class="dt">int</span> n<span class="op">,</span> <span class="dt">double</span><span class="op">*</span> prob<span class="op">,</span> <span class="dt">int</span> K<span class="op">,</span> <span class="dt">int</span><span class="op">*</span> rN<span class="op">);</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#define rmultinom </span>Rf_rmultinom</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rmath.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>rmultinom()</code></p>
 <ul>
 <li><code>n</code>: number of trials; the counts in <code>rN</code> sum to <code>n</code>.</li>
@@ -660,6 +663,31 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><code>expo</code>: for <code>bessel_i</code>/<code>bessel_k</code> only: 1 for unscaled, 2 to return <code>exp(-x) * I(x, nu)</code> or <code>exp(x) * K(x, nu)</code> (avoids overflow).</li>
 </ul>
 </section>
+<section id="expm1" class="level3" data-number="19.2.5">
+<h3 data-number="19.2.5" class="anchored" data-anchor-id="expm1"><span class="header-section-number">19.2.5</span> <code>expm1()</code> (<code>log1p()</code>)</h3>
+<p>Compute exp(x) - 1 and log(1 + x) accurately for small x.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="dt">double</span> expm1<span class="op">(</span><span class="dt">double</span> x<span class="op">);</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="dt">double</span> log1p<span class="op">(</span><span class="dt">double</span> x<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rmath.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<p>C99 functions that R requires; <code>Rmath.h</code> remaps <code>log1p()</code> to R’s own implementation on platforms where the system version is inaccurate.</p>
+<p><strong>See also:</strong> <a href="#log1pmx"><code>log1pmx()</code></a></p>
+</section>
+<section id="dpsifn" class="level3" data-number="19.2.6">
+<h3 data-number="19.2.6" class="anchored" data-anchor-id="dpsifn"><span class="header-section-number">19.2.6</span> <code>dpsifn()</code></h3>
+<p>Compute derivatives of the log-gamma (psi) function.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> dpsifn<span class="op">(</span><span class="dt">double</span> x<span class="op">,</span> <span class="dt">int</span> n<span class="op">,</span> <span class="dt">int</span> kode<span class="op">,</span> <span class="dt">int</span> m<span class="op">,</span> <span class="dt">double</span> <span class="op">*</span>ans<span class="op">,</span> <span class="dt">int</span> <span class="op">*</span>nz<span class="op">,</span> <span class="dt">int</span> <span class="op">*</span>ierr<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rmath.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<ul>
+<li><code>n</code>: the derivative order (0 = digamma, 1 = trigamma, …).</li>
+<li><code>kode</code>: 1 for psi^(n)(x), 2 for exp(-x) * psi^(n)(x).</li>
+<li><code>m</code>: number of sequence values to compute.</li>
+<li><code>ans</code>: output array of length at least m.</li>
+<li><code>nz</code>: output; number of underflowed entries.</li>
+<li><code>ierr</code>: output; error flag, 0 on success.</li>
+</ul>
+<p>Low-level workhorse behind <code>digamma()</code>/<code>trigamma()</code>; most code should call <code>digamma()</code> etc. directly.</p>
+<p><strong>See also:</strong> <a href="#gammafn"><code>gammafn()</code></a></p>
+</section>
 </section>
 <section id="numerical-utilities" class="level2" data-number="19.3">
 <h2 data-number="19.3" class="anchored" data-anchor-id="numerical-utilities"><span class="header-section-number">19.3</span> Numerical utilities</h2>
@@ -668,19 +696,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="R_pow" class="level3" data-number="19.3.1">
 <h3 data-number="19.3.1" class="anchored" data-anchor-id="R_pow"><span class="header-section-number">19.3.1</span> <code>R_pow()</code> (<code>R_pow_di()</code>, <code>pow1p()</code>)</h3>
 <p>Exponentiation with R’s edge-case semantics.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="dt">double</span> R_pow<span class="op">(</span><span class="dt">double</span> x<span class="op">,</span> <span class="dt">double</span> y<span class="op">);</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="dt">double</span> R_pow_di<span class="op">(</span><span class="dt">double</span> x<span class="op">,</span> <span class="dt">int</span> i<span class="op">);</span></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="dt">double</span> pow1p<span class="op">(</span><span class="dt">double</span> x<span class="op">,</span> <span class="dt">double</span> y<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="dt">double</span> R_pow<span class="op">(</span><span class="dt">double</span> x<span class="op">,</span> <span class="dt">double</span> y<span class="op">);</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="dt">double</span> R_pow_di<span class="op">(</span><span class="dt">double</span> x<span class="op">,</span> <span class="dt">int</span> i<span class="op">);</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="dt">double</span> pow1p<span class="op">(</span><span class="dt">double</span> x<span class="op">,</span> <span class="dt">double</span> y<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rmath.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 <p>Unlike C’s <code>pow()</code>, these give the same result as R’s <code>^</code> when <code>x</code> or <code>y</code> is 0, missing, infinite, or <code>NaN</code>. <code>pow1p(x, y)</code> computes <code>(1 + x)^y</code> accurately for small <code>|x|</code>.</p>
 </section>
 <section id="log1pmx" class="level3" data-number="19.3.2">
 <h3 data-number="19.3.2" class="anchored" data-anchor-id="log1pmx"><span class="header-section-number">19.3.2</span> <code>log1pmx()</code> (<code>log1pexp()</code>, <code>log1mexp()</code>, <code>lgamma1p()</code>)</h3>
 <p>Accurate log computations in numerically delicate regions.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="dt">double</span> log1pmx<span class="op">(</span><span class="dt">double</span> x<span class="op">);</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="dt">double</span> log1pexp<span class="op">(</span><span class="dt">double</span> x<span class="op">);</span></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="dt">double</span> log1mexp<span class="op">(</span><span class="dt">double</span> x<span class="op">);</span></span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="dt">double</span> lgamma1p<span class="op">(</span><span class="dt">double</span> x<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="dt">double</span> log1pmx<span class="op">(</span><span class="dt">double</span> x<span class="op">);</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="dt">double</span> log1pexp<span class="op">(</span><span class="dt">double</span> x<span class="op">);</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="dt">double</span> log1mexp<span class="op">(</span><span class="dt">double</span> x<span class="op">);</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="dt">double</span> lgamma1p<span class="op">(</span><span class="dt">double</span> x<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rmath.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 <p>Respectively <code>log(1 + x) - x</code> (accurate for small <code>|x|</code>), <code>log(1 + exp(x))</code> (accurate for large <code>x</code>), <code>log(1 - exp(-x))</code>, and <code>log(gamma(x + 1))</code> (accurate for <code>0 &lt; x &lt; 0.5</code>). Prefer these over composing the naive expressions.</p>
 <p><strong>See also:</strong> <a href="#logspace_add"><code>logspace_add()</code></a></p>
@@ -688,19 +716,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="cospi" class="level3" data-number="19.3.3">
 <h3 data-number="19.3.3" class="anchored" data-anchor-id="cospi"><span class="header-section-number">19.3.3</span> <code>cospi()</code> (<code>sinpi()</code>, <code>Rtanpi()</code>, <code>tanpi()</code>)</h3>
 <p>Trigonometric functions of pi * x, accurate at (half-)integer x.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="dt">double</span> cospi<span class="op">(</span><span class="dt">double</span> x<span class="op">);</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="dt">double</span> sinpi<span class="op">(</span><span class="dt">double</span> x<span class="op">);</span></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="dt">double</span> Rtanpi<span class="op">(</span><span class="dt">double</span> x<span class="op">);</span></span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="dt">double</span> tanpi<span class="op">(</span><span class="dt">double</span> x<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="dt">double</span> cospi<span class="op">(</span><span class="dt">double</span> x<span class="op">);</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="dt">double</span> sinpi<span class="op">(</span><span class="dt">double</span> x<span class="op">);</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="dt">double</span> Rtanpi<span class="op">(</span><span class="dt">double</span> x<span class="op">);</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="dt">double</span> tanpi<span class="op">(</span><span class="dt">double</span> x<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rmath.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>cospi()</code></p>
 <p>Prefer <code>Rtanpi()</code> over <code>tanpi()</code>: <code>Rtanpi()</code> is always R’s own implementation (exactly ±1 at quarter integers, <code>NaN</code> at half integers), while <code>tanpi()</code> may be the platform’s, with platform-dependent behaviour at half and quarter integers.</p>
 </section>
 <section id="logspace_add" class="level3" data-number="19.3.4">
 <h3 data-number="19.3.4" class="anchored" data-anchor-id="logspace_add"><span class="header-section-number">19.3.4</span> <code>logspace_add()</code> (<code>logspace_sub()</code>, <code>logspace_sum()</code>)</h3>
 <p>Add, subtract, or sum values given on the log scale.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="dt">double</span> logspace_add<span class="op">(</span><span class="dt">double</span> logx<span class="op">,</span> <span class="dt">double</span> logy<span class="op">);</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="dt">double</span> logspace_sub<span class="op">(</span><span class="dt">double</span> logx<span class="op">,</span> <span class="dt">double</span> logy<span class="op">);</span></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="dt">double</span> logspace_sum<span class="op">(</span><span class="dt">const</span> <span class="dt">double</span><span class="op">*</span> logx<span class="op">,</span> <span class="dt">int</span> n<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="dt">double</span> logspace_add<span class="op">(</span><span class="dt">double</span> logx<span class="op">,</span> <span class="dt">double</span> logy<span class="op">);</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="dt">double</span> logspace_sub<span class="op">(</span><span class="dt">double</span> logx<span class="op">,</span> <span class="dt">double</span> logy<span class="op">);</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="dt">double</span> logspace_sum<span class="op">(</span><span class="dt">const</span> <span class="dt">double</span><span class="op">*</span> logx<span class="op">,</span> <span class="dt">int</span> n<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rmath.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 <p>Compute <code>log(exp(logx) + exp(logy))</code> etc. without overflow or unnecessary loss of accuracy — the building blocks for working in log-space.</p>
 <p><strong>See also:</strong> <a href="#log1pmx"><code>log1pmx()</code></a></p>
@@ -708,27 +736,27 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="fmax2" class="level3" data-number="19.3.5">
 <h3 data-number="19.3.5" class="anchored" data-anchor-id="fmax2"><span class="header-section-number">19.3.5</span> <code>fmax2()</code> (<code>fmin2()</code>, <code>imax2()</code>, <code>imin2()</code>)</h3>
 <p>Maximum and minimum of two doubles or ints.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="dt">double</span> fmax2<span class="op">(</span><span class="dt">double</span> x<span class="op">,</span> <span class="dt">double</span> y<span class="op">);</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="dt">double</span> fmin2<span class="op">(</span><span class="dt">double</span> x<span class="op">,</span> <span class="dt">double</span> y<span class="op">);</span></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> imax2<span class="op">(</span><span class="dt">int</span> x<span class="op">,</span> <span class="dt">int</span> y<span class="op">);</span></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> imin2<span class="op">(</span><span class="dt">int</span> x<span class="op">,</span> <span class="dt">int</span> y<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="dt">double</span> fmax2<span class="op">(</span><span class="dt">double</span> x<span class="op">,</span> <span class="dt">double</span> y<span class="op">);</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="dt">double</span> fmin2<span class="op">(</span><span class="dt">double</span> x<span class="op">,</span> <span class="dt">double</span> y<span class="op">);</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> imax2<span class="op">(</span><span class="dt">int</span> x<span class="op">,</span> <span class="dt">int</span> y<span class="op">);</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> imin2<span class="op">(</span><span class="dt">int</span> x<span class="op">,</span> <span class="dt">int</span> y<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rmath.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 <p>Unlike C99’s <code>fmax()</code>/<code>fmin()</code>, these return <code>NaN</code> when either argument is <code>NaN</code>.</p>
 </section>
 <section id="sign" class="level3" data-number="19.3.6">
 <h3 data-number="19.3.6" class="anchored" data-anchor-id="sign"><span class="header-section-number">19.3.6</span> <code>sign()</code> (<code>fsign()</code>)</h3>
 <p>Signum function and transfer of sign.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="dt">double</span> sign<span class="op">(</span><span class="dt">double</span> x<span class="op">);</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="dt">double</span> fsign<span class="op">(</span><span class="dt">double</span> x<span class="op">,</span> <span class="dt">double</span> y<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="dt">double</span> sign<span class="op">(</span><span class="dt">double</span> x<span class="op">);</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="dt">double</span> fsign<span class="op">(</span><span class="dt">double</span> x<span class="op">,</span> <span class="dt">double</span> y<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rmath.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>sign()</code></p>
 <p><code>sign()</code> returns 1, 0, −1, or <code>NaN</code> for <code>NaN</code>. <code>fsign(x, y)</code> is <code>|x| * sign(y)</code>.</p>
 </section>
 <section id="fround" class="level3" data-number="19.3.7">
 <h3 data-number="19.3.7" class="anchored" data-anchor-id="fround"><span class="header-section-number">19.3.7</span> <code>fround()</code> (<code>fprec()</code>, <code>ftrunc()</code>)</h3>
 <p>Rounding used by R’s round() and signif().</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="dt">double</span> fround<span class="op">(</span><span class="dt">double</span> x<span class="op">,</span> <span class="dt">double</span> digits<span class="op">);</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="dt">double</span> fprec<span class="op">(</span><span class="dt">double</span> x<span class="op">,</span> <span class="dt">double</span> digits<span class="op">);</span></span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="dt">double</span> ftrunc<span class="op">(</span><span class="dt">double</span> x<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="dt">double</span> fround<span class="op">(</span><span class="dt">double</span> x<span class="op">,</span> <span class="dt">double</span> digits<span class="op">);</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="dt">double</span> fprec<span class="op">(</span><span class="dt">double</span> x<span class="op">,</span> <span class="dt">double</span> digits<span class="op">);</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="dt">double</span> ftrunc<span class="op">(</span><span class="dt">double</span> x<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rmath.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 <p><code>fround()</code> rounds to <code>digits</code> decimal places (as <code>round()</code>); <code>fprec()</code> rounds to <code>digits</code> significant digits (as <code>signif()</code>); <code>ftrunc()</code> truncates toward zero.</p>
 </section>

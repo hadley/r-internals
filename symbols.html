@@ -372,47 +372,51 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </ul></li>
   <li><a href="#create" id="toc-create" class="nav-link" data-scroll-target="#create"><span class="header-section-number">9.2</span> Create</a>
   <ul class="collapse">
-  <li><a href="#Rf_install" id="toc-Rf_install" class="nav-link" data-scroll-target="#Rf_install"><span class="header-section-number">9.2.1</span> <code>Rf_install()</code> (<code>Rf_installChar()</code>)</a></li>
+  <li><a href="#Rf_install" id="toc-Rf_install" class="nav-link" data-scroll-target="#Rf_install"><span class="header-section-number">9.2.1</span> <code>Rf_install()</code> (<code>Rf_installChar()</code>, <code>Rf_installTrChar()</code>)</a></li>
   </ul></li>
-  <li><a href="#missing-symbol" id="toc-missing-symbol" class="nav-link" data-scroll-target="#missing-symbol"><span class="header-section-number">9.3</span> Missing symbol</a>
+  <li><a href="#accessors" id="toc-accessors" class="nav-link" data-scroll-target="#accessors"><span class="header-section-number">9.3</span> Accessors</a>
   <ul class="collapse">
-  <li><a href="#R_MissingArg" id="toc-R_MissingArg" class="nav-link" data-scroll-target="#R_MissingArg"><span class="header-section-number">9.3.1</span> <code>R_MissingArg()</code></a></li>
+  <li><a href="#PRINTNAME" id="toc-PRINTNAME" class="nav-link" data-scroll-target="#PRINTNAME"><span class="header-section-number">9.3.1</span> <code>PRINTNAME()</code></a></li>
   </ul></li>
-  <li><a href="#predefined-symbols" id="toc-predefined-symbols" class="nav-link" data-scroll-target="#predefined-symbols"><span class="header-section-number">9.4</span> Predefined symbols</a>
+  <li><a href="#missing-symbol" id="toc-missing-symbol" class="nav-link" data-scroll-target="#missing-symbol"><span class="header-section-number">9.4</span> Missing symbol</a>
   <ul class="collapse">
-  <li><a href="#R_dot_defined" id="toc-R_dot_defined" class="nav-link" data-scroll-target="#R_dot_defined"><span class="header-section-number">9.4.1</span> <code>R_dot_defined()</code></a></li>
-  <li><a href="#R_dot_Method" id="toc-R_dot_Method" class="nav-link" data-scroll-target="#R_dot_Method"><span class="header-section-number">9.4.2</span> <code>R_dot_Method()</code></a></li>
-  <li><a href="#R_dot_packageName" id="toc-R_dot_packageName" class="nav-link" data-scroll-target="#R_dot_packageName"><span class="header-section-number">9.4.3</span> <code>R_dot_packageName()</code></a></li>
-  <li><a href="#R_dot_target" id="toc-R_dot_target" class="nav-link" data-scroll-target="#R_dot_target"><span class="header-section-number">9.4.4</span> <code>R_dot_target()</code></a></li>
-  <li><a href="#R_BaseSymbol" id="toc-R_BaseSymbol" class="nav-link" data-scroll-target="#R_BaseSymbol"><span class="header-section-number">9.4.5</span> <code>R_BaseSymbol()</code></a></li>
-  <li><a href="#R_BraceSymbol" id="toc-R_BraceSymbol" class="nav-link" data-scroll-target="#R_BraceSymbol"><span class="header-section-number">9.4.6</span> <code>R_BraceSymbol()</code></a></li>
-  <li><a href="#R_Bracket2Symbol" id="toc-R_Bracket2Symbol" class="nav-link" data-scroll-target="#R_Bracket2Symbol"><span class="header-section-number">9.4.7</span> <code>R_Bracket2Symbol()</code></a></li>
-  <li><a href="#R_BracketSymbol" id="toc-R_BracketSymbol" class="nav-link" data-scroll-target="#R_BracketSymbol"><span class="header-section-number">9.4.8</span> <code>R_BracketSymbol()</code></a></li>
-  <li><a href="#R_ClassSymbol" id="toc-R_ClassSymbol" class="nav-link" data-scroll-target="#R_ClassSymbol"><span class="header-section-number">9.4.9</span> <code>R_ClassSymbol()</code></a></li>
-  <li><a href="#R_DeviceSymbol" id="toc-R_DeviceSymbol" class="nav-link" data-scroll-target="#R_DeviceSymbol"><span class="header-section-number">9.4.10</span> <code>R_DeviceSymbol()</code></a></li>
-  <li><a href="#R_DimNamesSymbol" id="toc-R_DimNamesSymbol" class="nav-link" data-scroll-target="#R_DimNamesSymbol"><span class="header-section-number">9.4.11</span> <code>R_DimNamesSymbol()</code></a></li>
-  <li><a href="#R_DimSymbol" id="toc-R_DimSymbol" class="nav-link" data-scroll-target="#R_DimSymbol"><span class="header-section-number">9.4.12</span> <code>R_DimSymbol()</code></a></li>
-  <li><a href="#R_DollarSymbol" id="toc-R_DollarSymbol" class="nav-link" data-scroll-target="#R_DollarSymbol"><span class="header-section-number">9.4.13</span> <code>R_DollarSymbol()</code></a></li>
-  <li><a href="#R_DotsSymbol" id="toc-R_DotsSymbol" class="nav-link" data-scroll-target="#R_DotsSymbol"><span class="header-section-number">9.4.14</span> <code>R_DotsSymbol()</code></a></li>
-  <li><a href="#R_DoubleColonSymbol" id="toc-R_DoubleColonSymbol" class="nav-link" data-scroll-target="#R_DoubleColonSymbol"><span class="header-section-number">9.4.15</span> <code>R_DoubleColonSymbol()</code></a></li>
-  <li><a href="#R_DropSymbol" id="toc-R_DropSymbol" class="nav-link" data-scroll-target="#R_DropSymbol"><span class="header-section-number">9.4.16</span> <code>R_DropSymbol()</code></a></li>
-  <li><a href="#R_LastvalueSymbol" id="toc-R_LastvalueSymbol" class="nav-link" data-scroll-target="#R_LastvalueSymbol"><span class="header-section-number">9.4.17</span> <code>R_LastvalueSymbol()</code></a></li>
-  <li><a href="#R_LevelsSymbol" id="toc-R_LevelsSymbol" class="nav-link" data-scroll-target="#R_LevelsSymbol"><span class="header-section-number">9.4.18</span> <code>R_LevelsSymbol()</code></a></li>
-  <li><a href="#R_ModeSymbol" id="toc-R_ModeSymbol" class="nav-link" data-scroll-target="#R_ModeSymbol"><span class="header-section-number">9.4.19</span> <code>R_ModeSymbol()</code></a></li>
-  <li><a href="#R_NaRmSymbol" id="toc-R_NaRmSymbol" class="nav-link" data-scroll-target="#R_NaRmSymbol"><span class="header-section-number">9.4.20</span> <code>R_NaRmSymbol()</code></a></li>
-  <li><a href="#R_NameSymbol" id="toc-R_NameSymbol" class="nav-link" data-scroll-target="#R_NameSymbol"><span class="header-section-number">9.4.21</span> <code>R_NameSymbol()</code></a></li>
-  <li><a href="#R_NamesSymbol" id="toc-R_NamesSymbol" class="nav-link" data-scroll-target="#R_NamesSymbol"><span class="header-section-number">9.4.22</span> <code>R_NamesSymbol()</code></a></li>
-  <li><a href="#R_NamespaceEnvSymbol" id="toc-R_NamespaceEnvSymbol" class="nav-link" data-scroll-target="#R_NamespaceEnvSymbol"><span class="header-section-number">9.4.23</span> <code>R_NamespaceEnvSymbol()</code></a></li>
-  <li><a href="#R_PackageSymbol" id="toc-R_PackageSymbol" class="nav-link" data-scroll-target="#R_PackageSymbol"><span class="header-section-number">9.4.24</span> <code>R_PackageSymbol()</code></a></li>
-  <li><a href="#R_PreviousSymbol" id="toc-R_PreviousSymbol" class="nav-link" data-scroll-target="#R_PreviousSymbol"><span class="header-section-number">9.4.25</span> <code>R_PreviousSymbol()</code></a></li>
-  <li><a href="#R_QuoteSymbol" id="toc-R_QuoteSymbol" class="nav-link" data-scroll-target="#R_QuoteSymbol"><span class="header-section-number">9.4.26</span> <code>R_QuoteSymbol()</code></a></li>
-  <li><a href="#R_RowNamesSymbol" id="toc-R_RowNamesSymbol" class="nav-link" data-scroll-target="#R_RowNamesSymbol"><span class="header-section-number">9.4.27</span> <code>R_RowNamesSymbol()</code></a></li>
-  <li><a href="#R_SeedsSymbol" id="toc-R_SeedsSymbol" class="nav-link" data-scroll-target="#R_SeedsSymbol"><span class="header-section-number">9.4.28</span> <code>R_SeedsSymbol()</code></a></li>
-  <li><a href="#R_SortListSymbol" id="toc-R_SortListSymbol" class="nav-link" data-scroll-target="#R_SortListSymbol"><span class="header-section-number">9.4.29</span> <code>R_SortListSymbol()</code></a></li>
-  <li><a href="#R_SourceSymbol" id="toc-R_SourceSymbol" class="nav-link" data-scroll-target="#R_SourceSymbol"><span class="header-section-number">9.4.30</span> <code>R_SourceSymbol()</code></a></li>
-  <li><a href="#R_SpecSymbol" id="toc-R_SpecSymbol" class="nav-link" data-scroll-target="#R_SpecSymbol"><span class="header-section-number">9.4.31</span> <code>R_SpecSymbol()</code></a></li>
-  <li><a href="#R_TripleColonSymbol" id="toc-R_TripleColonSymbol" class="nav-link" data-scroll-target="#R_TripleColonSymbol"><span class="header-section-number">9.4.32</span> <code>R_TripleColonSymbol()</code></a></li>
-  <li><a href="#R_TspSymbol" id="toc-R_TspSymbol" class="nav-link" data-scroll-target="#R_TspSymbol"><span class="header-section-number">9.4.33</span> <code>R_TspSymbol()</code></a></li>
+  <li><a href="#R_MissingArg" id="toc-R_MissingArg" class="nav-link" data-scroll-target="#R_MissingArg"><span class="header-section-number">9.4.1</span> <code>R_MissingArg()</code></a></li>
+  </ul></li>
+  <li><a href="#predefined-symbols" id="toc-predefined-symbols" class="nav-link" data-scroll-target="#predefined-symbols"><span class="header-section-number">9.5</span> Predefined symbols</a>
+  <ul class="collapse">
+  <li><a href="#R_dot_defined" id="toc-R_dot_defined" class="nav-link" data-scroll-target="#R_dot_defined"><span class="header-section-number">9.5.1</span> <code>R_dot_defined()</code></a></li>
+  <li><a href="#R_dot_Method" id="toc-R_dot_Method" class="nav-link" data-scroll-target="#R_dot_Method"><span class="header-section-number">9.5.2</span> <code>R_dot_Method()</code></a></li>
+  <li><a href="#R_dot_packageName" id="toc-R_dot_packageName" class="nav-link" data-scroll-target="#R_dot_packageName"><span class="header-section-number">9.5.3</span> <code>R_dot_packageName()</code></a></li>
+  <li><a href="#R_dot_target" id="toc-R_dot_target" class="nav-link" data-scroll-target="#R_dot_target"><span class="header-section-number">9.5.4</span> <code>R_dot_target()</code></a></li>
+  <li><a href="#R_BaseSymbol" id="toc-R_BaseSymbol" class="nav-link" data-scroll-target="#R_BaseSymbol"><span class="header-section-number">9.5.5</span> <code>R_BaseSymbol()</code></a></li>
+  <li><a href="#R_BraceSymbol" id="toc-R_BraceSymbol" class="nav-link" data-scroll-target="#R_BraceSymbol"><span class="header-section-number">9.5.6</span> <code>R_BraceSymbol()</code></a></li>
+  <li><a href="#R_Bracket2Symbol" id="toc-R_Bracket2Symbol" class="nav-link" data-scroll-target="#R_Bracket2Symbol"><span class="header-section-number">9.5.7</span> <code>R_Bracket2Symbol()</code></a></li>
+  <li><a href="#R_BracketSymbol" id="toc-R_BracketSymbol" class="nav-link" data-scroll-target="#R_BracketSymbol"><span class="header-section-number">9.5.8</span> <code>R_BracketSymbol()</code></a></li>
+  <li><a href="#R_ClassSymbol" id="toc-R_ClassSymbol" class="nav-link" data-scroll-target="#R_ClassSymbol"><span class="header-section-number">9.5.9</span> <code>R_ClassSymbol()</code></a></li>
+  <li><a href="#R_DeviceSymbol" id="toc-R_DeviceSymbol" class="nav-link" data-scroll-target="#R_DeviceSymbol"><span class="header-section-number">9.5.10</span> <code>R_DeviceSymbol()</code></a></li>
+  <li><a href="#R_DimNamesSymbol" id="toc-R_DimNamesSymbol" class="nav-link" data-scroll-target="#R_DimNamesSymbol"><span class="header-section-number">9.5.11</span> <code>R_DimNamesSymbol()</code></a></li>
+  <li><a href="#R_DimSymbol" id="toc-R_DimSymbol" class="nav-link" data-scroll-target="#R_DimSymbol"><span class="header-section-number">9.5.12</span> <code>R_DimSymbol()</code></a></li>
+  <li><a href="#R_DollarSymbol" id="toc-R_DollarSymbol" class="nav-link" data-scroll-target="#R_DollarSymbol"><span class="header-section-number">9.5.13</span> <code>R_DollarSymbol()</code></a></li>
+  <li><a href="#R_DotsSymbol" id="toc-R_DotsSymbol" class="nav-link" data-scroll-target="#R_DotsSymbol"><span class="header-section-number">9.5.14</span> <code>R_DotsSymbol()</code></a></li>
+  <li><a href="#R_DoubleColonSymbol" id="toc-R_DoubleColonSymbol" class="nav-link" data-scroll-target="#R_DoubleColonSymbol"><span class="header-section-number">9.5.15</span> <code>R_DoubleColonSymbol()</code></a></li>
+  <li><a href="#R_DropSymbol" id="toc-R_DropSymbol" class="nav-link" data-scroll-target="#R_DropSymbol"><span class="header-section-number">9.5.16</span> <code>R_DropSymbol()</code></a></li>
+  <li><a href="#R_LastvalueSymbol" id="toc-R_LastvalueSymbol" class="nav-link" data-scroll-target="#R_LastvalueSymbol"><span class="header-section-number">9.5.17</span> <code>R_LastvalueSymbol()</code></a></li>
+  <li><a href="#R_LevelsSymbol" id="toc-R_LevelsSymbol" class="nav-link" data-scroll-target="#R_LevelsSymbol"><span class="header-section-number">9.5.18</span> <code>R_LevelsSymbol()</code></a></li>
+  <li><a href="#R_ModeSymbol" id="toc-R_ModeSymbol" class="nav-link" data-scroll-target="#R_ModeSymbol"><span class="header-section-number">9.5.19</span> <code>R_ModeSymbol()</code></a></li>
+  <li><a href="#R_NaRmSymbol" id="toc-R_NaRmSymbol" class="nav-link" data-scroll-target="#R_NaRmSymbol"><span class="header-section-number">9.5.20</span> <code>R_NaRmSymbol()</code></a></li>
+  <li><a href="#R_NameSymbol" id="toc-R_NameSymbol" class="nav-link" data-scroll-target="#R_NameSymbol"><span class="header-section-number">9.5.21</span> <code>R_NameSymbol()</code></a></li>
+  <li><a href="#R_NamesSymbol" id="toc-R_NamesSymbol" class="nav-link" data-scroll-target="#R_NamesSymbol"><span class="header-section-number">9.5.22</span> <code>R_NamesSymbol()</code></a></li>
+  <li><a href="#R_NamespaceEnvSymbol" id="toc-R_NamespaceEnvSymbol" class="nav-link" data-scroll-target="#R_NamespaceEnvSymbol"><span class="header-section-number">9.5.23</span> <code>R_NamespaceEnvSymbol()</code></a></li>
+  <li><a href="#R_PackageSymbol" id="toc-R_PackageSymbol" class="nav-link" data-scroll-target="#R_PackageSymbol"><span class="header-section-number">9.5.24</span> <code>R_PackageSymbol()</code></a></li>
+  <li><a href="#R_PreviousSymbol" id="toc-R_PreviousSymbol" class="nav-link" data-scroll-target="#R_PreviousSymbol"><span class="header-section-number">9.5.25</span> <code>R_PreviousSymbol()</code></a></li>
+  <li><a href="#R_QuoteSymbol" id="toc-R_QuoteSymbol" class="nav-link" data-scroll-target="#R_QuoteSymbol"><span class="header-section-number">9.5.26</span> <code>R_QuoteSymbol()</code></a></li>
+  <li><a href="#R_RowNamesSymbol" id="toc-R_RowNamesSymbol" class="nav-link" data-scroll-target="#R_RowNamesSymbol"><span class="header-section-number">9.5.27</span> <code>R_RowNamesSymbol()</code></a></li>
+  <li><a href="#R_SeedsSymbol" id="toc-R_SeedsSymbol" class="nav-link" data-scroll-target="#R_SeedsSymbol"><span class="header-section-number">9.5.28</span> <code>R_SeedsSymbol()</code></a></li>
+  <li><a href="#R_SortListSymbol" id="toc-R_SortListSymbol" class="nav-link" data-scroll-target="#R_SortListSymbol"><span class="header-section-number">9.5.29</span> <code>R_SortListSymbol()</code></a></li>
+  <li><a href="#R_SourceSymbol" id="toc-R_SourceSymbol" class="nav-link" data-scroll-target="#R_SourceSymbol"><span class="header-section-number">9.5.30</span> <code>R_SourceSymbol()</code></a></li>
+  <li><a href="#R_SpecSymbol" id="toc-R_SpecSymbol" class="nav-link" data-scroll-target="#R_SpecSymbol"><span class="header-section-number">9.5.31</span> <code>R_SpecSymbol()</code></a></li>
+  <li><a href="#R_TripleColonSymbol" id="toc-R_TripleColonSymbol" class="nav-link" data-scroll-target="#R_TripleColonSymbol"><span class="header-section-number">9.5.32</span> <code>R_TripleColonSymbol()</code></a></li>
+  <li><a href="#R_TspSymbol" id="toc-R_TspSymbol" class="nav-link" data-scroll-target="#R_TspSymbol"><span class="header-section-number">9.5.33</span> <code>R_TspSymbol()</code></a></li>
   </ul></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/hadley/r-internals/edit/main/symbols.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/hadley/r-internals/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
@@ -453,224 +457,236 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 data-number="9.2" class="anchored" data-anchor-id="create"><span class="header-section-number">9.2</span> Create</h2>
 <p><code>Rf_install()</code> returns the existing symbol for a name, or creates it if it doesn’t exist yet.</p>
 <section id="Rf_install" class="level3" data-number="9.2.1">
-<h3 data-number="9.2.1" class="anchored" data-anchor-id="Rf_install"><span class="header-section-number">9.2.1</span> <code>Rf_install()</code> (<code>Rf_installChar()</code>)</h3>
+<h3 data-number="9.2.1" class="anchored" data-anchor-id="Rf_install"><span class="header-section-number">9.2.1</span> <code>Rf_install()</code> (<code>Rf_installChar()</code>, <code>Rf_installTrChar()</code>)</h3>
 <p>Create the symbol for a name, returning the existing symbol if already present.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>SEXP Rf_install<span class="op">(</span><span class="dt">const</span> <span class="dt">char</span> <span class="op">*);</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>SEXP Rf_installChar<span class="op">(</span>SEXP<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>SEXP Rf_installChar<span class="op">(</span>SEXP<span class="op">);</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>SEXP Rf_installTrChar<span class="op">(</span>SEXP<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>as.name()</code></p>
-<p>Symbols are never garbage collected, so <code>SYMSXP</code>s don’t need to be protected. Cache frequently used symbols to avoid repeated lookups.</p>
+<p>Symbols are never garbage collected, so <code>SYMSXP</code>s don’t need to be protected. Cache frequently used symbols to avoid repeated lookups. <code>Rf_installChar()</code> takes a CHARSXP; <code>Rf_installTrChar()</code> is the same but first translates the string to the native encoding.</p>
 </section>
 </section>
-<section id="missing-symbol" class="level2" data-number="9.3">
-<h2 data-number="9.3" class="anchored" data-anchor-id="missing-symbol"><span class="header-section-number">9.3</span> Missing symbol</h2>
+<section id="accessors" class="level2" data-number="9.3">
+<h2 data-number="9.3" class="anchored" data-anchor-id="accessors"><span class="header-section-number">9.3</span> Accessors</h2>
+<section id="PRINTNAME" class="level3" data-number="9.3.1">
+<h3 data-number="9.3.1" class="anchored" data-anchor-id="PRINTNAME"><span class="header-section-number">9.3.1</span> <code>PRINTNAME()</code></h3>
+<p>Get the print name of a symbol.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>SEXP <span class="op">(</span>PRINTNAME<span class="op">)(</span>SEXP x<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<p>Returns the name as a CHARSXP; use <code>CHAR(PRINTNAME(x))</code> for a <code>const char*</code>. There is no API setter — symbols are interned, so create the symbol you want with <code>Rf_install()</code> instead.</p>
+<p><strong>See also:</strong> <a href="#Rf_install"><code>Rf_install()</code></a></p>
+</section>
+</section>
+<section id="missing-symbol" class="level2" data-number="9.4">
+<h2 data-number="9.4" class="anchored" data-anchor-id="missing-symbol"><span class="header-section-number">9.4</span> Missing symbol</h2>
 <p><code>R_MissingArg</code> represents the missing/empty symbol, i.e.&nbsp;the second argument in the call <code>f(x, )</code>.</p>
-<section id="R_MissingArg" class="level3" data-number="9.3.1">
-<h3 data-number="9.3.1" class="anchored" data-anchor-id="R_MissingArg"><span class="header-section-number">9.3.1</span> <code>R_MissingArg()</code></h3>
+<section id="R_MissingArg" class="level3" data-number="9.4.1">
+<h3 data-number="9.4.1" class="anchored" data-anchor-id="R_MissingArg"><span class="header-section-number">9.4.1</span> <code>R_MissingArg()</code></h3>
 <p>Access the missing/empty symbol.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>SEXP R_MissingArg<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>SEXP R_MissingArg<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 <p>Used as the second argument in a call like <code>f(x, )</code>.</p>
 </section>
 </section>
-<section id="predefined-symbols" class="level2" data-number="9.4">
-<h2 data-number="9.4" class="anchored" data-anchor-id="predefined-symbols"><span class="header-section-number">9.4</span> Predefined symbols</h2>
+<section id="predefined-symbols" class="level2" data-number="9.5">
+<h2 data-number="9.5" class="anchored" data-anchor-id="predefined-symbols"><span class="header-section-number">9.5</span> Predefined symbols</h2>
 <p>A number of symbols are so commonly used that they’re predefined and exported as global constants — use these instead of calling <code>Rf_install()</code> yourself.</p>
-<section id="R_dot_defined" class="level3" data-number="9.4.1">
-<h3 data-number="9.4.1" class="anchored" data-anchor-id="R_dot_defined"><span class="header-section-number">9.4.1</span> <code>R_dot_defined()</code></h3>
+<section id="R_dot_defined" class="level3" data-number="9.5.1">
+<h3 data-number="9.5.1" class="anchored" data-anchor-id="R_dot_defined"><span class="header-section-number">9.5.1</span> <code>R_dot_defined()</code></h3>
 <p>Access the predefined symbol for “.defined”.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>SEXP R_dot_defined<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>SEXP R_dot_defined<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 </section>
-<section id="R_dot_Method" class="level3" data-number="9.4.2">
-<h3 data-number="9.4.2" class="anchored" data-anchor-id="R_dot_Method"><span class="header-section-number">9.4.2</span> <code>R_dot_Method()</code></h3>
+<section id="R_dot_Method" class="level3" data-number="9.5.2">
+<h3 data-number="9.5.2" class="anchored" data-anchor-id="R_dot_Method"><span class="header-section-number">9.5.2</span> <code>R_dot_Method()</code></h3>
 <p>Access the predefined symbol for “.Method”.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>SEXP R_dot_Method<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>SEXP R_dot_Method<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 </section>
-<section id="R_dot_packageName" class="level3" data-number="9.4.3">
-<h3 data-number="9.4.3" class="anchored" data-anchor-id="R_dot_packageName"><span class="header-section-number">9.4.3</span> <code>R_dot_packageName()</code></h3>
+<section id="R_dot_packageName" class="level3" data-number="9.5.3">
+<h3 data-number="9.5.3" class="anchored" data-anchor-id="R_dot_packageName"><span class="header-section-number">9.5.3</span> <code>R_dot_packageName()</code></h3>
 <p>Access the predefined symbol for “.packageName”.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>SEXP R_dot_packageName<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>SEXP R_dot_packageName<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 </section>
-<section id="R_dot_target" class="level3" data-number="9.4.4">
-<h3 data-number="9.4.4" class="anchored" data-anchor-id="R_dot_target"><span class="header-section-number">9.4.4</span> <code>R_dot_target()</code></h3>
+<section id="R_dot_target" class="level3" data-number="9.5.4">
+<h3 data-number="9.5.4" class="anchored" data-anchor-id="R_dot_target"><span class="header-section-number">9.5.4</span> <code>R_dot_target()</code></h3>
 <p>Access the predefined symbol for “.target”.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>SEXP R_dot_target<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>SEXP R_dot_target<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 </section>
-<section id="R_BaseSymbol" class="level3" data-number="9.4.5">
-<h3 data-number="9.4.5" class="anchored" data-anchor-id="R_BaseSymbol"><span class="header-section-number">9.4.5</span> <code>R_BaseSymbol()</code></h3>
+<section id="R_BaseSymbol" class="level3" data-number="9.5.5">
+<h3 data-number="9.5.5" class="anchored" data-anchor-id="R_BaseSymbol"><span class="header-section-number">9.5.5</span> <code>R_BaseSymbol()</code></h3>
 <p>Access the predefined symbol for “base”.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>SEXP R_BaseSymbol<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>SEXP R_BaseSymbol<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 </section>
-<section id="R_BraceSymbol" class="level3" data-number="9.4.6">
-<h3 data-number="9.4.6" class="anchored" data-anchor-id="R_BraceSymbol"><span class="header-section-number">9.4.6</span> <code>R_BraceSymbol()</code></h3>
+<section id="R_BraceSymbol" class="level3" data-number="9.5.6">
+<h3 data-number="9.5.6" class="anchored" data-anchor-id="R_BraceSymbol"><span class="header-section-number">9.5.6</span> <code>R_BraceSymbol()</code></h3>
 <p>Access the predefined symbol for “{”.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>SEXP R_BraceSymbol<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>SEXP R_BraceSymbol<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 </section>
-<section id="R_Bracket2Symbol" class="level3" data-number="9.4.7">
-<h3 data-number="9.4.7" class="anchored" data-anchor-id="R_Bracket2Symbol"><span class="header-section-number">9.4.7</span> <code>R_Bracket2Symbol()</code></h3>
+<section id="R_Bracket2Symbol" class="level3" data-number="9.5.7">
+<h3 data-number="9.5.7" class="anchored" data-anchor-id="R_Bracket2Symbol"><span class="header-section-number">9.5.7</span> <code>R_Bracket2Symbol()</code></h3>
 <p>Access the predefined symbol for “[[”.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>SEXP R_Bracket2Symbol<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>SEXP R_Bracket2Symbol<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 </section>
-<section id="R_BracketSymbol" class="level3" data-number="9.4.8">
-<h3 data-number="9.4.8" class="anchored" data-anchor-id="R_BracketSymbol"><span class="header-section-number">9.4.8</span> <code>R_BracketSymbol()</code></h3>
+<section id="R_BracketSymbol" class="level3" data-number="9.5.8">
+<h3 data-number="9.5.8" class="anchored" data-anchor-id="R_BracketSymbol"><span class="header-section-number">9.5.8</span> <code>R_BracketSymbol()</code></h3>
 <p>Access the predefined symbol for “[”.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>SEXP R_BracketSymbol<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>SEXP R_BracketSymbol<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 </section>
-<section id="R_ClassSymbol" class="level3" data-number="9.4.9">
-<h3 data-number="9.4.9" class="anchored" data-anchor-id="R_ClassSymbol"><span class="header-section-number">9.4.9</span> <code>R_ClassSymbol()</code></h3>
+<section id="R_ClassSymbol" class="level3" data-number="9.5.9">
+<h3 data-number="9.5.9" class="anchored" data-anchor-id="R_ClassSymbol"><span class="header-section-number">9.5.9</span> <code>R_ClassSymbol()</code></h3>
 <p>Access the predefined symbol for “class”.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>SEXP R_ClassSymbol<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>SEXP R_ClassSymbol<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 </section>
-<section id="R_DeviceSymbol" class="level3" data-number="9.4.10">
-<h3 data-number="9.4.10" class="anchored" data-anchor-id="R_DeviceSymbol"><span class="header-section-number">9.4.10</span> <code>R_DeviceSymbol()</code></h3>
+<section id="R_DeviceSymbol" class="level3" data-number="9.5.10">
+<h3 data-number="9.5.10" class="anchored" data-anchor-id="R_DeviceSymbol"><span class="header-section-number">9.5.10</span> <code>R_DeviceSymbol()</code></h3>
 <p>Access the predefined symbol for “.Device”.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>SEXP R_DeviceSymbol<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>SEXP R_DeviceSymbol<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 </section>
-<section id="R_DimNamesSymbol" class="level3" data-number="9.4.11">
-<h3 data-number="9.4.11" class="anchored" data-anchor-id="R_DimNamesSymbol"><span class="header-section-number">9.4.11</span> <code>R_DimNamesSymbol()</code></h3>
+<section id="R_DimNamesSymbol" class="level3" data-number="9.5.11">
+<h3 data-number="9.5.11" class="anchored" data-anchor-id="R_DimNamesSymbol"><span class="header-section-number">9.5.11</span> <code>R_DimNamesSymbol()</code></h3>
 <p>Access the predefined symbol for “dimnames”.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>SEXP R_DimNamesSymbol<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>SEXP R_DimNamesSymbol<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 </section>
-<section id="R_DimSymbol" class="level3" data-number="9.4.12">
-<h3 data-number="9.4.12" class="anchored" data-anchor-id="R_DimSymbol"><span class="header-section-number">9.4.12</span> <code>R_DimSymbol()</code></h3>
+<section id="R_DimSymbol" class="level3" data-number="9.5.12">
+<h3 data-number="9.5.12" class="anchored" data-anchor-id="R_DimSymbol"><span class="header-section-number">9.5.12</span> <code>R_DimSymbol()</code></h3>
 <p>Access the predefined symbol for “dim”.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>SEXP R_DimSymbol<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>SEXP R_DimSymbol<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 </section>
-<section id="R_DollarSymbol" class="level3" data-number="9.4.13">
-<h3 data-number="9.4.13" class="anchored" data-anchor-id="R_DollarSymbol"><span class="header-section-number">9.4.13</span> <code>R_DollarSymbol()</code></h3>
+<section id="R_DollarSymbol" class="level3" data-number="9.5.13">
+<h3 data-number="9.5.13" class="anchored" data-anchor-id="R_DollarSymbol"><span class="header-section-number">9.5.13</span> <code>R_DollarSymbol()</code></h3>
 <p>Access the predefined symbol for “$”.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>SEXP R_DollarSymbol<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>SEXP R_DollarSymbol<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 </section>
-<section id="R_DotsSymbol" class="level3" data-number="9.4.14">
-<h3 data-number="9.4.14" class="anchored" data-anchor-id="R_DotsSymbol"><span class="header-section-number">9.4.14</span> <code>R_DotsSymbol()</code></h3>
+<section id="R_DotsSymbol" class="level3" data-number="9.5.14">
+<h3 data-number="9.5.14" class="anchored" data-anchor-id="R_DotsSymbol"><span class="header-section-number">9.5.14</span> <code>R_DotsSymbol()</code></h3>
 <p>Access the predefined symbol for “…”.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>SEXP R_DotsSymbol<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>SEXP R_DotsSymbol<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 </section>
-<section id="R_DoubleColonSymbol" class="level3" data-number="9.4.15">
-<h3 data-number="9.4.15" class="anchored" data-anchor-id="R_DoubleColonSymbol"><span class="header-section-number">9.4.15</span> <code>R_DoubleColonSymbol()</code></h3>
+<section id="R_DoubleColonSymbol" class="level3" data-number="9.5.15">
+<h3 data-number="9.5.15" class="anchored" data-anchor-id="R_DoubleColonSymbol"><span class="header-section-number">9.5.15</span> <code>R_DoubleColonSymbol()</code></h3>
 <p>Access the predefined symbol for “::”.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>SEXP R_DoubleColonSymbol<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>SEXP R_DoubleColonSymbol<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 </section>
-<section id="R_DropSymbol" class="level3" data-number="9.4.16">
-<h3 data-number="9.4.16" class="anchored" data-anchor-id="R_DropSymbol"><span class="header-section-number">9.4.16</span> <code>R_DropSymbol()</code></h3>
+<section id="R_DropSymbol" class="level3" data-number="9.5.16">
+<h3 data-number="9.5.16" class="anchored" data-anchor-id="R_DropSymbol"><span class="header-section-number">9.5.16</span> <code>R_DropSymbol()</code></h3>
 <p>Access the predefined symbol for “drop”.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>SEXP R_DropSymbol<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>SEXP R_DropSymbol<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 </section>
-<section id="R_LastvalueSymbol" class="level3" data-number="9.4.17">
-<h3 data-number="9.4.17" class="anchored" data-anchor-id="R_LastvalueSymbol"><span class="header-section-number">9.4.17</span> <code>R_LastvalueSymbol()</code></h3>
+<section id="R_LastvalueSymbol" class="level3" data-number="9.5.17">
+<h3 data-number="9.5.17" class="anchored" data-anchor-id="R_LastvalueSymbol"><span class="header-section-number">9.5.17</span> <code>R_LastvalueSymbol()</code></h3>
 <p>Access the predefined symbol for “.Last.value”.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>SEXP R_LastvalueSymbol<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>SEXP R_LastvalueSymbol<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 </section>
-<section id="R_LevelsSymbol" class="level3" data-number="9.4.18">
-<h3 data-number="9.4.18" class="anchored" data-anchor-id="R_LevelsSymbol"><span class="header-section-number">9.4.18</span> <code>R_LevelsSymbol()</code></h3>
+<section id="R_LevelsSymbol" class="level3" data-number="9.5.18">
+<h3 data-number="9.5.18" class="anchored" data-anchor-id="R_LevelsSymbol"><span class="header-section-number">9.5.18</span> <code>R_LevelsSymbol()</code></h3>
 <p>Access the predefined symbol for “levels”.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>SEXP R_LevelsSymbol<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>SEXP R_LevelsSymbol<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 </section>
-<section id="R_ModeSymbol" class="level3" data-number="9.4.19">
-<h3 data-number="9.4.19" class="anchored" data-anchor-id="R_ModeSymbol"><span class="header-section-number">9.4.19</span> <code>R_ModeSymbol()</code></h3>
+<section id="R_ModeSymbol" class="level3" data-number="9.5.19">
+<h3 data-number="9.5.19" class="anchored" data-anchor-id="R_ModeSymbol"><span class="header-section-number">9.5.19</span> <code>R_ModeSymbol()</code></h3>
 <p>Access the predefined symbol for “mode”.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>SEXP R_ModeSymbol<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>SEXP R_ModeSymbol<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 </section>
-<section id="R_NaRmSymbol" class="level3" data-number="9.4.20">
-<h3 data-number="9.4.20" class="anchored" data-anchor-id="R_NaRmSymbol"><span class="header-section-number">9.4.20</span> <code>R_NaRmSymbol()</code></h3>
+<section id="R_NaRmSymbol" class="level3" data-number="9.5.20">
+<h3 data-number="9.5.20" class="anchored" data-anchor-id="R_NaRmSymbol"><span class="header-section-number">9.5.20</span> <code>R_NaRmSymbol()</code></h3>
 <p>Access the predefined symbol for “na.rm”.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>SEXP R_NaRmSymbol<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb24"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>SEXP R_NaRmSymbol<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 </section>
-<section id="R_NameSymbol" class="level3" data-number="9.4.21">
-<h3 data-number="9.4.21" class="anchored" data-anchor-id="R_NameSymbol"><span class="header-section-number">9.4.21</span> <code>R_NameSymbol()</code></h3>
+<section id="R_NameSymbol" class="level3" data-number="9.5.21">
+<h3 data-number="9.5.21" class="anchored" data-anchor-id="R_NameSymbol"><span class="header-section-number">9.5.21</span> <code>R_NameSymbol()</code></h3>
 <p>Access the predefined symbol for “name”.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb24"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>SEXP R_NameSymbol<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb25"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>SEXP R_NameSymbol<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 </section>
-<section id="R_NamesSymbol" class="level3" data-number="9.4.22">
-<h3 data-number="9.4.22" class="anchored" data-anchor-id="R_NamesSymbol"><span class="header-section-number">9.4.22</span> <code>R_NamesSymbol()</code></h3>
+<section id="R_NamesSymbol" class="level3" data-number="9.5.22">
+<h3 data-number="9.5.22" class="anchored" data-anchor-id="R_NamesSymbol"><span class="header-section-number">9.5.22</span> <code>R_NamesSymbol()</code></h3>
 <p>Access the predefined symbol for “names”.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb25"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>SEXP R_NamesSymbol<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>SEXP R_NamesSymbol<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 </section>
-<section id="R_NamespaceEnvSymbol" class="level3" data-number="9.4.23">
-<h3 data-number="9.4.23" class="anchored" data-anchor-id="R_NamespaceEnvSymbol"><span class="header-section-number">9.4.23</span> <code>R_NamespaceEnvSymbol()</code></h3>
+<section id="R_NamespaceEnvSymbol" class="level3" data-number="9.5.23">
+<h3 data-number="9.5.23" class="anchored" data-anchor-id="R_NamespaceEnvSymbol"><span class="header-section-number">9.5.23</span> <code>R_NamespaceEnvSymbol()</code></h3>
 <p>Access the predefined symbol for “.__NAMESPACE__.”.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>SEXP R_NamespaceEnvSymbol<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb27"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>SEXP R_NamespaceEnvSymbol<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 </section>
-<section id="R_PackageSymbol" class="level3" data-number="9.4.24">
-<h3 data-number="9.4.24" class="anchored" data-anchor-id="R_PackageSymbol"><span class="header-section-number">9.4.24</span> <code>R_PackageSymbol()</code></h3>
+<section id="R_PackageSymbol" class="level3" data-number="9.5.24">
+<h3 data-number="9.5.24" class="anchored" data-anchor-id="R_PackageSymbol"><span class="header-section-number">9.5.24</span> <code>R_PackageSymbol()</code></h3>
 <p>Access the predefined symbol for “package”.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb27"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>SEXP R_PackageSymbol<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb28"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>SEXP R_PackageSymbol<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 </section>
-<section id="R_PreviousSymbol" class="level3" data-number="9.4.25">
-<h3 data-number="9.4.25" class="anchored" data-anchor-id="R_PreviousSymbol"><span class="header-section-number">9.4.25</span> <code>R_PreviousSymbol()</code></h3>
+<section id="R_PreviousSymbol" class="level3" data-number="9.5.25">
+<h3 data-number="9.5.25" class="anchored" data-anchor-id="R_PreviousSymbol"><span class="header-section-number">9.5.25</span> <code>R_PreviousSymbol()</code></h3>
 <p>Access the predefined symbol for “previous”.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb28"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>SEXP R_PreviousSymbol<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb29"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>SEXP R_PreviousSymbol<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 </section>
-<section id="R_QuoteSymbol" class="level3" data-number="9.4.26">
-<h3 data-number="9.4.26" class="anchored" data-anchor-id="R_QuoteSymbol"><span class="header-section-number">9.4.26</span> <code>R_QuoteSymbol()</code></h3>
+<section id="R_QuoteSymbol" class="level3" data-number="9.5.26">
+<h3 data-number="9.5.26" class="anchored" data-anchor-id="R_QuoteSymbol"><span class="header-section-number">9.5.26</span> <code>R_QuoteSymbol()</code></h3>
 <p>Access the predefined symbol for “quote”.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb29"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>SEXP R_QuoteSymbol<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb30"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>SEXP R_QuoteSymbol<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 </section>
-<section id="R_RowNamesSymbol" class="level3" data-number="9.4.27">
-<h3 data-number="9.4.27" class="anchored" data-anchor-id="R_RowNamesSymbol"><span class="header-section-number">9.4.27</span> <code>R_RowNamesSymbol()</code></h3>
+<section id="R_RowNamesSymbol" class="level3" data-number="9.5.27">
+<h3 data-number="9.5.27" class="anchored" data-anchor-id="R_RowNamesSymbol"><span class="header-section-number">9.5.27</span> <code>R_RowNamesSymbol()</code></h3>
 <p>Access the predefined symbol for “row.names”.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb30"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>SEXP R_RowNamesSymbol<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb31"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>SEXP R_RowNamesSymbol<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 </section>
-<section id="R_SeedsSymbol" class="level3" data-number="9.4.28">
-<h3 data-number="9.4.28" class="anchored" data-anchor-id="R_SeedsSymbol"><span class="header-section-number">9.4.28</span> <code>R_SeedsSymbol()</code></h3>
+<section id="R_SeedsSymbol" class="level3" data-number="9.5.28">
+<h3 data-number="9.5.28" class="anchored" data-anchor-id="R_SeedsSymbol"><span class="header-section-number">9.5.28</span> <code>R_SeedsSymbol()</code></h3>
 <p>Access the predefined symbol for “.Random.seed”.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb31"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>SEXP R_SeedsSymbol<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb32"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>SEXP R_SeedsSymbol<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 </section>
-<section id="R_SortListSymbol" class="level3" data-number="9.4.29">
-<h3 data-number="9.4.29" class="anchored" data-anchor-id="R_SortListSymbol"><span class="header-section-number">9.4.29</span> <code>R_SortListSymbol()</code></h3>
+<section id="R_SortListSymbol" class="level3" data-number="9.5.29">
+<h3 data-number="9.5.29" class="anchored" data-anchor-id="R_SortListSymbol"><span class="header-section-number">9.5.29</span> <code>R_SortListSymbol()</code></h3>
 <p>Access the predefined symbol for “sort.list”.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb32"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>SEXP R_SortListSymbol<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb33"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>SEXP R_SortListSymbol<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 </section>
-<section id="R_SourceSymbol" class="level3" data-number="9.4.30">
-<h3 data-number="9.4.30" class="anchored" data-anchor-id="R_SourceSymbol"><span class="header-section-number">9.4.30</span> <code>R_SourceSymbol()</code></h3>
+<section id="R_SourceSymbol" class="level3" data-number="9.5.30">
+<h3 data-number="9.5.30" class="anchored" data-anchor-id="R_SourceSymbol"><span class="header-section-number">9.5.30</span> <code>R_SourceSymbol()</code></h3>
 <p>Access the predefined symbol for “source”.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb33"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>SEXP R_SourceSymbol<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb34"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>SEXP R_SourceSymbol<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 </section>
-<section id="R_SpecSymbol" class="level3" data-number="9.4.31">
-<h3 data-number="9.4.31" class="anchored" data-anchor-id="R_SpecSymbol"><span class="header-section-number">9.4.31</span> <code>R_SpecSymbol()</code></h3>
+<section id="R_SpecSymbol" class="level3" data-number="9.5.31">
+<h3 data-number="9.5.31" class="anchored" data-anchor-id="R_SpecSymbol"><span class="header-section-number">9.5.31</span> <code>R_SpecSymbol()</code></h3>
 <p>Access the predefined symbol for “spec”.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb34"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>SEXP R_SpecSymbol<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb35"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>SEXP R_SpecSymbol<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 </section>
-<section id="R_TripleColonSymbol" class="level3" data-number="9.4.32">
-<h3 data-number="9.4.32" class="anchored" data-anchor-id="R_TripleColonSymbol"><span class="header-section-number">9.4.32</span> <code>R_TripleColonSymbol()</code></h3>
+<section id="R_TripleColonSymbol" class="level3" data-number="9.5.32">
+<h3 data-number="9.5.32" class="anchored" data-anchor-id="R_TripleColonSymbol"><span class="header-section-number">9.5.32</span> <code>R_TripleColonSymbol()</code></h3>
 <p>Access the predefined symbol for <code>":::"</code>.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb35"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>SEXP R_TripleColonSymbol<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb36"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>SEXP R_TripleColonSymbol<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 </section>
-<section id="R_TspSymbol" class="level3" data-number="9.4.33">
-<h3 data-number="9.4.33" class="anchored" data-anchor-id="R_TspSymbol"><span class="header-section-number">9.4.33</span> <code>R_TspSymbol()</code></h3>
+<section id="R_TspSymbol" class="level3" data-number="9.5.33">
+<h3 data-number="9.5.33" class="anchored" data-anchor-id="R_TspSymbol"><span class="header-section-number">9.5.33</span> <code>R_TspSymbol()</code></h3>
 <p>Access the predefined symbol for “tsp”.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb36"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>SEXP R_TspSymbol<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb37"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>SEXP R_TspSymbol<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 
 

@@ -1,0 +1,43 @@
+# R’s C API
+
+# Introduction
+
+This site documents R’s C API for package authors: the functions, macros, and types you can call from C code in an R package. It aims to be comprehensive (every entry point a package author can legitimately use), concise (reference-style entries, not tutorials), and current (it reflects the post-R-4.5 API-compliance era).
+
+It complements, rather than replaces, the official manuals: [Writing R Extensions](https://cran.r-project.org/doc/manuals/R-exts.html) (WRE) is the authoritative reference, and [R Internals](https://cran.r-project.org/doc/manuals/R-ints.html) describes R’s internal structures. This site reorganises that material around tasks, adds an explicit API-status taxonomy, and drops what you should no longer use. The prose style is modelled on the C-interface chapter of [Advanced R](http://adv-r.had.co.nz/C-interface.html).
+
+## Audience and prerequisites
+
+We assume you (or your agent) are fluent in C — pointers, memory management, calling conventions — and in R as a language. What we explain is what’s *different* about R’s API: SEXPs, protection from the garbage collector, errors that longjmp, and which entry points you’re allowed to use.
+
+## Conventions
+
+- All examples are C, not C++. If you use Rcpp or cpp11, the same rules apply underneath, but those toolkits have their own documentation.
+- All code is compiled with `R_NO_REMAP` defined, so every R API function is spelled with its canonical `Rf_` or `R_` prefix (`Rf_allocVector()`, never `allocVector()`). Define it in your package’s `src/Makevars` with `PKG_CPPFLAGS = -DR_NO_REMAP`.
+- We cover `.Call` (and briefly `.External`) only. The older `.C` and `.Fortran` interfaces are not recommended for new code and are not described here.
+
+## API status
+
+Every entry point on this site carries one of four statuses:
+
+- **API** — part of the public, supported interface. Safe to use in packages.
+- **Experimental** — public but may change in a future R release; use with a version check.
+- **Embedding** — only for front-ends embedding R, not for packages.
+- **Non-API** — not part of the public interface. Using these in a package triggers `R CMD check` NOTEs, is rejected by CRAN, and may break without warning in any R release. They are documented here only so the [compliance appendix](compliance.llms.md) can map them to supported replacements.
+
+## Headers
+
+Almost everything you need comes from two headers:
+
+``` c
+#include <R.h>           // R_ext/ utility headers, Rprintf, memory allocation
+#include <Rinternals.h>  // SEXP, vector access, most of the API
+```
+
+More specialised headers (`R_ext/BLAS.h`, `Rmath.h`, …) are introduced in the chapters that need them. Including `<Rinternals.h>` is fine even though it declares some non-API entry points: what matters is what you *call*, and `R CMD check` will tell you.
+
+## Supported R versions
+
+Following the [tidyverse version policy](https://tidyverse.org/blog/2019/04/r-version-support/), this site documents the R C API as it exists in the current release, R-devel, and the four previous minor releases — currently R 4.2 through current. Behaviour specific to older R versions is not covered; if a function or pattern requires a version newer than R 4.2, the entry says so in its **Since** field.
+
+Out of scope for this site: the `.C`/`.Fortran` interface as a recommended approach, embedding R / writing front-ends, the graphics engine API, and non-API entry points except where the [compliance appendix](compliance.llms.md) maps them to replacements.
