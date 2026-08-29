@@ -1,4 +1,3 @@
----
 - name: R_alloc
   family: R_allocLD
   summary: Allocate temporary memory that R reclaims automatically.
@@ -73,4 +72,23 @@
   see_also: R_alloc
   chapter: memory
   section: User-controlled memory
-...
+- name: R_malloc_gc
+  family:
+    - R_calloc_gc
+    - R_realloc_gc
+  summary: Allocate memory, retrying after a garbage collection on failure.
+  signature: |
+    void *R_malloc_gc(size_t);
+    void *R_calloc_gc(size_t, size_t);
+    void *R_realloc_gc(void *, size_t);
+  status: api
+  header: R_ext/Memory.h
+  protect: n/a
+  errors: never
+  notes: |
+    Like `malloc()`/`calloc()`/`realloc()`, but if the allocation fails
+    a garbage collection is run and the allocation retried. Memory must
+    be released with `free()`.
+  see_also: R_Calloc
+  chapter: memory
+  section: User-controlled memory

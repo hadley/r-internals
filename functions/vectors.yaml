@@ -1,4 +1,3 @@
----
 - name: Rf_xlength
   family: Rf_length
   summary: Get the length of a vector.
@@ -69,7 +68,7 @@
   summary: Test whether a vector is a long vector.
   signature: |
     int IS_LONG_VEC(SEXP x);
-  status: api
+  status: experimental
   header: Rinternals.h
   protect: n/a
   errors: never
@@ -298,12 +297,10 @@
 - name: NA_LOGICAL
   family:
     - NA_INTEGER
-    - NA_STRING
-  summary: Represent missing logical, integer, and character values.
+  summary: Represent missing logical and integer values.
   signature: |
     #define NA_LOGICAL R_NaInt
     #define NA_INTEGER R_NaInt
-    #define NA_STRING  R_NaString
   status: api
   header: R_ext/Arith.h
   protect: n/a
@@ -507,7 +504,7 @@
   signature: |
     #define IS_SCALAR(x, type) (TYPEOF(x) == (type) && XLENGTH(x) == 1)
     #define IS_SIMPLE_SCALAR(x, type) (IS_SCALAR(x, type) && ATTRIB(x) == R_NilValue)
-  status: api
+  status: experimental
   header: Rinternals.h
   protect: n/a
   errors: never
@@ -525,7 +522,7 @@
   summary: Test if a list can be converted into a vector.
   signature: |
     Rboolean Rf_isVectorizable(SEXP x);
-  status: api
+  status: experimental
   header: Rinternals.h
   protect: n/a
   errors: never
@@ -587,15 +584,15 @@
   header: R_ext/Utils.h
   protect: n/a
   errors: never
-  see_also: revsort
+  see_also: Rf_revsort
   chapter: vectors
   section: Sorting and ordering
-- name: revsort
+- name: Rf_revsort
   family: []
   summary: >-
     Sort a double array in reverse order, reordering an index array alongside.
   signature: |
-    void revsort(double*, int*, int);
+    void Rf_revsort(double*, int*, int);
   status: api
   header: R_ext/Utils.h
   protect: n/a
@@ -603,16 +600,16 @@
   see_also: rsort_with_index
   chapter: vectors
   section: Sorting and ordering
-- name: iPsort
+- name: Rf_iPsort
   family:
-    - rPsort
-    - cPsort
+    - Rf_rPsort
+    - Rf_cPsort
   summary: >-
     Partially sort an int, double, or complex array around the k-th element.
   signature: |
-    void iPsort(int*,    int, int);
-    void rPsort(double*, int, int);
-    void cPsort(Rcomplex*, int, int);
+    void Rf_iPsort(int*,    int, int);
+    void Rf_rPsort(double*, int, int);
+    void Rf_cPsort(Rcomplex*, int, int);
   status: api
   header: R_ext/Utils.h
   protect: n/a
@@ -644,7 +641,7 @@
   signature: |
     R_xlen_t Rf_any_duplicated(SEXP x, Rboolean from_last);
     R_xlen_t Rf_any_duplicated3(SEXP x, SEXP incomp, Rboolean from_last);
-  status: api
+  status: experimental
   header: Rinternals.h
   protect: n/a
   errors: can-throw
@@ -657,7 +654,7 @@
   summary: Test whether a vector may be unsorted.
   signature: |
     Rboolean Rf_isUnsorted(SEXP, Rboolean);
-  status: api
+  status: experimental
   header: Rinternals.h
   protect: n/a
   errors: can-throw
@@ -671,7 +668,7 @@
   signature: |
     SEXP Rf_match(SEXP itable, SEXP ix, int no_match);
     SEXP Rf_matchE(SEXP itable, SEXP ix, int no_match, SEXP env);
-  status: api
+  status: experimental
   header: Rinternals.h
   protect: result
   errors: can-throw
@@ -687,7 +684,7 @@
   summary: Identify duplicated elements of a vector.
   signature: |
     SEXP Rf_duplicated(SEXP x, Rboolean from_last);
-  status: api
+  status: experimental
   header: Rinternals.h
   protect: result
   errors: can-throw
@@ -701,18 +698,20 @@
   chapter: vectors
   section: Matching and duplication
 - name: STRING_PTR_RO
-  family: []
-  summary: Get read-only access to the CHARSXP elements of a character vector.
+  family: VECTOR_PTR_RO
+  summary: Get read-only access to the elements of a character or list vector.
   signature: |
     const SEXP *STRING_PTR_RO(SEXP x);
+    const SEXP *VECTOR_PTR_RO(SEXP x);
   status: api
   header: Rinternals.h
   protect: n/a
   errors: never
+  since: 4.5.0
   notes: |
-    The read-only analogue of `STRING_PTR()`; use it when you only read
-    elements so ALTREP and future representations aren't forced to
-    materialize a writable array.
+    The read-only analogues of `STRING_PTR()`/`VECTOR_PTR()`; use them
+    when you only read elements so ALTREP and future representations
+    aren't forced to materialize a writable array.
   see_also: [STRING_ELT]
   chapter: vectors
   section: Get and set values
@@ -745,4 +744,142 @@
   see_also: [Rf_allocVector]
   chapter: vectors
   section: Resizable vectors
-...
+- name: DATAPTR_RO
+  family: DATAPTR
+  summary: Get an untyped pointer to a vector's data.
+  signature: |
+    const void *(DATAPTR_RO)(SEXP x);
+    void *(DATAPTR)(SEXP x);
+  status: api
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  args:
+    x: any vector.
+  notes: |
+    Prefer the typed accessors (`REAL()`, `INTEGER_RO()`, ...), which
+    check the vector type. `DATAPTR()` gives write access;
+    `DATAPTR_RO()` is read-only.
+  see_also:
+    - LOGICAL
+    - INTEGER_RO
+  chapter: vectors
+  section: Get and set values
+- name: INTEGER_RO
+  family:
+    - LOGICAL_RO
+    - REAL_RO
+    - COMPLEX_RO
+    - RAW_RO
+  summary: Get a read-only pointer to the underlying C array.
+  signature: |
+    const int*      (INTEGER_RO)(SEXP x);
+    const int*      (LOGICAL_RO)(SEXP x);
+    const double*   (REAL_RO)(SEXP x);
+    const Rcomplex* (COMPLEX_RO)(SEXP x);
+    const Rbyte*    (RAW_RO)(SEXP x);
+  status: api
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  args:
+    x: a vector of the corresponding type.
+  notes: |
+    Read-only variants of `INTEGER()` etc. Use them when you only read:
+    the `const` pointer catches accidental writes, and ALTREP vectors can
+    avoid materialising a writable copy.
+  see_also:
+    - LOGICAL
+    - DATAPTR_RO
+  chapter: vectors
+  section: Get and set values
+- name: INTEGER_ELT
+  family:
+    - LOGICAL_ELT
+    - REAL_ELT
+    - COMPLEX_ELT
+    - RAW_ELT
+    - SET_INTEGER_ELT
+    - SET_LOGICAL_ELT
+    - SET_REAL_ELT
+    - SET_COMPLEX_ELT
+    - SET_RAW_ELT
+  summary: Get or set a single element of an atomic vector.
+  signature: |
+    int      (INTEGER_ELT)(SEXP x, R_xlen_t i);
+    int      (LOGICAL_ELT)(SEXP x, R_xlen_t i);
+    double   (REAL_ELT)(SEXP x, R_xlen_t i);
+    Rcomplex (COMPLEX_ELT)(SEXP x, R_xlen_t i);
+    Rbyte    (RAW_ELT)(SEXP x, R_xlen_t i);
+    void SET_INTEGER_ELT(SEXP x, R_xlen_t i, int v);
+    void SET_LOGICAL_ELT(SEXP x, R_xlen_t i, int v);
+    void SET_REAL_ELT(SEXP x, R_xlen_t i, double v);
+    void SET_COMPLEX_ELT(SEXP x, R_xlen_t i, Rcomplex v);
+    void SET_RAW_ELT(SEXP x, R_xlen_t i, Rbyte v);
+  status: api
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  args:
+    x: a vector of the corresponding type.
+    i: zero-based element index.
+    v: the new value.
+  notes: |
+    Element-wise access is much slower than sweeping a cached pointer;
+    use it when the type is not known in advance or only a few elements
+    are touched.
+  see_also:
+    - LOGICAL
+    - STRING_ELT
+  chapter: vectors
+  section: Get and set values
+- name: Rf_isNull
+  family: []
+  summary: Test whether an object is NULL.
+  signature: |
+    Rboolean (Rf_isNull)(SEXP s);
+  status: api
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  r_equivalent: is.null()
+  see_also: []
+  chapter: vectors
+  section: Test
+- name: Rf_asBool
+  family: Rf_asRboolean
+  summary: Extract a checked single logical value as a C bool.
+  signature: |
+    bool Rf_asBool(SEXP x);
+    Rboolean Rf_asRboolean(SEXP x);
+  status: api
+  header: Rinternals.h
+  protect: n/a
+  errors: can-throw
+  since: 4.5.0
+  args:
+    x: a vector coercible to a single logical.
+  notes: |
+    Like `Rf_asLogical()`, but errors if the coerced value is `NA` (or
+    the input is not a single value), so the result is always usable as
+    a C boolean.
+  see_also: Rf_asLogical
+  chapter: vectors
+  section: Scalars
+- name: R_isnancpp
+  family: []
+  summary: Test for NaN in a way that is safe from C++ compiler optimisations.
+  signature: |
+    int R_isnancpp(double);
+  status: api
+  header: R_ext/Arith.h
+  protect: n/a
+  errors: never
+  notes: |
+    Only needed from C++; it backs the `ISNAN()` macro there. In C, use
+    `ISNAN()` directly.
+  see_also:
+    - ISNA
+    - R_IsNA
+  chapter: vectors
+  section: Special values

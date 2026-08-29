@@ -1,4 +1,3 @@
----
 - name: Rf_isSymbol
   family: []
   summary: Test whether an object is a symbol.
@@ -13,13 +12,16 @@
   chapter: symbols
   section: Test
 - name: Rf_install
-  family: Rf_installChar
+  family:
+    - Rf_installChar
+    - Rf_installTrChar
   summary: >-
     Create the symbol for a name, returning the existing symbol if already
     present.
   signature: |
     SEXP Rf_install(const char *);
     SEXP Rf_installChar(SEXP);
+    SEXP Rf_installTrChar(SEXP);
   status: api
   header: Rinternals.h
   protect: not-needed
@@ -28,6 +30,8 @@
   notes: |
     Symbols are never garbage collected, so `SYMSXP`s don't need to be
     protected. Cache frequently used symbols to avoid repeated lookups.
+    `Rf_installChar()` takes a CHARSXP; `Rf_installTrChar()` is the same
+    but first translates the string to the native encoding.
   see_also: []
   chapter: symbols
   section: Create
@@ -441,3 +445,19 @@
   see_also: []
   chapter: symbols
   section: Predefined symbols
+- name: PRINTNAME
+  family: []
+  summary: Get the print name of a symbol.
+  signature: |
+    SEXP (PRINTNAME)(SEXP x);
+  status: api
+  header: Rinternals.h
+  protect: not-needed
+  errors: never
+  notes: |
+    Returns the name as a CHARSXP; use `CHAR(PRINTNAME(x))` for a
+    `const char*`. There is no API setter — symbols are interned, so
+    create the symbol you want with `Rf_install()` instead.
+  see_also: Rf_install
+  chapter: symbols
+  section: Accessors

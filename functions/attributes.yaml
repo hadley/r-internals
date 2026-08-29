@@ -1,4 +1,3 @@
----
 - name: Rf_getAttrib
   family: Rf_setAttrib
   summary: Get or set the attribute associated with a symbol.
@@ -280,7 +279,7 @@
   summary: Get the number of levels of a factor.
   signature: |
     int Rf_nlevels(SEXP x);
-  status: api
+  status: experimental
   header: Rinternals.h
   protect: n/a
   errors: never
@@ -348,7 +347,6 @@
   see_also: []
   chapter: attributes
   section: Time series
-...
 - name: Rf_isDataFrame
   family: []
   summary: Test whether an object is a data frame.
@@ -374,7 +372,7 @@
     R_xlen_t R_getAttribCount(SEXP x);
     SEXP R_getAttribNames(SEXP x);
     bool R_hasAttrib(SEXP x, SEXP name);
-  status: api
+  status: experimental
   header: Rinternals.h
   protect: result
   errors: can-throw
@@ -393,7 +391,7 @@
   signature: |
     R_xlen_t R_nrow(SEXP x);
     R_xlen_t R_ncol(SEXP x);
-  status: api
+  status: experimental
   header: Rinternals.h
   protect: n/a
   errors: can-throw
@@ -442,4 +440,23 @@
   see_also: [R_getAttributes]
   chapter: attributes
   section: Get and set
-...
+- name: ANY_ATTRIB
+  family: CLEAR_ATTRIB
+  summary: Test for, or remove, all attributes.
+  signature: |
+    int  (ANY_ATTRIB)(SEXP x);
+    void CLEAR_ATTRIB(SEXP x);
+  status: api
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  since: 4.5.0
+  notes: |
+    `CLEAR_ATTRIB()` removes all attributes and clears the object and
+    S4 bits. Prefer `Rf_getAttrib()`/`Rf_setAttrib()` when you only
+    touch one attribute.
+  see_also:
+    - Rf_getAttrib
+    - R_getAttributes
+  chapter: attributes
+  section: Get and set

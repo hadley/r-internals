@@ -86,6 +86,34 @@ render_entry <- function(entry) {
   ), collapse = "\n")
 }
 
+#' Render the alphabetical function index as a markdown table
+#'
+#' Every documented name (record names and family members) links to the
+#' anchor of its record. Call from a knitr chunk with `results: asis`.
+render_function_index <- function(dir = "functions") {
+  entries <- read_functions(dir)
+  rows <- do.call(rbind, lapply(entries, function(e) {
+    data.frame(
+      name = c(e$name, unlist(e$family)),
+      anchor = e$name,
+      status = status_label(e$status),
+      chapter = e$chapter,
+      stringsAsFactors = FALSE
+    )
+  }))
+  rows <- rows[order(tolower(rows$name)), ]
+  lines <- paste0(
+    "| [`", rows$name, "()`]", "(", rows$chapter, ".qmd#", rows$anchor, ") | ",
+    rows$status, " | ", rows$chapter, " |"
+  )
+  cat(paste(c(
+    "| Function | Status | Chapter |",
+    "|----------|--------|---------|",
+    lines
+  ), collapse = "\n"), "\n")
+  invisible(rows)
+}
+
 #' Render all entries for a chapter section as markdown
 #'
 #' Call from a knitr chunk with `results: asis`:

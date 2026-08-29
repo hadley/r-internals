@@ -1,4 +1,3 @@
----
 - name: dnorm
   family:
     - pnorm
@@ -67,10 +66,11 @@
   chapter: math
   section: Distribution functions
 - name: Rf_rmultinom
-  family: []
+  family: rmultinom
   summary: Generate one multinomial random vector.
   signature: |
     void Rf_rmultinom(int n, double* prob, int K, int* rN);
+    #define rmultinom Rf_rmultinom
   status: api
   header: Rmath.h
   protect: n/a
@@ -369,4 +369,41 @@
   see_also: []
   chapter: math
   section: Mathematical constants
-...
+- name: expm1
+  family: log1p
+  summary: Compute exp(x) - 1 and log(1 + x) accurately for small x.
+  signature: |
+    double expm1(double x);
+    double log1p(double x);
+  status: api
+  header: Rmath.h
+  protect: n/a
+  errors: never
+  notes: |
+    C99 functions that R requires; `Rmath.h` remaps `log1p()` to R's own
+    implementation on platforms where the system version is inaccurate.
+  see_also: log1pmx
+  chapter: math
+  section: Mathematical functions
+- name: dpsifn
+  family: []
+  summary: Compute derivatives of the log-gamma (psi) function.
+  signature: |
+    void dpsifn(double x, int n, int kode, int m, double *ans, int *nz, int *ierr);
+  status: api
+  header: Rmath.h
+  protect: n/a
+  errors: never
+  args:
+    n: the derivative order (0 = digamma, 1 = trigamma, ...).
+    kode: 1 for psi^(n)(x), 2 for exp(-x) * psi^(n)(x).
+    m: number of sequence values to compute.
+    ans: output array of length at least m.
+    nz: output; number of underflowed entries.
+    ierr: output; error flag, 0 on success.
+  notes: |
+    Low-level workhorse behind `digamma()`/`trigamma()`; most code
+    should call `digamma()` etc. directly.
+  see_also: gammafn
+  chapter: math
+  section: Mathematical functions

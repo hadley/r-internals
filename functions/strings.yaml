@@ -1,4 +1,3 @@
----
 - name: cetype_t
   family:
     - CE_NATIVE
@@ -170,7 +169,7 @@
   signature: |
     Rboolean Rf_StringBlank(SEXP);
     Rboolean Rf_isBlankString(const char *);
-  status: api
+  status: experimental
   header: Rinternals.h
   protect: n/a
   errors: never
@@ -205,16 +204,18 @@
     typedef enum {Bytes, Chars, Width} nchar_type;
     int R_nchar(SEXP string, nchar_type type_,
       Rboolean allowNA, Rboolean keepNA, const char* msg_name);
-  status: api
+  status: non-api
   header: Rinternals.h
   protect: n/a
   errors: can-throw
   r_equivalent: nchar()
   notes: |
-    `nchar_type` is one of `Bytes`, `Chars`, or `Width`.
+    Removed from the headers in R 4.6.0. There is no direct API
+    replacement; call `nchar()` at the R level, or count characters
+    yourself after `Rf_translateCharUTF8()`.
   see_also: []
-  chapter: strings
-  section: Helper functions
+  chapter: compliance
+  section: Vectors and strings
 - name: Rf_acopy_string
   family: []
   summary: Copy a C string into memory allocated by R_alloc().
@@ -310,7 +311,7 @@
   signature: |
     Rboolean Rf_pmatch(SEXP, SEXP, Rboolean);
     Rboolean Rf_psmatch(const char *, const char *, Rboolean);
-  status: api
+  status: experimental
   header: Rinternals.h
   protect: n/a
   errors: can-throw
@@ -332,4 +333,41 @@
   see_also: []
   chapter: strings
   section: Searching and matching
-...
+- name: Riconv
+  family:
+    - Riconv_open
+    - Riconv_close
+  summary: Convert a string between encodings.
+  signature: |
+    void *Riconv_open(const char *tocode, const char *fromcode);
+    size_t Riconv(void *cd, const char **inbuf, size_t *inbytesleft,
+                  char **outbuf, size_t *outbytesleft);
+    int Riconv_close(void *cd);
+  status: api
+  header: R_ext/Riconv.h
+  protect: n/a
+  errors: never
+  notes: |
+    A wrapper over the system `iconv()`, with the same calling
+    convention. `""` as an encoding name means the current native
+    encoding; `"UTF-8"` is always supported. Returns `(size_t) -1` on
+    error, with `errno` set (`E2BIG` when the output buffer is full).
+  see_also: Rf_reEnc
+  chapter: strings
+  section: Encodings
+- name: Rf_StringFalse
+  family: Rf_StringTrue
+  summary: Test whether a C string represents false or true.
+  signature: |
+    Rboolean Rf_StringFalse(const char *);
+    Rboolean Rf_StringTrue(const char *);
+  status: experimental
+  header: R_ext/Utils.h
+  protect: n/a
+  errors: never
+  notes: |
+    Recognises the strings `as.logical()` accepts (`"T"`, `"TRUE"`,
+    `"false"`, ...); anything else returns `FALSE` from both.
+  see_also: []
+  chapter: strings
+  section: Helper functions

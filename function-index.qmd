@@ -1,9 +1,14 @@
 # Function index {.unnumbered}
 
-::: {.callout-warning}
-Placeholder. This page will be **generated** by `tools/build-index.R`:
+{{< include _setup.qmd >}}
 
-- Alphabetical table of every documented entry point → chapter + anchor +
-  status
-- Never hand-edited
-:::
+Every documented entry point, alphabetically. Generated from
+`functions/*.yaml`; never edit by hand. Family members link to the
+record that documents them. Non-API and embedding-only entry points live
+in [Migrating to API compliance](compliance.qmd).
+
+```{r}
+#| results: asis
+#| echo: false
+render_function_index()
+```

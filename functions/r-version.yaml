@@ -1,4 +1,3 @@
----
 - name: R_Version
   family: R_VERSION
   summary: Test the compile-time version of R against a required version.
@@ -26,4 +25,3 @@
   see_also: []
   chapter: r-version
   section: "`Rversion.h`"
-...

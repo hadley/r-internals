@@ -1,4 +1,3 @@
----
 - name: Rf_error
   family: Rf_errorcall
   summary: "Signal an error, optionally including the call in the message."
@@ -195,4 +194,34 @@
   see_also: []
   chapter: errors
   section: C stack checking
-...
+- name: UNIMPLEMENTED
+  family: []
+  summary: Signal an error for an unimplemented operation.
+  signature: |
+    [[noreturn]] void UNIMPLEMENTED(const char *s);
+  status: api
+  header: R_ext/Error.h
+  protect: n/a
+  errors: can-throw
+  notes: |
+    Signals "feature 's' is not implemented"; never returns. Use
+    `UNIMPLEMENTED_TYPE()` for a type-specific variant.
+  see_also: Rf_error
+  chapter: errors
+  section: Signalling
+- name: Rf_onintr
+  family: []
+  summary: R's default response to a user interrupt.
+  signature: |
+    void Rf_onintr(void);
+  status: api
+  header: Rinterface.h
+  protect: n/a
+  errors: can-throw
+  notes: |
+    Jumps back to the top level, discarding the current computation.
+    Intended for front-ends and graphics devices; package code should
+    almost always use `R_CheckUserInterrupt()` instead.
+  see_also: R_CheckUserInterrupt
+  chapter: errors
+  section: Interrupts

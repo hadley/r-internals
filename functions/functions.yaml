@@ -1,4 +1,3 @@
----
 - name: Rf_isFunction
   family: Rf_isPrimitive
   summary: Test whether an object is a function or a primitive function.
@@ -92,4 +91,35 @@
   see_also: [R_mkClosure]
   chapter: functions
   section: Closures
-...
+- name: R_ClosureExpr
+  family: BODY_EXPR
+  summary: Get the body expression of a closure.
+  signature: |
+    SEXP R_ClosureExpr(SEXP);
+    #define BODY_EXPR(e) R_ClosureExpr(e)
+  status: api
+  header: Rinternals.h
+  protect: not-needed
+  errors: never
+  notes: |
+    Returns the unevaluated body, like `body()` at the R level.
+  see_also:
+    - R_ClosureFormals
+    - R_mkClosure
+  chapter: functions
+  section: Closures
+- name: R_BytecodeExpr
+  family: []
+  summary: Get the byte-compiled form of a closure's body.
+  signature: |
+    SEXP R_BytecodeExpr(SEXP e);
+  status: api
+  header: Rinternals.h
+  protect: not-needed
+  errors: never
+  notes: |
+    Returns a `BCODESXP` if the closure has been byte-compiled, and
+    `R_NilValue` otherwise.
+  see_also: R_ClosureExpr
+  chapter: functions
+  section: Closures

@@ -1,4 +1,3 @@
----
 - name: Rf_eval
   family: []
   summary: Evaluate an expression in an environment.
@@ -19,7 +18,7 @@
   summary: Force promises in an expression and then call it.
   signature: |
     SEXP R_forceAndCall(SEXP expression, int n, SEXP environment);
-  status: api
+  status: experimental
   header: Rinternals.h
   protect: result
   errors: can-throw
@@ -72,7 +71,7 @@
   summary: Access the text of the current error.
   signature: |
     const char *R_curErrorBuf();
-  status: api
+  status: experimental
   header: Rinternals.h
   protect: n/a
   errors: never
@@ -93,4 +92,29 @@
   see_also: []
   chapter: evaluation
   section: Evaluation
-...
+- name: R_ParseVector
+  family:
+    - R_ParseString
+    - R_ParseEvalString
+  summary: Parse R code from a character vector or C string.
+  signature: |
+    SEXP R_ParseVector(SEXP text, int n, ParseStatus *status, SEXP srcfile);
+    SEXP R_ParseString(const char *str);
+    SEXP R_ParseEvalString(const char *str, SEXP env);
+  status: api
+  header: R_ext/Parse.h
+  protect: result
+  errors: can-throw
+  args:
+    text: a character vector of lines of R code.
+    n: number of elements to parse, or -1 for all.
+    status: set to `PARSE_OK`, `PARSE_INCOMPLETE`, `PARSE_ERROR`, or
+      `PARSE_EOF`; may be `NULL`.
+    srcfile: a source reference environment, usually `R_NilValue`.
+  notes: |
+    Returns an `EXPRSXP` of parsed expressions. `R_ParseString()` (R
+    4.4.0) parses a single C string; `R_ParseEvalString()` parses and
+    evaluates in one step. Check `status` before evaluating the result.
+  see_also: Rf_eval
+  chapter: evaluation
+  section: Parsing

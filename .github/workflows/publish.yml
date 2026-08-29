@@ -26,11 +26,16 @@ jobs:
           packages: |
             knitr
             yaml12
+            jsonlite
 
-      # TODO: run tools/build-index.R pre-render once it exists
-      # TODO: run tools/llms.R post-render once it exists
+      # Coverage audit + functions.json; fails on rot, warns on gaps
+      - name: Build index and audit coverage
+        run: Rscript tools/build-index.R
 
-      - uses: quarto-dev/quarto-actions/render@v2
+      - name: Render
+        run: |
+          quarto render
+          cp functions.json _site/
 
       # Publish only from the default branch, not PRs
       - uses: quarto-dev/quarto-actions/publish@v2

@@ -1,4 +1,3 @@
----
 - name: R_MakeExternalPtr
   family: []
   summary: Create an external pointer wrapping a C pointer.
@@ -73,18 +72,6 @@
   see_also: []
   chapter: external-pointers
   section: Finalization
-- name: R_RunPendingFinalizers
-  family: []
-  summary: Run any pending finalizers.
-  signature: |
-    void R_RunPendingFinalizers(void);
-  status: api
-  header: Rinternals.h
-  protect: n/a
-  errors: can-throw
-  see_also: []
-  chapter: external-pointers
-  section: Finalization
 - name: R_MakeWeakRef
   family: R_MakeWeakRefC
   summary: Create a weak reference.
@@ -126,3 +113,26 @@
   see_also: []
   chapter: external-pointers
   section: Weak references
+- name: R_MakeExternalPtrFn
+  family: R_ExternalPtrAddrFn
+  summary: Wrap a C function pointer in an external pointer.
+  signature: |
+    SEXP R_MakeExternalPtrFn(DL_FUNC p, SEXP tag, SEXP prot);
+    DL_FUNC R_ExternalPtrAddrFn(SEXP s);
+  status: api
+  header: Rinternals.h
+  protect: result
+  errors: can-throw
+  args:
+    p: the function pointer to wrap.
+    tag: an identifying tag, often `R_NilValue`.
+    prot: an object to protect from GC while the pointer lives.
+  notes: |
+    The function-pointer analogue of `R_MakeExternalPtr()`; storing a
+    `DL_FUNC` directly avoids casting between object and function
+    pointers, which is undefined behaviour in C.
+  see_also:
+    - R_MakeExternalPtr
+    - R_ExternalPtrAddr
+  chapter: external-pointers
+  section: Create and access

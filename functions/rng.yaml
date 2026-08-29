@@ -1,4 +1,3 @@
----
 - name: GetRNGstate
   family: PutRNGstate
   summary: Read in (or create) `.Random.seed` before generating variates, and write it back after.
@@ -64,4 +63,19 @@
   see_also: [unif_rand]
   chapter: rng
   section: Random number generation
-...
+- name: R_sample_kind
+  family: []
+  summary: Get the current discrete-sampling algorithm.
+  signature: |
+    Sampletype R_sample_kind(void);
+  status: api
+  header: R_ext/Random.h
+  protect: n/a
+  errors: never
+  notes: |
+    Returns `ROUNDING` or `REJECTION`, reflecting the `sample.kind`
+    option; only relevant to code implementing its own discrete
+    sampling.
+  see_also: R_unif_index
+  chapter: rng
+  section: Random number generation

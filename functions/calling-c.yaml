@@ -1,4 +1,3 @@
----
 - name: R_registerRoutines
   family: R_useDynamicSymbols
   summary: Register a package's native routines and restrict dynamic symbol lookup.
@@ -22,4 +21,52 @@
   see_also: []
   chapter: calling-c
   section: Routine registration
-...
+- name: R_RegisterCCallable
+  family: R_GetCCallable
+  summary: Export or retrieve a C entry point for use by another package.
+  signature: |
+    void R_RegisterCCallable(const char *package, const char *name, DL_FUNC fptr);
+    DL_FUNC R_GetCCallable(const char *package, const char *name);
+  status: api
+  header: R_ext/Rdynload.h
+  protect: n/a
+  errors: can-throw
+  notes: |
+    Register in `R_init_<package>()`; clients retrieve the pointer at
+    their own load time and call it directly, with no R-level dispatch.
+    The function pointer must remain valid while the providing package
+    is loaded.
+  see_also: R_registerRoutines
+  chapter: calling-c
+  section: Routine registration
+- name: R_FindSymbol
+  family: []
+  summary: Look up a symbol in a loaded DLL by name.
+  signature: |
+    DL_FUNC R_FindSymbol(char const *name, char const *pkg, DllInfo *info);
+  status: api
+  header: R_ext/Rdynload.h
+  protect: n/a
+  errors: never
+  notes: |
+    Searches the DLLs loaded for package `pkg` (`info` is filled in if
+    not `NULL`). Rarely needed now that `R_GetCCallable()` exists.
+  see_also: R_GetCCallable
+  chapter: calling-c
+  section: Routine registration
+- name: R_forceSymbols
+  family: []
+  summary: Restrict a DLL to registered (symbol) entry points.
+  signature: |
+    Rboolean R_forceSymbols(DllInfo *info, Rboolean value);
+  status: api
+  header: R_ext/Rdynload.h
+  protect: n/a
+  errors: never
+  notes: |
+    With `value = TRUE`, entry points of the DLL can only be called via
+    registered `R_CallMethodDef` symbols, not by name. Set in
+    `R_init_<package>()` alongside `R_useDynamicSymbols(dll, FALSE)`.
+  see_also: R_registerRoutines
+  chapter: calling-c
+  section: Routine registration

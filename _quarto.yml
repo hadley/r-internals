@@ -2,6 +2,9 @@ project:
   type: book
   output-dir: _site
 
+website:
+  llms-txt: true
+
 book:
   title: "R's C API"
   repo-url: https://github.com/hadley/r-internals

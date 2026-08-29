@@ -136,17 +136,15 @@ Split into small chunks, one chapter (or record batch) at a time:
 - [x] ~~`C-headers.qmd`~~ — header-map appendix dropped; other-headers.md renamed to `r-version.qmd` and moved to Part IV
 - [x] Handle internals-only material (`SET_ENVFLAGS`, `HASHTAB`, `BCODESXP` internals, `SETLENGTH`, etc.): records have `status: non-api`, live only in `functions/compliance.yaml`, and render in compliance.qmd under a "not part of the API" warning; `render_entries()` errors if a non-API record is assigned to a regular chapter
 
-## Phase 9 — Tooling, coverage audit, and generated outputs
+## Phase 9 — Tooling, coverage audit, and generated outputs ✔
 
-- [ ] `tools/build-index.R` — read `functions/*.yaml` → `function-index.qmd` data, `functions.json`, coverage report
-  - [ ] Parse function names declared in installed headers (`R.home("include")`)
-  - [ ] Use API-status metadata R publishes (WRE `@apifun` annotations / `tools:::funAPI()`)
-  - [ ] Diff against `functions/*.yaml`; emit report: undocumented API functions (gaps), records that no longer exist (rot), status mismatches
-  - [ ] Wire into CI: fail on rot, warn on gaps
-- [ ] Turn on the coverage audit; fill gaps until the API-status diff is clean
-- [ ] `tools/llms.R` — post-render: `llms.txt`, `llms-full.txt`, per-page `.md` copies
-- [ ] `function-index.qmd` — generated alphabetical function index (entry point → chapter + anchor + status); never hand-edited
-- [ ] (Optional, later) CI job that extracts entry examples and compiles them against R headers
+- [x] `tools/build-index.R` — reads `functions/*.yaml` → `functions.json` + coverage report; exits 1 on rot. Uses `tools:::funAPI()` (WRE `@apifun`/`@apihdr` annotations) + installed headers; BLAS/LAPACK/Linpack/Rmath whitelisted (documented as tables), graphics-engine headers out of scope, experimental gaps reported but not required; status mismatches compared on record names only. Runs in CI pre-render; `functions.json` copied into `_site/`
+- [x] Fixed silent data loss: stray `...`/`---` YAML document markers (Phase 7 batch appends) made yaml12 parse only the first document — 7 records dropped, incl. all Phase 7i attributes additions
+- [x] Fixed rot: `R_nchar`, `Rf_GetOption`, `R_popen`/`R_system` (removed from headers in R 4.6.0 → compliance.yaml); dropped `R_lsInternal`, `SET_MISSING`, `MARK`/`LEVELS`/`SETLEVELS` (gone from 4.6 headers) from families
+- [x] Aligned statuses with WRE annotations: ~50 records api → experimental; `UNPROTECT_PTR`, `PRINTNAME`, `R_ClosureExpr` non-api → api (moved to chapters; `SET_PRINTNAME` stays non-api); `R_GetCurrentEnv`, `Rf_StringFalse`/`Rf_StringTrue` non-api → experimental; `R_FlushConsole`, `R_RunPendingFinalizers` api → embedding (parked in compliance.yaml)
+- [x] Filled all 62 required API gaps: vector accessors (`DATAPTR_RO`, typed `*_RO`, `*_ELT`/`SET_*_ELT`, `VECTOR_PTR_RO`), `R_ParseVector` family (new evaluation "Parsing" section), `R_RegisterCCallable`/`R_GetCCallable`/`R_FindSymbol`/`R_forceSymbols`, `R_NewPreciousMSet` family, `Riconv` family, `CONS`/`LCONS`, `CAD5R`, `Rf_list6`, `Rf_installTrChar`, `PRINTNAME` (new symbols "Accessors" section), `R_ClosureExpr`/`R_BytecodeExpr`, `ANY_ATTRIB`/`CLEAR_ATTRIB`, `R_MakeExternalPtrFn`/`R_ExternalPtrAddrFn`, `Rf_asBool`/`Rf_asRboolean`, `Rf_isNull`, `R_isnancpp`, `Rf_topenv`, `Rf_onintr`, `UNIMPLEMENTED`, `R_malloc_gc` family, `R_sample_kind`, `expm1`/`log1p`, `dpsifn`, `rmultinom`, `d1mach`/`i1mach`, `interv`, `Rf_revsort`/`Rf_iPsort`/`Rf_rPsort`/`Rf_cPsort` (renamed to canonical `Rf_` names). Audit now: 0 gaps, 0 rot, 0 mismatches
+- [x] Turned on Quarto LLM support: `website: llms-txt: true` (Quarto 1.9+; generates `llms.txt` + per-page `.llms.md`)
+- [x] `function-index.qmd` — generated alphabetical index via `render_function_index()` asis chunk (name → chapter + anchor + status); never hand-edited
 
 ## Cross-cutting (applies to every chapter)
 

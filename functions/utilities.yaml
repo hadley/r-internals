@@ -1,9 +1,7 @@
----
-- name: Rf_GetOption
-  family: Rf_GetOption1
+- name: Rf_GetOption1
+  family: []
   summary: Retrieve the value of an R option.
   signature: |
-    SEXP Rf_GetOption(SEXP, SEXP);
     SEXP Rf_GetOption1(SEXP);
   status: api
   header: Rinternals.h
@@ -11,7 +9,8 @@
   errors: never
   r_equivalent: getOption()
   notes: |
-    Use `Rf_GetOption1()`; `Rf_GetOption()` is kept for compatibility.
+    The older two-argument `Rf_GetOption()` was removed from the headers
+    in R 4.6.0.
   see_also: Rf_GetOptionDigits
   chapter: utilities
   section: Options
@@ -26,33 +25,15 @@
   protect: n/a
   errors: never
   r_equivalent: getOption()
-  see_also: Rf_GetOption
+  see_also: Rf_GetOption1
   chapter: utilities
   section: Options
-- name: R_popen
-  family: R_system
-  summary: Open a pipe or run a command in a shell.
-  signature: |
-    #ifdef HAVE_POPEN
-    FILE *R_popen(const char *, const char *);
-    #endif
-    int R_system(const char *);
-  status: api
-  header: Rinternals.h
-  protect: n/a
-  errors: never
-  r_equivalent: system()
-  notes: |
-    `R_popen()` is only available when `HAVE_POPEN` is defined.
-  see_also: []
-  chapter: utilities
-  section: Files and system
 - name: R_compute_identical
   family: []
   summary: Test whether two objects are identical.
   signature: |
     Rboolean R_compute_identical(SEXP, SEXP, int);
-  status: api
+  status: experimental
   header: Rinternals.h
   protect: n/a
   errors: can-throw
@@ -103,13 +84,12 @@
   see_also: []
   chapter: utilities
   section: Files and system
-...
 - name: acopy_string
   family: []
   summary: Copy a string into R_alloc-allocated memory.
   signature: |
     const char *acopy_string(const char *in);
-  status: api
+  status: experimental
   header: R_ext/Utils.h
   protect: n/a
   errors: can-throw

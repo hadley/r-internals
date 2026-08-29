@@ -1,4 +1,3 @@
----
 - name: R_ShowMessage
   family: []
   summary: Display a message to the user.
@@ -49,19 +48,6 @@
   see_also: []
   chapter: printing
   section: Printing
-- name: R_FlushConsole
-  family: []
-  summary: Flush the console.
-  signature: |
-    void R_FlushConsole(void);
-  status: api
-  header: R.h
-  protect: n/a
-  errors: never
-  r_equivalent: flush.console()
-  see_also: []
-  chapter: printing
-  section: Printing
 - name: IndexWidth
   family: []
   summary: Compute the character width needed to print a vector index.
@@ -74,4 +60,3 @@
   see_also: []
   chapter: printing
   section: Printing
-...

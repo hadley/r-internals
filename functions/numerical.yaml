@@ -1,4 +1,3 @@
----
 - name: nmmin
   family:
     - vmmin
@@ -110,8 +109,8 @@
   section: Linear algebra
 - name: findInterval
   family:
-    - find_interv_vec
     - findInterval2
+    - interv
   summary: Locate the interval containing a value within a sorted vector.
   signature: |
     int findInterval(double *xt, int n, double x,
@@ -120,9 +119,8 @@
     int findInterval2(double *xt, int n, double x,
       Rboolean rightmost_closed,  Rboolean all_inside, Rboolean left_open,
       int ilo, int *mflag);
-
-    void find_interv_vec(double *xt, int *n, double *x,   int *nx,
-      int *rightmost_closed, int *all_inside, int *indx);
+    int F77_SUB(interv)(double *xt, int *n, double *x,
+      int *rightmost_closed, int *all_inside, int *ilo, int *mflag);
   status: api
   header: R_ext/Utils.h
   protect: n/a
@@ -130,9 +128,10 @@
   r_equivalent: findInterval()
   notes: |
     Also declared in `R_ext/Applic.h`. `findInterval2()` adds a
-    `left_open` argument for left-open intervals. The algorithm is
-    fastest when `ilo` carries the previous result and successive `x`
-    values are monotone.
+    `left_open` argument for left-open intervals. `interv` is the
+    Fortran-callable predecessor, declared only under `R_RS_H`. The
+    algorithm is fastest when `ilo` carries the previous result and
+    successive `x` values are monotone.
   see_also: []
   chapter: numerical
   section: Miscellaneous
@@ -152,4 +151,20 @@
   see_also: []
   chapter: numerical
   section: Miscellaneous
-...
+- name: d1mach
+  family: i1mach
+  summary: Report machine floating-point or integer constants.
+  signature: |
+    double F77_SUB(d1mach)(int *i);
+    int F77_SUB(i1mach)(int *i);
+  status: api
+  header: R_ext/Utils.h
+  protect: n/a
+  errors: never
+  notes: |
+    Fortran-era routines kept for old numerical code. New code should
+    use the C99 constants from `<float.h>`/`<limits.h>` or
+    `R_ext/Arith.h` instead.
+  see_also: []
+  chapter: numerical
+  section: Miscellaneous

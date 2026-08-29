@@ -1,4 +1,3 @@
----
 - name: Rf_isObject
   family: []
   summary: Test whether an object is flagged as object-oriented.
@@ -93,7 +92,7 @@
   summary: Set or unset the S4 flag on an object.
   signature: |
     SEXP Rf_asS4(SEXP, Rboolean, int);
-  status: api
+  status: experimental
   header: Rinternals.h
   protect: result
   errors: can-throw
@@ -105,7 +104,7 @@
   summary: Allocate a new S4 object.
   signature: |
     SEXP Rf_allocS4Object(void);
-  status: api
+  status: experimental
   header: Rinternals.h
   protect: result
   errors: can-throw
@@ -137,7 +136,7 @@
   summary: Create a new S4 class definition.
   signature: |
     SEXP R_do_MAKE_CLASS(const char *what);
-  status: api
+  status: experimental
   header: Rinternals.h
   protect: result
   errors: can-throw
@@ -151,7 +150,7 @@
   signature: |
     SEXP R_getClassDef(const char *what);
     SEXP R_getClassDef_R(SEXP what);
-  status: api
+  status: experimental
   header: Rinternals.h
   protect: result
   errors: can-throw
@@ -191,7 +190,7 @@
   summary: Create a new object from an S4 class definition.
   signature: |
     SEXP R_do_new_object(SEXP class_def);
-  status: api
+  status: experimental
   header: Rinternals.h
   protect: result
   errors: can-throw
@@ -226,7 +225,7 @@
     SEXP R_do_slot(SEXP obj, SEXP name);
     SEXP R_do_slot_assign(SEXP obj, SEXP name, SEXP value);
     int R_has_slot(SEXP obj, SEXP name);
-  status: api
+  status: experimental
   header: Rinternals.h
   protect: result
   errors: can-throw

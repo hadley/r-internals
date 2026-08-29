@@ -27,6 +27,14 @@ doesn't exist yet.
 render_entries("symbols", "Create")
 ```
 
+## Accessors
+
+```{r}
+#| results: asis
+#| echo: false
+render_entries("symbols", "Accessors")
+```
+
 ## Missing symbol
 
 `R_MissingArg` represents the missing/empty symbol, i.e. the second

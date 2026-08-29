@@ -1,4 +1,3 @@
----
 - name: R_gc
   family: R_gc_running
   summary: "Trigger garbage collection, or check whether it is running."
@@ -114,21 +113,15 @@
   section: Efficient copying
 - name: TYPEOF
   family:
-    - MARK
     - NAMED
     - REFCNT
     - SET_NAMED
-    - LEVELS
-    - SETLEVELS
   summary: Read an object's type tag and header flags.
   signature: |
     int  (TYPEOF)(SEXP x);
-    int  (MARK)(SEXP x);
     int  (NAMED)(SEXP x);
     int  (REFCNT)(SEXP x);
     void (SET_NAMED)(SEXP x, int v);
-    int  (LEVELS)(SEXP x);
-    int  (SETLEVELS)(SEXP x, int v);
   status: api
   header: Rinternals.h
   protect: n/a
@@ -173,4 +166,47 @@
   see_also: R_PreserveObject
   chapter: protection
   section: Protect
-...
+- name: R_NewPreciousMSet
+  family:
+    - R_PreserveInMSet
+    - R_ReleaseFromMSet
+  summary: Protect a changing set of objects across R calls.
+  signature: |
+    SEXP R_NewPreciousMSet(int n);
+    void R_PreserveInMSet(SEXP x, SEXP mset);
+    void R_ReleaseFromMSet(SEXP x, SEXP mset);
+  status: api
+  header: Rinternals.h
+  protect: result
+  errors: can-throw
+  args:
+    n: initial capacity hint.
+    mset: a multi-set created by `R_NewPreciousMSet()`.
+  notes: |
+    A "precious multi-set" protects many objects more cheaply than one
+    `R_PreserveObject()` per object. The set itself must be protected
+    (e.g. with `R_PreserveObject()`); members can be added and removed
+    freely.
+  see_also: R_PreserveObject
+  chapter: protection
+  section: R_PreserveObject, R_ReleaseObject
+- name: UNPROTECT_PTR
+  family: Rf_unprotect_ptr
+  summary: Unprotect a specific object by pointer.
+  signature: |
+    #define UNPROTECT_PTR(s) Rf_unprotect_ptr(s)
+    void Rf_unprotect_ptr(SEXP);
+  status: api
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  notes: |
+    Searches the protection stack for a matching entry and removes it,
+    rather than unprotecting the most recent entries. Convenient but
+    error-prone: prefer a strict `PROTECT`/`UNPROTECT` stack discipline,
+    or `PROTECT_WITH_INDEX` when the number of protected objects varies.
+  see_also:
+    - PROTECT
+    - R_ProtectWithIndex
+  chapter: protection
+  section: Protect

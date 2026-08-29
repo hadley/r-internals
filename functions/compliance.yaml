@@ -1,4 +1,3 @@
----
 - name: R_cycle_detected
   family: []
   summary: Detect a reference cycle between two objects.
@@ -9,23 +8,6 @@
   protect: n/a
   errors: never
   see_also: []
-  chapter: compliance
-  section: Internal entry points
-- name: UNPROTECT_PTR
-  family: Rf_unprotect_ptr
-  summary: Unprotect a specific object by pointer.
-  signature: |
-    #define UNPROTECT_PTR(s) Rf_unprotect_ptr(s)
-    void Rf_unprotect_ptr(SEXP);
-  status: non-api
-  replacement: UNPROTECT
-  header: Rinternals.h
-  protect: n/a
-  errors: never
-  notes: |
-    Searches the protection stack from the top to find and remove the
-    matching entry, rather than assuming it is the most recent one.
-  see_also: PROTECT
   chapter: compliance
   section: Internal entry points
 - name: IS_GETTER_CALL
@@ -155,22 +137,6 @@
   errors: can-throw
   notes: |
     Copies variables from `from` (a `VECSXP`) unless already present in `to`.
-  see_also: []
-  chapter: compliance
-  section: Environments
-- name: R_GetCurrentEnv
-  family: []
-  summary: Retrieve the current environment.
-  signature: |
-    SEXP R_GetCurrentEnv(void);
-  status: non-api
-  header: Rinternals.h
-  protect: not-needed
-  errors: never
-  r_equivalent: environment()
-  notes: |
-    Not part of the API; call `environment()` at the R level and pass the
-    result as an argument to your C function.
   see_also: []
   chapter: compliance
   section: Environments
@@ -534,32 +500,18 @@
   see_also: []
   chapter: compliance
   section: Serialisation
-- name: Rf_StringFalse
-  family: Rf_StringTrue
-  summary: Check whether a C string represents false or true.
+- name: SET_PRINTNAME
+  family: []
+  summary: Set the print name of a symbol.
   signature: |
-    Rboolean Rf_StringFalse(const char *);
-    Rboolean Rf_StringTrue(const char *);
-  status: non-api
-  header: R_ext/Utils.h
-  protect: n/a
-  errors: never
-  see_also: []
-  chapter: compliance
-  section: Vectors and strings
-- name: PRINTNAME
-  family: SET_PRINTNAME
-  summary: Get or set the print name of a symbol.
-  signature: |
-    SEXP (PRINTNAME)(SEXP x);
     void SET_PRINTNAME(SEXP x, SEXP v);
   status: non-api
   header: Rinternals.h
-  protect: not-needed
+  protect: n/a
   errors: never
   notes: |
-    The value of the symbol, as a CHARSXP. Use `CHAR(PRINTNAME(x))` to get
-    the name as a `const char*`.
+    Symbols are interned and shared; mutating a print name corrupts the
+    symbol table. Create the symbol you want with `Rf_install()` instead.
   see_also: []
   chapter: compliance
   section: Symbols
@@ -652,17 +604,11 @@
   section: Byte code
 - name: R_PromiseExpr
   family:
-    - R_ClosureExpr
     - PREXPR
-    - BODY_EXPR
-  summary: >-
-    Get the unevaluated expression of a promise or the body expression of a
-    closure.
+  summary: Get the unevaluated expression of a promise.
   signature: |
     SEXP R_PromiseExpr(SEXP);
-    SEXP R_ClosureExpr(SEXP);
     #define PREXPR(e) R_PromiseExpr(e)
-    #define BODY_EXPR(e) R_ClosureExpr(e)
   status: non-api
   header: Rinternals.h
   protect: not-needed
@@ -878,3 +824,66 @@
   see_also: VECTOR_ELT
   chapter: compliance
   section: Vectors and strings
+- name: Rf_GetOption
+  family: []
+  summary: Retrieve the value of an R option (two-argument form).
+  signature: |
+    SEXP Rf_GetOption(SEXP, SEXP);
+  status: non-api
+  replacement: Rf_GetOption1
+  header: Rinternals.h
+  protect: not-needed
+  errors: never
+  r_equivalent: getOption()
+  notes: |
+    Removed from the headers in R 4.6.0; use `Rf_GetOption1()`.
+  see_also: []
+  chapter: compliance
+  section: Internal entry points
+- name: R_popen
+  family: R_system
+  summary: Open a pipe or run a command in a shell.
+  signature: |
+    FILE *R_popen(const char *, const char *);
+    int R_system(const char *);
+  status: non-api
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  r_equivalent: system()
+  notes: |
+    Removed from the headers in R 4.6.0. There is no C-level API
+    replacement; use `system()` or a pipe connection at the R level.
+  see_also: []
+  chapter: compliance
+  section: Internal entry points
+- name: R_FlushConsole
+  family: []
+  summary: Flush the console.
+  signature: |
+    void R_FlushConsole(void);
+  status: embedding
+  header: R.h
+  protect: n/a
+  errors: never
+  r_equivalent: flush.console()
+  notes: |
+    Only meaningful for front-ends; WRE classifies it as embedding-only.
+  see_also: []
+  chapter: compliance
+  section: Internal entry points
+- name: R_RunPendingFinalizers
+  family: []
+  summary: Run any pending finalizers.
+  signature: |
+    void R_RunPendingFinalizers(void);
+  status: embedding
+  header: Rinternals.h
+  protect: n/a
+  errors: can-throw
+  notes: |
+    Only meaningful for front-ends driving the event loop; WRE
+    classifies it as embedding-only.
+  see_also: []
+  chapter: compliance
+  section: Internal entry points

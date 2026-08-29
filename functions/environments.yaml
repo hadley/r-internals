@@ -1,4 +1,3 @@
----
 - name: R_GlobalEnv
   family: []
   summary: Access the global environment.
@@ -98,19 +97,17 @@
   chapter: environments
   section: Set values
 - name: R_lsInternal3
-  family: R_lsInternal
+  family: []
   summary: List the names bound in an environment.
   signature: |
     SEXP R_lsInternal3(SEXP env, Rboolean all_names, Rboolean sorted);
-    SEXP R_lsInternal(SEXP, Rboolean);
-  status: api
+  status: experimental
   header: Rinternals.h
   protect: result
   errors: can-throw
   notes: |
-    Returns a character vector. `R_lsInternal(env, all)` is shorthand for
-    `R_lsInternal3(env, all, TRUE)` but is not part of the API; prefer
-    `R_lsInternal3()` directly.
+    Returns a character vector. The older `R_lsInternal(env, all)` was
+    removed from the headers in R 4.6.0.
   see_also: []
   chapter: environments
   section: Check for presence
@@ -139,7 +136,7 @@
     Rboolean R_IsPackageEnv(SEXP rho);
     SEXP R_PackageEnvName(SEXP rho);
     SEXP R_FindPackageEnv(SEXP info);
-  status: api
+  status: experimental
   header: Rinternals.h
   protect: result
   errors: can-throw
@@ -157,7 +154,7 @@
     Rboolean R_IsNamespaceEnv(SEXP rho);
     SEXP R_NamespaceEnvSpec(SEXP rho);
     SEXP R_FindNamespace(SEXP info);
-  status: api
+  status: experimental
   header: Rinternals.h
   protect: result
   errors: can-throw
@@ -170,7 +167,7 @@
   signature: |
     void R_LockEnvironment(SEXP env, Rboolean bindings);
     Rboolean R_EnvironmentIsLocked(SEXP env);
-  status: api
+  status: experimental
   header: Rinternals.h
   protect: n/a
   errors: can-throw
@@ -183,7 +180,7 @@
   signature: |
     void R_LockBinding(SEXP sym, SEXP env);
     void R_unLockBinding(SEXP sym, SEXP env);
-  status: api
+  status: experimental
   header: Rinternals.h
   protect: n/a
   errors: can-throw
@@ -195,7 +192,7 @@
   summary: Make an active binding for a symbol in an environment.
   signature: |
     void R_MakeActiveBinding(SEXP sym, SEXP fun, SEXP env);
-  status: api
+  status: experimental
   header: Rinternals.h
   protect: n/a
   errors: can-throw
@@ -208,7 +205,7 @@
   signature: |
     Rboolean R_BindingIsLocked(SEXP sym, SEXP env);
     Rboolean R_BindingIsActive(SEXP sym, SEXP env);
-  status: api
+  status: experimental
   header: Rinternals.h
   protect: n/a
   errors: can-throw
@@ -430,4 +427,35 @@
   see_also: [R_findDotsEnv, R_GetDotType]
   chapter: environments
   section: Inspecting bindings
-...
+- name: Rf_topenv
+  family: []
+  summary: Find the top-level environment in an environment chain.
+  signature: |
+    SEXP Rf_topenv(SEXP, SEXP);
+  status: api
+  header: Rinternals.h
+  protect: n/a
+  errors: never
+  r_equivalent: topenv()
+  args:
+    x: the environment to start from.
+    target: stop when this environment is reached, usually `R_NilValue`.
+  see_also: R_ParentEnv
+  chapter: environments
+  section: Miscellaneous
+- name: R_GetCurrentEnv
+  family: []
+  summary: Retrieve the environment of the currently executing closure.
+  signature: |
+    SEXP R_GetCurrentEnv(void);
+  status: experimental
+  header: Rinternals.h
+  protect: not-needed
+  errors: never
+  r_equivalent: environment()
+  notes: |
+    Only meaningful while R is evaluating a call. Usually better to pass
+    the environment explicitly as an argument to your C function.
+  see_also: []
+  chapter: environments
+  section: Miscellaneous

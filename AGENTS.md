@@ -34,6 +34,15 @@ This repo is a Quarto book documenting R's C API for package authors. See
 - One `.qmd` per chapter; chapter order lives in `_quarto.yml`.
 - `tools/` holds maintenance scripts; `sources/` holds raw mined material
   (never rendered, never copied verbatim).
+- `tools/build-index.R` is the coverage audit: diffs `functions/*.yaml`
+  against `tools:::funAPI()` + installed headers (0 gaps / 0 rot / 0 status
+  mismatches required), writes `functions.json` (gitignored; served at
+  /functions.json via CI). `function-index.qmd` is generated at render time
+  by `render_function_index()` — never hand-edit.
+- YAML files must stay single-document: no `---`/`...` marker lines
+  (yaml12 parses only the first document and silently drops the rest).
+- `llms-txt: true` is set under a top-level `website:` key (book projects
+  accept it there; under `book:` it is ignored).
 
 ## R source access
 
