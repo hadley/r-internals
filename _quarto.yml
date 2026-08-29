@@ -4,7 +4,6 @@ project:
 
 book:
   title: "R's C API"
-  author: "Hadley Wickham"
   repo-url: https://github.com/hadley/r-internals
   repo-actions: [edit, issue]
   search: true
