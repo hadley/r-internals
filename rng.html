@@ -112,6 +112,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 }</script>
 
 
+<link rel="stylesheet" href="badges.css">
 </head>
 
 <body class="nav-sidebar floating quarto-light">
@@ -366,8 +367,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#GetRNGstate" id="toc-GetRNGstate" class="nav-link active" data-scroll-target="#GetRNGstate"><span class="header-section-number">18.0.1</span> <code>GetRNGstate()</code> (<code>PutRNGstate()</code>)</a></li>
-  <li><a href="#unif_rand" id="toc-unif_rand" class="nav-link" data-scroll-target="#unif_rand"><span class="header-section-number">18.0.2</span> <code>unif_rand()</code> (<code>norm_rand()</code>, <code>exp_rand()</code>)</a></li>
+  <li><a href="#GetRNGstate" id="toc-GetRNGstate" class="nav-link active" data-scroll-target="#GetRNGstate"><span class="header-section-number">18.0.1</span> <code>GetRNGstate()</code>, <code>PutRNGstate()</code></a></li>
+  <li><a href="#unif_rand" id="toc-unif_rand" class="nav-link" data-scroll-target="#unif_rand"><span class="header-section-number">18.0.2</span> <code>unif_rand()</code>, <code>norm_rand()</code>, <code>exp_rand()</code></a></li>
   <li><a href="#R_unif_index" id="toc-R_unif_index" class="nav-link" data-scroll-target="#R_unif_index"><span class="header-section-number">18.0.3</span> <code>R_unif_index()</code></a></li>
   <li><a href="#R_sample_kind" id="toc-R_sample_kind" class="nav-link" data-scroll-target="#R_sample_kind"><span class="header-section-number">18.0.4</span> <code>R_sample_kind()</code></a></li>
   </ul>
@@ -398,11 +399,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>R’s RNG is private to R: from C you draw from R’s stream, you don’t create your own. The stream state lives in the <code>.Random.seed</code> variable in the global environment, so every use from C must be bracketed by <code>GetRNGstate()</code> (read the state in, creating it if needed) and <code>PutRNGstate()</code> (write it back). Skip the bracket and your draws won’t advance R’s stream — repeated calls return the same values, and <code>set.seed()</code> at the R level won’t make your code reproducible.</p>
 <p>There is no C API to choose the generator or set the seed; if you need that, evaluate calls to <code>RNGkind()</code>/<code>set.seed()</code> (see <a href="./evaluation.html">Evaluation</a>). For distributions beyond uniform, normal, and exponential, use the <code>r*</code> functions from <code>Rmath.h</code> (see <a href="./math.html">Mathematical functions</a>) — they draw from the same stream and need the same bracketing.</p>
 <section id="GetRNGstate" class="level3" data-number="18.0.1">
-<h3 data-number="18.0.1" class="anchored" data-anchor-id="GetRNGstate"><span class="header-section-number">18.0.1</span> <code>GetRNGstate()</code> (<code>PutRNGstate()</code>)</h3>
+<h3 data-number="18.0.1" class="anchored" data-anchor-id="GetRNGstate"><span class="header-section-number">18.0.1</span> <code>GetRNGstate()</code>, <code>PutRNGstate()</code></h3>
+<p><span class="badge badge-errors">throws</span></p>
+<p><strong>Header:</strong> <code>R_ext/Random.h</code></p>
 <p>Read in (or create) <code>.Random.seed</code> before generating variates, and write it back after.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> GetRNGstate<span class="op">(</span><span class="dt">void</span><span class="op">);</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> PutRNGstate<span class="op">(</span><span class="dt">void</span><span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>R_ext/Random.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 <p>Every use of R’s RNG from C must be bracketed by these calls: <code>GetRNGstate()</code> reads (or lazily creates) <code>.Random.seed</code>, and <code>PutRNGstate()</code> writes the updated state back so R-level code sees the stream advance. They can allocate when the seed doesn’t yet exist. These names are never remapped.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>GetRNGstate<span class="op">();</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="dt">double</span> u <span class="op">=</span> unif_rand<span class="op">();</span></span>
@@ -410,31 +412,34 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><strong>See also:</strong> <a href="#unif_rand"><code>unif_rand()</code></a></p>
 </section>
 <section id="unif_rand" class="level3" data-number="18.0.2">
-<h3 data-number="18.0.2" class="anchored" data-anchor-id="unif_rand"><span class="header-section-number">18.0.2</span> <code>unif_rand()</code> (<code>norm_rand()</code>, <code>exp_rand()</code>)</h3>
+<h3 data-number="18.0.2" class="anchored" data-anchor-id="unif_rand"><span class="header-section-number">18.0.2</span> <code>unif_rand()</code>, <code>norm_rand()</code>, <code>exp_rand()</code></h3>
+<p><strong>Header:</strong> <code>R_ext/Random.h</code></p>
 <p>Draw one uniform, standard normal, or unit exponential variate.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="dt">double</span> unif_rand<span class="op">(</span><span class="dt">void</span><span class="op">);</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="dt">double</span> norm_rand<span class="op">(</span><span class="dt">void</span><span class="op">);</span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="dt">double</span> exp_rand<span class="op">(</span><span class="dt">void</span><span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>R_ext/Random.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<p><strong>Returns:</strong> One variate: uniform on (0, 1) for <code>unif_rand()</code>, standard normal for <code>norm_rand()</code>, unit exponential for <code>exp_rand()</code>.</p>
 <p>Must be called between <code>GetRNGstate()</code> and <code>PutRNGstate()</code>. The generator kind and seed are chosen at the R level (<code>RNGkind()</code>, <code>set.seed()</code>); there is no C API to select them. For other distributions, use the <code>r*</code> functions from <code>Rmath.h</code> (see <a href="./math.html">Mathematical functions</a>) — they need the same bracketing. These names are never remapped.</p>
 <p><strong>See also:</strong> <a href="#GetRNGstate"><code>GetRNGstate()</code></a>, <a href="#R_unif_index"><code>R_unif_index()</code></a></p>
 </section>
 <section id="R_unif_index" class="level3" data-number="18.0.3">
 <h3 data-number="18.0.3" class="anchored" data-anchor-id="R_unif_index"><span class="header-section-number">18.0.3</span> <code>R_unif_index()</code></h3>
+<p><strong>Header:</strong> <code>R_ext/Random.h</code></p>
 <p>Draw a uniform index in <code>[0, n)</code> for random sampling.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="dt">double</span> R_unif_index<span class="op">(</span><span class="dt">double</span> n<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>R_ext/Random.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 <ul>
 <li><code>n</code>: upper bound (exclusive) on the returned index.</li>
 </ul>
+<p><strong>Returns:</strong> A uniform draw in <code>[0, n)</code>; truncate to an integer type to get an index.</p>
 <p>Returns a <code>double</code> in <code>[0, n)</code>; truncate to <code>int</code> or <code>R_xlen_t</code> to get an index. Uses the sampling algorithm selected by R’s <code>sample.kind</code> option, so results match R-level <code>sample.int()</code>. Must be called between <code>GetRNGstate()</code> and <code>PutRNGstate()</code>.</p>
 <p><strong>See also:</strong> <a href="#unif_rand"><code>unif_rand()</code></a></p>
 </section>
 <section id="R_sample_kind" class="level3" data-number="18.0.4">
 <h3 data-number="18.0.4" class="anchored" data-anchor-id="R_sample_kind"><span class="header-section-number">18.0.4</span> <code>R_sample_kind()</code></h3>
+<p><strong>Header:</strong> <code>R_ext/Random.h</code></p>
 <p>Get the current discrete-sampling algorithm.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>Sampletype R_sample_kind<span class="op">(</span><span class="dt">void</span><span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>R_ext/Random.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<p><strong>Returns:</strong> The current sampling algorithm, <code>ROUNDING</code> or <code>REJECTION</code>.</p>
 <p>Returns <code>ROUNDING</code> or <code>REJECTION</code>, reflecting the <code>sample.kind</code> option; only relevant to code implementing its own discrete sampling.</p>
 <p><strong>See also:</strong> <a href="#R_unif_index"><code>R_unif_index()</code></a></p>
 

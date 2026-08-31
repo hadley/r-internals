@@ -112,6 +112,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 }</script>
 
 
+<link rel="stylesheet" href="badges.css">
 </head>
 
 <body class="nav-sidebar floating quarto-light">
@@ -368,22 +369,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul>
   <li><a href="#get-and-set" id="toc-get-and-set" class="nav-link active" data-scroll-target="#get-and-set"><span class="header-section-number">7.1</span> Get and set</a>
   <ul class="collapse">
-  <li><a href="#Rf_getAttrib" id="toc-Rf_getAttrib" class="nav-link" data-scroll-target="#Rf_getAttrib"><span class="header-section-number">7.1.1</span> <code>Rf_getAttrib()</code> (<code>Rf_setAttrib()</code>)</a></li>
+  <li><a href="#Rf_getAttrib" id="toc-Rf_getAttrib" class="nav-link" data-scroll-target="#Rf_getAttrib"><span class="header-section-number">7.1.1</span> <code>Rf_getAttrib()</code>, <code>Rf_setAttrib()</code></a></li>
   <li><a href="#Rf_copyMostAttrib" id="toc-Rf_copyMostAttrib" class="nav-link" data-scroll-target="#Rf_copyMostAttrib"><span class="header-section-number">7.1.2</span> <code>Rf_copyMostAttrib()</code></a></li>
-  <li><a href="#DUPLICATE_ATTRIB" id="toc-DUPLICATE_ATTRIB" class="nav-link" data-scroll-target="#DUPLICATE_ATTRIB"><span class="header-section-number">7.1.3</span> <code>DUPLICATE_ATTRIB()</code> (<code>SHALLOW_DUPLICATE_ATTRIB()</code>)</a></li>
+  <li><a href="#DUPLICATE_ATTRIB" id="toc-DUPLICATE_ATTRIB" class="nav-link" data-scroll-target="#DUPLICATE_ATTRIB"><span class="header-section-number">7.1.3</span> <code>DUPLICATE_ATTRIB()</code>, <code>SHALLOW_DUPLICATE_ATTRIB()</code></a></li>
   <li><a href="#Rf_namesgets" id="toc-Rf_namesgets" class="nav-link" data-scroll-target="#Rf_namesgets"><span class="header-section-number">7.1.4</span> <code>Rf_namesgets()</code></a></li>
-  <li><a href="#R_getAttributes" id="toc-R_getAttributes" class="nav-link" data-scroll-target="#R_getAttributes"><span class="header-section-number">7.1.5</span> <code>R_getAttributes()</code> (<code>R_getAttribCount()</code>, <code>R_getAttribNames()</code>, <code>R_hasAttrib()</code>)</a></li>
-  <li><a href="#R_nrow" id="toc-R_nrow" class="nav-link" data-scroll-target="#R_nrow"><span class="header-section-number">7.1.6</span> <code>R_nrow()</code> (<code>R_ncol()</code>)</a></li>
+  <li><a href="#R_getAttributes" id="toc-R_getAttributes" class="nav-link" data-scroll-target="#R_getAttributes"><span class="header-section-number">7.1.5</span> <code>R_getAttributes()</code>, <code>R_getAttribCount()</code>, <code>R_getAttribNames()</code>, <code>R_hasAttrib()</code></a></li>
+  <li><a href="#R_nrow" id="toc-R_nrow" class="nav-link" data-scroll-target="#R_nrow"><span class="header-section-number">7.1.6</span> <code>R_nrow()</code>, <code>R_ncol()</code></a></li>
   <li><a href="#R_class" id="toc-R_class" class="nav-link" data-scroll-target="#R_class"><span class="header-section-number">7.1.7</span> <code>R_class()</code></a></li>
   <li><a href="#R_mapAttrib" id="toc-R_mapAttrib" class="nav-link" data-scroll-target="#R_mapAttrib"><span class="header-section-number">7.1.8</span> <code>R_mapAttrib()</code></a></li>
-  <li><a href="#ANY_ATTRIB" id="toc-ANY_ATTRIB" class="nav-link" data-scroll-target="#ANY_ATTRIB"><span class="header-section-number">7.1.9</span> <code>ANY_ATTRIB()</code> (<code>CLEAR_ATTRIB()</code>)</a></li>
+  <li><a href="#ANY_ATTRIB" id="toc-ANY_ATTRIB" class="nav-link" data-scroll-target="#ANY_ATTRIB"><span class="header-section-number">7.1.9</span> <code>ANY_ATTRIB()</code>, <code>CLEAR_ATTRIB()</code></a></li>
   </ul></li>
   <li><a href="#arrays" id="toc-arrays" class="nav-link" data-scroll-target="#arrays"><span class="header-section-number">7.2</span> Arrays</a>
   <ul class="collapse">
   <li><a href="#Rf_isArray" id="toc-Rf_isArray" class="nav-link" data-scroll-target="#Rf_isArray"><span class="header-section-number">7.2.1</span> <code>Rf_isArray()</code></a></li>
-  <li><a href="#Rf_allocArray" id="toc-Rf_allocArray" class="nav-link" data-scroll-target="#Rf_allocArray"><span class="header-section-number">7.2.2</span> <code>Rf_allocArray()</code> (<code>Rf_alloc3DArray()</code>)</a></li>
+  <li><a href="#Rf_allocArray" id="toc-Rf_allocArray" class="nav-link" data-scroll-target="#Rf_allocArray"><span class="header-section-number">7.2.2</span> <code>Rf_allocArray()</code>, <code>Rf_alloc3DArray()</code></a></li>
   <li><a href="#Rf_GetArrayDimnames" id="toc-Rf_GetArrayDimnames" class="nav-link" data-scroll-target="#Rf_GetArrayDimnames"><span class="header-section-number">7.2.3</span> <code>Rf_GetArrayDimnames()</code></a></li>
-  <li><a href="#Rf_dimgets" id="toc-Rf_dimgets" class="nav-link" data-scroll-target="#Rf_dimgets"><span class="header-section-number">7.2.4</span> <code>Rf_dimgets()</code> (<code>Rf_dimnamesgets()</code>)</a></li>
+  <li><a href="#Rf_dimgets" id="toc-Rf_dimgets" class="nav-link" data-scroll-target="#Rf_dimgets"><span class="header-section-number">7.2.4</span> <code>Rf_dimgets()</code>, <code>Rf_dimnamesgets()</code></a></li>
   <li><a href="#Rf_DropDims" id="toc-Rf_DropDims" class="nav-link" data-scroll-target="#Rf_DropDims"><span class="header-section-number">7.2.5</span> <code>Rf_DropDims()</code></a></li>
   <li><a href="#Rf_arraySubscript" id="toc-Rf_arraySubscript" class="nav-link" data-scroll-target="#Rf_arraySubscript"><span class="header-section-number">7.2.6</span> <code>Rf_arraySubscript()</code></a></li>
   </ul></li>
@@ -391,15 +392,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul class="collapse">
   <li><a href="#Rf_allocMatrix" id="toc-Rf_allocMatrix" class="nav-link" data-scroll-target="#Rf_allocMatrix"><span class="header-section-number">7.3.1</span> <code>Rf_allocMatrix()</code></a></li>
   <li><a href="#Rf_isMatrix" id="toc-Rf_isMatrix" class="nav-link" data-scroll-target="#Rf_isMatrix"><span class="header-section-number">7.3.2</span> <code>Rf_isMatrix()</code></a></li>
-  <li><a href="#Rf_GetColNames" id="toc-Rf_GetColNames" class="nav-link" data-scroll-target="#Rf_GetColNames"><span class="header-section-number">7.3.3</span> <code>Rf_GetColNames()</code> (<code>Rf_GetRowNames()</code>)</a></li>
+  <li><a href="#Rf_GetColNames" id="toc-Rf_GetColNames" class="nav-link" data-scroll-target="#Rf_GetColNames"><span class="header-section-number">7.3.3</span> <code>Rf_GetColNames()</code>, <code>Rf_GetRowNames()</code></a></li>
   <li><a href="#Rf_GetMatrixDimnames" id="toc-Rf_GetMatrixDimnames" class="nav-link" data-scroll-target="#Rf_GetMatrixDimnames"><span class="header-section-number">7.3.4</span> <code>Rf_GetMatrixDimnames()</code></a></li>
-  <li><a href="#Rf_ncols" id="toc-Rf_ncols" class="nav-link" data-scroll-target="#Rf_ncols"><span class="header-section-number">7.3.5</span> <code>Rf_ncols()</code> (<code>Rf_nrows()</code>)</a></li>
-  <li><a href="#Rf_copyMatrix" id="toc-Rf_copyMatrix" class="nav-link" data-scroll-target="#Rf_copyMatrix"><span class="header-section-number">7.3.6</span> <code>Rf_copyMatrix()</code> (<code>Rf_copyListMatrix()</code>)</a></li>
+  <li><a href="#Rf_ncols" id="toc-Rf_ncols" class="nav-link" data-scroll-target="#Rf_ncols"><span class="header-section-number">7.3.5</span> <code>Rf_ncols()</code>, <code>Rf_nrows()</code></a></li>
+  <li><a href="#Rf_copyMatrix" id="toc-Rf_copyMatrix" class="nav-link" data-scroll-target="#Rf_copyMatrix"><span class="header-section-number">7.3.6</span> <code>Rf_copyMatrix()</code>, <code>Rf_copyListMatrix()</code></a></li>
   <li><a href="#Rf_conformable" id="toc-Rf_conformable" class="nav-link" data-scroll-target="#Rf_conformable"><span class="header-section-number">7.3.7</span> <code>Rf_conformable()</code></a></li>
   </ul></li>
   <li><a href="#factors" id="toc-factors" class="nav-link" data-scroll-target="#factors"><span class="header-section-number">7.4</span> Factors</a>
   <ul class="collapse">
-  <li><a href="#Rf_isFactor" id="toc-Rf_isFactor" class="nav-link" data-scroll-target="#Rf_isFactor"><span class="header-section-number">7.4.1</span> <code>Rf_isFactor()</code> (<code>Rf_isOrdered()</code>, <code>Rf_isUnordered()</code>)</a></li>
+  <li><a href="#Rf_isFactor" id="toc-Rf_isFactor" class="nav-link" data-scroll-target="#Rf_isFactor"><span class="header-section-number">7.4.1</span> <code>Rf_isFactor()</code>, <code>Rf_isOrdered()</code>, <code>Rf_isUnordered()</code></a></li>
   <li><a href="#Rf_nlevels" id="toc-Rf_nlevels" class="nav-link" data-scroll-target="#Rf_nlevels"><span class="header-section-number">7.4.2</span> <code>Rf_nlevels()</code></a></li>
   <li><a href="#Rf_asCharacterFactor" id="toc-Rf_asCharacterFactor" class="nav-link" data-scroll-target="#Rf_asCharacterFactor"><span class="header-section-number">7.4.3</span> <code>Rf_asCharacterFactor()</code></a></li>
   </ul></li>
@@ -441,80 +442,104 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 data-number="7.1" class="anchored" data-anchor-id="get-and-set"><span class="header-section-number">7.1</span> Get and set</h2>
 <p>Attributes are stored as a tagged pairlist, but you should treat them as an opaque map from symbol to value and use the accessors below.</p>
 <section id="Rf_getAttrib" class="level3" data-number="7.1.1">
-<h3 data-number="7.1.1" class="anchored" data-anchor-id="Rf_getAttrib"><span class="header-section-number">7.1.1</span> <code>Rf_getAttrib()</code> (<code>Rf_setAttrib()</code>)</h3>
+<h3 data-number="7.1.1" class="anchored" data-anchor-id="Rf_getAttrib"><span class="header-section-number">7.1.1</span> <code>Rf_getAttrib()</code>, <code>Rf_setAttrib()</code></h3>
+<p><span class="badge badge-errors">throws</span></p>
+<p><strong>Header:</strong> <code>Rinternals.h</code></p>
 <p>Get or set the attribute associated with a symbol.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>SEXP Rf_getAttrib<span class="op">(</span>SEXP x<span class="op">,</span> SEXP symbol<span class="op">);</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>SEXP Rf_setAttrib<span class="op">(</span>SEXP x<span class="op">,</span> SEXP symbol<span class="op">,</span> SEXP value<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<p><strong>Returns:</strong> <code>Rf_getAttrib()</code> returns the value of the attribute, or <code>R_NilValue</code> if <code>x</code> has no such attribute; <code>Rf_setAttrib()</code> returns <code>value</code>.</p>
 <p><code>Rf_getAttrib()</code> normally returns a borrowed reference, but there is one exception: retrieving <code>row.names</code> from a data frame expands the compact <code>c(NA_integer_, -n)</code> form into a newly allocated vector, which must be protected.</p>
 <p><strong>See also:</strong> <a href="#Rf_copyMostAttrib"><code>Rf_copyMostAttrib()</code></a>, <a href="#ATTRIB"><code>ATTRIB()</code></a></p>
 </section>
 <section id="Rf_copyMostAttrib" class="level3" data-number="7.1.2">
 <h3 data-number="7.1.2" class="anchored" data-anchor-id="Rf_copyMostAttrib"><span class="header-section-number">7.1.2</span> <code>Rf_copyMostAttrib()</code></h3>
+<p><span class="badge badge-errors">throws</span></p>
+<p><strong>Header:</strong> <code>Rinternals.h</code></p>
 <p>Copy attributes, except names, dim, and dimnames, from one object to another.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> Rf_copyMostAttrib<span class="op">(</span>SEXP source<span class="op">,</span> SEXP target<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 <p><strong>See also:</strong> <a href="#Rf_getAttrib"><code>Rf_getAttrib()</code></a>, <a href="#DUPLICATE_ATTRIB"><code>DUPLICATE_ATTRIB()</code></a></p>
 </section>
 <section id="DUPLICATE_ATTRIB" class="level3" data-number="7.1.3">
-<h3 data-number="7.1.3" class="anchored" data-anchor-id="DUPLICATE_ATTRIB"><span class="header-section-number">7.1.3</span> <code>DUPLICATE_ATTRIB()</code> (<code>SHALLOW_DUPLICATE_ATTRIB()</code>)</h3>
+<h3 data-number="7.1.3" class="anchored" data-anchor-id="DUPLICATE_ATTRIB"><span class="header-section-number">7.1.3</span> <code>DUPLICATE_ATTRIB()</code>, <code>SHALLOW_DUPLICATE_ATTRIB()</code></h3>
+<p><span class="badge badge-errors">throws</span></p>
+<p><strong>Header:</strong> <code>Rinternals.h</code></p>
 <p>Copy attributes from one object to another when duplicating an object.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> DUPLICATE_ATTRIB<span class="op">(</span>SEXP to<span class="op">,</span> SEXP from<span class="op">);</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> SHALLOW_DUPLICATE_ATTRIB<span class="op">(</span>SEXP to<span class="op">,</span> SEXP from<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 <p><strong>See also:</strong> <a href="#Rf_copyMostAttrib"><code>Rf_copyMostAttrib()</code></a></p>
 </section>
 <section id="Rf_namesgets" class="level3" data-number="7.1.4">
 <h3 data-number="7.1.4" class="anchored" data-anchor-id="Rf_namesgets"><span class="header-section-number">7.1.4</span> <code>Rf_namesgets()</code></h3>
+<p><span class="badge badge-errors">throws</span></p>
+<p><strong>Header:</strong> <code>Rinternals.h</code><br>
+<strong>R equivalent:</strong> <code>names&lt;-()</code></p>
 <p>Set the names of a vector.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>SEXP Rf_namesgets<span class="op">(</span>SEXP<span class="op">,</span> SEXP<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>names&lt;-()</code></p>
+<p><strong>Returns:</strong> The input vector with its names set.</p>
 </section>
 <section id="R_getAttributes" class="level3" data-number="7.1.5">
-<h3 data-number="7.1.5" class="anchored" data-anchor-id="R_getAttributes"><span class="header-section-number">7.1.5</span> <code>R_getAttributes()</code> (<code>R_getAttribCount()</code>, <code>R_getAttribNames()</code>, <code>R_hasAttrib()</code>)</h3>
+<h3 data-number="7.1.5" class="anchored" data-anchor-id="R_getAttributes"><span class="header-section-number">7.1.5</span> <code>R_getAttributes()</code>, <code>R_getAttribCount()</code>, <code>R_getAttribNames()</code>, <code>R_hasAttrib()</code></h3>
+<p><span class="badge badge-experimental">experimental</span> <span class="badge badge-protect">needs protect</span> <span class="badge badge-errors">throws</span></p>
+<p><strong>Header:</strong> <code>Rinternals.h</code><br>
+<strong>Since:</strong> 4.6.0<br>
+<strong>R equivalent:</strong> <code>attributes()</code></p>
 <p>Query the attributes of an object as a whole.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>SEXP R_getAttributes<span class="op">(</span>SEXP x<span class="op">);</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>R_xlen_t R_getAttribCount<span class="op">(</span>SEXP x<span class="op">);</span></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>SEXP R_getAttribNames<span class="op">(</span>SEXP x<span class="op">);</span></span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="dt">bool</span> R_hasAttrib<span class="op">(</span>SEXP x<span class="op">,</span> SEXP name<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> experimental · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> result · <strong>Errors:</strong> can throw · <strong>Since:</strong> 4.6.0 · <strong>R equivalent:</strong> <code>attributes()</code></p>
+<p><strong>Returns:</strong> <code>R_getAttributes()</code> returns the attributes of <code>x</code> as a named list (<code>R_NilValue</code> if none); <code>R_getAttribCount()</code> returns the number of attributes; <code>R_getAttribNames()</code> returns their names as a character vector; <code>R_hasAttrib()</code> returns <code>true</code> if <code>x</code> has an attribute called <code>name</code>.</p>
 <p><code>R_getAttributes()</code> returns the attributes as a named list, like <code>attributes()</code>; <code>R_hasAttrib()</code> tests for one attribute by name without retrieving it.</p>
 <p><strong>See also:</strong> <a href="#Rf_getAttrib"><code>Rf_getAttrib()</code></a>, <a href="#R_mapAttrib"><code>R_mapAttrib()</code></a></p>
 </section>
 <section id="R_nrow" class="level3" data-number="7.1.6">
-<h3 data-number="7.1.6" class="anchored" data-anchor-id="R_nrow"><span class="header-section-number">7.1.6</span> <code>R_nrow()</code> (<code>R_ncol()</code>)</h3>
+<h3 data-number="7.1.6" class="anchored" data-anchor-id="R_nrow"><span class="header-section-number">7.1.6</span> <code>R_nrow()</code>, <code>R_ncol()</code></h3>
+<p><span class="badge badge-experimental">experimental</span> <span class="badge badge-errors">throws</span></p>
+<p><strong>Header:</strong> <code>Rinternals.h</code><br>
+<strong>Since:</strong> 4.6.0<br>
+<strong>R equivalent:</strong> <code>nrow()</code></p>
 <p>Get the number of rows or columns of a matrix or data frame.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>R_xlen_t R_nrow<span class="op">(</span>SEXP x<span class="op">);</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>R_xlen_t R_ncol<span class="op">(</span>SEXP x<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> experimental · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> can throw · <strong>Since:</strong> 4.6.0 · <strong>R equivalent:</strong> <code>nrow()</code></p>
+<p><strong>Returns:</strong> The number of rows (<code>R_nrow()</code>) or columns (<code>R_ncol()</code>) of <code>x</code>.</p>
 <p>May dispatch to the <code>dim</code> method for non-standard objects, so they can allocate and error.</p>
 <p><strong>See also:</strong> <a href="#Rf_getAttrib"><code>Rf_getAttrib()</code></a></p>
 </section>
 <section id="R_class" class="level3" data-number="7.1.7">
 <h3 data-number="7.1.7" class="anchored" data-anchor-id="R_class"><span class="header-section-number">7.1.7</span> <code>R_class()</code></h3>
+<p><span class="badge badge-errors">throws</span></p>
+<p><strong>Header:</strong> <code>Rinternals.h</code><br>
+<strong>Since:</strong> 4.6.0<br>
+<strong>R equivalent:</strong> <code>class()</code></p>
 <p>Get the class vector of an object.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>SEXP R_class<span class="op">(</span>SEXP x<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> can throw · <strong>Since:</strong> 4.6.0 · <strong>R equivalent:</strong> <code>class()</code></p>
+<p><strong>Returns:</strong> The class vector of <code>x</code>, or the implicit class if <code>x</code> has no class attribute.</p>
 <p>Returns the implicit class for classless objects, like <code>class()</code> does; use <code>Rf_getAttrib(x, R_ClassSymbol)</code> if you want only the explicit class attribute.</p>
 <p><strong>See also:</strong> <a href="#Rf_getAttrib"><code>Rf_getAttrib()</code></a></p>
 </section>
 <section id="R_mapAttrib" class="level3" data-number="7.1.8">
 <h3 data-number="7.1.8" class="anchored" data-anchor-id="R_mapAttrib"><span class="header-section-number">7.1.8</span> <code>R_mapAttrib()</code></h3>
+<p><span class="badge badge-experimental">experimental</span> <span class="badge badge-protect">needs protect</span> <span class="badge badge-errors">throws</span></p>
+<p><strong>Header:</strong> <code>Rinternals.h</code><br>
+<strong>Since:</strong> 4.6.0</p>
 <p>Iterate over the attributes of an object with a callback.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>SEXP R_mapAttrib<span class="op">(</span>SEXP x<span class="op">,</span> SEXP <span class="op">(*</span>FUN<span class="op">)(</span>SEXP<span class="op">,</span> SEXP<span class="op">,</span> <span class="dt">void</span> <span class="op">*),</span> <span class="dt">void</span> <span class="op">*</span>data<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> experimental · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> result · <strong>Errors:</strong> can throw · <strong>Since:</strong> 4.6.0 · <strong>R equivalent:</strong> —</p>
 <ul>
 <li><code>FUN</code>: called with each attribute’s name and value; return <code>NULL</code> to continue, or any other value to stop and return it.</li>
 </ul>
+<p><strong>Returns:</strong> The first non-<code>NULL</code> value returned by <code>FUN</code>, or <code>NULL</code> if <code>FUN</code> returned <code>NULL</code> for every attribute.</p>
 <p>Highly experimental: both interface and semantics may change at short notice. Use only when <code>Rf_getAttrib()</code>/<code>R_getAttributes()</code> can’t do the job.</p>
 <p><strong>See also:</strong> <a href="#R_getAttributes"><code>R_getAttributes()</code></a></p>
 </section>
 <section id="ANY_ATTRIB" class="level3" data-number="7.1.9">
-<h3 data-number="7.1.9" class="anchored" data-anchor-id="ANY_ATTRIB"><span class="header-section-number">7.1.9</span> <code>ANY_ATTRIB()</code> (<code>CLEAR_ATTRIB()</code>)</h3>
+<h3 data-number="7.1.9" class="anchored" data-anchor-id="ANY_ATTRIB"><span class="header-section-number">7.1.9</span> <code>ANY_ATTRIB()</code>, <code>CLEAR_ATTRIB()</code></h3>
+<p><strong>Header:</strong> <code>Rinternals.h</code><br>
+<strong>Since:</strong> 4.5.0</p>
 <p>Test for, or remove, all attributes.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span>  <span class="op">(</span>ANY_ATTRIB<span class="op">)(</span>SEXP x<span class="op">);</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> CLEAR_ATTRIB<span class="op">(</span>SEXP x<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> 4.5.0 · <strong>R equivalent:</strong> —</p>
+<p><strong>Returns:</strong> <code>ANY_ATTRIB()</code> returns non-zero if <code>x</code> has any attributes, otherwise zero.</p>
 <p><code>CLEAR_ATTRIB()</code> removes all attributes and clears the object and S4 bits. Prefer <code>Rf_getAttrib()</code>/<code>Rf_setAttrib()</code> when you only touch one attribute.</p>
 <p><strong>See also:</strong> <a href="#Rf_getAttrib"><code>Rf_getAttrib()</code></a>, <a href="#R_getAttributes"><code>R_getAttributes()</code></a></p>
 </section>
@@ -524,64 +549,79 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>An array is an atomic vector with a <code>dim</code> attribute: an integer vector giving the size of each dimension. Elements are stored in column-major order (the first dimension varies fastest), so the flat data pointer from <code>REAL()</code> etc. needs no rearrangement.</p>
 <section id="Rf_isArray" class="level3" data-number="7.2.1">
 <h3 data-number="7.2.1" class="anchored" data-anchor-id="Rf_isArray"><span class="header-section-number">7.2.1</span> <code>Rf_isArray()</code></h3>
+<p><strong>Header:</strong> <code>Rinternals.h</code><br>
+<strong>R equivalent:</strong> <code>is.array()</code></p>
 <p>Test if an object is an array.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>Rboolean Rf_isArray<span class="op">(</span>SEXP x<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>is.array()</code></p>
 <ul>
 <li><code>x</code>: any SEXP.</li>
 </ul>
+<p><strong>Returns:</strong> <code>TRUE</code> if <code>x</code> is an array (a vector with a <code>dim</code> attribute), otherwise <code>FALSE</code>.</p>
 <p>Arrays are vectors with a dim attribute.</p>
 <p><strong>See also:</strong> <a href="#Rf_allocArray"><code>Rf_allocArray()</code></a>, <a href="#Rf_isMatrix"><code>Rf_isMatrix()</code></a></p>
 </section>
 <section id="Rf_allocArray" class="level3" data-number="7.2.2">
-<h3 data-number="7.2.2" class="anchored" data-anchor-id="Rf_allocArray"><span class="header-section-number">7.2.2</span> <code>Rf_allocArray()</code> (<code>Rf_alloc3DArray()</code>)</h3>
+<h3 data-number="7.2.2" class="anchored" data-anchor-id="Rf_allocArray"><span class="header-section-number">7.2.2</span> <code>Rf_allocArray()</code>, <code>Rf_alloc3DArray()</code></h3>
+<p><span class="badge badge-protect">needs protect</span> <span class="badge badge-errors">throws</span></p>
+<p><strong>Header:</strong> <code>Rinternals.h</code><br>
+<strong>R equivalent:</strong> <code>array()</code></p>
 <p>Create an array of the given type and dimensions.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>SEXP Rf_allocArray<span class="op">(</span>SEXPTYPE type<span class="op">,</span> SEXP dims<span class="op">);</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>SEXP Rf_alloc3DArray<span class="op">(</span>SEXPTYPE type<span class="op">,</span> <span class="dt">int</span><span class="op">,</span> <span class="dt">int</span><span class="op">,</span> <span class="dt">int</span><span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> result · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>array()</code></p>
 <ul>
 <li><code>type</code>: any vector <code>SEXPTYPE</code>.</li>
 <li><code>dims</code>: an integer vector of dimensions.</li>
 </ul>
+<p><strong>Returns:</strong> A newly allocated array of the given type and dimensions.</p>
 <p><strong>See also:</strong> <a href="#Rf_allocMatrix"><code>Rf_allocMatrix()</code></a>, <a href="#Rf_dimgets"><code>Rf_dimgets()</code></a></p>
 </section>
 <section id="Rf_GetArrayDimnames" class="level3" data-number="7.2.3">
 <h3 data-number="7.2.3" class="anchored" data-anchor-id="Rf_GetArrayDimnames"><span class="header-section-number">7.2.3</span> <code>Rf_GetArrayDimnames()</code></h3>
+<p><strong>Header:</strong> <code>Rinternals.h</code><br>
+<strong>R equivalent:</strong> <code>dimnames()</code></p>
 <p>Get the dimnames of an array.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>SEXP Rf_GetArrayDimnames<span class="op">(</span>SEXP x<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>dimnames()</code></p>
 <ul>
 <li><code>x</code>: an array.</li>
 </ul>
+<p><strong>Returns:</strong> The dimnames of <code>x</code> as a list, or <code>R_NilValue</code> if it has none.</p>
 <p><strong>See also:</strong> <a href="#Rf_dimgets"><code>Rf_dimgets()</code></a></p>
 </section>
 <section id="Rf_dimgets" class="level3" data-number="7.2.4">
-<h3 data-number="7.2.4" class="anchored" data-anchor-id="Rf_dimgets"><span class="header-section-number">7.2.4</span> <code>Rf_dimgets()</code> (<code>Rf_dimnamesgets()</code>)</h3>
+<h3 data-number="7.2.4" class="anchored" data-anchor-id="Rf_dimgets"><span class="header-section-number">7.2.4</span> <code>Rf_dimgets()</code>, <code>Rf_dimnamesgets()</code></h3>
+<p><span class="badge badge-errors">throws</span></p>
+<p><strong>Header:</strong> <code>Rinternals.h</code><br>
+<strong>R equivalent:</strong> <code>dim&lt;-</code></p>
 <p>Set the dim or dimnames attribute of an array.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>SEXP Rf_dimgets<span class="op">(</span>SEXP x<span class="op">,</span> SEXP v<span class="op">);</span></span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>SEXP Rf_dimnamesgets<span class="op">(</span>SEXP x<span class="op">,</span> SEXP v<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>dim&lt;-</code></p>
 <ul>
 <li><code>x</code>: an array.</li>
 <li><code>v</code>: the new dim (an integer vector) or dimnames (a list).</li>
 </ul>
+<p><strong>Returns:</strong> The modified object <code>x</code>.</p>
 <p><strong>See also:</strong> <a href="#Rf_GetArrayDimnames"><code>Rf_GetArrayDimnames()</code></a>, <a href="#Rf_DropDims"><code>Rf_DropDims()</code></a></p>
 </section>
 <section id="Rf_DropDims" class="level3" data-number="7.2.5">
 <h3 data-number="7.2.5" class="anchored" data-anchor-id="Rf_DropDims"><span class="header-section-number">7.2.5</span> <code>Rf_DropDims()</code></h3>
+<p><span class="badge badge-errors">throws</span></p>
+<p><strong>Header:</strong> <code>Rinternals.h</code><br>
+<strong>R equivalent:</strong> <code>drop()</code></p>
 <p>Drop the dim attribute of an array.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>SEXP Rf_DropDims<span class="op">(</span>SEXP x<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>drop()</code></p>
 <ul>
 <li><code>x</code>: an array.</li>
 </ul>
+<p><strong>Returns:</strong> <code>x</code> with its <code>dim</code> attribute removed.</p>
 <p><strong>See also:</strong> <a href="#Rf_dimgets"><code>Rf_dimgets()</code></a></p>
 </section>
 <section id="Rf_arraySubscript" class="level3" data-number="7.2.6">
 <h3 data-number="7.2.6" class="anchored" data-anchor-id="Rf_arraySubscript"><span class="header-section-number">7.2.6</span> <code>Rf_arraySubscript()</code></h3>
+<p><span class="badge badge-protect">needs protect</span> <span class="badge badge-errors">throws</span></p>
+<p><strong>Header:</strong> <code>Rinternals.h</code></p>
 <p>Compute the vector offset corresponding to an array subscript.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>SEXP Rf_arraySubscript<span class="op">(</span><span class="dt">int</span><span class="op">,</span> SEXP<span class="op">,</span> SEXP<span class="op">,</span> SEXP <span class="op">(*)(</span>SEXP<span class="op">,</span>SEXP<span class="op">),</span> SEXP <span class="op">(*)(</span>SEXP<span class="op">,</span> <span class="dt">int</span><span class="op">),</span> SEXP<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> result · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<p><strong>Returns:</strong> A newly allocated vector of offsets into the array’s underlying storage.</p>
 </section>
 </section>
 <section id="matrices" class="level2" data-number="7.3">
@@ -589,44 +629,52 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>A matrix is an array with exactly two dimensions. R provides a few matrix-specific conveniences:</p>
 <section id="Rf_allocMatrix" class="level3" data-number="7.3.1">
 <h3 data-number="7.3.1" class="anchored" data-anchor-id="Rf_allocMatrix"><span class="header-section-number">7.3.1</span> <code>Rf_allocMatrix()</code></h3>
+<p><span class="badge badge-protect">needs protect</span> <span class="badge badge-errors">throws</span></p>
+<p><strong>Header:</strong> <code>Rinternals.h</code><br>
+<strong>R equivalent:</strong> <code>matrix()</code></p>
 <p>Create a matrix of the given type and dimensions.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>SEXP Rf_allocMatrix<span class="op">(</span>SEXPTYPE type<span class="op">,</span> <span class="dt">int</span> nrow<span class="op">,</span> <span class="dt">int</span> ncol<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> result · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>matrix()</code></p>
 <ul>
 <li><code>type</code>: any vector <code>SEXPTYPE</code>.</li>
 <li><code>nrow</code>: number of rows.</li>
 <li><code>ncol</code>: number of columns.</li>
 </ul>
+<p><strong>Returns:</strong> A newly allocated matrix of the given type and dimensions.</p>
 <p>Matrices are arrays with exactly 2 dimensions.</p>
 <p><strong>See also:</strong> <a href="#Rf_allocArray"><code>Rf_allocArray()</code></a>, <a href="#Rf_ncols"><code>Rf_ncols()</code></a></p>
 </section>
 <section id="Rf_isMatrix" class="level3" data-number="7.3.2">
 <h3 data-number="7.3.2" class="anchored" data-anchor-id="Rf_isMatrix"><span class="header-section-number">7.3.2</span> <code>Rf_isMatrix()</code></h3>
+<p><strong>Header:</strong> <code>Rinternals.h</code><br>
+<strong>R equivalent:</strong> <code>is.matrix()</code></p>
 <p>Test if an object is a matrix.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>Rboolean Rf_isMatrix<span class="op">(</span>SEXP x<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>is.matrix()</code></p>
 <ul>
 <li><code>x</code>: any SEXP.</li>
 </ul>
+<p><strong>Returns:</strong> <code>TRUE</code> if <code>x</code> is a matrix (an array with exactly two dimensions), otherwise <code>FALSE</code>.</p>
 <p><strong>See also:</strong> <a href="#Rf_isArray"><code>Rf_isArray()</code></a></p>
 </section>
 <section id="Rf_GetColNames" class="level3" data-number="7.3.3">
-<h3 data-number="7.3.3" class="anchored" data-anchor-id="Rf_GetColNames"><span class="header-section-number">7.3.3</span> <code>Rf_GetColNames()</code> (<code>Rf_GetRowNames()</code>)</h3>
+<h3 data-number="7.3.3" class="anchored" data-anchor-id="Rf_GetColNames"><span class="header-section-number">7.3.3</span> <code>Rf_GetColNames()</code>, <code>Rf_GetRowNames()</code></h3>
+<p><strong>Header:</strong> <code>Rinternals.h</code><br>
+<strong>R equivalent:</strong> <code>colnames()</code></p>
 <p>Get the column or row names from a dimnames object.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>SEXP Rf_GetColNames<span class="op">(</span>SEXP dimnames<span class="op">);</span></span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>SEXP Rf_GetRowNames<span class="op">(</span>SEXP dimnames<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>colnames()</code></p>
 <ul>
 <li><code>dimnames</code>: a dimnames object.</li>
 </ul>
+<p><strong>Returns:</strong> <code>Rf_GetColNames()</code> returns the column names (second element of <code>dimnames</code>) and <code>Rf_GetRowNames()</code> the row names (first element); either may be <code>R_NilValue</code>.</p>
 <p><strong>See also:</strong> <a href="#Rf_GetMatrixDimnames"><code>Rf_GetMatrixDimnames()</code></a></p>
 </section>
 <section id="Rf_GetMatrixDimnames" class="level3" data-number="7.3.4">
 <h3 data-number="7.3.4" class="anchored" data-anchor-id="Rf_GetMatrixDimnames"><span class="header-section-number">7.3.4</span> <code>Rf_GetMatrixDimnames()</code></h3>
+<p><strong>Header:</strong> <code>Rinternals.h</code><br>
+<strong>R equivalent:</strong> <code>dimnames()</code></p>
 <p>Get the row and column names of a matrix through output parameters.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> Rf_GetMatrixDimnames<span class="op">(</span>SEXP x<span class="op">,</span> SEXP<span class="op">*</span> rl<span class="op">,</span> SEXP<span class="op">*</span> cl<span class="op">,</span></span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">const</span> <span class="dt">char</span><span class="op">**</span> rownames<span class="op">,</span> <span class="dt">const</span> <span class="dt">char</span><span class="op">**</span> colnames<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>dimnames()</code></p>
 <ul>
 <li><code>x</code>: a matrix.</li>
 <li><code>rl</code>: output parameter for the row names as a SEXP.</li>
@@ -637,22 +685,25 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><strong>See also:</strong> <a href="#Rf_GetColNames"><code>Rf_GetColNames()</code></a></p>
 </section>
 <section id="Rf_ncols" class="level3" data-number="7.3.5">
-<h3 data-number="7.3.5" class="anchored" data-anchor-id="Rf_ncols"><span class="header-section-number">7.3.5</span> <code>Rf_ncols()</code> (<code>Rf_nrows()</code>)</h3>
+<h3 data-number="7.3.5" class="anchored" data-anchor-id="Rf_ncols"><span class="header-section-number">7.3.5</span> <code>Rf_ncols()</code>, <code>Rf_nrows()</code></h3>
+<p><strong>Header:</strong> <code>Rinternals.h</code><br>
+<strong>R equivalent:</strong> <code>ncol()</code></p>
 <p>Get the number of columns or rows of a matrix.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> Rf_ncols<span class="op">(</span>SEXP x<span class="op">);</span></span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> Rf_nrows<span class="op">(</span>SEXP x<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>ncol()</code></p>
 <ul>
 <li><code>x</code>: a matrix.</li>
 </ul>
+<p><strong>Returns:</strong> The number of columns (<code>Rf_ncols()</code>) or rows (<code>Rf_nrows()</code>) of <code>x</code>.</p>
 <p><strong>See also:</strong> <a href="#Rf_allocMatrix"><code>Rf_allocMatrix()</code></a></p>
 </section>
 <section id="Rf_copyMatrix" class="level3" data-number="7.3.6">
-<h3 data-number="7.3.6" class="anchored" data-anchor-id="Rf_copyMatrix"><span class="header-section-number">7.3.6</span> <code>Rf_copyMatrix()</code> (<code>Rf_copyListMatrix()</code>)</h3>
+<h3 data-number="7.3.6" class="anchored" data-anchor-id="Rf_copyMatrix"><span class="header-section-number">7.3.6</span> <code>Rf_copyMatrix()</code>, <code>Rf_copyListMatrix()</code></h3>
+<p><span class="badge badge-errors">throws</span></p>
+<p><strong>Header:</strong> <code>Rinternals.h</code></p>
 <p>Copy the contents of one matrix into another.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> Rf_copyMatrix<span class="op">(</span>SEXP source<span class="op">,</span> SEXP target<span class="op">,</span> Rboolean byrow<span class="op">);</span></span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> Rf_copyListMatrix<span class="op">(</span>SEXP source<span class="op">,</span> SEXP target<span class="op">,</span> Rboolean byrow<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 <ul>
 <li><code>source</code>: the matrix to copy from.</li>
 <li><code>target</code>: the matrix to copy to.</li>
@@ -662,44 +713,54 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="Rf_conformable" class="level3" data-number="7.3.7">
 <h3 data-number="7.3.7" class="anchored" data-anchor-id="Rf_conformable"><span class="header-section-number">7.3.7</span> <code>Rf_conformable()</code></h3>
+<p><span class="badge badge-errors">throws</span></p>
+<p><strong>Header:</strong> <code>Rinternals.h</code></p>
 <p>Test whether two objects have conformable dimensions.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>Rboolean Rf_conformable<span class="op">(</span>SEXP<span class="op">,</span> SEXP<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<p><strong>Returns:</strong> <code>TRUE</code> if the two objects have conformable dimensions, otherwise <code>FALSE</code>.</p>
 </section>
 </section>
 <section id="factors" class="level2" data-number="7.4">
 <h2 data-number="7.4" class="anchored" data-anchor-id="factors"><span class="header-section-number">7.4</span> Factors</h2>
 <p>A factor is an integer vector of 1-based codes with a <code>levels</code> character vector and class <code>"factor"</code>. <code>NA_INTEGER</code> codes represent missing values. Because factors are <code>INTSXP</code> internally, <code>TYPEOF(x) == INTSXP</code> alone can’t distinguish them from plain integer vectors.</p>
 <section id="Rf_isFactor" class="level3" data-number="7.4.1">
-<h3 data-number="7.4.1" class="anchored" data-anchor-id="Rf_isFactor"><span class="header-section-number">7.4.1</span> <code>Rf_isFactor()</code> (<code>Rf_isOrdered()</code>, <code>Rf_isUnordered()</code>)</h3>
+<h3 data-number="7.4.1" class="anchored" data-anchor-id="Rf_isFactor"><span class="header-section-number">7.4.1</span> <code>Rf_isFactor()</code>, <code>Rf_isOrdered()</code>, <code>Rf_isUnordered()</code></h3>
+<p><strong>Header:</strong> <code>Rinternals.h</code><br>
+<strong>R equivalent:</strong> <code>is.factor()</code></p>
 <p>Test if an object is a factor, or an ordered or unordered factor.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>Rboolean Rf_isFactor<span class="op">(</span>SEXP x<span class="op">);</span></span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>Rboolean Rf_isOrdered<span class="op">(</span>SEXP x<span class="op">);</span></span>
 <span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>Rboolean Rf_isUnordered<span class="op">(</span>SEXP x<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>is.factor()</code></p>
 <ul>
 <li><code>x</code>: any SEXP.</li>
 </ul>
+<p><strong>Returns:</strong> <code>TRUE</code> if <code>x</code> is a factor (<code>Rf_isFactor()</code>), an ordered factor (<code>Rf_isOrdered()</code>), or an unordered factor (<code>Rf_isUnordered()</code>), otherwise <code>FALSE</code>.</p>
 <p><strong>See also:</strong> <a href="#Rf_nlevels"><code>Rf_nlevels()</code></a>, <a href="#Rf_asCharacterFactor"><code>Rf_asCharacterFactor()</code></a></p>
 </section>
 <section id="Rf_nlevels" class="level3" data-number="7.4.2">
 <h3 data-number="7.4.2" class="anchored" data-anchor-id="Rf_nlevels"><span class="header-section-number">7.4.2</span> <code>Rf_nlevels()</code></h3>
+<p><span class="badge badge-experimental">experimental</span></p>
+<p><strong>Header:</strong> <code>Rinternals.h</code><br>
+<strong>R equivalent:</strong> <code>nlevels()</code></p>
 <p>Get the number of levels of a factor.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb24"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> Rf_nlevels<span class="op">(</span>SEXP x<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> experimental · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>nlevels()</code></p>
 <ul>
 <li><code>x</code>: a factor.</li>
 </ul>
+<p><strong>Returns:</strong> The number of levels of the factor <code>x</code>.</p>
 <p><strong>See also:</strong> <a href="#Rf_isFactor"><code>Rf_isFactor()</code></a></p>
 </section>
 <section id="Rf_asCharacterFactor" class="level3" data-number="7.4.3">
 <h3 data-number="7.4.3" class="anchored" data-anchor-id="Rf_asCharacterFactor"><span class="header-section-number">7.4.3</span> <code>Rf_asCharacterFactor()</code></h3>
+<p><span class="badge badge-protect">needs protect</span> <span class="badge badge-errors">throws</span></p>
+<p><strong>Header:</strong> <code>Rinternals.h</code><br>
+<strong>R equivalent:</strong> <code>as.character()</code></p>
 <p>Coerce a factor into a character vector.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb25"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>SEXP Rf_asCharacterFactor<span class="op">(</span>SEXP x<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> result · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>as.character()</code></p>
 <ul>
 <li><code>x</code>: a factor.</li>
 </ul>
+<p><strong>Returns:</strong> A newly allocated character vector of the factor’s level labels.</p>
 <p><strong>See also:</strong> <a href="#Rf_isFactor"><code>Rf_isFactor()</code></a></p>
 </section>
 </section>
@@ -714,9 +775,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>UNPROTECT<span class="op">(</span><span class="dv">1</span><span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <section id="Rf_isDataFrame" class="level3" data-number="7.5.1">
 <h3 data-number="7.5.1" class="anchored" data-anchor-id="Rf_isDataFrame"><span class="header-section-number">7.5.1</span> <code>Rf_isDataFrame()</code></h3>
+<p><strong>Header:</strong> <code>Rinternals.h</code><br>
+<strong>Since:</strong> 4.5.0<br>
+<strong>R equivalent:</strong> <code>is.data.frame()</code></p>
 <p>Test whether an object is a data frame.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb27"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>Rboolean Rf_isDataFrame<span class="op">(</span>SEXP x<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> 4.5.0 · <strong>R equivalent:</strong> <code>is.data.frame()</code></p>
+<p><strong>Returns:</strong> <code>TRUE</code> if <code>x</code> is a data frame, otherwise <code>FALSE</code>.</p>
 </section>
 </section>
 <section id="time-series" class="level2" data-number="7.6">
@@ -724,9 +788,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>A <code>ts</code> object is a numeric vector or matrix with a <code>tsp</code> attribute holding <code>c(start, end, frequency)</code>. This is mostly of historical interest — most modern time series packages use their own classes — but base R’s <code>is.ts()</code> is available:</p>
 <section id="Rf_isTs" class="level3" data-number="7.6.1">
 <h3 data-number="7.6.1" class="anchored" data-anchor-id="Rf_isTs"><span class="header-section-number">7.6.1</span> <code>Rf_isTs()</code></h3>
+<p><span class="badge badge-errors">throws</span></p>
+<p><strong>Header:</strong> <code>Rinternals.h</code><br>
+<strong>R equivalent:</strong> <code>is.ts()</code></p>
 <p>Test whether an object is a time series.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb28"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>Rboolean Rf_isTs<span class="op">(</span>SEXP<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>is.ts()</code></p>
+<p><strong>Returns:</strong> <code>TRUE</code> if the object is of class <code>ts</code>, otherwise <code>FALSE</code>.</p>
 <p>Tests for the <code>"ts"</code> class. Mostly of historical interest: the <code>ts</code> class (a numeric vector or matrix with a <code>tsp</code> attribute) is base R’s original time series representation, but most modern time series packages use their own classes.</p>
 
 

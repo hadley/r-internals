@@ -8,19 +8,29 @@ Create closures with `R_mkClosure()` — the old idiom of allocating a `CLOSXP` 
 
 ### 11.1.1 `R_mkClosure()`
 
+needs protect throws
+
+**Header:** `Rinternals.h`\
+**Since:** 4.5.0\
+**R equivalent:** `as.function()`
+
 Create a closure from formals, body, and environment.
 
 ``` c
 SEXP R_mkClosure(SEXP formals, SEXP body, SEXP env);
 ```
 
-**Status:** API · **Header:** `Rinternals.h` · **Protect:** result · **Errors:** can throw · **Since:** 4.5.0 · **R equivalent:** `as.function()`
+**Returns:** A new `CLOSXP` closure.
 
 The API replacement for the non-API idiom `Rf_allocSExp(CLOSXP)` + `SET_FORMALS`/`SET_BODY`/`SET_CLOENV`. Checks that `formals` is a well-formed pairlist of formal arguments.
 
 **See also:** [`R_ClosureFormals()`](#R_ClosureFormals)
 
-### 11.1.2 `R_ClosureFormals()` (`R_ClosureBody()`, `R_ClosureEnv()`)
+### 11.1.2 `R_ClosureFormals()`, `R_ClosureBody()`, `R_ClosureEnv()`
+
+**Header:** `Rinternals.h`\
+**Since:** 4.5.0\
+**R equivalent:** `formals()`
 
 Access the formals, body, or environment of a closure.
 
@@ -30,13 +40,15 @@ SEXP R_ClosureBody(SEXP x);
 SEXP R_ClosureEnv(SEXP x);
 ```
 
-**Status:** API · **Header:** `Rinternals.h` · **Protect:** not needed · **Errors:** never · **Since:** 4.5.0 · **R equivalent:** `formals()`
+**Returns:** The formals, body, or environment of closure `x`, respectively.
 
 The API replacements for `FORMALS()`, `BODY()`, and `CLOENV()`.
 
 **See also:** [`R_mkClosure()`](#R_mkClosure)
 
-### 11.1.3 `R_ClosureExpr()` (`BODY_EXPR()`)
+### 11.1.3 `R_ClosureExpr()`, `BODY_EXPR()`
+
+**Header:** `Rinternals.h`
 
 Get the body expression of a closure.
 
@@ -45,7 +57,7 @@ SEXP R_ClosureExpr(SEXP);
 #define BODY_EXPR(e) R_ClosureExpr(e)
 ```
 
-**Status:** API · **Header:** `Rinternals.h` · **Protect:** not needed · **Errors:** never · **Since:** — · **R equivalent:** —
+**Returns:** The unevaluated body expression of the closure.
 
 Returns the unevaluated body, like `body()` at the R level.
 
@@ -53,13 +65,15 @@ Returns the unevaluated body, like `body()` at the R level.
 
 ### 11.1.4 `R_BytecodeExpr()`
 
+**Header:** `Rinternals.h`
+
 Get the byte-compiled form of a closure’s body.
 
 ``` c
 SEXP R_BytecodeExpr(SEXP e);
 ```
 
-**Status:** API · **Header:** `Rinternals.h` · **Protect:** not needed · **Errors:** never · **Since:** — · **R equivalent:** —
+**Returns:** The byte-compiled body as a `BCODESXP`, or `R_NilValue` if the closure is not byte-compiled.
 
 Returns a `BCODESXP` if the closure has been byte-compiled, and `R_NilValue` otherwise.
 
@@ -67,7 +81,10 @@ Returns a `BCODESXP` if the closure has been byte-compiled, and `R_NilValue` oth
 
 ## 11.2 Testing functions
 
-### 11.2.1 `Rf_isFunction()` (`Rf_isPrimitive()`)
+### 11.2.1 `Rf_isFunction()`, `Rf_isPrimitive()`
+
+**Header:** `Rinternals.h`\
+**R equivalent:** `is.function()`
 
 Test whether an object is a function or a primitive function.
 
@@ -76,7 +93,7 @@ Rboolean Rf_isFunction(SEXP);
 Rboolean Rf_isPrimitive(SEXP);
 ```
 
-**Status:** API · **Header:** `Rinternals.h` · **Protect:** n/a · **Errors:** never · **Since:** — · **R equivalent:** `is.function()`
+**Returns:** `TRUE` if the object is a function (respectively a primitive function), otherwise `FALSE`.
 
 `FUNSXP` is an abstract union type.
 
@@ -86,13 +103,13 @@ A promise bundles an unevaluated expression with the environment it should be ev
 
 ### 11.3.1 `R_UnboundValue()`
 
+**Header:** `Rinternals.h`
+
 Access the unbound-value marker constant.
 
 ``` c
 LibExtern SEXP  R_UnboundValue;     /* Unbound marker */
 ```
-
-**Status:** API · **Header:** `Rinternals.h` · **Protect:** n/a · **Errors:** never · **Since:** — · **R equivalent:** —
 
 `R_UnboundValue` marks an unbound symbol or an unread promise value.
 
@@ -102,15 +119,19 @@ LibExtern SEXP  R_UnboundValue;     /* Unbound marker */
 
 ### 11.4.1 `R_Srcref()`
 
+**Header:** `Rinternals.h`
+
 Access the current srcref, for debuggers.
 
 ``` c
 LibExtern SEXP  R_Srcref;           /* Current srcref, for debuggers */
 ```
 
-**Status:** API · **Header:** `Rinternals.h` · **Protect:** n/a · **Errors:** never · **Since:** — · **R equivalent:** —
+### 11.4.2 `R_GetCurrentSrcref()`, `R_GetSrcFilename()`
 
-### 11.4.2 `R_GetCurrentSrcref()` (`R_GetSrcFilename()`)
+needs protect
+
+**Header:** `Rinternals.h`
 
 Get the current srcref or the source filename of a srcref.
 
@@ -119,4 +140,4 @@ SEXP R_GetCurrentSrcref(int);
 SEXP R_GetSrcFilename(SEXP);
 ```
 
-**Status:** API · **Header:** `Rinternals.h` · **Protect:** result · **Errors:** never · **Since:** — · **R equivalent:** —
+**Returns:** `R_GetCurrentSrcref()` returns the current srcref, or `R_NilValue` if none; `R_GetSrcFilename()` returns the filename stored in a srcref.

@@ -112,6 +112,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 }</script>
 
 
+<link rel="stylesheet" href="badges.css">
 </head>
 
 <body class="nav-sidebar floating quarto-light">
@@ -374,13 +375,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </ul></li>
   <li><a href="#protected-evaluation" id="toc-protected-evaluation" class="nav-link" data-scroll-target="#protected-evaluation"><span class="header-section-number">14.2</span> Protected evaluation</a>
   <ul class="collapse">
-  <li><a href="#R_tryEval" id="toc-R_tryEval" class="nav-link" data-scroll-target="#R_tryEval"><span class="header-section-number">14.2.1</span> <code>R_tryEval()</code> (<code>R_tryEvalSilent()</code>)</a></li>
+  <li><a href="#R_tryEval" id="toc-R_tryEval" class="nav-link" data-scroll-target="#R_tryEval"><span class="header-section-number">14.2.1</span> <code>R_tryEval()</code>, <code>R_tryEvalSilent()</code></a></li>
   <li><a href="#R_ToplevelExec" id="toc-R_ToplevelExec" class="nav-link" data-scroll-target="#R_ToplevelExec"><span class="header-section-number">14.2.2</span> <code>R_ToplevelExec()</code></a></li>
   <li><a href="#R_curErrorBuf" id="toc-R_curErrorBuf" class="nav-link" data-scroll-target="#R_curErrorBuf"><span class="header-section-number">14.2.3</span> <code>R_curErrorBuf()</code></a></li>
   </ul></li>
   <li><a href="#parsing" id="toc-parsing" class="nav-link" data-scroll-target="#parsing"><span class="header-section-number">14.3</span> Parsing</a>
   <ul class="collapse">
-  <li><a href="#R_ParseVector" id="toc-R_ParseVector" class="nav-link" data-scroll-target="#R_ParseVector"><span class="header-section-number">14.3.1</span> <code>R_ParseVector()</code> (<code>R_ParseString()</code>, <code>R_ParseEvalString()</code>)</a></li>
+  <li><a href="#R_ParseVector" id="toc-R_ParseVector" class="nav-link" data-scroll-target="#R_ParseVector"><span class="header-section-number">14.3.1</span> <code>R_ParseVector()</code>, <code>R_ParseString()</code>, <code>R_ParseEvalString()</code></a></li>
   </ul></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/hadley/r-internals/edit/main/evaluation.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/hadley/r-internals/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
@@ -420,27 +421,35 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>For more than a couple of arguments, build the call with <code>Rf_allocList()</code> + <code>SET_TYPEOF(..., LANGSXP)</code> or <code>Rf_cons()</code> rather than deeply nesting <code>Rf_lang*()</code> calls. Evaluate in the environment that gives the call the right scope: <code>R_GlobalEnv</code> for user-visible semantics, a namespace environment for calling a package’s internals, or <code>R_BaseEnv</code>/<code>R_BaseNamespace</code> for base functions.</p>
 <section id="Rf_eval" class="level3" data-number="14.1.1">
 <h3 data-number="14.1.1" class="anchored" data-anchor-id="Rf_eval"><span class="header-section-number">14.1.1</span> <code>Rf_eval()</code></h3>
+<p><span class="badge badge-protect">needs protect</span> <span class="badge badge-errors">throws</span></p>
+<p><strong>Header:</strong> <code>Rinternals.h</code><br>
+<strong>R equivalent:</strong> <code>eval()</code></p>
 <p>Evaluate an expression in an environment.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>SEXP Rf_eval<span class="op">(</span>SEXP expression<span class="op">,</span> SEXP environment<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> result · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>eval()</code></p>
+<p><strong>Returns:</strong> The result of evaluating <code>expression</code> in <code>environment</code>; may be <code>R_NilValue</code>.</p>
 <p>Expression can be anything - non-language objects are returned as is.</p>
 </section>
 <section id="R_forceAndCall" class="level3" data-number="14.1.2">
 <h3 data-number="14.1.2" class="anchored" data-anchor-id="R_forceAndCall"><span class="header-section-number">14.1.2</span> <code>R_forceAndCall()</code></h3>
+<p><span class="badge badge-experimental">experimental</span> <span class="badge badge-protect">needs protect</span> <span class="badge badge-errors">throws</span></p>
+<p><strong>Header:</strong> <code>Rinternals.h</code></p>
 <p>Force promises in an expression and then call it.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>SEXP R_forceAndCall<span class="op">(</span>SEXP expression<span class="op">,</span> <span class="dt">int</span> n<span class="op">,</span> SEXP environment<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> experimental · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> result · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 <ul>
 <li><code>n</code>: The number of arguments to force.</li>
 </ul>
+<p><strong>Returns:</strong> The result of the call after forcing the first <code>n</code> arguments.</p>
 <p><code>n</code> is the number of leading arguments in the call to force before evaluating.</p>
 <p><strong>See also:</strong> <a href="#Rf_eval"><code>Rf_eval()</code></a></p>
 </section>
 <section id="Rf_substitute" class="level3" data-number="14.1.3">
 <h3 data-number="14.1.3" class="anchored" data-anchor-id="Rf_substitute"><span class="header-section-number">14.1.3</span> <code>Rf_substitute()</code></h3>
+<p><span class="badge badge-protect">needs protect</span> <span class="badge badge-errors">throws</span></p>
+<p><strong>Header:</strong> <code>Rinternals.h</code><br>
+<strong>R equivalent:</strong> <code>substitute()</code></p>
 <p>Substitute values for variables in an expression.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>SEXP Rf_substitute<span class="op">(</span>SEXP<span class="op">,</span>SEXP<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> result · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>substitute()</code></p>
+<p><strong>Returns:</strong> The expression with variables replaced by their values.</p>
 </section>
 </section>
 <section id="protected-evaluation" class="level2" data-number="14.2">
@@ -448,51 +457,60 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><code>Rf_eval()</code> longjmps on error, abandoning your C function mid-flight. If you need to keep control after a failure — to report the error yourself, retry, or clean up and continue — evaluate in a context that catches the error instead. These functions ignore all existing condition handlers, so R-level <code>tryCatch()</code> and <code>suppressWarnings()</code> have no effect on the protected evaluation.</p>
 <p>For richer control — running cleanup code on unwind, or installing condition handlers — see <a href="./errors.html">Errors and conditions</a>.</p>
 <section id="R_tryEval" class="level3" data-number="14.2.1">
-<h3 data-number="14.2.1" class="anchored" data-anchor-id="R_tryEval"><span class="header-section-number">14.2.1</span> <code>R_tryEval()</code> (<code>R_tryEvalSilent()</code>)</h3>
+<h3 data-number="14.2.1" class="anchored" data-anchor-id="R_tryEval"><span class="header-section-number">14.2.1</span> <code>R_tryEval()</code>, <code>R_tryEvalSilent()</code></h3>
+<p><span class="badge badge-protect">needs protect</span></p>
+<p><strong>Header:</strong> <code>Rinternals.h</code><br>
+<strong>R equivalent:</strong> <code>try()</code></p>
 <p>Evaluate an R expression in a stand-alone context so errors don’t longjmp.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>SEXP R_tryEval<span class="op">(</span>SEXP expression<span class="op">,</span> SEXP environment<span class="op">,</span> <span class="dt">int</span><span class="op">*</span> pOutError<span class="op">);</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>SEXP R_tryEvalSilent<span class="op">(</span>SEXP expression<span class="op">,</span> SEXP environment<span class="op">,</span> <span class="dt">int</span><span class="op">*</span> pOutError<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> result · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>try()</code></p>
 <ul>
 <li><code>pOutError</code>: On error, the function returns NULL and sets the contents of <code>pOutError</code> to 1.</li>
 </ul>
+<p><strong>Returns:</strong> The result of evaluating <code>expression</code>, or <code>NULL</code> on error (with <code>*pOutError</code> set to 1).</p>
 <p><code>R_tryEvalSilent()</code> behaves like <code>R_tryEval()</code> but suppresses printing of error messages. Both ignore existing condition handlers, so R-level <code>tryCatch()</code> and <code>suppressWarnings()</code> have no effect on the evaluation.</p>
 <p><strong>See also:</strong> <a href="#R_ToplevelExec"><code>R_ToplevelExec()</code></a></p>
 </section>
 <section id="R_ToplevelExec" class="level3" data-number="14.2.2">
 <h3 data-number="14.2.2" class="anchored" data-anchor-id="R_ToplevelExec"><span class="header-section-number">14.2.2</span> <code>R_ToplevelExec()</code></h3>
+<p><strong>Header:</strong> <code>Rinternals.h</code></p>
 <p>Execute a C function in a top-level context, catching any errors.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>Rboolean R_ToplevelExec<span class="op">(</span><span class="dt">void</span> <span class="op">(*</span>fun<span class="op">)(</span><span class="dt">void</span> <span class="op">*),</span> <span class="dt">void</span> <span class="op">*</span>data<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 <ul>
 <li><code>fun</code>: C function to call after context setup. Passed <code>*data</code>.</li>
 </ul>
+<p><strong>Returns:</strong> <code>TRUE</code> if <code>fun</code> ran to completion, <code>FALSE</code> if an error occurred.</p>
 <p>Both <code>R_tryEval()</code> and <code>R_tryEvalSilent()</code> call <code>R_ToplevelExec</code> under the hood.</p>
 <p><strong>See also:</strong> <a href="#R_tryEval"><code>R_tryEval()</code></a></p>
 </section>
 <section id="R_curErrorBuf" class="level3" data-number="14.2.3">
 <h3 data-number="14.2.3" class="anchored" data-anchor-id="R_curErrorBuf"><span class="header-section-number">14.2.3</span> <code>R_curErrorBuf()</code></h3>
+<p><span class="badge badge-experimental">experimental</span></p>
+<p><strong>Header:</strong> <code>Rinternals.h</code><br>
+<strong>R equivalent:</strong> <code>geterrmessage()</code></p>
 <p>Access the text of the current error.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> <span class="dt">char</span> <span class="op">*</span>R_curErrorBuf<span class="op">();</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> experimental · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>geterrmessage()</code></p>
+<p><strong>Returns:</strong> The text of the current error message.</p>
 </section>
 </section>
 <section id="parsing" class="level2" data-number="14.3">
 <h2 data-number="14.3" class="anchored" data-anchor-id="parsing"><span class="header-section-number">14.3</span> Parsing</h2>
 <p>Parsing turns text into an expression vector (<code>EXPRSXP</code>) without evaluating it; evaluate the result element by element with <code>Rf_eval()</code>. Always check the returned <code>ParseStatus</code> before evaluating.</p>
 <section id="R_ParseVector" class="level3" data-number="14.3.1">
-<h3 data-number="14.3.1" class="anchored" data-anchor-id="R_ParseVector"><span class="header-section-number">14.3.1</span> <code>R_ParseVector()</code> (<code>R_ParseString()</code>, <code>R_ParseEvalString()</code>)</h3>
+<h3 data-number="14.3.1" class="anchored" data-anchor-id="R_ParseVector"><span class="header-section-number">14.3.1</span> <code>R_ParseVector()</code>, <code>R_ParseString()</code>, <code>R_ParseEvalString()</code></h3>
+<p><span class="badge badge-protect">needs protect</span> <span class="badge badge-errors">throws</span></p>
+<p><strong>Header:</strong> <code>R_ext/Parse.h</code></p>
 <p>Parse R code from a character vector or C string.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>SEXP R_ParseVector<span class="op">(</span>SEXP text<span class="op">,</span> <span class="dt">int</span> n<span class="op">,</span> ParseStatus <span class="op">*</span>status<span class="op">,</span> SEXP srcfile<span class="op">);</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>SEXP R_ParseString<span class="op">(</span><span class="dt">const</span> <span class="dt">char</span> <span class="op">*</span>str<span class="op">);</span></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>SEXP R_ParseEvalString<span class="op">(</span><span class="dt">const</span> <span class="dt">char</span> <span class="op">*</span>str<span class="op">,</span> SEXP env<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>R_ext/Parse.h</code> · <strong>Protect:</strong> result · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 <ul>
 <li><code>text</code>: a character vector of lines of R code.</li>
 <li><code>n</code>: number of elements to parse, or -1 for all.</li>
 <li><code>status</code>: set to <code>PARSE_OK</code>, <code>PARSE_INCOMPLETE</code>, <code>PARSE_ERROR</code>, or <code>PARSE_EOF</code>; may be <code>NULL</code>.</li>
 <li><code>srcfile</code>: a source reference environment, usually <code>R_NilValue</code>.</li>
 </ul>
+<p><strong>Returns:</strong> <code>R_ParseVector()</code> and <code>R_ParseString()</code> return an <code>EXPRSXP</code> vector of parsed expressions; <code>R_ParseEvalString()</code> returns the result of evaluating the parsed code in <code>env</code>.</p>
 <p>Returns an <code>EXPRSXP</code> of parsed expressions. <code>R_ParseString()</code> (R 4.4.0) parses a single C string; <code>R_ParseEvalString()</code> parses and evaluates in one step. Check <code>status</code> before evaluating the result.</p>
 <p><strong>See also:</strong> <a href="#Rf_eval"><code>Rf_eval()</code></a></p>
 

@@ -4,7 +4,10 @@
 
 Used test current version of R
 
-### 22.0.2 `R_Version()` (`R_VERSION()`)
+### 22.0.2 `R_Version()`, `R_VERSION()`
+
+**Header:** `Rversion.h`\
+**R equivalent:** `R.version`
 
 Test the compile-time version of R against a required version.
 
@@ -13,8 +16,6 @@ Test the compile-time version of R against a required version.
 #define R_Version(major, minor, patch) \
   (((major) * 65536) + ((minor) * 256) + (patch))
 ```
-
-**Status:** API · **Header:** `Rversion.h` · **Protect:** n/a · **Errors:** never · **Since:** — · **R equivalent:** `R.version`
 
 `R_VERSION` is the packed version number of the R being compiled against; `R_Version()` packs a `major.minor.patch` triple into the same format for comparison.
 

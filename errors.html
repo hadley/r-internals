@@ -112,6 +112,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 }</script>
 
 
+<link rel="stylesheet" href="badges.css">
 </head>
 
 <body class="nav-sidebar floating quarto-light">
@@ -368,17 +369,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul>
   <li><a href="#signalling" id="toc-signalling" class="nav-link active" data-scroll-target="#signalling"><span class="header-section-number">15.1</span> Signalling</a>
   <ul class="collapse">
-  <li><a href="#Rf_error" id="toc-Rf_error" class="nav-link" data-scroll-target="#Rf_error"><span class="header-section-number">15.1.1</span> <code>Rf_error()</code> (<code>Rf_errorcall()</code>)</a></li>
-  <li><a href="#Rf_warning" id="toc-Rf_warning" class="nav-link" data-scroll-target="#Rf_warning"><span class="header-section-number">15.1.2</span> <code>Rf_warning()</code> (<code>Rf_warningcall()</code>, <code>Rf_warningcall_immediate()</code>)</a></li>
-  <li><a href="#error_return" id="toc-error_return" class="nav-link" data-scroll-target="#error_return"><span class="header-section-number">15.1.3</span> <code>error_return()</code> (<code>errorcall_return()</code>)</a></li>
+  <li><a href="#Rf_error" id="toc-Rf_error" class="nav-link" data-scroll-target="#Rf_error"><span class="header-section-number">15.1.1</span> <code>Rf_error()</code>, <code>Rf_errorcall()</code></a></li>
+  <li><a href="#Rf_warning" id="toc-Rf_warning" class="nav-link" data-scroll-target="#Rf_warning"><span class="header-section-number">15.1.2</span> <code>Rf_warning()</code>, <code>Rf_warningcall()</code>, <code>Rf_warningcall_immediate()</code></a></li>
+  <li><a href="#error_return" id="toc-error_return" class="nav-link" data-scroll-target="#error_return"><span class="header-section-number">15.1.3</span> <code>error_return()</code>, <code>errorcall_return()</code></a></li>
   <li><a href="#UNIMPLEMENTED" id="toc-UNIMPLEMENTED" class="nav-link" data-scroll-target="#UNIMPLEMENTED"><span class="header-section-number">15.1.4</span> <code>UNIMPLEMENTED()</code></a></li>
   </ul></li>
   <li><a href="#condition-handling-and-cleanup" id="toc-condition-handling-and-cleanup" class="nav-link" data-scroll-target="#condition-handling-and-cleanup"><span class="header-section-number">15.2</span> Condition handling and cleanup</a>
   <ul class="collapse">
   <li><a href="#R_UnwindProtect" id="toc-R_UnwindProtect" class="nav-link" data-scroll-target="#R_UnwindProtect"><span class="header-section-number">15.2.1</span> <code>R_UnwindProtect()</code></a></li>
-  <li><a href="#R_MakeUnwindCont" id="toc-R_MakeUnwindCont" class="nav-link" data-scroll-target="#R_MakeUnwindCont"><span class="header-section-number">15.2.2</span> <code>R_MakeUnwindCont()</code> (<code>R_ContinueUnwind()</code>)</a></li>
+  <li><a href="#R_MakeUnwindCont" id="toc-R_MakeUnwindCont" class="nav-link" data-scroll-target="#R_MakeUnwindCont"><span class="header-section-number">15.2.2</span> <code>R_MakeUnwindCont()</code>, <code>R_ContinueUnwind()</code></a></li>
   <li><a href="#R_ExecWithCleanup" id="toc-R_ExecWithCleanup" class="nav-link" data-scroll-target="#R_ExecWithCleanup"><span class="header-section-number">15.2.3</span> <code>R_ExecWithCleanup()</code></a></li>
-  <li><a href="#R_tryCatchError" id="toc-R_tryCatchError" class="nav-link" data-scroll-target="#R_tryCatchError"><span class="header-section-number">15.2.4</span> <code>R_tryCatchError()</code> (<code>R_withCallingErrorHandler()</code>)</a></li>
+  <li><a href="#R_tryCatchError" id="toc-R_tryCatchError" class="nav-link" data-scroll-target="#R_tryCatchError"><span class="header-section-number">15.2.4</span> <code>R_tryCatchError()</code>, <code>R_withCallingErrorHandler()</code></a></li>
   <li><a href="#R_tryCatch" id="toc-R_tryCatch" class="nav-link" data-scroll-target="#R_tryCatch"><span class="header-section-number">15.2.5</span> <code>R_tryCatch()</code></a></li>
   </ul></li>
   <li><a href="#interrupts" id="toc-interrupts" class="nav-link" data-scroll-target="#interrupts"><span class="header-section-number">15.3</span> Interrupts</a>
@@ -388,7 +389,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </ul></li>
   <li><a href="#c-stack-checking" id="toc-c-stack-checking" class="nav-link" data-scroll-target="#c-stack-checking"><span class="header-section-number">15.4</span> C stack checking</a>
   <ul class="collapse">
-  <li><a href="#R_CheckStack" id="toc-R_CheckStack" class="nav-link" data-scroll-target="#R_CheckStack"><span class="header-section-number">15.4.1</span> <code>R_CheckStack()</code> (<code>R_CheckStack2()</code>)</a></li>
+  <li><a href="#R_CheckStack" id="toc-R_CheckStack" class="nav-link" data-scroll-target="#R_CheckStack"><span class="header-section-number">15.4.1</span> <code>R_CheckStack()</code>, <code>R_CheckStack2()</code></a></li>
   </ul></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/hadley/r-internals/edit/main/errors.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/hadley/r-internals/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
@@ -436,23 +437,29 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>Rf_eval<span class="op">(</span>Rf_lang2<span class="op">(</span>Rf_install<span class="op">(</span><span class="st">"stop"</span><span class="op">),</span> cond<span class="op">),</span> R_GlobalEnv<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>The same pattern with <code>warning()</code> signals a classed warning.</p>
 <section id="Rf_error" class="level3" data-number="15.1.1">
-<h3 data-number="15.1.1" class="anchored" data-anchor-id="Rf_error"><span class="header-section-number">15.1.1</span> <code>Rf_error()</code> (<code>Rf_errorcall()</code>)</h3>
+<h3 data-number="15.1.1" class="anchored" data-anchor-id="Rf_error"><span class="header-section-number">15.1.1</span> <code>Rf_error()</code>, <code>Rf_errorcall()</code></h3>
+<p><span class="badge badge-errors">throws</span></p>
+<p><strong>Header:</strong> <code>Rinternals.h</code><br>
+<strong>R equivalent:</strong> <code>stop()</code></p>
 <p>Signal an error, optionally including the call in the message.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> Rf_error<span class="op">(</span><span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> format<span class="op">,</span> <span class="op">...);</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> Rf_errorcall<span class="op">(</span>SEXP call<span class="op">,</span> <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> format<span class="op">,</span> <span class="op">...);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>stop()</code></p>
 <p>Use <code>Rf_errorcall(R_NilValue, ...)</code> to suppress display of the call.</p>
 </section>
 <section id="Rf_warning" class="level3" data-number="15.1.2">
-<h3 data-number="15.1.2" class="anchored" data-anchor-id="Rf_warning"><span class="header-section-number">15.1.2</span> <code>Rf_warning()</code> (<code>Rf_warningcall()</code>, <code>Rf_warningcall_immediate()</code>)</h3>
+<h3 data-number="15.1.2" class="anchored" data-anchor-id="Rf_warning"><span class="header-section-number">15.1.2</span> <code>Rf_warning()</code>, <code>Rf_warningcall()</code>, <code>Rf_warningcall_immediate()</code></h3>
+<p><span class="badge badge-errors">throws</span></p>
+<p><strong>Header:</strong> <code>R_ext/Error.h</code><br>
+<strong>R equivalent:</strong> <code>warning()</code></p>
 <p>Signal a warning, optionally including the call or displaying it immediately.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> Rf_warning<span class="op">(</span><span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> format<span class="op">,</span> <span class="op">...);</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> Rf_warningcall<span class="op">(</span>SEXP call<span class="op">,</span> <span class="dt">const</span> <span class="dt">char</span><span class="op">*,</span> <span class="op">...);</span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> Rf_warningcall_immediate<span class="op">(</span>SEXP call<span class="op">,</span> <span class="dt">const</span> <span class="dt">char</span><span class="op">*,</span> <span class="op">...);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>R_ext/Error.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>warning()</code></p>
 </section>
 <section id="error_return" class="level3" data-number="15.1.3">
-<h3 data-number="15.1.3" class="anchored" data-anchor-id="error_return"><span class="header-section-number">15.1.3</span> <code>error_return()</code> (<code>errorcall_return()</code>)</h3>
+<h3 data-number="15.1.3" class="anchored" data-anchor-id="error_return"><span class="header-section-number">15.1.3</span> <code>error_return()</code>, <code>errorcall_return()</code></h3>
+<p><span class="badge badge-errors">throws</span></p>
+<p><strong>Header:</strong> <code>Rinternals.h</code></p>
 <p>Eliminate compiler warnings about non-void functions that don’t return.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#define error_return</span><span class="op">(</span><span class="pp">msg</span><span class="op">)</span><span class="pp"> </span><span class="op">{</span><span class="pp"> </span><span class="op">\</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="pp">  </span>Rf_error<span class="op">(</span><span class="pp">msg</span><span class="op">);</span><span class="pp"> </span><span class="op">\</span></span>
@@ -462,15 +469,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="pp">  </span>Rf_errorcall<span class="op">(</span><span class="pp">cl</span><span class="op">,</span><span class="pp"> msg</span><span class="op">);</span><span class="pp"> </span><span class="op">\</span></span>
 <span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="pp">  </span><span class="cf">return</span><span class="pp"> </span>R_NilValue<span class="op">;</span><span class="pp"> </span><span class="op">\</span></span>
 <span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 <p><code>Rf_error</code> will <code>longjmp</code> and so any code following will not be executed; however, most compilers do not detect this when providing warnings.</p>
 <p><strong>See also:</strong> <a href="#Rf_error"><code>Rf_error()</code></a></p>
 </section>
 <section id="UNIMPLEMENTED" class="level3" data-number="15.1.4">
 <h3 data-number="15.1.4" class="anchored" data-anchor-id="UNIMPLEMENTED"><span class="header-section-number">15.1.4</span> <code>UNIMPLEMENTED()</code></h3>
+<p><span class="badge badge-errors">throws</span></p>
+<p><strong>Header:</strong> <code>R_ext/Error.h</code></p>
 <p>Signal an error for an unimplemented operation.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="op">[[</span><span class="at">noreturn</span><span class="op">]]</span> <span class="dt">void</span> UNIMPLEMENTED<span class="op">(</span><span class="dt">const</span> <span class="dt">char</span> <span class="op">*</span>s<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>R_ext/Error.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 <p>Signals “feature ‘s’ is not implemented”; never returns. Use <code>UNIMPLEMENTED_TYPE()</code> for a type-specific variant.</p>
 <p><strong>See also:</strong> <a href="#Rf_error"><code>Rf_error()</code></a></p>
 </section>
@@ -481,67 +488,79 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>These functions let C code do what <code>tryCatch()</code> and <code>on.exit()</code> do at the R level: run a body function with a condition handler or cleanup action installed. Reach for <code>R_UnwindProtect()</code> when you need guaranteed cleanup, and the <code>R_tryCatch*()</code> family when you need to inspect or recover from a condition object.</p>
 <section id="R_UnwindProtect" class="level3" data-number="15.2.1">
 <h3 data-number="15.2.1" class="anchored" data-anchor-id="R_UnwindProtect"><span class="header-section-number">15.2.1</span> <code>R_UnwindProtect()</code></h3>
+<p><span class="badge badge-protect">needs protect</span> <span class="badge badge-errors">throws</span></p>
+<p><strong>Header:</strong> <code>Rinternals.h</code></p>
 <p>Run a C function, guaranteeing a cleanup action runs on normal return and on longjmp.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>SEXP R_UnwindProtect<span class="op">(</span>SEXP <span class="op">(*</span>fun<span class="op">)(</span><span class="dt">void</span> <span class="op">*</span>data<span class="op">),</span> <span class="dt">void</span> <span class="op">*</span>data<span class="op">,</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>                     <span class="dt">void</span> <span class="op">(*</span>clean<span class="op">)(</span><span class="dt">void</span> <span class="op">*</span>cdata<span class="op">,</span> Rboolean jump<span class="op">),</span> <span class="dt">void</span> <span class="op">*</span>cdata<span class="op">,</span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>                     SEXP cont<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> result · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 <ul>
 <li><code>fun</code>: function to run; its return value is passed through.</li>
 <li><code>clean</code>: cleanup function, called with <code>jump = FALSE</code> after a normal return and <code>jump = TRUE</code> before a non-local transfer of control resumes.</li>
 <li><code>cont</code>: continuation token from <code>R_MakeUnwindCont()</code>, or <code>R_NilValue</code> for plain C use.</li>
 </ul>
+<p><strong>Returns:</strong> The <code>SEXP</code> returned by <code>fun</code>.</p>
 <p>This is the primary tool for making C (and C++) code longjmp-safe: free <code>R_Calloc()</code> memory, close files, and restore state in <code>clean</code>. With a continuation token, <code>clean</code> can throw a C++ exception to unwind the C++ stack and then call <code>R_ContinueUnwind()</code> to resume R’s longjmp.</p>
 <p><strong>See also:</strong> <a href="#R_MakeUnwindCont"><code>R_MakeUnwindCont()</code></a>, <a href="#R_ExecWithCleanup"><code>R_ExecWithCleanup()</code></a></p>
 </section>
 <section id="R_MakeUnwindCont" class="level3" data-number="15.2.2">
-<h3 data-number="15.2.2" class="anchored" data-anchor-id="R_MakeUnwindCont"><span class="header-section-number">15.2.2</span> <code>R_MakeUnwindCont()</code> (<code>R_ContinueUnwind()</code>)</h3>
+<h3 data-number="15.2.2" class="anchored" data-anchor-id="R_MakeUnwindCont"><span class="header-section-number">15.2.2</span> <code>R_MakeUnwindCont()</code>, <code>R_ContinueUnwind()</code></h3>
+<p><span class="badge badge-protect">needs protect</span> <span class="badge badge-errors">throws</span></p>
+<p><strong>Header:</strong> <code>Rinternals.h</code></p>
 <p>Allocate a continuation token for C++ stack unwinding, and resume the unwind.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>SEXP R_MakeUnwindCont<span class="op">(</span><span class="dt">void</span><span class="op">);</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>NORET <span class="dt">void</span> R_ContinueUnwind<span class="op">(</span>SEXP cont<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> result · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<p><strong>Returns:</strong> <code>R_MakeUnwindCont()</code> returns a <code>SEXP</code> continuation token for use with <code>R_UnwindProtect()</code>; <code>R_ContinueUnwind()</code> never returns.</p>
 <p><code>PROTECT</code> the token before passing it to <code>R_UnwindProtect()</code>. Only needed when C++ code sits between R and the cleanup handler; plain C code should pass <code>R_NilValue</code> as <code>cont</code> instead.</p>
 <p><strong>See also:</strong> <a href="#R_UnwindProtect"><code>R_UnwindProtect()</code></a></p>
 </section>
 <section id="R_ExecWithCleanup" class="level3" data-number="15.2.3">
 <h3 data-number="15.2.3" class="anchored" data-anchor-id="R_ExecWithCleanup"><span class="header-section-number">15.2.3</span> <code>R_ExecWithCleanup()</code></h3>
+<p><span class="badge badge-protect">needs protect</span> <span class="badge badge-errors">throws</span></p>
+<p><strong>Header:</strong> <code>Rinternals.h</code></p>
 <p>Execute a C function in a protected context, with cleanup before teardown.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>SEXP R_ExecWithCleanup<span class="op">(</span>SEXP <span class="op">(*</span>fun<span class="op">)(</span><span class="dt">void</span> <span class="op">*),</span> <span class="dt">void</span> <span class="op">*</span>data<span class="op">,</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>                       <span class="dt">void</span> <span class="op">(*</span>cleanfun<span class="op">)(</span><span class="dt">void</span> <span class="op">*),</span></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>                       <span class="dt">void</span> <span class="op">*</span>cleandata<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> result · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 <ul>
 <li><code>fun</code>: C function to call after context setup. Passed <code>*data</code>.</li>
 <li><code>cleanfun</code>: C function to call before context teardown. Passed <code>*data</code>.</li>
 </ul>
+<p><strong>Returns:</strong> The <code>SEXP</code> returned by <code>fun</code>.</p>
 <p>Older, simpler variant of <code>R_UnwindProtect()</code>; the cleanup function is not told whether the exit was a normal return or a longjmp.</p>
 <p><strong>See also:</strong> <a href="#R_UnwindProtect"><code>R_UnwindProtect()</code></a></p>
 </section>
 <section id="R_tryCatchError" class="level3" data-number="15.2.4">
-<h3 data-number="15.2.4" class="anchored" data-anchor-id="R_tryCatchError"><span class="header-section-number">15.2.4</span> <code>R_tryCatchError()</code> (<code>R_withCallingErrorHandler()</code>)</h3>
+<h3 data-number="15.2.4" class="anchored" data-anchor-id="R_tryCatchError"><span class="header-section-number">15.2.4</span> <code>R_tryCatchError()</code>, <code>R_withCallingErrorHandler()</code></h3>
+<p><span class="badge badge-protect">needs protect</span> <span class="badge badge-errors">throws</span></p>
+<p><strong>Header:</strong> <code>Rinternals.h</code><br>
+<strong>R equivalent:</strong> <code>tryCatch()</code></p>
 <p>Call a C function with a handler installed for R error conditions.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>SEXP R_tryCatchError<span class="op">(</span>SEXP <span class="op">(*</span>fun<span class="op">)(</span><span class="dt">void</span> <span class="op">*</span>data<span class="op">),</span> <span class="dt">void</span> <span class="op">*</span>data<span class="op">,</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>                     SEXP <span class="op">(*</span>hndlr<span class="op">)(</span>SEXP cond<span class="op">,</span> <span class="dt">void</span> <span class="op">*</span>hdata<span class="op">),</span> <span class="dt">void</span> <span class="op">*</span>hdata<span class="op">);</span></span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>SEXP R_withCallingErrorHandler<span class="op">(</span>SEXP <span class="op">(*</span>fun<span class="op">)(</span><span class="dt">void</span> <span class="op">*</span>data<span class="op">),</span> <span class="dt">void</span> <span class="op">*</span>data<span class="op">,</span></span>
 <span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>                               SEXP <span class="op">(*</span>hndlr<span class="op">)(</span>SEXP cond<span class="op">,</span> <span class="dt">void</span> <span class="op">*</span>hdata<span class="op">),</span> <span class="dt">void</span> <span class="op">*</span>hdata<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> result · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>tryCatch()</code></p>
 <ul>
 <li><code>hndlr</code>: handler called with the condition object; its return value becomes the result.</li>
 </ul>
+<p><strong>Returns:</strong> The <code>SEXP</code> returned by <code>fun</code>, or the handler’s return value if an error is signalled.</p>
 <p><code>R_tryCatchError()</code> installs an exiting handler (like <code>tryCatch(error = ...)</code>); <code>R_withCallingErrorHandler()</code> installs a calling handler (like <code>withCallingHandlers(error = ...)</code>) and avoids calling back into R, so it is more efficient. <code>R_tryCatchError()</code> is implemented via R-level <code>tryCatch()</code> and has some overhead.</p>
 <p><strong>See also:</strong> <a href="#R_tryCatch"><code>R_tryCatch()</code></a>, <a href="evaluation.html#R_tryEval"><code>R_tryEval()</code></a></p>
 </section>
 <section id="R_tryCatch" class="level3" data-number="15.2.5">
 <h3 data-number="15.2.5" class="anchored" data-anchor-id="R_tryCatch"><span class="header-section-number">15.2.5</span> <code>R_tryCatch()</code></h3>
+<p><span class="badge badge-protect">needs protect</span> <span class="badge badge-errors">throws</span></p>
+<p><strong>Header:</strong> <code>Rinternals.h</code><br>
+<strong>R equivalent:</strong> <code>tryCatch()</code></p>
 <p>Call a C function with handlers for arbitrary condition classes and a cleanup action.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>SEXP R_tryCatch<span class="op">(</span>SEXP <span class="op">(*</span>fun<span class="op">)(</span><span class="dt">void</span> <span class="op">*</span>data<span class="op">),</span> <span class="dt">void</span> <span class="op">*</span>data<span class="op">,</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>                SEXP conds<span class="op">,</span></span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>                SEXP <span class="op">(*</span>hndlr<span class="op">)(</span>SEXP cond<span class="op">,</span> <span class="dt">void</span> <span class="op">*</span>hdata<span class="op">),</span> <span class="dt">void</span> <span class="op">*</span>hdata<span class="op">,</span></span>
 <span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>                <span class="dt">void</span> <span class="op">(*</span>clean<span class="op">)(</span><span class="dt">void</span> <span class="op">*</span>cdata<span class="op">),</span> <span class="dt">void</span> <span class="op">*</span>cdata<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> result · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>tryCatch()</code></p>
 <ul>
 <li><code>conds</code>: condition classes to handle, as a character vector (<code>STRSXP</code>).</li>
 </ul>
+<p><strong>Returns:</strong> The <code>SEXP</code> returned by <code>fun</code>, or the handler’s return value if a handled condition is signalled.</p>
 <p><code>NULL</code> may be passed for <code>fun</code> or <code>clean</code> if condition handling or cleanup is not needed. Implemented via R-level <code>tryCatch()</code>, so it has some overhead.</p>
 <p><strong>See also:</strong> <a href="#R_tryCatchError"><code>R_tryCatchError()</code></a>, <a href="#R_UnwindProtect"><code>R_UnwindProtect()</code></a></p>
 </section>
@@ -551,16 +570,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Follows <a href="https://cran.r-project.org/doc/manuals/R-exts.html#Allowing-interrupts-1">WRE §6.14, Allowing interrupts</a> closely.</p>
 <section id="R_CheckUserInterrupt" class="level3" data-number="15.3.1">
 <h3 data-number="15.3.1" class="anchored" data-anchor-id="R_CheckUserInterrupt"><span class="header-section-number">15.3.1</span> <code>R_CheckUserInterrupt()</code></h3>
+<p><span class="badge badge-errors">throws</span></p>
+<p><strong>Header:</strong> <code>R_ext/Utils.h</code></p>
 <p>Check for a pending user interrupt, signalling an error if one occurred.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> R_CheckUserInterrupt<span class="op">(</span><span class="dt">void</span><span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>R_ext/Utils.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 <p>Call periodically from long-running loops; R cannot interrupt compiled code that never checks. On interrupt it longjmps, so the same cleanup obligations as for <code>Rf_error()</code> apply.</p>
 </section>
 <section id="Rf_onintr" class="level3" data-number="15.3.2">
 <h3 data-number="15.3.2" class="anchored" data-anchor-id="Rf_onintr"><span class="header-section-number">15.3.2</span> <code>Rf_onintr()</code></h3>
+<p><span class="badge badge-errors">throws</span></p>
+<p><strong>Header:</strong> <code>Rinterface.h</code></p>
 <p>R’s default response to a user interrupt.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> Rf_onintr<span class="op">(</span><span class="dt">void</span><span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinterface.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 <p>Jumps back to the top level, discarding the current computation. Intended for front-ends and graphics devices; package code should almost always use <code>R_CheckUserInterrupt()</code> instead.</p>
 <p><strong>See also:</strong> <a href="#R_CheckUserInterrupt"><code>R_CheckUserInterrupt()</code></a></p>
 </section>
@@ -569,11 +590,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 data-number="15.4" class="anchored" data-anchor-id="c-stack-checking"><span class="header-section-number">15.4</span> C stack checking</h2>
 <p>Follows <a href="https://cran.r-project.org/doc/manuals/R-exts.html#C-stack-checking-1">WRE §6.15, C stack checking</a> closely.</p>
 <section id="R_CheckStack" class="level3" data-number="15.4.1">
-<h3 data-number="15.4.1" class="anchored" data-anchor-id="R_CheckStack"><span class="header-section-number">15.4.1</span> <code>R_CheckStack()</code> (<code>R_CheckStack2()</code>)</h3>
+<h3 data-number="15.4.1" class="anchored" data-anchor-id="R_CheckStack"><span class="header-section-number">15.4.1</span> <code>R_CheckStack()</code>, <code>R_CheckStack2()</code></h3>
+<p><span class="badge badge-errors">throws</span></p>
+<p><strong>Header:</strong> <code>R_ext/Utils.h</code></p>
 <p>Signal an error if the C stack is (nearly) exhausted.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> R_CheckStack<span class="op">(</span><span class="dt">void</span><span class="op">);</span></span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> R_CheckStack2<span class="op">(</span>R_SIZE_T extra<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>R_ext/Utils.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 <ul>
 <li><code>extra</code>: <code>R_CheckStack2()</code> errors when fewer than <code>extra</code> bytes remain.</li>
 </ul>

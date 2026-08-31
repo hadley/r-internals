@@ -6,7 +6,9 @@ R’s serialisation format converts an R object to a byte stream (and back) that
 
 XDR is the default binary serialisation format: big-endian and platform-independent, so streams are portable across architectures. These helpers encode and decode individual values when you implement a custom stream.
 
-### 17.1.1 `R_XDR_DOUBLE_SIZE()` (`R_XDR_INTEGER_SIZE()`)
+### 17.1.1 `R_XDR_DOUBLE_SIZE()`, `R_XDR_INTEGER_SIZE()`
+
+**Header:** `Rinternals.h`
 
 Specify the byte sizes of doubles and integers in XDR serialisation format.
 
@@ -15,9 +17,9 @@ Specify the byte sizes of doubles and integers in XDR serialisation format.
 #define R_XDR_INTEGER_SIZE 4
 ```
 
-**Status:** API · **Header:** `Rinternals.h` · **Protect:** n/a · **Errors:** never · **Since:** — · **R equivalent:** —
+### 17.1.2 `R_XDREncodeDouble()`, `R_XDRDecodeDouble()`, `R_XDREncodeInteger()`, `R_XDRDecodeInteger()`
 
-### 17.1.2 `R_XDREncodeDouble()` (`R_XDRDecodeDouble()`, `R_XDREncodeInteger()`, `R_XDRDecodeInteger()`)
+**Header:** `Rinternals.h`
 
 Encode and decode doubles and integers in XDR format.
 
@@ -28,7 +30,7 @@ void R_XDREncodeInteger(int i, void *buf);
 int R_XDRDecodeInteger(void *buf);
 ```
 
-**Status:** API · **Header:** `Rinternals.h` · **Protect:** n/a · **Errors:** never · **Since:** — · **R equivalent:** —
+**Returns:** `R_XDRDecodeDouble()` and `R_XDRDecodeInteger()` return the value decoded from `buf`.
 
 ## 17.2 Persistence streams
 
@@ -80,7 +82,11 @@ typedef struct Rconn  *Rconnection;
 #endif
 ```
 
-### 17.2.1 `R_InitInPStream()` (`R_InitOutPStream()`)
+### 17.2.1 `R_InitInPStream()`, `R_InitOutPStream()`
+
+experimental
+
+**Header:** `Rinternals.h`
 
 Initialise a custom input or output persistence stream.
 
@@ -97,9 +103,11 @@ void R_InitOutPStream(R_outpstream_t stream, R_pstream_data_t data,
   SEXP (*phook)(SEXP, SEXP), SEXP pdata);
 ```
 
-**Status:** experimental · **Header:** `Rinternals.h` · **Protect:** n/a · **Errors:** never · **Since:** — · **R equivalent:** —
+### 17.2.2 `R_InitFileInPStream()`, `R_InitFileOutPStream()`
 
-### 17.2.2 `R_InitFileInPStream()` (`R_InitFileOutPStream()`)
+experimental
+
+**Header:** `Rinternals.h`
 
 Initialise a persistence stream that reads from or writes to a file.
 
@@ -112,13 +120,16 @@ void R_InitFileOutPStream(R_outpstream_t stream, FILE *fp,
   SEXP (*phook)(SEXP, SEXP), SEXP pdata);
 ```
 
-**Status:** experimental · **Header:** `Rinternals.h` · **Protect:** n/a · **Errors:** never · **Since:** — · **R equivalent:** —
-
 ## 17.3 Serialising objects
 
 With a stream initialised, these two functions do the actual work:
 
-### 17.3.1 `R_Serialize()` (`R_Unserialize()`)
+### 17.3.1 `R_Serialize()`, `R_Unserialize()`
+
+experimental needs protect throws
+
+**Header:** `Rinternals.h`\
+**R equivalent:** `serialize()`
 
 Serialise an R object to an output stream, or unserialise it from an input stream.
 
@@ -127,6 +138,6 @@ void R_Serialize(SEXP s, R_outpstream_t ops);
 SEXP R_Unserialize(R_inpstream_t ips);
 ```
 
-**Status:** experimental · **Header:** `Rinternals.h` · **Protect:** result · **Errors:** can throw · **Since:** — · **R equivalent:** `serialize()`
+**Returns:** `R_Unserialize()` returns the unserialised object; freshly allocated and unprotected.
 
 The `SEXP` returned by `R_Unserialize()` is freshly allocated and must be protected from garbage collection.

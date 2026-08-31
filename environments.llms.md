@@ -6,17 +6,19 @@ An environment (`ENVSXP`) is a set of bindings from symbols to values, plus a po
 
 ### 8.1.1 `R_GlobalEnv()`
 
+**Header:** `Rinternals.h`
+
 Access the global environment.
 
 ``` c
 SEXP R_GlobalEnv;
 ```
 
-**Status:** API · **Header:** `Rinternals.h` · **Protect:** n/a · **Errors:** never · **Since:** — · **R equivalent:** —
-
 The “global” environment.
 
 ### 8.1.2 `R_EmptyEnv()`
+
+**Header:** `Rinternals.h`
 
 Access the empty environment.
 
@@ -24,11 +26,11 @@ Access the empty environment.
 SEXP R_EmptyEnv;
 ```
 
-**Status:** API · **Header:** `Rinternals.h` · **Protect:** n/a · **Errors:** never · **Since:** — · **R equivalent:** —
-
 An empty environment at the root of the environment tree.
 
 ### 8.1.3 `R_BaseEnv()`
+
+**Header:** `Rinternals.h`
 
 Access the base environment.
 
@@ -36,11 +38,11 @@ Access the base environment.
 SEXP R_BaseEnv;
 ```
 
-**Status:** API · **Header:** `Rinternals.h` · **Protect:** n/a · **Errors:** never · **Since:** — · **R equivalent:** —
-
 The base environment; formerly `R_NilValue`.
 
 ### 8.1.4 `R_BaseNamespace()`
+
+**Header:** `Rinternals.h`
 
 Access the base namespace.
 
@@ -48,13 +50,15 @@ Access the base namespace.
 SEXP R_BaseNamespace;
 ```
 
-**Status:** API · **Header:** `Rinternals.h` · **Protect:** n/a · **Errors:** never · **Since:** — · **R equivalent:** —
-
 The (fake) namespace for base.
 
 ## 8.2 Creation
 
 ### 8.2.1 `R_NewEnv()`
+
+needs protect throws
+
+**Header:** `Rinternals.h`
 
 Create a new environment.
 
@@ -62,7 +66,7 @@ Create a new environment.
 SEXP R_NewEnv(SEXP enclos, int hash, int size);
 ```
 
-**Status:** API · **Header:** `Rinternals.h` · **Protect:** result · **Errors:** can throw · **Since:** — · **R equivalent:** —
+**Returns:** The newly allocated environment, with enclosure `enclos`.
 
 ## 8.3 Get and set objects in environment
 
@@ -74,19 +78,29 @@ Retrieving a variable from an environment can allocate, because the binding migh
 
 ### 8.3.2 `Rf_findFun()`
 
+needs protect throws
+
+**Header:** `Rinternals.h`
+
 Find the function bound to a symbol in an environment and its enclosing environments.
 
 ``` c
 SEXP Rf_findFun(SEXP symbol, SEXP environment);
 ```
 
-**Status:** API · **Header:** `Rinternals.h` · **Protect:** result · **Errors:** can throw · **Since:** — · **R equivalent:** —
+**Returns:** The function bound to `symbol` in `environment` or an enclosing frame.
 
 Like `Rf_findVar()`, but ignores non-functions.
 
 **See also:** [`Rf_findVar()`](#Rf_findVar)
 
-### 8.3.3 `R_getVar()` (`R_getVarEx()`)
+### 8.3.3 `R_getVar()`, `R_getVarEx()`
+
+throws
+
+**Header:** `Rinternals.h`\
+**Since:** 4.5.0\
+**R equivalent:** `get()`
 
 Get the value of a variable from an environment.
 
@@ -95,10 +109,10 @@ SEXP R_getVar(SEXP sym, SEXP env, Rboolean inherits);
 SEXP R_getVarEx(SEXP sym, SEXP env, Rboolean inherits, SEXP ifnotfound);
 ```
 
-**Status:** API · **Header:** `Rinternals.h` · **Protect:** not needed · **Errors:** can throw · **Since:** 4.5.0 · **R equivalent:** `get()`
-
 - `inherits`: search enclosing frames, as `inherits = TRUE` in `get()`.
 - `ifnotfound`: `R_getVarEx` only: value returned when the variable is not found, as in `get0()`.
+
+**Returns:** The value of `sym` in `env`, searching enclosing frames if `inherits` is `TRUE` (not freshly allocated); `R_getVarEx()` returns `ifnotfound` when not found, while `R_getVar()` errors.
 
 The API replacement for the non-API `Rf_findVar()`/ `Rf_findVarInFrame()`. `R_getVar()` errors when the variable is not found. Active bindings are triggered and delayed bindings are forced.
 
@@ -106,13 +120,19 @@ The API replacement for the non-API `Rf_findVar()`/ `Rf_findVarInFrame()`. `R_ge
 
 ### 8.3.4 `R_ParentEnv()`
 
+throws
+
+**Header:** `Rinternals.h`\
+**Since:** 4.5.0\
+**R equivalent:** `parent.env()`
+
 Get the enclosing environment of an environment.
 
 ``` c
 SEXP R_ParentEnv(SEXP env);
 ```
 
-**Status:** API · **Header:** `Rinternals.h` · **Protect:** not needed · **Errors:** can throw · **Since:** 4.5.0 · **R equivalent:** `parent.env()`
+**Returns:** The enclosing (parent) environment of `env`; errors on the empty environment.
 
 The API replacement for `ENCLOS()`; errors on the empty environment.
 
@@ -122,17 +142,24 @@ To remove a binding, set its value to `R_UnboundValue`.
 
 ### 8.3.6 `Rf_defineVar()`
 
+throws
+
+**Header:** `Rinternals.h`
+
 Bind a symbol to a value in an environment.
 
 ``` c
 void Rf_defineVar(SEXP symbol, SEXP value, SEXP env);
 ```
 
-**Status:** API · **Header:** `Rinternals.h` · **Protect:** n/a · **Errors:** can throw · **Since:** — · **R equivalent:** —
-
 To remove a binding, set its value to `R_UnboundSymbol`.
 
-### 8.3.7 `Rf_setVar()` (`Rf_gsetVar()`)
+### 8.3.7 `Rf_setVar()`, `Rf_gsetVar()`
+
+throws
+
+**Header:** `Rinternals.h`\
+**R equivalent:** `assign()`
 
 Assign a value to a symbol in an environment.
 
@@ -141,11 +168,13 @@ void Rf_setVar(SEXP, SEXP, SEXP);
 void Rf_gsetVar(SEXP, SEXP, SEXP);
 ```
 
-**Status:** API · **Header:** `Rinternals.h` · **Protect:** n/a · **Errors:** can throw · **Since:** — · **R equivalent:** `assign()`
-
 ### 8.3.8 Check for presence
 
 ### 8.3.9 `R_lsInternal3()`
+
+experimental needs protect throws
+
+**Header:** `Rinternals.h`
 
 List the names bound in an environment.
 
@@ -153,7 +182,7 @@ List the names bound in an environment.
 SEXP R_lsInternal3(SEXP env, Rboolean all_names, Rboolean sorted);
 ```
 
-**Status:** experimental · **Header:** `Rinternals.h` · **Protect:** result · **Errors:** can throw · **Since:** — · **R equivalent:** —
+**Returns:** A freshly allocated character vector of the names bound in `env`.
 
 Returns a character vector. The older `R_lsInternal(env, all)` was removed from the headers in R 4.6.0.
 
@@ -161,17 +190,23 @@ Returns a character vector. The older `R_lsInternal(env, all)` was removed from 
 
 ### 8.4.1 `Rf_isEnvironment()`
 
+**Header:** `Rinternals.h`
+
 Test whether an object is an environment.
 
 ``` c
 Rboolean Rf_isEnvironment(SEXP x);
 ```
 
-**Status:** API · **Header:** `Rinternals.h` · **Protect:** n/a · **Errors:** never · **Since:** — · **R equivalent:** —
+**Returns:** `TRUE` if `x` is an environment (`ENVSXP`), otherwise `FALSE`.
 
 Equivalent to `TYPEOF(x) == ENVSXP`.
 
-### 8.4.2 `R_IsPackageEnv()` (`R_PackageEnvName()`, `R_FindPackageEnv()`)
+### 8.4.2 `R_IsPackageEnv()`, `R_PackageEnvName()`, `R_FindPackageEnv()`
+
+experimental needs protect throws
+
+**Header:** `Rinternals.h`
 
 Test whether an environment is a package environment, get its name, or find a package’s environment.
 
@@ -181,11 +216,15 @@ SEXP R_PackageEnvName(SEXP rho);
 SEXP R_FindPackageEnv(SEXP info);
 ```
 
-**Status:** experimental · **Header:** `Rinternals.h` · **Protect:** result · **Errors:** can throw · **Since:** — · **R equivalent:** —
+**Returns:** `R_IsPackageEnv()` returns `TRUE` if `rho` is a package environment, otherwise `FALSE`; `R_PackageEnvName()` returns its name as a string, or `R_NilValue` if not a package environment; `R_FindPackageEnv()` returns the environment of the named package.
 
 **See also:** [`R_IsNamespaceEnv()`](#R_IsNamespaceEnv)
 
-### 8.4.3 `R_IsNamespaceEnv()` (`R_NamespaceEnvSpec()`, `R_FindNamespace()`)
+### 8.4.3 `R_IsNamespaceEnv()`, `R_NamespaceEnvSpec()`, `R_FindNamespace()`
+
+experimental needs protect throws
+
+**Header:** `Rinternals.h`
 
 Test whether an environment is a namespace environment, get its spec, or find a namespace.
 
@@ -195,11 +234,15 @@ SEXP R_NamespaceEnvSpec(SEXP rho);
 SEXP R_FindNamespace(SEXP info);
 ```
 
-**Status:** experimental · **Header:** `Rinternals.h` · **Protect:** result · **Errors:** can throw · **Since:** — · **R equivalent:** —
+**Returns:** `R_IsNamespaceEnv()` returns `TRUE` if `rho` is a namespace, otherwise `FALSE`; `R_NamespaceEnvSpec()` returns its spec string, or `R_NilValue` if not a namespace; `R_FindNamespace()` returns the named namespace environment.
 
 **See also:** [`R_IsPackageEnv()`](#R_IsPackageEnv)
 
-### 8.4.4 `R_LockEnvironment()` (`R_EnvironmentIsLocked()`)
+### 8.4.4 `R_LockEnvironment()`, `R_EnvironmentIsLocked()`
+
+experimental throws
+
+**Header:** `Rinternals.h`
 
 Lock an environment, or test whether it is locked.
 
@@ -208,11 +251,15 @@ void R_LockEnvironment(SEXP env, Rboolean bindings);
 Rboolean R_EnvironmentIsLocked(SEXP env);
 ```
 
-**Status:** experimental · **Header:** `Rinternals.h` · **Protect:** n/a · **Errors:** can throw · **Since:** — · **R equivalent:** —
+**Returns:** `R_EnvironmentIsLocked()` returns `TRUE` if `env` is locked, otherwise `FALSE`.
 
 **See also:** [`R_LockBinding()`](#R_LockBinding)
 
-### 8.4.5 `R_LockBinding()` (`R_unLockBinding()`)
+### 8.4.5 `R_LockBinding()`, `R_unLockBinding()`
+
+experimental throws
+
+**Header:** `Rinternals.h`
 
 Lock or unlock a binding in an environment.
 
@@ -221,11 +268,13 @@ void R_LockBinding(SEXP sym, SEXP env);
 void R_unLockBinding(SEXP sym, SEXP env);
 ```
 
-**Status:** experimental · **Header:** `Rinternals.h` · **Protect:** n/a · **Errors:** can throw · **Since:** — · **R equivalent:** —
-
 **See also:** [`R_LockEnvironment()`](#R_LockEnvironment)
 
 ### 8.4.6 `R_MakeActiveBinding()`
+
+experimental throws
+
+**Header:** `Rinternals.h`
 
 Make an active binding for a symbol in an environment.
 
@@ -233,11 +282,13 @@ Make an active binding for a symbol in an environment.
 void R_MakeActiveBinding(SEXP sym, SEXP fun, SEXP env);
 ```
 
-**Status:** experimental · **Header:** `Rinternals.h` · **Protect:** n/a · **Errors:** can throw · **Since:** — · **R equivalent:** —
-
 **See also:** [`R_BindingIsLocked()`](#R_BindingIsLocked)
 
-### 8.4.7 `R_BindingIsLocked()` (`R_BindingIsActive()`)
+### 8.4.7 `R_BindingIsLocked()`, `R_BindingIsActive()`
+
+experimental throws
+
+**Header:** `Rinternals.h`
 
 Test whether a binding is locked or active.
 
@@ -246,11 +297,13 @@ Rboolean R_BindingIsLocked(SEXP sym, SEXP env);
 Rboolean R_BindingIsActive(SEXP sym, SEXP env);
 ```
 
-**Status:** experimental · **Header:** `Rinternals.h` · **Protect:** n/a · **Errors:** can throw · **Since:** — · **R equivalent:** —
+**Returns:** `TRUE` if the binding of `sym` in `env` is locked (`R_BindingIsLocked()`) or active (`R_BindingIsActive()`), otherwise `FALSE`.
 
 **See also:** [`R_MakeActiveBinding()`](#R_MakeActiveBinding)
 
 ### 8.4.8 `R_HasFancyBindings()`
+
+**Header:** `Rinternals.h`
 
 Test whether an environment has fancy bindings.
 
@@ -258,9 +311,12 @@ Test whether an environment has fancy bindings.
 Rboolean R_HasFancyBindings(SEXP rho);
 ```
 
-**Status:** API · **Header:** `Rinternals.h` · **Protect:** n/a · **Errors:** never · **Since:** — · **R equivalent:** —
+**Returns:** `TRUE` if `rho` has any active or delayed bindings, otherwise `FALSE`.
 
 ### 8.4.9 `Rf_topenv()`
+
+**Header:** `Rinternals.h`\
+**R equivalent:** `topenv()`
 
 Find the top-level environment in an environment chain.
 
@@ -268,14 +324,19 @@ Find the top-level environment in an environment chain.
 SEXP Rf_topenv(SEXP, SEXP);
 ```
 
-**Status:** API · **Header:** `Rinternals.h` · **Protect:** n/a · **Errors:** never · **Since:** — · **R equivalent:** `topenv()`
-
 - `x`: the environment to start from.
 - `target`: stop when this environment is reached, usually `R_NilValue`.
+
+**Returns:** The top-level environment in the chain containing `x`, stopping at `target`.
 
 **See also:** [`R_ParentEnv()`](#R_ParentEnv)
 
 ### 8.4.10 `R_GetCurrentEnv()`
+
+experimental
+
+**Header:** `Rinternals.h`\
+**R equivalent:** `environment()`
 
 Retrieve the environment of the currently executing closure.
 
@@ -283,7 +344,7 @@ Retrieve the environment of the currently executing closure.
 SEXP R_GetCurrentEnv(void);
 ```
 
-**Status:** experimental · **Header:** `Rinternals.h` · **Protect:** not needed · **Errors:** never · **Since:** — · **R equivalent:** `environment()`
+**Returns:** The environment of the closure currently being evaluated; only meaningful while R is evaluating a call.
 
 Only meaningful while R is evaluating a call. Usually better to pass the environment explicitly as an argument to your C function.
 
@@ -293,19 +354,29 @@ R 4.6.0 added an **experimental** API for examining bindings in detail — wheth
 
 ### 8.5.1 `R_GetBindingType()`
 
+experimental
+
+**Header:** `Rinternals.h`\
+**Since:** 4.6.0
+
 Query the type of a symbol’s binding in an environment.
 
 ``` c
 R_BindingType_t R_GetBindingType(SEXP sym, SEXP env);
 ```
 
-**Status:** experimental · **Header:** `Rinternals.h` · **Protect:** n/a · **Errors:** never · **Since:** 4.6.0 · **R equivalent:** —
+**Returns:** The binding type of `sym` in `env`: one of `R_BindingTypeUnbound`, `R_BindingTypeValue`, `R_BindingTypeMissing`, `R_BindingTypeDelayed`, `R_BindingTypeForced`, or `R_BindingTypeActive`.
 
 Returns one of `R_BindingTypeUnbound`, `R_BindingTypeValue`, `R_BindingTypeMissing`, `R_BindingTypeDelayed`, `R_BindingTypeForced`, or `R_BindingTypeActive`. Part of the experimental binding API added in R 4.6.0; the interface may change.
 
 **See also:** [`R_getVar()`](#R_getVar)
 
-### 8.5.2 `R_DelayedBindingExpression()` (`R_DelayedBindingEnvironment()`, `R_ForcedBindingExpression()`)
+### 8.5.2 `R_DelayedBindingExpression()`, `R_DelayedBindingEnvironment()`, `R_ForcedBindingExpression()`
+
+experimental
+
+**Header:** `Rinternals.h`\
+**Since:** 4.6.0
 
 Inspect the expression or environment behind a delayed or forced binding.
 
@@ -315,13 +386,18 @@ SEXP R_DelayedBindingEnvironment(SEXP sym, SEXP env);
 SEXP R_ForcedBindingExpression(SEXP sym, SEXP env);
 ```
 
-**Status:** experimental · **Header:** `Rinternals.h` · **Protect:** not needed · **Errors:** never · **Since:** 4.6.0 · **R equivalent:** —
+**Returns:** `R_DelayedBindingExpression()` returns the delayed expression, `R_DelayedBindingEnvironment()` the environment it will be evaluated in, and `R_ForcedBindingExpression()` the expression behind a forced binding.
 
 Use `R_GetBindingType()` first to check the binding type.
 
 **See also:** [`R_GetBindingType()`](#R_GetBindingType), [`R_MakeDelayedBinding()`](#R_MakeDelayedBinding)
 
-### 8.5.3 `R_MakeDelayedBinding()` (`R_MakeForcedBinding()`, `R_MakeMissingBinding()`)
+### 8.5.3 `R_MakeDelayedBinding()`, `R_MakeForcedBinding()`, `R_MakeMissingBinding()`
+
+experimental throws
+
+**Header:** `Rinternals.h`\
+**Since:** 4.6.0
 
 Create a delayed, forced, or missing binding in an environment.
 
@@ -330,8 +406,6 @@ void R_MakeDelayedBinding(SEXP sym, SEXP expr, SEXP evalEnv, SEXP env);
 void R_MakeForcedBinding(SEXP sym, SEXP expr, SEXP value, SEXP env);
 void R_MakeMissingBinding(SEXP sym, SEXP env);
 ```
-
-**Status:** experimental · **Header:** `Rinternals.h` · **Protect:** n/a · **Errors:** can throw · **Since:** 4.6.0 · **R equivalent:** —
 
 - `expr`: the expression associated with the binding.
 - `evalEnv`: environment in which a delayed binding’s expression is evaluated.
@@ -342,15 +416,26 @@ A delayed binding is a promise; a forced binding pairs an expression with its al
 
 ### 8.5.4 `R_envSymbols()`
 
+experimental needs protect throws
+
+**Header:** `Rinternals.h`\
+**Since:** 4.6.0\
+**R equivalent:** `ls()`
+
 List the symbols bound in an environment.
 
 ``` c
 SEXP R_envSymbols(SEXP env);
 ```
 
-**Status:** experimental · **Header:** `Rinternals.h` · **Protect:** result · **Errors:** can throw · **Since:** 4.6.0 · **R equivalent:** `ls()`
+**Returns:** A freshly allocated list of the symbols bound in `env`.
 
-### 8.5.5 `R_findDotsEnv()` (`R_DotsExist()`)
+### 8.5.5 `R_findDotsEnv()`, `R_DotsExist()`
+
+experimental
+
+**Header:** `Rinternals.h`\
+**Since:** 4.6.0
 
 Find the nearest enclosing frame containing a `...` binding.
 
@@ -359,13 +444,19 @@ SEXP R_findDotsEnv(SEXP env);
 Rboolean R_DotsExist(SEXP env);
 ```
 
-**Status:** experimental · **Header:** `Rinternals.h` · **Protect:** not needed · **Errors:** never · **Since:** 4.6.0 · **R equivalent:** —
+**Returns:** `R_findDotsEnv()` returns the nearest enclosing frame containing a `...` binding, or `R_EmptyEnv` if none; `R_DotsExist()` returns `TRUE` if `env` contains a `...` binding, otherwise `FALSE`.
 
 `R_findDotsEnv()` walks parent environments and returns the first containing a proper `...` binding, or `R_EmptyEnv`. The `R_Dots*`/`R_Dot*` accessors look up `...` only in the given frame, so call this first if you need R’s inherited lookup.
 
 **See also:** [`R_DotsLength()`](#R_DotsLength), [`R_DotsElt()`](#R_DotsElt)
 
-### 8.5.6 `R_DotsLength()` (`R_DotsNames()`)
+### 8.5.6 `R_DotsLength()`, `R_DotsNames()`
+
+experimental needs protect
+
+**Header:** `Rinternals.h`\
+**Since:** 4.6.0\
+**R equivalent:** `...length()`
 
 Get the length or names of the `...` binding in a frame.
 
@@ -374,11 +465,16 @@ int R_DotsLength(SEXP env);
 SEXP R_DotsNames(SEXP env);
 ```
 
-**Status:** experimental · **Header:** `Rinternals.h` · **Protect:** result · **Errors:** never · **Since:** 4.6.0 · **R equivalent:** `...length()`
+**Returns:** `R_DotsLength()` returns the number of elements in the `...` binding of `env`; `R_DotsNames()` returns their names as a character vector.
 
 **See also:** [`R_findDotsEnv()`](#R_findDotsEnv)
 
 ### 8.5.7 `R_GetDotType()`
+
+experimental
+
+**Header:** `Rinternals.h`\
+**Since:** 4.6.0
 
 Query the type of an individual `...` element.
 
@@ -386,13 +482,19 @@ Query the type of an individual `...` element.
 R_DotType_t R_GetDotType(int i, SEXP env);
 ```
 
-**Status:** experimental · **Header:** `Rinternals.h` · **Protect:** n/a · **Errors:** never · **Since:** 4.6.0 · **R equivalent:** —
+**Returns:** The type of `...` element `i`: one of `R_DotTypeValue`, `R_DotTypeMissing`, `R_DotTypeDelayed`, or `R_DotTypeForced`.
 
 Returns one of `R_DotTypeValue`, `R_DotTypeMissing`, `R_DotTypeDelayed`, or `R_DotTypeForced`.
 
 **See also:** [`R_DotsElt()`](#R_DotsElt)
 
-### 8.5.8 `R_DotsElt()` (`R_DotForcedExpression()`, `R_DotDelayedExpression()`, `R_DotDelayedEnvironment()`)
+### 8.5.8 `R_DotsElt()`, `R_DotForcedExpression()`, `R_DotDelayedExpression()`, `R_DotDelayedEnvironment()`
+
+experimental needs protect throws
+
+**Header:** `Rinternals.h`\
+**Since:** 4.6.0\
+**R equivalent:** `...elt()`
 
 Access an individual `...` element or its underlying expression.
 
@@ -403,9 +505,9 @@ SEXP R_DotDelayedExpression(int i, SEXP env);
 SEXP R_DotDelayedEnvironment(int i, SEXP env);
 ```
 
-**Status:** experimental · **Header:** `Rinternals.h` · **Protect:** result · **Errors:** can throw · **Since:** 4.6.0 · **R equivalent:** `...elt()`
-
 - `i`: zero-based index into the `...` binding.
+
+**Returns:** `R_DotsElt()` returns the (forced) value of `...` element `i`; the `R_Dot*` variants return the underlying expression or evaluation environment without forcing it.
 
 `R_DotsElt()` forces the element, like `...elt()`; the `R_Dot*` variants inspect a delayed or forced element without forcing — check with `R_GetDotType()` first.
 

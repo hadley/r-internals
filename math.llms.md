@@ -37,7 +37,10 @@ Every distribution provides up to four entry points: `d` (density/mass), `p` (CD
 
 The non-central distributions have no `r` functions, and `tukey` has only `p` and `q`. Note that the exponential and gamma distributions are parametrized by `scale`, not `rate`.
 
-### 19.1.1 `dnorm()` (`pnorm()`, `qnorm()`, `rnorm()`)
+### 19.1.1 `dnorm()`, `pnorm()`, `qnorm()`, `rnorm()`
+
+**Header:** `Rmath.h`\
+**R equivalent:** `dnorm()`
 
 Density, CDF, quantile, and random generation for a distribution.
 
@@ -48,17 +51,20 @@ double qnorm(double p, double mu, double sigma, int lower_tail, int log_p);
 double rnorm(double mu, double sigma);
 ```
 
-**Status:** API · **Header:** `Rmath.h` · **Protect:** n/a · **Errors:** never · **Since:** — · **R equivalent:** `dnorm()`
-
 - `give_log`: return the result on the log scale.
 - `lower_tail`: use the lower (left) tail; set to 0 for the upper tail.
 - `log_p`: `p` is supplied on the log scale.
+
+**Returns:** The density, cumulative probability, quantile, or random draw as a double; `NaN` with a warning on invalid parameters.
 
 Shown for the normal distribution; every distribution in the table above follows the same argument pattern with its own parameters. The cumulative hazard is `-pdist(t, ..., 0, 1)`. The `r*` functions draw from R’s RNG stream and must be bracketed by `GetRNGstate()`/`PutRNGstate()` (see [Random number generation](rng.llms.md)). With `R_NO_REMAP_RMATH` defined, the normal names become `Rf_dnorm4`, `Rf_pnorm5`, `Rf_qnorm5`.
 
 **See also:** [`Rf_rmultinom()`](#Rf_rmultinom)
 
-### 19.1.2 `dnbinom_mu()` (`pnbinom_mu()`, `qnbinom_mu()`, `rnbinom_mu()`)
+### 19.1.2 `dnbinom_mu()`, `pnbinom_mu()`, `qnbinom_mu()`, `rnbinom_mu()`
+
+**Header:** `Rmath.h`\
+**R equivalent:** `dnbinom()`
 
 Negative binomial distribution in the alternative (size, mu) parametrization.
 
@@ -69,11 +75,13 @@ double qnbinom_mu(double p, double size, double mu, int lower_tail, int log_p);
 double rnbinom_mu(double size, double mu);
 ```
 
-**Status:** API · **Header:** `Rmath.h` · **Protect:** n/a · **Errors:** never · **Since:** — · **R equivalent:** `dnbinom()`
+**Returns:** The density, cumulative probability, quantile, or random draw as a double; `NaN` with a warning on invalid parameters.
 
 **See also:** [`dnorm()`](#dnorm)
 
-### 19.1.3 `dbinom_raw()` (`dpois_raw()`)
+### 19.1.3 `dbinom_raw()`, `dpois_raw()`
+
+**Header:** `Rmath.h`
 
 Binomial and Poisson mass functions that vary continuously in x.
 
@@ -82,13 +90,16 @@ double dbinom_raw(double x, double n, double p, double q, int give_log);
 double dpois_raw(double x, double lambda, int give_log);
 ```
 
-**Status:** API · **Header:** `Rmath.h` · **Protect:** n/a · **Errors:** never · **Since:** — · **R equivalent:** —
+**Returns:** The probability mass at `x` (or its log when `give_log` is nonzero) as a double.
 
 Unlike `dbinom()`/`dpois()`, these return nonzero values for non-integer `x`. `dbinom_raw()` takes both `p` and `q = 1 - p`, which is more accurate when one is close to 1.
 
 **See also:** [`dnorm()`](#dnorm)
 
-### 19.1.4 `Rf_rmultinom()` (`rmultinom()`)
+### 19.1.4 `Rf_rmultinom()`, `rmultinom()`
+
+**Header:** `Rmath.h`\
+**R equivalent:** `rmultinom()`
 
 Generate one multinomial random vector.
 
@@ -96,8 +107,6 @@ Generate one multinomial random vector.
 void Rf_rmultinom(int n, double* prob, int K, int* rN);
 #define rmultinom Rf_rmultinom
 ```
-
-**Status:** API · **Header:** `Rmath.h` · **Protect:** n/a · **Errors:** never · **Since:** — · **R equivalent:** `rmultinom()`
 
 - `n`: number of trials; the counts in `rN` sum to `n`.
 - `prob`: length-`K` vector of probabilities, summing to 1.
@@ -107,7 +116,10 @@ Must be bracketed by `GetRNGstate()`/`PutRNGstate()`.
 
 **See also:** [`dnorm()`](#dnorm), [`GetRNGstate()`](#GetRNGstate)
 
-### 19.1.5 `wilcox_free()` (`signrank_free()`)
+### 19.1.5 `wilcox_free()`, `signrank_free()`
+
+**Header:** `Rmath.h`\
+**Since:** 4.2.0
 
 Free memory cached by the Wilcoxon distribution functions.
 
@@ -115,8 +127,6 @@ Free memory cached by the Wilcoxon distribution functions.
 void wilcox_free(void);
 void signrank_free(void);
 ```
-
-**Status:** API · **Header:** `Rmath.h` · **Protect:** n/a · **Errors:** never · **Since:** 4.2.0 · **R equivalent:** —
 
 Call after any use of `dwilcox`/`pwilcox`/`qwilcox` (or the `signrank` equivalents). Declared in `Rmath.h` only from R 4.2.0; for earlier versions declare `extern void wilcox_free(void);` yourself. These names are never remapped.
 
@@ -126,7 +136,10 @@ Call after any use of `dwilcox`/`pwilcox`/`qwilcox` (or the `signrank` equivalen
 
 Follows [WRE §6.7.2, Mathematical functions](https://cran.r-project.org/doc/manuals/R-exts.html#Mathematical-functions-1) closely.
 
-### 19.2.1 `gammafn()` (`lgammafn()`, `digamma()`, `trigamma()`, `tetragamma()`, `pentagamma()`, `psigamma()`)
+### 19.2.1 `gammafn()`, `lgammafn()`, `digamma()`, `trigamma()`, `tetragamma()`, `pentagamma()`, `psigamma()`
+
+**Header:** `Rmath.h`\
+**R equivalent:** `gamma()`
 
 Gamma function, its log, and derivatives of the digamma function.
 
@@ -140,13 +153,16 @@ double pentagamma(double x);
 double psigamma(double x, double deriv);
 ```
 
-**Status:** API · **Header:** `Rmath.h` · **Protect:** n/a · **Errors:** never · **Since:** — · **R equivalent:** `gamma()`
+**Returns:** The function value at `x` as a double; `NaN` with a warning on domain errors.
 
 `digamma(x)` is `psigamma(x, 0)`, `trigamma(x)` is `psigamma(x, 1)`, and so on. When you need several derivatives at once, the underlying workhorse `dpsifn()` computes a whole sequence in one call; see `src/nmath/polygamma.c` in the R sources.
 
 **See also:** [`beta()`](#beta)
 
-### 19.2.2 `beta()` (`lbeta()`)
+### 19.2.2 `beta()`, `lbeta()`
+
+**Header:** `Rmath.h`\
+**R equivalent:** `beta()`
 
 Beta function and its natural logarithm.
 
@@ -155,11 +171,14 @@ double beta(double a, double b);
 double lbeta(double a, double b);
 ```
 
-**Status:** API · **Header:** `Rmath.h` · **Protect:** n/a · **Errors:** never · **Since:** — · **R equivalent:** `beta()`
+**Returns:** `beta()` returns the value of the beta function and `lbeta()` its natural logarithm, both as a double; `NaN` with a warning if `a` or `b` is negative.
 
 **See also:** [`gammafn()`](#gammafn)
 
-### 19.2.3 `choose()` (`lchoose()`)
+### 19.2.3 `choose()`, `lchoose()`
+
+**Header:** `Rmath.h`\
+**R equivalent:** `choose()`
 
 Binomial coefficient and its log, generalized to real n.
 
@@ -168,13 +187,16 @@ double choose(double n, double k);
 double lchoose(double n, double k);
 ```
 
-**Status:** API · **Header:** `Rmath.h` · **Protect:** n/a · **Errors:** never · **Since:** — · **R equivalent:** `choose()`
+**Returns:** The binomial coefficient (or its natural logarithm) as a double; 0 when `k < 0`.
 
 `k` is rounded to the nearest integer (with a warning if needed).
 
 **See also:** [`gammafn()`](#gammafn)
 
-### 19.2.4 `bessel_i()` (`bessel_j()`, `bessel_k()`, `bessel_y()`)
+### 19.2.4 `bessel_i()`, `bessel_j()`, `bessel_k()`, `bessel_y()`
+
+**Header:** `Rmath.h`\
+**R equivalent:** `besselI()`
 
 Bessel functions I, J, K, and Y of fractional order.
 
@@ -185,12 +207,14 @@ double bessel_k(double x, double nu, double expo);
 double bessel_y(double x, double nu);
 ```
 
-**Status:** API · **Header:** `Rmath.h` · **Protect:** n/a · **Errors:** never · **Since:** — · **R equivalent:** `besselI()`
-
 - `nu`: order of the Bessel function.
 - `expo`: for `bessel_i`/`bessel_k` only: 1 for unscaled, 2 to return `exp(-x) * I(x, nu)` or `exp(x) * K(x, nu)` (avoids overflow).
 
-### 19.2.5 `expm1()` (`log1p()`)
+**Returns:** The value of the Bessel function at `x` (exponentially scaled if requested) as a double; `NaN` with a warning on domain errors.
+
+### 19.2.5 `expm1()`, `log1p()`
+
+**Header:** `Rmath.h`
 
 Compute exp(x) - 1 and log(1 + x) accurately for small x.
 
@@ -199,7 +223,7 @@ double expm1(double x);
 double log1p(double x);
 ```
 
-**Status:** API · **Header:** `Rmath.h` · **Protect:** n/a · **Errors:** never · **Since:** — · **R equivalent:** —
+**Returns:** The value of `exp(x) - 1` or `log(1 + x)` as a double.
 
 C99 functions that R requires; `Rmath.h` remaps `log1p()` to R’s own implementation on platforms where the system version is inaccurate.
 
@@ -207,13 +231,13 @@ C99 functions that R requires; `Rmath.h` remaps `log1p()` to R’s own implement
 
 ### 19.2.6 `dpsifn()`
 
+**Header:** `Rmath.h`
+
 Compute derivatives of the log-gamma (psi) function.
 
 ``` c
 void dpsifn(double x, int n, int kode, int m, double *ans, int *nz, int *ierr);
 ```
-
-**Status:** API · **Header:** `Rmath.h` · **Protect:** n/a · **Errors:** never · **Since:** — · **R equivalent:** —
 
 - `n`: the derivative order (0 = digamma, 1 = trigamma, …).
 - `kode`: 1 for psi^(n)(x), 2 for exp(-x) \* psi^(n)(x).
@@ -232,7 +256,9 @@ Follows [WRE §6.7.3, Numerical utilities](https://cran.r-project.org/doc/manual
 
 Some of these (`log1p`, `expm1`, `cospi`, `sinpi`, `tanpi`) may be provided by the platform’s `math.h` instead of `Rmath.h`; under C++, `math.h` is not included by `Rmath.h`, so declare them yourself or define `__STDC_WANT_IEC_60559_FUNCS_EXT__` before the first inclusion.
 
-### 19.3.1 `R_pow()` (`R_pow_di()`, `pow1p()`)
+### 19.3.1 `R_pow()`, `R_pow_di()`, `pow1p()`
+
+**Header:** `Rmath.h`
 
 Exponentiation with R’s edge-case semantics.
 
@@ -242,11 +268,13 @@ double R_pow_di(double x, int i);
 double pow1p(double x, double y);
 ```
 
-**Status:** API · **Header:** `Rmath.h` · **Protect:** n/a · **Errors:** never · **Since:** — · **R equivalent:** —
+**Returns:** `x` raised to the power `y` with R’s `^` edge-case semantics (`pow1p()` computes `(1 + x)^y`), as a double.
 
 Unlike C’s `pow()`, these give the same result as R’s `^` when `x` or `y` is 0, missing, infinite, or `NaN`. `pow1p(x, y)` computes `(1 + x)^y` accurately for small `|x|`.
 
-### 19.3.2 `log1pmx()` (`log1pexp()`, `log1mexp()`, `lgamma1p()`)
+### 19.3.2 `log1pmx()`, `log1pexp()`, `log1mexp()`, `lgamma1p()`
+
+**Header:** `Rmath.h`
 
 Accurate log computations in numerically delicate regions.
 
@@ -257,13 +285,16 @@ double log1mexp(double x);
 double lgamma1p(double x);
 ```
 
-**Status:** API · **Header:** `Rmath.h` · **Protect:** n/a · **Errors:** never · **Since:** — · **R equivalent:** —
+**Returns:** The computed value as a double; `NaN` with a warning outside the domain.
 
 Respectively `log(1 + x) - x` (accurate for small `|x|`), `log(1 + exp(x))` (accurate for large `x`), `log(1 - exp(-x))`, and `log(gamma(x + 1))` (accurate for `0 < x < 0.5`). Prefer these over composing the naive expressions.
 
 **See also:** [`logspace_add()`](#logspace_add)
 
-### 19.3.3 `cospi()` (`sinpi()`, `Rtanpi()`, `tanpi()`)
+### 19.3.3 `cospi()`, `sinpi()`, `Rtanpi()`, `tanpi()`
+
+**Header:** `Rmath.h`\
+**R equivalent:** `cospi()`
 
 Trigonometric functions of pi \* x, accurate at (half-)integer x.
 
@@ -274,11 +305,13 @@ double Rtanpi(double x);
 double tanpi(double x);
 ```
 
-**Status:** API · **Header:** `Rmath.h` · **Protect:** n/a · **Errors:** never · **Since:** — · **R equivalent:** `cospi()`
+**Returns:** The value of the function at `x * pi` as a double; `NaN` where the function is undefined.
 
 Prefer `Rtanpi()` over `tanpi()`: `Rtanpi()` is always R’s own implementation (exactly ±1 at quarter integers, `NaN` at half integers), while `tanpi()` may be the platform’s, with platform-dependent behaviour at half and quarter integers.
 
-### 19.3.4 `logspace_add()` (`logspace_sub()`, `logspace_sum()`)
+### 19.3.4 `logspace_add()`, `logspace_sub()`, `logspace_sum()`
+
+**Header:** `Rmath.h`
 
 Add, subtract, or sum values given on the log scale.
 
@@ -288,13 +321,15 @@ double logspace_sub(double logx, double logy);
 double logspace_sum(const double* logx, int n);
 ```
 
-**Status:** API · **Header:** `Rmath.h` · **Protect:** n/a · **Errors:** never · **Since:** — · **R equivalent:** —
+**Returns:** The result on the log scale as a double, e.g. `log(exp(logx) + exp(logy))`.
 
 Compute `log(exp(logx) + exp(logy))` etc. without overflow or unnecessary loss of accuracy — the building blocks for working in log-space.
 
 **See also:** [`log1pmx()`](#log1pmx)
 
-### 19.3.5 `fmax2()` (`fmin2()`, `imax2()`, `imin2()`)
+### 19.3.5 `fmax2()`, `fmin2()`, `imax2()`, `imin2()`
+
+**Header:** `Rmath.h`
 
 Maximum and minimum of two doubles or ints.
 
@@ -305,11 +340,14 @@ int imax2(int x, int y);
 int imin2(int x, int y);
 ```
 
-**Status:** API · **Header:** `Rmath.h` · **Protect:** n/a · **Errors:** never · **Since:** — · **R equivalent:** —
+**Returns:** The larger (`fmax2()`/`imax2()`) or smaller (`fmin2()`/`imin2()`) of the two arguments; `NaN` if either is `NaN`.
 
 Unlike C99’s `fmax()`/`fmin()`, these return `NaN` when either argument is `NaN`.
 
-### 19.3.6 `sign()` (`fsign()`)
+### 19.3.6 `sign()`, `fsign()`
+
+**Header:** `Rmath.h`\
+**R equivalent:** `sign()`
 
 Signum function and transfer of sign.
 
@@ -318,11 +356,13 @@ double sign(double x);
 double fsign(double x, double y);
 ```
 
-**Status:** API · **Header:** `Rmath.h` · **Protect:** n/a · **Errors:** never · **Since:** — · **R equivalent:** `sign()`
+**Returns:** `sign()` returns 1, 0, -1, or `NaN` for `NaN` input; `fsign()` returns `|x|` with the sign of `y`.
 
 `sign()` returns 1, 0, −1, or `NaN` for `NaN`. `fsign(x, y)` is `|x| * sign(y)`.
 
-### 19.3.7 `fround()` (`fprec()`, `ftrunc()`)
+### 19.3.7 `fround()`, `fprec()`, `ftrunc()`
+
+**Header:** `Rmath.h`
 
 Rounding used by R’s round() and signif().
 
@@ -332,7 +372,7 @@ double fprec(double x, double digits);
 double ftrunc(double x);
 ```
 
-**Status:** API · **Header:** `Rmath.h` · **Protect:** n/a · **Errors:** never · **Since:** — · **R equivalent:** —
+**Returns:** The rounded (`fround()`/`fprec()`) or truncated (`ftrunc()`) value as a double.
 
 `fround()` rounds to `digits` decimal places (as `round()`); `fprec()` rounds to `digits` significant digits (as `signif()`); `ftrunc()` truncates toward zero.
 

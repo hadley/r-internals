@@ -4,7 +4,11 @@ R’s RNG is private to R: from C you draw from R’s stream, you don’t create
 
 There is no C API to choose the generator or set the seed; if you need that, evaluate calls to `RNGkind()`/`set.seed()` (see [Evaluation](evaluation.llms.md)). For distributions beyond uniform, normal, and exponential, use the `r*` functions from `Rmath.h` (see [Mathematical functions](math.llms.md)) — they draw from the same stream and need the same bracketing.
 
-### 18.0.1 `GetRNGstate()` (`PutRNGstate()`)
+### 18.0.1 `GetRNGstate()`, `PutRNGstate()`
+
+throws
+
+**Header:** `R_ext/Random.h`
 
 Read in (or create) `.Random.seed` before generating variates, and write it back after.
 
@@ -12,8 +16,6 @@ Read in (or create) `.Random.seed` before generating variates, and write it back
 void GetRNGstate(void);
 void PutRNGstate(void);
 ```
-
-**Status:** API · **Header:** `R_ext/Random.h` · **Protect:** n/a · **Errors:** can throw · **Since:** — · **R equivalent:** —
 
 Every use of R’s RNG from C must be bracketed by these calls: `GetRNGstate()` reads (or lazily creates) `.Random.seed`, and `PutRNGstate()` writes the updated state back so R-level code sees the stream advance. They can allocate when the seed doesn’t yet exist. These names are never remapped.
 
@@ -25,7 +27,9 @@ PutRNGstate();
 
 **See also:** [`unif_rand()`](#unif_rand)
 
-### 18.0.2 `unif_rand()` (`norm_rand()`, `exp_rand()`)
+### 18.0.2 `unif_rand()`, `norm_rand()`, `exp_rand()`
+
+**Header:** `R_ext/Random.h`
 
 Draw one uniform, standard normal, or unit exponential variate.
 
@@ -35,7 +39,7 @@ double norm_rand(void);
 double exp_rand(void);
 ```
 
-**Status:** API · **Header:** `R_ext/Random.h` · **Protect:** n/a · **Errors:** never · **Since:** — · **R equivalent:** —
+**Returns:** One variate: uniform on (0, 1) for `unif_rand()`, standard normal for `norm_rand()`, unit exponential for `exp_rand()`.
 
 Must be called between `GetRNGstate()` and `PutRNGstate()`. The generator kind and seed are chosen at the R level (`RNGkind()`, `set.seed()`); there is no C API to select them. For other distributions, use the `r*` functions from `Rmath.h` (see [Mathematical functions](math.llms.md)) — they need the same bracketing. These names are never remapped.
 
@@ -43,15 +47,17 @@ Must be called between `GetRNGstate()` and `PutRNGstate()`. The generator kind a
 
 ### 18.0.3 `R_unif_index()`
 
+**Header:** `R_ext/Random.h`
+
 Draw a uniform index in `[0, n)` for random sampling.
 
 ``` c
 double R_unif_index(double n);
 ```
 
-**Status:** API · **Header:** `R_ext/Random.h` · **Protect:** n/a · **Errors:** never · **Since:** — · **R equivalent:** —
-
 - `n`: upper bound (exclusive) on the returned index.
+
+**Returns:** A uniform draw in `[0, n)`; truncate to an integer type to get an index.
 
 Returns a `double` in `[0, n)`; truncate to `int` or `R_xlen_t` to get an index. Uses the sampling algorithm selected by R’s `sample.kind` option, so results match R-level `sample.int()`. Must be called between `GetRNGstate()` and `PutRNGstate()`.
 
@@ -59,13 +65,15 @@ Returns a `double` in `[0, n)`; truncate to `int` or `R_xlen_t` to get an index.
 
 ### 18.0.4 `R_sample_kind()`
 
+**Header:** `R_ext/Random.h`
+
 Get the current discrete-sampling algorithm.
 
 ``` c
 Sampletype R_sample_kind(void);
 ```
 
-**Status:** API · **Header:** `R_ext/Random.h` · **Protect:** n/a · **Errors:** never · **Since:** — · **R equivalent:** —
+**Returns:** The current sampling algorithm, `ROUNDING` or `REJECTION`.
 
 Returns `ROUNDING` or `REJECTION`, reflecting the `sample.kind` option; only relevant to code implementing its own discrete sampling.
 

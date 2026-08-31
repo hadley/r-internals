@@ -112,6 +112,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 }</script>
 
 
+<link rel="stylesheet" href="badges.css">
 </head>
 
 <body class="nav-sidebar floating quarto-light">
@@ -368,14 +369,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul>
   <li><a href="#transient-allocation" id="toc-transient-allocation" class="nav-link active" data-scroll-target="#transient-allocation"><span class="header-section-number">4.1</span> Transient allocation</a>
   <ul class="collapse">
-  <li><a href="#R_alloc" id="toc-R_alloc" class="nav-link" data-scroll-target="#R_alloc"><span class="header-section-number">4.1.1</span> <code>R_alloc()</code> (<code>R_allocLD()</code>)</a></li>
-  <li><a href="#S_alloc" id="toc-S_alloc" class="nav-link" data-scroll-target="#S_alloc"><span class="header-section-number">4.1.2</span> <code>S_alloc()</code> (<code>S_realloc()</code>)</a></li>
-  <li><a href="#vmaxget" id="toc-vmaxget" class="nav-link" data-scroll-target="#vmaxget"><span class="header-section-number">4.1.3</span> <code>vmaxget()</code> (<code>vmaxset()</code>)</a></li>
+  <li><a href="#R_alloc" id="toc-R_alloc" class="nav-link" data-scroll-target="#R_alloc"><span class="header-section-number">4.1.1</span> <code>R_alloc()</code>, <code>R_allocLD()</code></a></li>
+  <li><a href="#S_alloc" id="toc-S_alloc" class="nav-link" data-scroll-target="#S_alloc"><span class="header-section-number">4.1.2</span> <code>S_alloc()</code>, <code>S_realloc()</code></a></li>
+  <li><a href="#vmaxget" id="toc-vmaxget" class="nav-link" data-scroll-target="#vmaxget"><span class="header-section-number">4.1.3</span> <code>vmaxget()</code>, <code>vmaxset()</code></a></li>
   </ul></li>
   <li><a href="#user-controlled-memory" id="toc-user-controlled-memory" class="nav-link" data-scroll-target="#user-controlled-memory"><span class="header-section-number">4.2</span> User-controlled memory</a>
   <ul class="collapse">
-  <li><a href="#R_Calloc" id="toc-R_Calloc" class="nav-link" data-scroll-target="#R_Calloc"><span class="header-section-number">4.2.1</span> <code>R_Calloc()</code> (<code>R_Realloc()</code>, <code>R_Free()</code>)</a></li>
-  <li><a href="#R_malloc_gc" id="toc-R_malloc_gc" class="nav-link" data-scroll-target="#R_malloc_gc"><span class="header-section-number">4.2.2</span> <code>R_malloc_gc()</code> (<code>R_calloc_gc()</code>, <code>R_realloc_gc()</code>)</a></li>
+  <li><a href="#R_Calloc" id="toc-R_Calloc" class="nav-link" data-scroll-target="#R_Calloc"><span class="header-section-number">4.2.1</span> <code>R_Calloc()</code>, <code>R_Realloc()</code>, <code>R_Free()</code></a></li>
+  <li><a href="#R_malloc_gc" id="toc-R_malloc_gc" class="nav-link" data-scroll-target="#R_malloc_gc"><span class="header-section-number">4.2.2</span> <code>R_malloc_gc()</code>, <code>R_calloc_gc()</code>, <code>R_realloc_gc()</code></a></li>
   </ul></li>
   <li><a href="#when-to-use-a-rawsxp-instead" id="toc-when-to-use-a-rawsxp-instead" class="nav-link" data-scroll-target="#when-to-use-a-rawsxp-instead"><span class="header-section-number">4.3</span> When to use a RAWSXP instead</a></li>
   </ul>
@@ -416,29 +417,34 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>The returned memory is only guaranteed to be aligned for <code>double</code>; use <code>R_allocLD()</code> if you need <code>long double</code> alignment.</p>
 <section id="R_alloc" class="level3" data-number="4.1.1">
-<h3 data-number="4.1.1" class="anchored" data-anchor-id="R_alloc"><span class="header-section-number">4.1.1</span> <code>R_alloc()</code> (<code>R_allocLD()</code>)</h3>
+<h3 data-number="4.1.1" class="anchored" data-anchor-id="R_alloc"><span class="header-section-number">4.1.1</span> <code>R_alloc()</code>, <code>R_allocLD()</code></h3>
+<p><span class="badge badge-errors">throws</span></p>
+<p><strong>Header:</strong> <code>R_ext/Memory.h</code></p>
 <p>Allocate temporary memory that R reclaims automatically.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="dt">char</span><span class="op">*</span> R_alloc<span class="op">(</span><span class="dt">size_t</span><span class="op">,</span> <span class="dt">int</span><span class="op">);</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="dt">long</span> <span class="dt">double</span> <span class="op">*</span>R_allocLD<span class="op">(</span><span class="dt">size_t</span> nelem<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>R_ext/Memory.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<p><strong>Returns:</strong> A pointer to the allocated memory, freed automatically when the <code>.Call</code> entry point returns.</p>
 <p>Memory is freed automatically when the <code>.Call</code> entry point returns (including on error or interrupt). <code>R_allocLD()</code> additionally guarantees the 16-byte alignment some platforms need for <code>long double</code>.</p>
 <p><strong>See also:</strong> <a href="#vmaxget"><code>vmaxget()</code></a></p>
 </section>
 <section id="S_alloc" class="level3" data-number="4.1.2">
-<h3 data-number="4.1.2" class="anchored" data-anchor-id="S_alloc"><span class="header-section-number">4.1.2</span> <code>S_alloc()</code> (<code>S_realloc()</code>)</h3>
+<h3 data-number="4.1.2" class="anchored" data-anchor-id="S_alloc"><span class="header-section-number">4.1.2</span> <code>S_alloc()</code>, <code>S_realloc()</code></h3>
+<p><span class="badge badge-errors">throws</span></p>
+<p><strong>Header:</strong> <code>R_ext/Memory.h</code></p>
 <p>Allocate and reallocate temporary memory using the legacy S interface.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="dt">char</span><span class="op">*</span> S_alloc<span class="op">(</span><span class="dt">long</span><span class="op">,</span> <span class="dt">int</span><span class="op">);</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="dt">char</span><span class="op">*</span> S_realloc<span class="op">(</span><span class="dt">char</span> <span class="op">*,</span> <span class="dt">long</span><span class="op">,</span> <span class="dt">long</span><span class="op">,</span> <span class="dt">int</span><span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>R_ext/Memory.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<p><strong>Returns:</strong> A pointer to the allocated (or reallocated) temporary memory.</p>
 <p>Best avoided: <code>long</code> is limited to 2^31 - 1 bytes on 64-bit Windows, so these cannot handle large allocations there. Prefer <code>R_alloc()</code>.</p>
 <p><strong>See also:</strong> <a href="#R_alloc"><code>R_alloc()</code></a></p>
 </section>
 <section id="vmaxget" class="level3" data-number="4.1.3">
-<h3 data-number="4.1.3" class="anchored" data-anchor-id="vmaxget"><span class="header-section-number">4.1.3</span> <code>vmaxget()</code> (<code>vmaxset()</code>)</h3>
+<h3 data-number="4.1.3" class="anchored" data-anchor-id="vmaxget"><span class="header-section-number">4.1.3</span> <code>vmaxget()</code>, <code>vmaxset()</code></h3>
+<p><strong>Header:</strong> <code>R_ext/Memory.h</code></p>
 <p>Get and set the high-water mark of R’s temporary allocation arena.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span><span class="op">*</span> vmaxget<span class="op">(</span><span class="dt">void</span><span class="op">);</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> vmaxset<span class="op">(</span><span class="dt">const</span> <span class="dt">void</span> <span class="op">*);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>R_ext/Memory.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<p><strong>Returns:</strong> <code>vmaxget()</code> returns the current allocation high-water mark, for passing back to <code>vmaxset()</code>.</p>
 <p><code>vmaxset()</code> releases everything allocated by <code>R_alloc()</code> since the matching <code>vmaxget()</code>. Useful to bound memory growth when calling <code>R_alloc()</code> in a loop, but easy to get wrong — for experts only.</p>
 <p><strong>See also:</strong> <a href="#R_alloc"><code>R_alloc()</code></a></p>
 </section>
@@ -454,22 +460,25 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
 <p>Also provided: <code>CallocCharBuf(n)</code> (a <code>char</code> buffer of <code>n + 1</code> for the NUL terminator), and <code>Memcpy()</code>/<code>Memzero()</code> for copying and zeroing arrays.</p>
 <section id="R_Calloc" class="level3" data-number="4.2.1">
-<h3 data-number="4.2.1" class="anchored" data-anchor-id="R_Calloc"><span class="header-section-number">4.2.1</span> <code>R_Calloc()</code> (<code>R_Realloc()</code>, <code>R_Free()</code>)</h3>
+<h3 data-number="4.2.1" class="anchored" data-anchor-id="R_Calloc"><span class="header-section-number">4.2.1</span> <code>R_Calloc()</code>, <code>R_Realloc()</code>, <code>R_Free()</code></h3>
+<p><span class="badge badge-errors">throws</span></p>
+<p><strong>Header:</strong> <code>R_ext/RS.h</code></p>
 <p>Allocate, reallocate, and free user-controlled memory with R error handling.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>type<span class="op">*</span> R_Calloc<span class="op">(</span><span class="dt">size_t</span> n<span class="op">,</span> type<span class="op">);</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>type<span class="op">*</span> R_Realloc<span class="op">(</span>any <span class="op">*</span>p<span class="op">,</span> <span class="dt">size_t</span> n<span class="op">,</span> type<span class="op">);</span></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> R_Free<span class="op">(</span>any <span class="op">*</span>p<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>R_ext/RS.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<p><strong>Returns:</strong> <code>R_Calloc()</code> and <code>R_Realloc()</code> return a pointer to the allocated memory; never <code>NULL</code>, since failure raises an R error.</p>
 <p>Analogues of <code>calloc()</code>/<code>realloc()</code>/<code>free()</code>; on allocation failure R throws an error, so a returned pointer is always valid. You must <code>R_Free()</code> on every path, including error paths (see <code>R_UnwindProtect()</code>). Never mix with <code>malloc()</code>/<code>free()</code>, and never call the underlying <code>R_chk_calloc()</code> etc. directly. The legacy <code>Calloc</code>/<code>Realloc</code>/<code>Free</code> spellings were removed in R 4.5.0.</p>
 <p><strong>See also:</strong> <a href="#R_alloc"><code>R_alloc()</code></a></p>
 </section>
 <section id="R_malloc_gc" class="level3" data-number="4.2.2">
-<h3 data-number="4.2.2" class="anchored" data-anchor-id="R_malloc_gc"><span class="header-section-number">4.2.2</span> <code>R_malloc_gc()</code> (<code>R_calloc_gc()</code>, <code>R_realloc_gc()</code>)</h3>
+<h3 data-number="4.2.2" class="anchored" data-anchor-id="R_malloc_gc"><span class="header-section-number">4.2.2</span> <code>R_malloc_gc()</code>, <code>R_calloc_gc()</code>, <code>R_realloc_gc()</code></h3>
+<p><strong>Header:</strong> <code>R_ext/Memory.h</code></p>
 <p>Allocate memory, retrying after a garbage collection on failure.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> <span class="op">*</span>R_malloc_gc<span class="op">(</span><span class="dt">size_t</span><span class="op">);</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> <span class="op">*</span>R_calloc_gc<span class="op">(</span><span class="dt">size_t</span><span class="op">,</span> <span class="dt">size_t</span><span class="op">);</span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> <span class="op">*</span>R_realloc_gc<span class="op">(</span><span class="dt">void</span> <span class="op">*,</span> <span class="dt">size_t</span><span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>R_ext/Memory.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<p><strong>Returns:</strong> A pointer to the allocated memory, or <code>NULL</code> if allocation fails even after a garbage collection.</p>
 <p>Like <code>malloc()</code>/<code>calloc()</code>/<code>realloc()</code>, but if the allocation fails a garbage collection is run and the allocation retried. Memory must be released with <code>free()</code>.</p>
 <p><strong>See also:</strong> <a href="#R_Calloc"><code>R_Calloc()</code></a></p>
 </section>

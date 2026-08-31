@@ -58,7 +58,9 @@ void R_init_mypkg(DllInfo *dll) {
 
 `R_useDynamicSymbols(dll, FALSE)` means only registered routines are visible, so `.Call("add_one", ...)` by string fails and you must use the symbol object. Generate the R-side registration with `tools::package_native_routine_registration_skeleton("src")`, then put `useDynLib(mypkg, .registration = TRUE)` in `NAMESPACE`, which makes the symbol object `C_add_one` available to your R code.
 
-### 1.2.1 `R_registerRoutines()` (`R_useDynamicSymbols()`)
+### 1.2.1 `R_registerRoutines()`, `R_useDynamicSymbols()`
+
+**Header:** `R_ext/Rdynload.h`
 
 Register a package’s native routines and restrict dynamic symbol lookup.
 
@@ -70,15 +72,19 @@ int R_registerRoutines(DllInfo *info, const R_CMethodDef * const croutines,
 Rboolean R_useDynamicSymbols(DllInfo *info, Rboolean value);
 ```
 
-**Status:** API · **Header:** `R_ext/Rdynload.h` · **Protect:** n/a · **Errors:** never · **Since:** — · **R equivalent:** —
-
 - `info`: passed to your `R_init_<pkgname>()` initializer.
 - `callRoutines`: NULL-terminated array of `R_CallMethodDef` entries: name, function pointer cast to `DL_FUNC`, argument count.
 - `value`: `FALSE` hides unregistered symbols, so routines can only be reached via registration.
 
+**Returns:** `R_registerRoutines()` returns the number of routines registered; `R_useDynamicSymbols()` returns the previous setting.
+
 Call from `R_init_<pkgname>()`. Generate the registration boilerplate with `tools::package_native_routine_registration_skeleton("src")`.
 
-### 1.2.2 `R_RegisterCCallable()` (`R_GetCCallable()`)
+### 1.2.2 `R_RegisterCCallable()`, `R_GetCCallable()`
+
+throws
+
+**Header:** `R_ext/Rdynload.h`
 
 Export or retrieve a C entry point for use by another package.
 
@@ -87,7 +93,7 @@ void R_RegisterCCallable(const char *package, const char *name, DL_FUNC fptr);
 DL_FUNC R_GetCCallable(const char *package, const char *name);
 ```
 
-**Status:** API · **Header:** `R_ext/Rdynload.h` · **Protect:** n/a · **Errors:** can throw · **Since:** — · **R equivalent:** —
+**Returns:** `R_GetCCallable()` returns the registered function pointer, raising an error if not found.
 
 Register in `R_init_<package>()`; clients retrieve the pointer at their own load time and call it directly, with no R-level dispatch. The function pointer must remain valid while the providing package is loaded.
 
@@ -95,13 +101,15 @@ Register in `R_init_<package>()`; clients retrieve the pointer at their own load
 
 ### 1.2.3 `R_FindSymbol()`
 
+**Header:** `R_ext/Rdynload.h`
+
 Look up a symbol in a loaded DLL by name.
 
 ``` c
 DL_FUNC R_FindSymbol(char const *name, char const *pkg, DllInfo *info);
 ```
 
-**Status:** API · **Header:** `R_ext/Rdynload.h` · **Protect:** n/a · **Errors:** never · **Since:** — · **R equivalent:** —
+**Returns:** The entry point for `name`, or `NULL` if not found.
 
 Searches the DLLs loaded for package `pkg` (`info` is filled in if not `NULL`). Rarely needed now that `R_GetCCallable()` exists.
 
@@ -109,13 +117,15 @@ Searches the DLLs loaded for package `pkg` (`info` is filled in if not `NULL`). 
 
 ### 1.2.4 `R_forceSymbols()`
 
+**Header:** `R_ext/Rdynload.h`
+
 Restrict a DLL to registered (symbol) entry points.
 
 ``` c
 Rboolean R_forceSymbols(DllInfo *info, Rboolean value);
 ```
 
-**Status:** API · **Header:** `R_ext/Rdynload.h` · **Protect:** n/a · **Errors:** never · **Since:** — · **R equivalent:** —
+**Returns:** The previous setting.
 
 With `value = TRUE`, entry points of the DLL can only be called via registered `R_CallMethodDef` symbols, not by name. Set in `R_init_<package>()` alongside `R_useDynamicSymbols(dll, FALSE)`.
 

@@ -112,6 +112,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 }</script>
 
 
+<link rel="stylesheet" href="badges.css">
 </head>
 
 <body class="nav-sidebar floating quarto-light">
@@ -369,8 +370,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#call" id="toc-call" class="nav-link active" data-scroll-target="#call"><span class="header-section-number">1.1</span> .Call</a></li>
   <li><a href="#routine-registration" id="toc-routine-registration" class="nav-link" data-scroll-target="#routine-registration"><span class="header-section-number">1.2</span> Routine registration</a>
   <ul class="collapse">
-  <li><a href="#R_registerRoutines" id="toc-R_registerRoutines" class="nav-link" data-scroll-target="#R_registerRoutines"><span class="header-section-number">1.2.1</span> <code>R_registerRoutines()</code> (<code>R_useDynamicSymbols()</code>)</a></li>
-  <li><a href="#R_RegisterCCallable" id="toc-R_RegisterCCallable" class="nav-link" data-scroll-target="#R_RegisterCCallable"><span class="header-section-number">1.2.2</span> <code>R_RegisterCCallable()</code> (<code>R_GetCCallable()</code>)</a></li>
+  <li><a href="#R_registerRoutines" id="toc-R_registerRoutines" class="nav-link" data-scroll-target="#R_registerRoutines"><span class="header-section-number">1.2.1</span> <code>R_registerRoutines()</code>, <code>R_useDynamicSymbols()</code></a></li>
+  <li><a href="#R_RegisterCCallable" id="toc-R_RegisterCCallable" class="nav-link" data-scroll-target="#R_RegisterCCallable"><span class="header-section-number">1.2.2</span> <code>R_RegisterCCallable()</code>, <code>R_GetCCallable()</code></a></li>
   <li><a href="#R_FindSymbol" id="toc-R_FindSymbol" class="nav-link" data-scroll-target="#R_FindSymbol"><span class="header-section-number">1.2.3</span> <code>R_FindSymbol()</code></a></li>
   <li><a href="#R_forceSymbols" id="toc-R_forceSymbols" class="nav-link" data-scroll-target="#R_forceSymbols"><span class="header-section-number">1.2.4</span> <code>R_forceSymbols()</code></a></li>
   </ul></li>
@@ -447,43 +448,48 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><code>R_useDynamicSymbols(dll, FALSE)</code> means only registered routines are visible, so <code>.Call("add_one", ...)</code> by string fails and you must use the symbol object. Generate the R-side registration with <code>tools::package_native_routine_registration_skeleton("src")</code>, then put <code>useDynLib(mypkg, .registration = TRUE)</code> in <code>NAMESPACE</code>, which makes the symbol object <code>C_add_one</code> available to your R code.</p>
 <section id="R_registerRoutines" class="level3" data-number="1.2.1">
-<h3 data-number="1.2.1" class="anchored" data-anchor-id="R_registerRoutines"><span class="header-section-number">1.2.1</span> <code>R_registerRoutines()</code> (<code>R_useDynamicSymbols()</code>)</h3>
+<h3 data-number="1.2.1" class="anchored" data-anchor-id="R_registerRoutines"><span class="header-section-number">1.2.1</span> <code>R_registerRoutines()</code>, <code>R_useDynamicSymbols()</code></h3>
+<p><strong>Header:</strong> <code>R_ext/Rdynload.h</code></p>
 <p>Register a package’s native routines and restrict dynamic symbol lookup.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> R_registerRoutines<span class="op">(</span>DllInfo <span class="op">*</span>info<span class="op">,</span> <span class="dt">const</span> R_CMethodDef <span class="op">*</span> <span class="dt">const</span> croutines<span class="op">,</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>                       <span class="dt">const</span> R_CallMethodDef <span class="op">*</span> <span class="dt">const</span> callRoutines<span class="op">,</span></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>                       <span class="dt">const</span> R_FortranMethodDef <span class="op">*</span> <span class="dt">const</span> fortranRoutines<span class="op">,</span></span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>                       <span class="dt">const</span> R_ExternalMethodDef <span class="op">*</span> <span class="dt">const</span> externalRoutines<span class="op">);</span></span>
 <span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>Rboolean R_useDynamicSymbols<span class="op">(</span>DllInfo <span class="op">*</span>info<span class="op">,</span> Rboolean value<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>R_ext/Rdynload.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 <ul>
 <li><code>info</code>: passed to your <code>R_init_&lt;pkgname&gt;()</code> initializer.</li>
 <li><code>callRoutines</code>: NULL-terminated array of <code>R_CallMethodDef</code> entries: name, function pointer cast to <code>DL_FUNC</code>, argument count.</li>
 <li><code>value</code>: <code>FALSE</code> hides unregistered symbols, so routines can only be reached via registration.</li>
 </ul>
+<p><strong>Returns:</strong> <code>R_registerRoutines()</code> returns the number of routines registered; <code>R_useDynamicSymbols()</code> returns the previous setting.</p>
 <p>Call from <code>R_init_&lt;pkgname&gt;()</code>. Generate the registration boilerplate with <code>tools::package_native_routine_registration_skeleton("src")</code>.</p>
 </section>
 <section id="R_RegisterCCallable" class="level3" data-number="1.2.2">
-<h3 data-number="1.2.2" class="anchored" data-anchor-id="R_RegisterCCallable"><span class="header-section-number">1.2.2</span> <code>R_RegisterCCallable()</code> (<code>R_GetCCallable()</code>)</h3>
+<h3 data-number="1.2.2" class="anchored" data-anchor-id="R_RegisterCCallable"><span class="header-section-number">1.2.2</span> <code>R_RegisterCCallable()</code>, <code>R_GetCCallable()</code></h3>
+<p><span class="badge badge-errors">throws</span></p>
+<p><strong>Header:</strong> <code>R_ext/Rdynload.h</code></p>
 <p>Export or retrieve a C entry point for use by another package.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> R_RegisterCCallable<span class="op">(</span><span class="dt">const</span> <span class="dt">char</span> <span class="op">*</span>package<span class="op">,</span> <span class="dt">const</span> <span class="dt">char</span> <span class="op">*</span>name<span class="op">,</span> DL_FUNC fptr<span class="op">);</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>DL_FUNC R_GetCCallable<span class="op">(</span><span class="dt">const</span> <span class="dt">char</span> <span class="op">*</span>package<span class="op">,</span> <span class="dt">const</span> <span class="dt">char</span> <span class="op">*</span>name<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>R_ext/Rdynload.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<p><strong>Returns:</strong> <code>R_GetCCallable()</code> returns the registered function pointer, raising an error if not found.</p>
 <p>Register in <code>R_init_&lt;package&gt;()</code>; clients retrieve the pointer at their own load time and call it directly, with no R-level dispatch. The function pointer must remain valid while the providing package is loaded.</p>
 <p><strong>See also:</strong> <a href="#R_registerRoutines"><code>R_registerRoutines()</code></a></p>
 </section>
 <section id="R_FindSymbol" class="level3" data-number="1.2.3">
 <h3 data-number="1.2.3" class="anchored" data-anchor-id="R_FindSymbol"><span class="header-section-number">1.2.3</span> <code>R_FindSymbol()</code></h3>
+<p><strong>Header:</strong> <code>R_ext/Rdynload.h</code></p>
 <p>Look up a symbol in a loaded DLL by name.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>DL_FUNC R_FindSymbol<span class="op">(</span><span class="dt">char</span> <span class="dt">const</span> <span class="op">*</span>name<span class="op">,</span> <span class="dt">char</span> <span class="dt">const</span> <span class="op">*</span>pkg<span class="op">,</span> DllInfo <span class="op">*</span>info<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>R_ext/Rdynload.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<p><strong>Returns:</strong> The entry point for <code>name</code>, or <code>NULL</code> if not found.</p>
 <p>Searches the DLLs loaded for package <code>pkg</code> (<code>info</code> is filled in if not <code>NULL</code>). Rarely needed now that <code>R_GetCCallable()</code> exists.</p>
 <p><strong>See also:</strong> <a href="#R_GetCCallable"><code>R_GetCCallable()</code></a></p>
 </section>
 <section id="R_forceSymbols" class="level3" data-number="1.2.4">
 <h3 data-number="1.2.4" class="anchored" data-anchor-id="R_forceSymbols"><span class="header-section-number">1.2.4</span> <code>R_forceSymbols()</code></h3>
+<p><strong>Header:</strong> <code>R_ext/Rdynload.h</code></p>
 <p>Restrict a DLL to registered (symbol) entry points.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>Rboolean R_forceSymbols<span class="op">(</span>DllInfo <span class="op">*</span>info<span class="op">,</span> Rboolean value<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>R_ext/Rdynload.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<p><strong>Returns:</strong> The previous setting.</p>
 <p>With <code>value = TRUE</code>, entry points of the DLL can only be called via registered <code>R_CallMethodDef</code> symbols, not by name. Set in <code>R_init_&lt;package&gt;()</code> alongside <code>R_useDynamicSymbols(dll, FALSE)</code>.</p>
 <p><strong>See also:</strong> <a href="#R_registerRoutines"><code>R_registerRoutines()</code></a></p>
 </section>

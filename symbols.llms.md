@@ -6,19 +6,27 @@ A symbol (`SYMSXP`) is a name, like `x` or `+`. Symbols are interned: there is e
 
 ### 9.1.1 `Rf_isSymbol()`
 
+**Header:** `Rinternals.h`\
+**R equivalent:** `is.symbol()`
+
 Test whether an object is a symbol.
 
 ``` c
 Rboolean Rf_isSymbol(SEXP s);
 ```
 
-**Status:** API · **Header:** `Rinternals.h` · **Protect:** n/a · **Errors:** never · **Since:** — · **R equivalent:** `is.symbol()`
+**Returns:** `TRUE` if `s` is a symbol (`SYMSXP`), otherwise `FALSE`.
 
 ## 9.2 Create
 
 `Rf_install()` returns the existing symbol for a name, or creates it if it doesn’t exist yet.
 
-### 9.2.1 `Rf_install()` (`Rf_installChar()`, `Rf_installTrChar()`)
+### 9.2.1 `Rf_install()`, `Rf_installChar()`, `Rf_installTrChar()`
+
+throws
+
+**Header:** `Rinternals.h`\
+**R equivalent:** `as.name()`
 
 Create the symbol for a name, returning the existing symbol if already present.
 
@@ -28,7 +36,7 @@ SEXP Rf_installChar(SEXP);
 SEXP Rf_installTrChar(SEXP);
 ```
 
-**Status:** API · **Header:** `Rinternals.h` · **Protect:** not needed · **Errors:** can throw · **Since:** — · **R equivalent:** `as.name()`
+**Returns:** The symbol (`SYMSXP`) with the given name, creating it if necessary.
 
 Symbols are never garbage collected, so `SYMSXP`s don’t need to be protected. Cache frequently used symbols to avoid repeated lookups. `Rf_installChar()` takes a CHARSXP; `Rf_installTrChar()` is the same but first translates the string to the native encoding.
 
@@ -36,13 +44,15 @@ Symbols are never garbage collected, so `SYMSXP`s don’t need to be protected. 
 
 ### 9.3.1 `PRINTNAME()`
 
+**Header:** `Rinternals.h`
+
 Get the print name of a symbol.
 
 ``` c
 SEXP (PRINTNAME)(SEXP x);
 ```
 
-**Status:** API · **Header:** `Rinternals.h` · **Protect:** not needed · **Errors:** never · **Since:** — · **R equivalent:** —
+**Returns:** The print name of the symbol `x` as a `CHARSXP`.
 
 Returns the name as a CHARSXP; use `CHAR(PRINTNAME(x))` for a `const char*`. There is no API setter — symbols are interned, so create the symbol you want with `Rf_install()` instead.
 
@@ -54,13 +64,13 @@ Returns the name as a CHARSXP; use `CHAR(PRINTNAME(x))` for a `const char*`. The
 
 ### 9.4.1 `R_MissingArg()`
 
+**Header:** `Rinternals.h`
+
 Access the missing/empty symbol.
 
 ``` c
 SEXP R_MissingArg;
 ```
-
-**Status:** API · **Header:** `Rinternals.h` · **Protect:** not needed · **Errors:** never · **Since:** — · **R equivalent:** —
 
 Used as the second argument in a call like `f(x, )`.
 
@@ -70,15 +80,17 @@ A number of symbols are so commonly used that they’re predefined and exported 
 
 ### 9.5.1 `R_dot_defined()`
 
+**Header:** `Rinternals.h`
+
 Access the predefined symbol for “.defined”.
 
 ``` c
 SEXP R_dot_defined;
 ```
 
-**Status:** API · **Header:** `Rinternals.h` · **Protect:** not needed · **Errors:** never · **Since:** — · **R equivalent:** —
-
 ### 9.5.2 `R_dot_Method()`
+
+**Header:** `Rinternals.h`
 
 Access the predefined symbol for “.Method”.
 
@@ -86,9 +98,9 @@ Access the predefined symbol for “.Method”.
 SEXP R_dot_Method;
 ```
 
-**Status:** API · **Header:** `Rinternals.h` · **Protect:** not needed · **Errors:** never · **Since:** — · **R equivalent:** —
-
 ### 9.5.3 `R_dot_packageName()`
+
+**Header:** `Rinternals.h`
 
 Access the predefined symbol for “.packageName”.
 
@@ -96,9 +108,9 @@ Access the predefined symbol for “.packageName”.
 SEXP R_dot_packageName;
 ```
 
-**Status:** API · **Header:** `Rinternals.h` · **Protect:** not needed · **Errors:** never · **Since:** — · **R equivalent:** —
-
 ### 9.5.4 `R_dot_target()`
+
+**Header:** `Rinternals.h`
 
 Access the predefined symbol for “.target”.
 
@@ -106,9 +118,9 @@ Access the predefined symbol for “.target”.
 SEXP R_dot_target;
 ```
 
-**Status:** API · **Header:** `Rinternals.h` · **Protect:** not needed · **Errors:** never · **Since:** — · **R equivalent:** —
-
 ### 9.5.5 `R_BaseSymbol()`
+
+**Header:** `Rinternals.h`
 
 Access the predefined symbol for “base”.
 
@@ -116,9 +128,9 @@ Access the predefined symbol for “base”.
 SEXP R_BaseSymbol;
 ```
 
-**Status:** API · **Header:** `Rinternals.h` · **Protect:** not needed · **Errors:** never · **Since:** — · **R equivalent:** —
-
 ### 9.5.6 `R_BraceSymbol()`
+
+**Header:** `Rinternals.h`
 
 Access the predefined symbol for “{”.
 
@@ -126,9 +138,9 @@ Access the predefined symbol for “{”.
 SEXP R_BraceSymbol;
 ```
 
-**Status:** API · **Header:** `Rinternals.h` · **Protect:** not needed · **Errors:** never · **Since:** — · **R equivalent:** —
-
 ### 9.5.7 `R_Bracket2Symbol()`
+
+**Header:** `Rinternals.h`
 
 Access the predefined symbol for “\[\[”.
 
@@ -136,9 +148,9 @@ Access the predefined symbol for “\[\[”.
 SEXP R_Bracket2Symbol;
 ```
 
-**Status:** API · **Header:** `Rinternals.h` · **Protect:** not needed · **Errors:** never · **Since:** — · **R equivalent:** —
-
 ### 9.5.8 `R_BracketSymbol()`
+
+**Header:** `Rinternals.h`
 
 Access the predefined symbol for “\[”.
 
@@ -146,9 +158,9 @@ Access the predefined symbol for “\[”.
 SEXP R_BracketSymbol;
 ```
 
-**Status:** API · **Header:** `Rinternals.h` · **Protect:** not needed · **Errors:** never · **Since:** — · **R equivalent:** —
-
 ### 9.5.9 `R_ClassSymbol()`
+
+**Header:** `Rinternals.h`
 
 Access the predefined symbol for “class”.
 
@@ -156,9 +168,9 @@ Access the predefined symbol for “class”.
 SEXP R_ClassSymbol;
 ```
 
-**Status:** API · **Header:** `Rinternals.h` · **Protect:** not needed · **Errors:** never · **Since:** — · **R equivalent:** —
-
 ### 9.5.10 `R_DeviceSymbol()`
+
+**Header:** `Rinternals.h`
 
 Access the predefined symbol for “.Device”.
 
@@ -166,9 +178,9 @@ Access the predefined symbol for “.Device”.
 SEXP R_DeviceSymbol;
 ```
 
-**Status:** API · **Header:** `Rinternals.h` · **Protect:** not needed · **Errors:** never · **Since:** — · **R equivalent:** —
-
 ### 9.5.11 `R_DimNamesSymbol()`
+
+**Header:** `Rinternals.h`
 
 Access the predefined symbol for “dimnames”.
 
@@ -176,9 +188,9 @@ Access the predefined symbol for “dimnames”.
 SEXP R_DimNamesSymbol;
 ```
 
-**Status:** API · **Header:** `Rinternals.h` · **Protect:** not needed · **Errors:** never · **Since:** — · **R equivalent:** —
-
 ### 9.5.12 `R_DimSymbol()`
+
+**Header:** `Rinternals.h`
 
 Access the predefined symbol for “dim”.
 
@@ -186,9 +198,9 @@ Access the predefined symbol for “dim”.
 SEXP R_DimSymbol;
 ```
 
-**Status:** API · **Header:** `Rinternals.h` · **Protect:** not needed · **Errors:** never · **Since:** — · **R equivalent:** —
-
 ### 9.5.13 `R_DollarSymbol()`
+
+**Header:** `Rinternals.h`
 
 Access the predefined symbol for “\$”.
 
@@ -196,9 +208,9 @@ Access the predefined symbol for “\$”.
 SEXP R_DollarSymbol;
 ```
 
-**Status:** API · **Header:** `Rinternals.h` · **Protect:** not needed · **Errors:** never · **Since:** — · **R equivalent:** —
-
 ### 9.5.14 `R_DotsSymbol()`
+
+**Header:** `Rinternals.h`
 
 Access the predefined symbol for “…”.
 
@@ -206,9 +218,9 @@ Access the predefined symbol for “…”.
 SEXP R_DotsSymbol;
 ```
 
-**Status:** API · **Header:** `Rinternals.h` · **Protect:** not needed · **Errors:** never · **Since:** — · **R equivalent:** —
-
 ### 9.5.15 `R_DoubleColonSymbol()`
+
+**Header:** `Rinternals.h`
 
 Access the predefined symbol for “::”.
 
@@ -216,9 +228,9 @@ Access the predefined symbol for “::”.
 SEXP R_DoubleColonSymbol;
 ```
 
-**Status:** API · **Header:** `Rinternals.h` · **Protect:** not needed · **Errors:** never · **Since:** — · **R equivalent:** —
-
 ### 9.5.16 `R_DropSymbol()`
+
+**Header:** `Rinternals.h`
 
 Access the predefined symbol for “drop”.
 
@@ -226,9 +238,9 @@ Access the predefined symbol for “drop”.
 SEXP R_DropSymbol;
 ```
 
-**Status:** API · **Header:** `Rinternals.h` · **Protect:** not needed · **Errors:** never · **Since:** — · **R equivalent:** —
-
 ### 9.5.17 `R_LastvalueSymbol()`
+
+**Header:** `Rinternals.h`
 
 Access the predefined symbol for “.Last.value”.
 
@@ -236,9 +248,9 @@ Access the predefined symbol for “.Last.value”.
 SEXP R_LastvalueSymbol;
 ```
 
-**Status:** API · **Header:** `Rinternals.h` · **Protect:** not needed · **Errors:** never · **Since:** — · **R equivalent:** —
-
 ### 9.5.18 `R_LevelsSymbol()`
+
+**Header:** `Rinternals.h`
 
 Access the predefined symbol for “levels”.
 
@@ -246,9 +258,9 @@ Access the predefined symbol for “levels”.
 SEXP R_LevelsSymbol;
 ```
 
-**Status:** API · **Header:** `Rinternals.h` · **Protect:** not needed · **Errors:** never · **Since:** — · **R equivalent:** —
-
 ### 9.5.19 `R_ModeSymbol()`
+
+**Header:** `Rinternals.h`
 
 Access the predefined symbol for “mode”.
 
@@ -256,9 +268,9 @@ Access the predefined symbol for “mode”.
 SEXP R_ModeSymbol;
 ```
 
-**Status:** API · **Header:** `Rinternals.h` · **Protect:** not needed · **Errors:** never · **Since:** — · **R equivalent:** —
-
 ### 9.5.20 `R_NaRmSymbol()`
+
+**Header:** `Rinternals.h`
 
 Access the predefined symbol for “na.rm”.
 
@@ -266,9 +278,9 @@ Access the predefined symbol for “na.rm”.
 SEXP R_NaRmSymbol;
 ```
 
-**Status:** API · **Header:** `Rinternals.h` · **Protect:** not needed · **Errors:** never · **Since:** — · **R equivalent:** —
-
 ### 9.5.21 `R_NameSymbol()`
+
+**Header:** `Rinternals.h`
 
 Access the predefined symbol for “name”.
 
@@ -276,9 +288,9 @@ Access the predefined symbol for “name”.
 SEXP R_NameSymbol;
 ```
 
-**Status:** API · **Header:** `Rinternals.h` · **Protect:** not needed · **Errors:** never · **Since:** — · **R equivalent:** —
-
 ### 9.5.22 `R_NamesSymbol()`
+
+**Header:** `Rinternals.h`
 
 Access the predefined symbol for “names”.
 
@@ -286,9 +298,9 @@ Access the predefined symbol for “names”.
 SEXP R_NamesSymbol;
 ```
 
-**Status:** API · **Header:** `Rinternals.h` · **Protect:** not needed · **Errors:** never · **Since:** — · **R equivalent:** —
-
 ### 9.5.23 `R_NamespaceEnvSymbol()`
+
+**Header:** `Rinternals.h`
 
 Access the predefined symbol for “.\_\_NAMESPACE\_\_.”.
 
@@ -296,9 +308,9 @@ Access the predefined symbol for “.\_\_NAMESPACE\_\_.”.
 SEXP R_NamespaceEnvSymbol;
 ```
 
-**Status:** API · **Header:** `Rinternals.h` · **Protect:** not needed · **Errors:** never · **Since:** — · **R equivalent:** —
-
 ### 9.5.24 `R_PackageSymbol()`
+
+**Header:** `Rinternals.h`
 
 Access the predefined symbol for “package”.
 
@@ -306,9 +318,9 @@ Access the predefined symbol for “package”.
 SEXP R_PackageSymbol;
 ```
 
-**Status:** API · **Header:** `Rinternals.h` · **Protect:** not needed · **Errors:** never · **Since:** — · **R equivalent:** —
-
 ### 9.5.25 `R_PreviousSymbol()`
+
+**Header:** `Rinternals.h`
 
 Access the predefined symbol for “previous”.
 
@@ -316,9 +328,9 @@ Access the predefined symbol for “previous”.
 SEXP R_PreviousSymbol;
 ```
 
-**Status:** API · **Header:** `Rinternals.h` · **Protect:** not needed · **Errors:** never · **Since:** — · **R equivalent:** —
-
 ### 9.5.26 `R_QuoteSymbol()`
+
+**Header:** `Rinternals.h`
 
 Access the predefined symbol for “quote”.
 
@@ -326,9 +338,9 @@ Access the predefined symbol for “quote”.
 SEXP R_QuoteSymbol;
 ```
 
-**Status:** API · **Header:** `Rinternals.h` · **Protect:** not needed · **Errors:** never · **Since:** — · **R equivalent:** —
-
 ### 9.5.27 `R_RowNamesSymbol()`
+
+**Header:** `Rinternals.h`
 
 Access the predefined symbol for “row.names”.
 
@@ -336,9 +348,9 @@ Access the predefined symbol for “row.names”.
 SEXP R_RowNamesSymbol;
 ```
 
-**Status:** API · **Header:** `Rinternals.h` · **Protect:** not needed · **Errors:** never · **Since:** — · **R equivalent:** —
-
 ### 9.5.28 `R_SeedsSymbol()`
+
+**Header:** `Rinternals.h`
 
 Access the predefined symbol for “.Random.seed”.
 
@@ -346,9 +358,9 @@ Access the predefined symbol for “.Random.seed”.
 SEXP R_SeedsSymbol;
 ```
 
-**Status:** API · **Header:** `Rinternals.h` · **Protect:** not needed · **Errors:** never · **Since:** — · **R equivalent:** —
-
 ### 9.5.29 `R_SortListSymbol()`
+
+**Header:** `Rinternals.h`
 
 Access the predefined symbol for “sort.list”.
 
@@ -356,9 +368,9 @@ Access the predefined symbol for “sort.list”.
 SEXP R_SortListSymbol;
 ```
 
-**Status:** API · **Header:** `Rinternals.h` · **Protect:** not needed · **Errors:** never · **Since:** — · **R equivalent:** —
-
 ### 9.5.30 `R_SourceSymbol()`
+
+**Header:** `Rinternals.h`
 
 Access the predefined symbol for “source”.
 
@@ -366,9 +378,9 @@ Access the predefined symbol for “source”.
 SEXP R_SourceSymbol;
 ```
 
-**Status:** API · **Header:** `Rinternals.h` · **Protect:** not needed · **Errors:** never · **Since:** — · **R equivalent:** —
-
 ### 9.5.31 `R_SpecSymbol()`
+
+**Header:** `Rinternals.h`
 
 Access the predefined symbol for “spec”.
 
@@ -376,9 +388,9 @@ Access the predefined symbol for “spec”.
 SEXP R_SpecSymbol;
 ```
 
-**Status:** API · **Header:** `Rinternals.h` · **Protect:** not needed · **Errors:** never · **Since:** — · **R equivalent:** —
-
 ### 9.5.32 `R_TripleColonSymbol()`
+
+**Header:** `Rinternals.h`
 
 Access the predefined symbol for `":::"`.
 
@@ -386,14 +398,12 @@ Access the predefined symbol for `":::"`.
 SEXP R_TripleColonSymbol;
 ```
 
-**Status:** API · **Header:** `Rinternals.h` · **Protect:** not needed · **Errors:** never · **Since:** — · **R equivalent:** —
-
 ### 9.5.33 `R_TspSymbol()`
+
+**Header:** `Rinternals.h`
 
 Access the predefined symbol for “tsp”.
 
 ``` c
 SEXP R_TspSymbol;
 ```
-
-**Status:** API · **Header:** `Rinternals.h` · **Protect:** not needed · **Errors:** never · **Since:** — · **R equivalent:** —

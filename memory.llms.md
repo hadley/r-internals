@@ -19,7 +19,11 @@ for (...) {
 
 The returned memory is only guaranteed to be aligned for `double`; use `R_allocLD()` if you need `long double` alignment.
 
-### 4.1.1 `R_alloc()` (`R_allocLD()`)
+### 4.1.1 `R_alloc()`, `R_allocLD()`
+
+throws
+
+**Header:** `R_ext/Memory.h`
 
 Allocate temporary memory that R reclaims automatically.
 
@@ -28,13 +32,17 @@ char* R_alloc(size_t, int);
 long double *R_allocLD(size_t nelem);
 ```
 
-**Status:** API · **Header:** `R_ext/Memory.h` · **Protect:** n/a · **Errors:** can throw · **Since:** — · **R equivalent:** —
+**Returns:** A pointer to the allocated memory, freed automatically when the `.Call` entry point returns.
 
 Memory is freed automatically when the `.Call` entry point returns (including on error or interrupt). `R_allocLD()` additionally guarantees the 16-byte alignment some platforms need for `long double`.
 
 **See also:** [`vmaxget()`](#vmaxget)
 
-### 4.1.2 `S_alloc()` (`S_realloc()`)
+### 4.1.2 `S_alloc()`, `S_realloc()`
+
+throws
+
+**Header:** `R_ext/Memory.h`
 
 Allocate and reallocate temporary memory using the legacy S interface.
 
@@ -43,13 +51,15 @@ char* S_alloc(long, int);
 char* S_realloc(char *, long, long, int);
 ```
 
-**Status:** API · **Header:** `R_ext/Memory.h` · **Protect:** n/a · **Errors:** can throw · **Since:** — · **R equivalent:** —
+**Returns:** A pointer to the allocated (or reallocated) temporary memory.
 
 Best avoided: `long` is limited to 2^31 - 1 bytes on 64-bit Windows, so these cannot handle large allocations there. Prefer `R_alloc()`.
 
 **See also:** [`R_alloc()`](#R_alloc)
 
-### 4.1.3 `vmaxget()` (`vmaxset()`)
+### 4.1.3 `vmaxget()`, `vmaxset()`
+
+**Header:** `R_ext/Memory.h`
 
 Get and set the high-water mark of R’s temporary allocation arena.
 
@@ -58,7 +68,7 @@ void* vmaxget(void);
 void vmaxset(const void *);
 ```
 
-**Status:** API · **Header:** `R_ext/Memory.h` · **Protect:** n/a · **Errors:** never · **Since:** — · **R equivalent:** —
+**Returns:** `vmaxget()` returns the current allocation high-water mark, for passing back to `vmaxset()`.
 
 `vmaxset()` releases everything allocated by `R_alloc()` since the matching `vmaxget()`. Useful to bound memory growth when calling `R_alloc()` in a loop, but easy to get wrong — for experts only.
 
@@ -76,7 +86,11 @@ Follows [WRE §6.1.2, User-controlled memory](https://cran.r-project.org/doc/man
 
 Also provided: `CallocCharBuf(n)` (a `char` buffer of `n + 1` for the NUL terminator), and `Memcpy()`/`Memzero()` for copying and zeroing arrays.
 
-### 4.2.1 `R_Calloc()` (`R_Realloc()`, `R_Free()`)
+### 4.2.1 `R_Calloc()`, `R_Realloc()`, `R_Free()`
+
+throws
+
+**Header:** `R_ext/RS.h`
 
 Allocate, reallocate, and free user-controlled memory with R error handling.
 
@@ -86,13 +100,15 @@ type* R_Realloc(any *p, size_t n, type);
 void R_Free(any *p);
 ```
 
-**Status:** API · **Header:** `R_ext/RS.h` · **Protect:** n/a · **Errors:** can throw · **Since:** — · **R equivalent:** —
+**Returns:** `R_Calloc()` and `R_Realloc()` return a pointer to the allocated memory; never `NULL`, since failure raises an R error.
 
 Analogues of `calloc()`/`realloc()`/`free()`; on allocation failure R throws an error, so a returned pointer is always valid. You must `R_Free()` on every path, including error paths (see `R_UnwindProtect()`). Never mix with `malloc()`/`free()`, and never call the underlying `R_chk_calloc()` etc. directly. The legacy `Calloc`/`Realloc`/`Free` spellings were removed in R 4.5.0.
 
 **See also:** [`R_alloc()`](#R_alloc)
 
-### 4.2.2 `R_malloc_gc()` (`R_calloc_gc()`, `R_realloc_gc()`)
+### 4.2.2 `R_malloc_gc()`, `R_calloc_gc()`, `R_realloc_gc()`
+
+**Header:** `R_ext/Memory.h`
 
 Allocate memory, retrying after a garbage collection on failure.
 
@@ -102,7 +118,7 @@ void *R_calloc_gc(size_t, size_t);
 void *R_realloc_gc(void *, size_t);
 ```
 
-**Status:** API · **Header:** `R_ext/Memory.h` · **Protect:** n/a · **Errors:** never · **Since:** — · **R equivalent:** —
+**Returns:** A pointer to the allocated memory, or `NULL` if allocation fails even after a garbage collection.
 
 Like `malloc()`/`calloc()`/`realloc()`, but if the allocation fails a garbage collection is run and the allocation retried. Memory must be released with `free()`.
 

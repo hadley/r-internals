@@ -112,6 +112,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 }</script>
 
 
+<link rel="stylesheet" href="badges.css">
 </head>
 
 <body class="nav-sidebar floating quarto-light">
@@ -373,16 +374,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#options" id="toc-options" class="nav-link" data-scroll-target="#options"><span class="header-section-number">21.2</span> Options</a>
   <ul class="collapse">
   <li><a href="#Rf_GetOption1" id="toc-Rf_GetOption1" class="nav-link" data-scroll-target="#Rf_GetOption1"><span class="header-section-number">21.2.1</span> <code>Rf_GetOption1()</code></a></li>
-  <li><a href="#Rf_GetOptionDigits" id="toc-Rf_GetOptionDigits" class="nav-link" data-scroll-target="#Rf_GetOptionDigits"><span class="header-section-number">21.2.2</span> <code>Rf_GetOptionDigits()</code> (<code>Rf_GetOptionWidth()</code>)</a></li>
+  <li><a href="#Rf_GetOptionDigits" id="toc-Rf_GetOptionDigits" class="nav-link" data-scroll-target="#Rf_GetOptionDigits"><span class="header-section-number">21.2.2</span> <code>Rf_GetOptionDigits()</code>, <code>Rf_GetOptionWidth()</code></a></li>
   </ul></li>
   <li><a href="#numeric-parsing" id="toc-numeric-parsing" class="nav-link" data-scroll-target="#numeric-parsing"><span class="header-section-number">21.3</span> Numeric parsing</a>
   <ul class="collapse">
-  <li><a href="#R_atof" id="toc-R_atof" class="nav-link" data-scroll-target="#R_atof"><span class="header-section-number">21.3.1</span> <code>R_atof()</code> (<code>R_strtod()</code>)</a></li>
+  <li><a href="#R_atof" id="toc-R_atof" class="nav-link" data-scroll-target="#R_atof"><span class="header-section-number">21.3.1</span> <code>R_atof()</code>, <code>R_strtod()</code></a></li>
   <li><a href="#acopy_string" id="toc-acopy_string" class="nav-link" data-scroll-target="#acopy_string"><span class="header-section-number">21.3.2</span> <code>acopy_string()</code></a></li>
   </ul></li>
   <li><a href="#files-and-system" id="toc-files-and-system" class="nav-link" data-scroll-target="#files-and-system"><span class="header-section-number">21.4</span> Files and system</a>
   <ul class="collapse">
-  <li><a href="#R_tmpnam" id="toc-R_tmpnam" class="nav-link" data-scroll-target="#R_tmpnam"><span class="header-section-number">21.4.1</span> <code>R_tmpnam()</code> (<code>R_tmpnam2()</code>, <code>R_free_tmpnam()</code>)</a></li>
+  <li><a href="#R_tmpnam" id="toc-R_tmpnam" class="nav-link" data-scroll-target="#R_tmpnam"><span class="header-section-number">21.4.1</span> <code>R_tmpnam()</code>, <code>R_tmpnam2()</code>, <code>R_free_tmpnam()</code></a></li>
   <li><a href="#R_ExpandFileName" id="toc-R_ExpandFileName" class="nav-link" data-scroll-target="#R_ExpandFileName"><span class="header-section-number">21.4.2</span> <code>R_ExpandFileName()</code></a></li>
   </ul></li>
   <li><a href="#platform-information" id="toc-platform-information" class="nav-link" data-scroll-target="#platform-information"><span class="header-section-number">21.5</span> Platform information</a></li>
@@ -416,9 +417,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 data-number="21.1" class="anchored" data-anchor-id="testing"><span class="header-section-number">21.1</span> Testing</h2>
 <section id="R_compute_identical" class="level3" data-number="21.1.1">
 <h3 data-number="21.1.1" class="anchored" data-anchor-id="R_compute_identical"><span class="header-section-number">21.1.1</span> <code>R_compute_identical()</code></h3>
+<p><span class="badge badge-experimental">experimental</span> <span class="badge badge-errors">throws</span></p>
+<p><strong>Header:</strong> <code>Rinternals.h</code><br>
+<strong>R equivalent:</strong> <code>identical()</code></p>
 <p>Test whether two objects are identical.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>Rboolean R_compute_identical<span class="op">(</span>SEXP<span class="op">,</span> SEXP<span class="op">,</span> <span class="dt">int</span><span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> experimental · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>identical()</code></p>
+<p><strong>Returns:</strong> <code>TRUE</code> if the objects are identical under the given flags, otherwise <code>FALSE</code>.</p>
 <p>The third argument is a bitmask of flags for non-default options (set a bit to get the FALSE behaviour): 1 = !NUM_EQ, 2 = !SINGLE_NA, 4 = !ATTR_AS_SET, 8 = !IGNORE_BYTECODE, 16 = !IGNORE_ENV, 32 = !IGNORE_SRCREF. R’s <code>identical()</code> default corresponds to 16.</p>
 </section>
 </section>
@@ -426,18 +430,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 data-number="21.2" class="anchored" data-anchor-id="options"><span class="header-section-number">21.2</span> Options</h2>
 <section id="Rf_GetOption1" class="level3" data-number="21.2.1">
 <h3 data-number="21.2.1" class="anchored" data-anchor-id="Rf_GetOption1"><span class="header-section-number">21.2.1</span> <code>Rf_GetOption1()</code></h3>
+<p><strong>Header:</strong> <code>Rinternals.h</code><br>
+<strong>R equivalent:</strong> <code>getOption()</code></p>
 <p>Retrieve the value of an R option.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>SEXP Rf_GetOption1<span class="op">(</span>SEXP<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>getOption()</code></p>
+<p><strong>Returns:</strong> The option’s value, or <code>R_NilValue</code> if it is not set.</p>
 <p>The older two-argument <code>Rf_GetOption()</code> was removed from the headers in R 4.6.0.</p>
 <p><strong>See also:</strong> <a href="#Rf_GetOptionDigits"><code>Rf_GetOptionDigits()</code></a></p>
 </section>
 <section id="Rf_GetOptionDigits" class="level3" data-number="21.2.2">
-<h3 data-number="21.2.2" class="anchored" data-anchor-id="Rf_GetOptionDigits"><span class="header-section-number">21.2.2</span> <code>Rf_GetOptionDigits()</code> (<code>Rf_GetOptionWidth()</code>)</h3>
+<h3 data-number="21.2.2" class="anchored" data-anchor-id="Rf_GetOptionDigits"><span class="header-section-number">21.2.2</span> <code>Rf_GetOptionDigits()</code>, <code>Rf_GetOptionWidth()</code></h3>
+<p><strong>Header:</strong> <code>Rinternals.h</code><br>
+<strong>R equivalent:</strong> <code>getOption()</code></p>
 <p>Retrieve the digits or width option.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> Rf_GetOptionDigits<span class="op">(</span><span class="dt">void</span><span class="op">);</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> Rf_GetOptionWidth<span class="op">(</span><span class="dt">void</span><span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>getOption()</code></p>
+<p><strong>Returns:</strong> The current value of the <code>digits</code> or <code>width</code> option, respectively.</p>
 <p><strong>See also:</strong> <a href="#Rf_GetOption1"><code>Rf_GetOption1()</code></a></p>
 </section>
 </section>
@@ -445,18 +453,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 data-number="21.3" class="anchored" data-anchor-id="numeric-parsing"><span class="header-section-number">21.3</span> Numeric parsing</h2>
 <p><code>R_atof()</code>/<code>R_strtod()</code> exist because the C library equivalents are locale-dependent: R’s versions always use <code>.</code> as the decimal point and recognise <code>"NA"</code>.</p>
 <section id="R_atof" class="level3" data-number="21.3.1">
-<h3 data-number="21.3.1" class="anchored" data-anchor-id="R_atof"><span class="header-section-number">21.3.1</span> <code>R_atof()</code> (<code>R_strtod()</code>)</h3>
+<h3 data-number="21.3.1" class="anchored" data-anchor-id="R_atof"><span class="header-section-number">21.3.1</span> <code>R_atof()</code>, <code>R_strtod()</code></h3>
+<p><strong>Header:</strong> <code>R_ext/Utils.h</code><br>
+<strong>R equivalent:</strong> <code>as.numeric()</code></p>
 <p>Convert a string to a double.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="dt">double</span> R_atof<span class="op">(</span><span class="dt">const</span> <span class="dt">char</span> <span class="op">*</span>str<span class="op">);</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="dt">double</span> R_strtod<span class="op">(</span><span class="dt">const</span> <span class="dt">char</span> <span class="op">*</span>c<span class="op">,</span> <span class="dt">char</span> <span class="op">**</span>end<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>R_ext/Utils.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>as.numeric()</code></p>
+<p><strong>Returns:</strong> The parsed <code>double</code> value; <code>R_strtod()</code> also sets <code>*end</code> to the first unparsed character.</p>
 <p>These two are guaranteed to use ‘.’ as the decimal point, and to accept “NA”.</p>
 </section>
 <section id="acopy_string" class="level3" data-number="21.3.2">
 <h3 data-number="21.3.2" class="anchored" data-anchor-id="acopy_string"><span class="header-section-number">21.3.2</span> <code>acopy_string()</code></h3>
+<p><span class="badge badge-experimental">experimental</span> <span class="badge badge-errors">throws</span></p>
+<p><strong>Header:</strong> <code>R_ext/Utils.h</code></p>
 <p>Copy a string into R_alloc-allocated memory.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> <span class="dt">char</span> <span class="op">*</span>acopy_string<span class="op">(</span><span class="dt">const</span> <span class="dt">char</span> <span class="op">*</span>in<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> experimental · <strong>Header:</strong> <code>R_ext/Utils.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<p><strong>Returns:</strong> A copy of <code>in</code> in transient <code>R_alloc()</code> memory.</p>
 <p>The copy uses transient <code>R_alloc()</code> memory, so it is freed automatically when your <code>.Call</code> entry point returns.</p>
 <p><strong>See also:</strong> <a href="memory.html#R_alloc"><code>R_alloc()</code></a></p>
 </section>
@@ -464,19 +476,24 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="files-and-system" class="level2" data-number="21.4">
 <h2 data-number="21.4" class="anchored" data-anchor-id="files-and-system"><span class="header-section-number">21.4</span> Files and system</h2>
 <section id="R_tmpnam" class="level3" data-number="21.4.1">
-<h3 data-number="21.4.1" class="anchored" data-anchor-id="R_tmpnam"><span class="header-section-number">21.4.1</span> <code>R_tmpnam()</code> (<code>R_tmpnam2()</code>, <code>R_free_tmpnam()</code>)</h3>
+<h3 data-number="21.4.1" class="anchored" data-anchor-id="R_tmpnam"><span class="header-section-number">21.4.1</span> <code>R_tmpnam()</code>, <code>R_tmpnam2()</code>, <code>R_free_tmpnam()</code></h3>
+<p><span class="badge badge-errors">throws</span></p>
+<p><strong>Header:</strong> <code>R_ext/Utils.h</code><br>
+<strong>R equivalent:</strong> <code>tempfile()</code></p>
 <p>Create a name for a temporary file.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="dt">char</span> <span class="op">*</span>R_tmpnam<span class="op">(</span><span class="dt">const</span> <span class="dt">char</span> <span class="op">*</span>prefix<span class="op">,</span> <span class="dt">const</span> <span class="dt">char</span> <span class="op">*</span>tempdir<span class="op">);</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="dt">char</span> <span class="op">*</span>R_tmpnam2<span class="op">(</span><span class="dt">const</span> <span class="dt">char</span> <span class="op">*</span>prefix<span class="op">,</span> <span class="dt">const</span> <span class="dt">char</span> <span class="op">*</span>tempdir<span class="op">,</span> <span class="dt">const</span> <span class="dt">char</span> <span class="op">*</span>fileext<span class="op">);</span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> R_free_tmpnam<span class="op">(</span><span class="dt">char</span> <span class="op">*</span>name<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>R_ext/Utils.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>tempfile()</code></p>
+<p><strong>Returns:</strong> <code>R_tmpnam()</code> and <code>R_tmpnam2()</code> return a newly allocated temporary file name to free with <code>R_free_tmpnam()</code>.</p>
 <p>The returned string is dynamically allocated; free it with <code>R_free_tmpnam()</code> (not <code>free()</code>). A <code>NULL</code> prefix or extension is replaced by <code>""</code>.</p>
 </section>
 <section id="R_ExpandFileName" class="level3" data-number="21.4.2">
 <h3 data-number="21.4.2" class="anchored" data-anchor-id="R_ExpandFileName"><span class="header-section-number">21.4.2</span> <code>R_ExpandFileName()</code></h3>
+<p><strong>Header:</strong> <code>R_ext/Utils.h</code><br>
+<strong>R equivalent:</strong> <code>path.expand()</code></p>
 <p>Expand a path containing ~ to a full path.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> <span class="dt">char</span> <span class="op">*</span>R_ExpandFileName<span class="op">(</span><span class="dt">const</span> <span class="dt">char</span> <span class="op">*);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>R_ext/Utils.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>path.expand()</code></p>
+<p><strong>Returns:</strong> The path with any leading <code>~</code> expanded.</p>
 <p>Needed because most C APIs don’t understand <code>~</code>.</p>
 </section>
 </section>

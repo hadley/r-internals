@@ -29,7 +29,12 @@ Rf_eval(Rf_lang2(Rf_install("stop"), cond), R_GlobalEnv);
 
 The same pattern with `warning()` signals a classed warning.
 
-### 15.1.1 `Rf_error()` (`Rf_errorcall()`)
+### 15.1.1 `Rf_error()`, `Rf_errorcall()`
+
+throws
+
+**Header:** `Rinternals.h`\
+**R equivalent:** `stop()`
 
 Signal an error, optionally including the call in the message.
 
@@ -38,11 +43,14 @@ void Rf_error(const char* format, ...);
 void Rf_errorcall(SEXP call, const char* format, ...);
 ```
 
-**Status:** API · **Header:** `Rinternals.h` · **Protect:** n/a · **Errors:** can throw · **Since:** — · **R equivalent:** `stop()`
-
 Use `Rf_errorcall(R_NilValue, ...)` to suppress display of the call.
 
-### 15.1.2 `Rf_warning()` (`Rf_warningcall()`, `Rf_warningcall_immediate()`)
+### 15.1.2 `Rf_warning()`, `Rf_warningcall()`, `Rf_warningcall_immediate()`
+
+throws
+
+**Header:** `R_ext/Error.h`\
+**R equivalent:** `warning()`
 
 Signal a warning, optionally including the call or displaying it immediately.
 
@@ -52,9 +60,11 @@ void Rf_warningcall(SEXP call, const char*, ...);
 void Rf_warningcall_immediate(SEXP call, const char*, ...);
 ```
 
-**Status:** API · **Header:** `R_ext/Error.h` · **Protect:** n/a · **Errors:** can throw · **Since:** — · **R equivalent:** `warning()`
+### 15.1.3 `error_return()`, `errorcall_return()`
 
-### 15.1.3 `error_return()` (`errorcall_return()`)
+throws
+
+**Header:** `Rinternals.h`
 
 Eliminate compiler warnings about non-void functions that don’t return.
 
@@ -69,21 +79,21 @@ Eliminate compiler warnings about non-void functions that don’t return.
 }
 ```
 
-**Status:** API · **Header:** `Rinternals.h` · **Protect:** n/a · **Errors:** can throw · **Since:** — · **R equivalent:** —
-
 `Rf_error` will `longjmp` and so any code following will not be executed; however, most compilers do not detect this when providing warnings.
 
 **See also:** [`Rf_error()`](#Rf_error)
 
 ### 15.1.4 `UNIMPLEMENTED()`
 
+throws
+
+**Header:** `R_ext/Error.h`
+
 Signal an error for an unimplemented operation.
 
 ``` c
 [[noreturn]] void UNIMPLEMENTED(const char *s);
 ```
-
-**Status:** API · **Header:** `R_ext/Error.h` · **Protect:** n/a · **Errors:** can throw · **Since:** — · **R equivalent:** —
 
 Signals “feature ‘s’ is not implemented”; never returns. Use `UNIMPLEMENTED_TYPE()` for a type-specific variant.
 
@@ -97,6 +107,10 @@ These functions let C code do what `tryCatch()` and `on.exit()` do at the R leve
 
 ### 15.2.1 `R_UnwindProtect()`
 
+needs protect throws
+
+**Header:** `Rinternals.h`
+
 Run a C function, guaranteeing a cleanup action runs on normal return and on longjmp.
 
 ``` c
@@ -105,17 +119,21 @@ SEXP R_UnwindProtect(SEXP (*fun)(void *data), void *data,
                      SEXP cont);
 ```
 
-**Status:** API · **Header:** `Rinternals.h` · **Protect:** result · **Errors:** can throw · **Since:** — · **R equivalent:** —
-
 - `fun`: function to run; its return value is passed through.
 - `clean`: cleanup function, called with `jump = FALSE` after a normal return and `jump = TRUE` before a non-local transfer of control resumes.
 - `cont`: continuation token from `R_MakeUnwindCont()`, or `R_NilValue` for plain C use.
+
+**Returns:** The `SEXP` returned by `fun`.
 
 This is the primary tool for making C (and C++) code longjmp-safe: free `R_Calloc()` memory, close files, and restore state in `clean`. With a continuation token, `clean` can throw a C++ exception to unwind the C++ stack and then call `R_ContinueUnwind()` to resume R’s longjmp.
 
 **See also:** [`R_MakeUnwindCont()`](#R_MakeUnwindCont), [`R_ExecWithCleanup()`](#R_ExecWithCleanup)
 
-### 15.2.2 `R_MakeUnwindCont()` (`R_ContinueUnwind()`)
+### 15.2.2 `R_MakeUnwindCont()`, `R_ContinueUnwind()`
+
+needs protect throws
+
+**Header:** `Rinternals.h`
 
 Allocate a continuation token for C++ stack unwinding, and resume the unwind.
 
@@ -124,13 +142,17 @@ SEXP R_MakeUnwindCont(void);
 NORET void R_ContinueUnwind(SEXP cont);
 ```
 
-**Status:** API · **Header:** `Rinternals.h` · **Protect:** result · **Errors:** can throw · **Since:** — · **R equivalent:** —
+**Returns:** `R_MakeUnwindCont()` returns a `SEXP` continuation token for use with `R_UnwindProtect()`; `R_ContinueUnwind()` never returns.
 
 `PROTECT` the token before passing it to `R_UnwindProtect()`. Only needed when C++ code sits between R and the cleanup handler; plain C code should pass `R_NilValue` as `cont` instead.
 
 **See also:** [`R_UnwindProtect()`](#R_UnwindProtect)
 
 ### 15.2.3 `R_ExecWithCleanup()`
+
+needs protect throws
+
+**Header:** `Rinternals.h`
 
 Execute a C function in a protected context, with cleanup before teardown.
 
@@ -140,16 +162,21 @@ SEXP R_ExecWithCleanup(SEXP (*fun)(void *), void *data,
                        void *cleandata);
 ```
 
-**Status:** API · **Header:** `Rinternals.h` · **Protect:** result · **Errors:** can throw · **Since:** — · **R equivalent:** —
-
 - `fun`: C function to call after context setup. Passed `*data`.
 - `cleanfun`: C function to call before context teardown. Passed `*data`.
+
+**Returns:** The `SEXP` returned by `fun`.
 
 Older, simpler variant of `R_UnwindProtect()`; the cleanup function is not told whether the exit was a normal return or a longjmp.
 
 **See also:** [`R_UnwindProtect()`](#R_UnwindProtect)
 
-### 15.2.4 `R_tryCatchError()` (`R_withCallingErrorHandler()`)
+### 15.2.4 `R_tryCatchError()`, `R_withCallingErrorHandler()`
+
+needs protect throws
+
+**Header:** `Rinternals.h`\
+**R equivalent:** `tryCatch()`
 
 Call a C function with a handler installed for R error conditions.
 
@@ -160,15 +187,20 @@ SEXP R_withCallingErrorHandler(SEXP (*fun)(void *data), void *data,
                                SEXP (*hndlr)(SEXP cond, void *hdata), void *hdata);
 ```
 
-**Status:** API · **Header:** `Rinternals.h` · **Protect:** result · **Errors:** can throw · **Since:** — · **R equivalent:** `tryCatch()`
-
 - `hndlr`: handler called with the condition object; its return value becomes the result.
+
+**Returns:** The `SEXP` returned by `fun`, or the handler’s return value if an error is signalled.
 
 `R_tryCatchError()` installs an exiting handler (like `tryCatch(error = ...)`); `R_withCallingErrorHandler()` installs a calling handler (like `withCallingHandlers(error = ...)`) and avoids calling back into R, so it is more efficient. `R_tryCatchError()` is implemented via R-level `tryCatch()` and has some overhead.
 
 **See also:** [`R_tryCatch()`](#R_tryCatch), [`R_tryEval()`](#R_tryEval)
 
 ### 15.2.5 `R_tryCatch()`
+
+needs protect throws
+
+**Header:** `Rinternals.h`\
+**R equivalent:** `tryCatch()`
 
 Call a C function with handlers for arbitrary condition classes and a cleanup action.
 
@@ -179,9 +211,9 @@ SEXP R_tryCatch(SEXP (*fun)(void *data), void *data,
                 void (*clean)(void *cdata), void *cdata);
 ```
 
-**Status:** API · **Header:** `Rinternals.h` · **Protect:** result · **Errors:** can throw · **Since:** — · **R equivalent:** `tryCatch()`
-
 - `conds`: condition classes to handle, as a character vector (`STRSXP`).
+
+**Returns:** The `SEXP` returned by `fun`, or the handler’s return value if a handled condition is signalled.
 
 `NULL` may be passed for `fun` or `clean` if condition handling or cleanup is not needed. Implemented via R-level `tryCatch()`, so it has some overhead.
 
@@ -193,25 +225,29 @@ Follows [WRE §6.14, Allowing interrupts](https://cran.r-project.org/doc/manuals
 
 ### 15.3.1 `R_CheckUserInterrupt()`
 
+throws
+
+**Header:** `R_ext/Utils.h`
+
 Check for a pending user interrupt, signalling an error if one occurred.
 
 ``` c
 void R_CheckUserInterrupt(void);
 ```
 
-**Status:** API · **Header:** `R_ext/Utils.h` · **Protect:** n/a · **Errors:** can throw · **Since:** — · **R equivalent:** —
-
 Call periodically from long-running loops; R cannot interrupt compiled code that never checks. On interrupt it longjmps, so the same cleanup obligations as for `Rf_error()` apply.
 
 ### 15.3.2 `Rf_onintr()`
+
+throws
+
+**Header:** `Rinterface.h`
 
 R’s default response to a user interrupt.
 
 ``` c
 void Rf_onintr(void);
 ```
-
-**Status:** API · **Header:** `Rinterface.h` · **Protect:** n/a · **Errors:** can throw · **Since:** — · **R equivalent:** —
 
 Jumps back to the top level, discarding the current computation. Intended for front-ends and graphics devices; package code should almost always use `R_CheckUserInterrupt()` instead.
 
@@ -221,7 +257,11 @@ Jumps back to the top level, discarding the current computation. Intended for fr
 
 Follows [WRE §6.15, C stack checking](https://cran.r-project.org/doc/manuals/R-exts.html#C-stack-checking-1) closely.
 
-### 15.4.1 `R_CheckStack()` (`R_CheckStack2()`)
+### 15.4.1 `R_CheckStack()`, `R_CheckStack2()`
+
+throws
+
+**Header:** `R_ext/Utils.h`
 
 Signal an error if the C stack is (nearly) exhausted.
 
@@ -229,8 +269,6 @@ Signal an error if the C stack is (nearly) exhausted.
 void R_CheckStack(void);
 void R_CheckStack2(R_SIZE_T extra);
 ```
-
-**Status:** API · **Header:** `R_ext/Utils.h` · **Protect:** n/a · **Errors:** can throw · **Since:** — · **R equivalent:** —
 
 - `extra`: `R_CheckStack2()` errors when fewer than `extra` bytes remain.
 

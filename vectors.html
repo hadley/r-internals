@@ -141,6 +141,7 @@ window.Quarto = {
 };
 </script>
 
+<link rel="stylesheet" href="badges.css">
 </head>
 
 <body class="nav-sidebar floating quarto-light">
@@ -397,70 +398,84 @@ window.Quarto = {
   <ul>
   <li><a href="#length" id="toc-length" class="nav-link active" data-scroll-target="#length"><span class="header-section-number">5.1</span> Length</a>
   <ul class="collapse">
-  <li><a href="#Rf_xlength" id="toc-Rf_xlength" class="nav-link" data-scroll-target="#Rf_xlength"><span class="header-section-number">5.1.1</span> <code>Rf_xlength()</code> (<code>Rf_length()</code>)</a></li>
-  <li><a href="#Rf_lengthgets" id="toc-Rf_lengthgets" class="nav-link" data-scroll-target="#Rf_lengthgets"><span class="header-section-number">5.1.2</span> <code>Rf_lengthgets()</code> (<code>Rf_xlengthgets()</code>)</a></li>
-  <li><a href="#LENGTH" id="toc-LENGTH" class="nav-link" data-scroll-target="#LENGTH"><span class="header-section-number">5.1.3</span> <code>LENGTH()</code> (<code>XLENGTH()</code>)</a></li>
+  <li><a href="#Rf_xlength" id="toc-Rf_xlength" class="nav-link" data-scroll-target="#Rf_xlength"><span class="header-section-number">5.1.1</span> <code>Rf_xlength()</code>, <code>Rf_length()</code></a></li>
+  <li><a href="#Rf_lengthgets" id="toc-Rf_lengthgets" class="nav-link" data-scroll-target="#Rf_lengthgets"><span class="header-section-number">5.1.2</span> <code>Rf_lengthgets()</code>, <code>Rf_xlengthgets()</code></a></li>
+  <li><a href="#LENGTH" id="toc-LENGTH" class="nav-link" data-scroll-target="#LENGTH"><span class="header-section-number">5.1.3</span> <code>LENGTH()</code>, <code>XLENGTH()</code></a></li>
   <li><a href="#IS_LONG_VEC" id="toc-IS_LONG_VEC" class="nav-link" data-scroll-target="#IS_LONG_VEC"><span class="header-section-number">5.1.4</span> <code>IS_LONG_VEC()</code></a></li>
   </ul></li>
   <li><a href="#create" id="toc-create" class="nav-link" data-scroll-target="#create"><span class="header-section-number">5.2</span> Create</a>
   <ul class="collapse">
   <li><a href="#Rf_allocVector" id="toc-Rf_allocVector" class="nav-link" data-scroll-target="#Rf_allocVector"><span class="header-section-number">5.2.1</span> <code>Rf_allocVector()</code></a></li>
-  <li><a href="#Rf_ScalarLogical" id="toc-Rf_ScalarLogical" class="nav-link" data-scroll-target="#Rf_ScalarLogical"><span class="header-section-number">5.2.2</span> <code>Rf_ScalarLogical()</code> (<code>Rf_ScalarInteger()</code>, <code>Rf_ScalarReal()</code>, <code>Rf_ScalarComplex()</code>, <code>Rf_ScalarRaw()</code>)</a></li>
+  <li><a href="#Rf_ScalarLogical" id="toc-Rf_ScalarLogical" class="nav-link" data-scroll-target="#Rf_ScalarLogical"><span class="header-section-number">5.2.2</span> <code>Rf_ScalarLogical()</code>, <code>Rf_ScalarInteger()</code>, <code>Rf_ScalarReal()</code>, <code>Rf_ScalarComplex()</code>, <code>Rf_ScalarRaw()</code></a></li>
   <li><a href="#Rf_coerceVector" id="toc-Rf_coerceVector" class="nav-link" data-scroll-target="#Rf_coerceVector"><span class="header-section-number">5.2.3</span> <code>Rf_coerceVector()</code></a></li>
   <li><a href="#Rf_mkNamed" id="toc-Rf_mkNamed" class="nav-link" data-scroll-target="#Rf_mkNamed"><span class="header-section-number">5.2.4</span> <code>Rf_mkNamed()</code></a></li>
   <li><a href="#Rf_allocVector3" id="toc-Rf_allocVector3" class="nav-link" data-scroll-target="#Rf_allocVector3"><span class="header-section-number">5.2.5</span> <code>Rf_allocVector3()</code></a></li>
   </ul></li>
   <li><a href="#resizable-vectors" id="toc-resizable-vectors" class="nav-link" data-scroll-target="#resizable-vectors"><span class="header-section-number">5.3</span> Resizable vectors</a>
   <ul class="collapse">
-  <li><a href="#R_allocResizableVector" id="toc-R_allocResizableVector" class="nav-link" data-scroll-target="#R_allocResizableVector"><span class="header-section-number">5.3.1</span> <code>R_allocResizableVector()</code> (<code>R_duplicateAsResizable()</code>, <code>R_resizeVector()</code>, <code>R_isResizable()</code>, <code>R_maxLength()</code>)</a></li>
+  <li><a href="#R_allocResizableVector" id="toc-R_allocResizableVector" class="nav-link" data-scroll-target="#R_allocResizableVector"><span class="header-section-number">5.3.1</span> <code>R_allocResizableVector()</code></a></li>
+  <li><a href="#R_duplicateAsResizable" id="toc-R_duplicateAsResizable" class="nav-link" data-scroll-target="#R_duplicateAsResizable"><span class="header-section-number">5.3.2</span> <code>R_duplicateAsResizable()</code></a></li>
+  <li><a href="#R_resizeVector" id="toc-R_resizeVector" class="nav-link" data-scroll-target="#R_resizeVector"><span class="header-section-number">5.3.3</span> <code>R_resizeVector()</code></a></li>
+  <li><a href="#R_isResizable" id="toc-R_isResizable" class="nav-link" data-scroll-target="#R_isResizable"><span class="header-section-number">5.3.4</span> <code>R_isResizable()</code></a></li>
+  <li><a href="#R_maxLength" id="toc-R_maxLength" class="nav-link" data-scroll-target="#R_maxLength"><span class="header-section-number">5.3.5</span> <code>R_maxLength()</code></a></li>
   </ul></li>
   <li><a href="#get-and-set-values" id="toc-get-and-set-values" class="nav-link" data-scroll-target="#get-and-set-values"><span class="header-section-number">5.4</span> Get and set values</a>
   <ul class="collapse">
-  <li><a href="#LOGICAL" id="toc-LOGICAL" class="nav-link" data-scroll-target="#LOGICAL"><span class="header-section-number">5.4.1</span> <code>LOGICAL()</code> (<code>INTEGER()</code>, <code>REAL()</code>, <code>COMPLEX()</code>, <code>RAW()</code>)</a></li>
-  <li><a href="#STRING_ELT" id="toc-STRING_ELT" class="nav-link" data-scroll-target="#STRING_ELT"><span class="header-section-number">5.4.2</span> <code>STRING_ELT()</code> (<code>SET_STRING_ELT()</code>)</a></li>
-  <li><a href="#VECTOR_ELT" id="toc-VECTOR_ELT" class="nav-link" data-scroll-target="#VECTOR_ELT"><span class="header-section-number">5.4.3</span> <code>VECTOR_ELT()</code> (<code>SET_VECTOR_ELT()</code>)</a></li>
-  <li><a href="#STRING_PTR_RO" id="toc-STRING_PTR_RO" class="nav-link" data-scroll-target="#STRING_PTR_RO"><span class="header-section-number">5.4.4</span> <code>STRING_PTR_RO()</code> (<code>VECTOR_PTR_RO()</code>)</a></li>
-  <li><a href="#DATAPTR_RO" id="toc-DATAPTR_RO" class="nav-link" data-scroll-target="#DATAPTR_RO"><span class="header-section-number">5.4.5</span> <code>DATAPTR_RO()</code> (<code>DATAPTR()</code>)</a></li>
-  <li><a href="#INTEGER_RO" id="toc-INTEGER_RO" class="nav-link" data-scroll-target="#INTEGER_RO"><span class="header-section-number">5.4.6</span> <code>INTEGER_RO()</code> (<code>LOGICAL_RO()</code>, <code>REAL_RO()</code>, <code>COMPLEX_RO()</code>, <code>RAW_RO()</code>)</a></li>
-  <li><a href="#INTEGER_ELT" id="toc-INTEGER_ELT" class="nav-link" data-scroll-target="#INTEGER_ELT"><span class="header-section-number">5.4.7</span> <code>INTEGER_ELT()</code> (<code>LOGICAL_ELT()</code>, <code>REAL_ELT()</code>, <code>COMPLEX_ELT()</code>, <code>RAW_ELT()</code>, <code>SET_INTEGER_ELT()</code>, <code>SET_LOGICAL_ELT()</code>, <code>SET_REAL_ELT()</code>, <code>SET_COMPLEX_ELT()</code>, <code>SET_RAW_ELT()</code>)</a></li>
+  <li><a href="#LOGICAL" id="toc-LOGICAL" class="nav-link" data-scroll-target="#LOGICAL"><span class="header-section-number">5.4.1</span> <code>LOGICAL()</code>, <code>INTEGER()</code>, <code>REAL()</code>, <code>COMPLEX()</code>, <code>RAW()</code></a></li>
+  <li><a href="#STRING_ELT" id="toc-STRING_ELT" class="nav-link" data-scroll-target="#STRING_ELT"><span class="header-section-number">5.4.2</span> <code>STRING_ELT()</code>, <code>SET_STRING_ELT()</code></a></li>
+  <li><a href="#VECTOR_ELT" id="toc-VECTOR_ELT" class="nav-link" data-scroll-target="#VECTOR_ELT"><span class="header-section-number">5.4.3</span> <code>VECTOR_ELT()</code>, <code>SET_VECTOR_ELT()</code></a></li>
+  <li><a href="#STRING_PTR_RO" id="toc-STRING_PTR_RO" class="nav-link" data-scroll-target="#STRING_PTR_RO"><span class="header-section-number">5.4.4</span> <code>STRING_PTR_RO()</code>, <code>VECTOR_PTR_RO()</code></a></li>
+  <li><a href="#DATAPTR_RO" id="toc-DATAPTR_RO" class="nav-link" data-scroll-target="#DATAPTR_RO"><span class="header-section-number">5.4.5</span> <code>DATAPTR_RO()</code>, <code>DATAPTR()</code></a></li>
+  <li><a href="#INTEGER_RO" id="toc-INTEGER_RO" class="nav-link" data-scroll-target="#INTEGER_RO"><span class="header-section-number">5.4.6</span> <code>INTEGER_RO()</code>, <code>LOGICAL_RO()</code>, <code>REAL_RO()</code>, <code>COMPLEX_RO()</code>, <code>RAW_RO()</code></a></li>
+  <li><a href="#INTEGER_ELT" id="toc-INTEGER_ELT" class="nav-link" data-scroll-target="#INTEGER_ELT"><span class="header-section-number">5.4.7</span> <code>INTEGER_ELT()</code>, <code>LOGICAL_ELT()</code>, <code>REAL_ELT()</code>, <code>COMPLEX_ELT()</code>, <code>RAW_ELT()</code>, <code>SET_INTEGER_ELT()</code>, <code>SET_LOGICAL_ELT()</code>, <code>SET_REAL_ELT()</code>, <code>SET_COMPLEX_ELT()</code>, <code>SET_RAW_ELT()</code></a></li>
   <li><a href="#scalars" id="toc-scalars" class="nav-link" data-scroll-target="#scalars"><span class="header-section-number">5.4.8</span> Scalars</a></li>
-  <li><a href="#Rf_asLogical" id="toc-Rf_asLogical" class="nav-link" data-scroll-target="#Rf_asLogical"><span class="header-section-number">5.4.9</span> <code>Rf_asLogical()</code> (<code>Rf_asInteger()</code>, <code>Rf_asReal()</code>, <code>Rf_asComplex()</code>)</a></li>
-  <li><a href="#Rf_asBool" id="toc-Rf_asBool" class="nav-link" data-scroll-target="#Rf_asBool"><span class="header-section-number">5.4.10</span> <code>Rf_asBool()</code> (<code>Rf_asRboolean()</code>)</a></li>
+  <li><a href="#Rf_asLogical" id="toc-Rf_asLogical" class="nav-link" data-scroll-target="#Rf_asLogical"><span class="header-section-number">5.4.9</span> <code>Rf_asLogical()</code>, <code>Rf_asInteger()</code>, <code>Rf_asReal()</code>, <code>Rf_asComplex()</code></a></li>
+  <li><a href="#Rf_asBool" id="toc-Rf_asBool" class="nav-link" data-scroll-target="#Rf_asBool"><span class="header-section-number">5.4.10</span> <code>Rf_asBool()</code>, <code>Rf_asRboolean()</code></a></li>
   <li><a href="#special-values" id="toc-special-values" class="nav-link" data-scroll-target="#special-values"><span class="header-section-number">5.4.11</span> Special values</a></li>
-  <li><a href="#NA_LOGICAL" id="toc-NA_LOGICAL" class="nav-link" data-scroll-target="#NA_LOGICAL"><span class="header-section-number">5.4.12</span> <code>NA_LOGICAL()</code> (<code>NA_INTEGER()</code>)</a></li>
-  <li><a href="#NA_REAL" id="toc-NA_REAL" class="nav-link" data-scroll-target="#NA_REAL"><span class="header-section-number">5.4.13</span> <code>NA_REAL()</code> (<code>R_NaReal()</code>)</a></li>
-  <li><a href="#R_NaN" id="toc-R_NaN" class="nav-link" data-scroll-target="#R_NaN"><span class="header-section-number">5.4.14</span> <code>R_NaN()</code> (<code>R_PosInf()</code>, <code>R_NegInf()</code>)</a></li>
-  <li><a href="#ISNA" id="toc-ISNA" class="nav-link" data-scroll-target="#ISNA"><span class="header-section-number">5.4.15</span> <code>ISNA()</code> (<code>ISNAN()</code>, <code>R_FINITE()</code>)</a></li>
-  <li><a href="#R_IsNA" id="toc-R_IsNA" class="nav-link" data-scroll-target="#R_IsNA"><span class="header-section-number">5.4.16</span> <code>R_IsNA()</code> (<code>R_IsNaN()</code>, <code>R_finite()</code>)</a></li>
+  <li><a href="#NA_LOGICAL" id="toc-NA_LOGICAL" class="nav-link" data-scroll-target="#NA_LOGICAL"><span class="header-section-number">5.4.12</span> <code>NA_LOGICAL()</code>, <code>NA_INTEGER()</code></a></li>
+  <li><a href="#NA_REAL" id="toc-NA_REAL" class="nav-link" data-scroll-target="#NA_REAL"><span class="header-section-number">5.4.13</span> <code>NA_REAL()</code>, <code>R_NaReal()</code></a></li>
+  <li><a href="#R_NaN" id="toc-R_NaN" class="nav-link" data-scroll-target="#R_NaN"><span class="header-section-number">5.4.14</span> <code>R_NaN()</code>, <code>R_PosInf()</code>, <code>R_NegInf()</code></a></li>
+  <li><a href="#ISNA" id="toc-ISNA" class="nav-link" data-scroll-target="#ISNA"><span class="header-section-number">5.4.15</span> <code>ISNA()</code>, <code>ISNAN()</code>, <code>R_FINITE()</code></a></li>
+  <li><a href="#R_IsNA" id="toc-R_IsNA" class="nav-link" data-scroll-target="#R_IsNA"><span class="header-section-number">5.4.16</span> <code>R_IsNA()</code>, <code>R_IsNaN()</code>, <code>R_finite()</code></a></li>
   <li><a href="#R_isnancpp" id="toc-R_isnancpp" class="nav-link" data-scroll-target="#R_isnancpp"><span class="header-section-number">5.4.17</span> <code>R_isnancpp()</code></a></li>
   </ul></li>
   <li><a href="#test" id="toc-test" class="nav-link" data-scroll-target="#test"><span class="header-section-number">5.5</span> Test</a>
   <ul class="collapse">
-  <li><a href="#Rf_isLogical" id="toc-Rf_isLogical" class="nav-link" data-scroll-target="#Rf_isLogical"><span class="header-section-number">5.5.1</span> <code>Rf_isLogical()</code> (<code>Rf_isInteger()</code>, <code>Rf_isReal()</code>, <code>Rf_isComplex()</code>, <code>Rf_isString()</code>, <code>Rf_isExpression()</code>)</a></li>
-  <li><a href="#Rf_isNewList" id="toc-Rf_isNewList" class="nav-link" data-scroll-target="#Rf_isNewList"><span class="header-section-number">5.5.2</span> <code>Rf_isNewList()</code> (<code>Rf_isVectorAtomic()</code>, <code>Rf_isVectorList()</code>, <code>Rf_isVector()</code>, <code>Rf_isNumber()</code>, <code>Rf_isNumeric()</code>)</a></li>
-  <li><a href="#Rf_isNull" id="toc-Rf_isNull" class="nav-link" data-scroll-target="#Rf_isNull"><span class="header-section-number">5.5.3</span> <code>Rf_isNull()</code></a></li>
+  <li><a href="#Rf_isLogical" id="toc-Rf_isLogical" class="nav-link" data-scroll-target="#Rf_isLogical"><span class="header-section-number">5.5.1</span> <code>Rf_isLogical()</code></a></li>
+  <li><a href="#Rf_isInteger" id="toc-Rf_isInteger" class="nav-link" data-scroll-target="#Rf_isInteger"><span class="header-section-number">5.5.2</span> <code>Rf_isInteger()</code></a></li>
+  <li><a href="#Rf_isReal" id="toc-Rf_isReal" class="nav-link" data-scroll-target="#Rf_isReal"><span class="header-section-number">5.5.3</span> <code>Rf_isReal()</code></a></li>
+  <li><a href="#Rf_isComplex" id="toc-Rf_isComplex" class="nav-link" data-scroll-target="#Rf_isComplex"><span class="header-section-number">5.5.4</span> <code>Rf_isComplex()</code></a></li>
+  <li><a href="#Rf_isString" id="toc-Rf_isString" class="nav-link" data-scroll-target="#Rf_isString"><span class="header-section-number">5.5.5</span> <code>Rf_isString()</code></a></li>
+  <li><a href="#Rf_isExpression" id="toc-Rf_isExpression" class="nav-link" data-scroll-target="#Rf_isExpression"><span class="header-section-number">5.5.6</span> <code>Rf_isExpression()</code></a></li>
+  <li><a href="#Rf_isNewList" id="toc-Rf_isNewList" class="nav-link" data-scroll-target="#Rf_isNewList"><span class="header-section-number">5.5.7</span> <code>Rf_isNewList()</code></a></li>
+  <li><a href="#Rf_isVectorAtomic" id="toc-Rf_isVectorAtomic" class="nav-link" data-scroll-target="#Rf_isVectorAtomic"><span class="header-section-number">5.5.8</span> <code>Rf_isVectorAtomic()</code></a></li>
+  <li><a href="#Rf_isVectorList" id="toc-Rf_isVectorList" class="nav-link" data-scroll-target="#Rf_isVectorList"><span class="header-section-number">5.5.9</span> <code>Rf_isVectorList()</code></a></li>
+  <li><a href="#Rf_isVector" id="toc-Rf_isVector" class="nav-link" data-scroll-target="#Rf_isVector"><span class="header-section-number">5.5.10</span> <code>Rf_isVector()</code></a></li>
+  <li><a href="#Rf_isNumber" id="toc-Rf_isNumber" class="nav-link" data-scroll-target="#Rf_isNumber"><span class="header-section-number">5.5.11</span> <code>Rf_isNumber()</code></a></li>
+  <li><a href="#Rf_isNumeric" id="toc-Rf_isNumeric" class="nav-link" data-scroll-target="#Rf_isNumeric"><span class="header-section-number">5.5.12</span> <code>Rf_isNumeric()</code></a></li>
+  <li><a href="#Rf_isNull" id="toc-Rf_isNull" class="nav-link" data-scroll-target="#Rf_isNull"><span class="header-section-number">5.5.13</span> <code>Rf_isNull()</code></a></li>
   </ul></li>
   <li><a href="#sorting-and-ordering" id="toc-sorting-and-ordering" class="nav-link" data-scroll-target="#sorting-and-ordering"><span class="header-section-number">5.6</span> Sorting and ordering</a>
   <ul class="collapse">
-  <li><a href="#R_qsort" id="toc-R_qsort" class="nav-link" data-scroll-target="#R_qsort"><span class="header-section-number">5.6.1</span> <code>R_qsort()</code> (<code>R_qsort_I()</code>, <code>R_qsort_int()</code>, <code>R_qsort_int_I()</code>)</a></li>
-  <li><a href="#R_isort" id="toc-R_isort" class="nav-link" data-scroll-target="#R_isort"><span class="header-section-number">5.6.2</span> <code>R_isort()</code> (<code>R_rsort()</code>, <code>R_csort()</code>)</a></li>
+  <li><a href="#R_qsort" id="toc-R_qsort" class="nav-link" data-scroll-target="#R_qsort"><span class="header-section-number">5.6.1</span> <code>R_qsort()</code>, <code>R_qsort_I()</code>, <code>R_qsort_int()</code>, <code>R_qsort_int_I()</code></a></li>
+  <li><a href="#R_isort" id="toc-R_isort" class="nav-link" data-scroll-target="#R_isort"><span class="header-section-number">5.6.2</span> <code>R_isort()</code>, <code>R_rsort()</code>, <code>R_csort()</code></a></li>
   <li><a href="#rsort_with_index" id="toc-rsort_with_index" class="nav-link" data-scroll-target="#rsort_with_index"><span class="header-section-number">5.6.3</span> <code>rsort_with_index()</code></a></li>
   <li><a href="#Rf_revsort" id="toc-Rf_revsort" class="nav-link" data-scroll-target="#Rf_revsort"><span class="header-section-number">5.6.4</span> <code>Rf_revsort()</code></a></li>
-  <li><a href="#Rf_iPsort" id="toc-Rf_iPsort" class="nav-link" data-scroll-target="#Rf_iPsort"><span class="header-section-number">5.6.5</span> <code>Rf_iPsort()</code> (<code>Rf_rPsort()</code>, <code>Rf_cPsort()</code>)</a></li>
-  <li><a href="#R_orderVector" id="toc-R_orderVector" class="nav-link" data-scroll-target="#R_orderVector"><span class="header-section-number">5.6.6</span> <code>R_orderVector()</code> (<code>R_orderVector1()</code>)</a></li>
+  <li><a href="#Rf_iPsort" id="toc-Rf_iPsort" class="nav-link" data-scroll-target="#Rf_iPsort"><span class="header-section-number">5.6.5</span> <code>Rf_iPsort()</code>, <code>Rf_rPsort()</code>, <code>Rf_cPsort()</code></a></li>
+  <li><a href="#R_orderVector" id="toc-R_orderVector" class="nav-link" data-scroll-target="#R_orderVector"><span class="header-section-number">5.6.6</span> <code>R_orderVector()</code>, <code>R_orderVector1()</code></a></li>
   <li><a href="#Rf_isUnsorted" id="toc-Rf_isUnsorted" class="nav-link" data-scroll-target="#Rf_isUnsorted"><span class="header-section-number">5.6.7</span> <code>Rf_isUnsorted()</code></a></li>
   </ul></li>
   <li><a href="#matching-and-duplication" id="toc-matching-and-duplication" class="nav-link" data-scroll-target="#matching-and-duplication"><span class="header-section-number">5.7</span> Matching and duplication</a>
   <ul class="collapse">
-  <li><a href="#Rf_any_duplicated" id="toc-Rf_any_duplicated" class="nav-link" data-scroll-target="#Rf_any_duplicated"><span class="header-section-number">5.7.1</span> <code>Rf_any_duplicated()</code> (<code>Rf_any_duplicated3()</code>)</a></li>
-  <li><a href="#Rf_match" id="toc-Rf_match" class="nav-link" data-scroll-target="#Rf_match"><span class="header-section-number">5.7.2</span> <code>Rf_match()</code> (<code>Rf_matchE()</code>)</a></li>
+  <li><a href="#Rf_any_duplicated" id="toc-Rf_any_duplicated" class="nav-link" data-scroll-target="#Rf_any_duplicated"><span class="header-section-number">5.7.1</span> <code>Rf_any_duplicated()</code>, <code>Rf_any_duplicated3()</code></a></li>
+  <li><a href="#Rf_match" id="toc-Rf_match" class="nav-link" data-scroll-target="#Rf_match"><span class="header-section-number">5.7.2</span> <code>Rf_match()</code>, <code>Rf_matchE()</code></a></li>
   <li><a href="#Rf_duplicated" id="toc-Rf_duplicated" class="nav-link" data-scroll-target="#Rf_duplicated"><span class="header-section-number">5.7.3</span> <code>Rf_duplicated()</code></a></li>
   </ul></li>
   <li><a href="#miscellaneous-helpers" id="toc-miscellaneous-helpers" class="nav-link" data-scroll-target="#miscellaneous-helpers"><span class="header-section-number">5.8</span> Miscellaneous helpers</a>
   <ul class="collapse">
   <li><a href="#Rf_copyVector" id="toc-Rf_copyVector" class="nav-link" data-scroll-target="#Rf_copyVector"><span class="header-section-number">5.8.1</span> <code>Rf_copyVector()</code></a></li>
   <li><a href="#Rf_stringSuffix" id="toc-Rf_stringSuffix" class="nav-link" data-scroll-target="#Rf_stringSuffix"><span class="header-section-number">5.8.2</span> <code>Rf_stringSuffix()</code></a></li>
-  <li><a href="#IS_SCALAR" id="toc-IS_SCALAR" class="nav-link" data-scroll-target="#IS_SCALAR"><span class="header-section-number">5.8.3</span> <code>IS_SCALAR()</code> (<code>IS_SIMPLE_SCALAR()</code>)</a></li>
+  <li><a href="#IS_SCALAR" id="toc-IS_SCALAR" class="nav-link" data-scroll-target="#IS_SCALAR"><span class="header-section-number">5.8.3</span> <code>IS_SCALAR()</code>, <code>IS_SIMPLE_SCALAR()</code></a></li>
   <li><a href="#Rf_isVectorizable" id="toc-Rf_isVectorizable" class="nav-link" data-scroll-target="#Rf_isVectorizable"><span class="header-section-number">5.8.4</span> <code>Rf_isVectorizable()</code></a></li>
   </ul></li>
   </ul>
@@ -514,50 +529,59 @@ window.Quarto = {
 <p>New code should always use <code>R_xlen_t</code> for vector lengths and indices. It costs nothing on 64-bit platforms, and the alternative fails badly: an <code>int</code> length silently overflows if a user passes a vector longer than <span class="math inline">\(2^{31}-1\)</span>. Reserve <code>int</code> for things that are inherently small, like the number of arguments to a call. You’ll still need occasional casts where older parts of the API take or return <code>int</code>.</p>
 <p>Vectors also carry a hidden “truelength” field used for over-allocation: since R 3.4.0, assigning past the end of a vector grows the allocation by ~5% and records the capacity in truelength, so repeated appends can extend the vector in place. The experimental resizable-vector API (<code>R_allocResizableVector()</code>/<code>R_resizeVector()</code>) builds on the same mechanism.</p>
 <section id="Rf_xlength" class="level3" data-number="5.1.1">
-<h3 data-number="5.1.1" class="anchored" data-anchor-id="Rf_xlength"><span class="header-section-number">5.1.1</span> <code>Rf_xlength()</code> (<code>Rf_length()</code>)</h3>
+<h3 data-number="5.1.1" class="anchored" data-anchor-id="Rf_xlength"><span class="header-section-number">5.1.1</span> <code>Rf_xlength()</code>, <code>Rf_length()</code></h3>
+<p><strong>Header:</strong> <code>Rinternals.h</code><br>
+<strong>R equivalent:</strong> <code>length()</code></p>
 <p>Get the length of a vector.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>R_xlen_t Rf_xlength<span class="op">(</span>SEXP x<span class="op">);</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>R_len_t Rf_length<span class="op">(</span>SEXP x<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>length()</code></p>
 <ul>
 <li><code>x</code>: any vector.</li>
 </ul>
+<p><strong>Returns:</strong> The length of <code>x</code>: <code>Rf_xlength()</code> returns an <code>R_xlen_t</code>, <code>Rf_length()</code> an <code>R_len_t</code>.</p>
 <p><code>Rf_xlength()</code> uses <code>R_xlen_t</code> and supports long vectors (length up to 2^64 - 1); <code>Rf_length()</code> is limited to <code>int</code> (2^31 - 1). Also works on pairlists, where it is O(n).</p>
 <p><strong>See also:</strong> <a href="#Rf_lengthgets"><code>Rf_lengthgets()</code></a>, <a href="#LENGTH"><code>LENGTH()</code></a></p>
 </section>
 <section id="Rf_lengthgets" class="level3" data-number="5.1.2">
-<h3 data-number="5.1.2" class="anchored" data-anchor-id="Rf_lengthgets"><span class="header-section-number">5.1.2</span> <code>Rf_lengthgets()</code> (<code>Rf_xlengthgets()</code>)</h3>
+<h3 data-number="5.1.2" class="anchored" data-anchor-id="Rf_lengthgets"><span class="header-section-number">5.1.2</span> <code>Rf_lengthgets()</code>, <code>Rf_xlengthgets()</code></h3>
+<p><span class="badge badge-protect">needs protect</span> <span class="badge badge-errors">throws</span></p>
+<p><strong>Header:</strong> <code>Rinternals.h</code><br>
+<strong>R equivalent:</strong> <code>length&lt;-</code></p>
 <p>Set the length of a vector by creating a new vector of extended length.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>SEXP Rf_lengthgets<span class="op">(</span>SEXP x<span class="op">,</span> R_len_t n<span class="op">);</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>SEXP Rf_xlengthgets<span class="op">(</span>SEXP x<span class="op">,</span> R_xlen_t n<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> result · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>length&lt;-</code></p>
 <ul>
 <li><code>x</code>: a vector.</li>
 <li><code>n</code>: the new length.</li>
 </ul>
+<p><strong>Returns:</strong> A newly allocated copy of <code>x</code> with length <code>n</code>, padded or truncated as needed.</p>
 <p><code>Rf_xlengthgets()</code> is the <code>R_xlen_t</code>-based variant for long vectors.</p>
 <p><strong>See also:</strong> <a href="#Rf_xlength"><code>Rf_xlength()</code></a>, <a href="#SETLENGTH"><code>SETLENGTH()</code></a></p>
 </section>
 <section id="LENGTH" class="level3" data-number="5.1.3">
-<h3 data-number="5.1.3" class="anchored" data-anchor-id="LENGTH"><span class="header-section-number">5.1.3</span> <code>LENGTH()</code> (<code>XLENGTH()</code>)</h3>
+<h3 data-number="5.1.3" class="anchored" data-anchor-id="LENGTH"><span class="header-section-number">5.1.3</span> <code>LENGTH()</code>, <code>XLENGTH()</code></h3>
+<p><strong>Header:</strong> <code>Rinternals.h</code><br>
+<strong>R equivalent:</strong> <code>length()</code></p>
 <p>Get the length of a vector.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> LENGTH<span class="op">(</span>SEXP x<span class="op">);</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>R_xlen_t XLENGTH<span class="op">(</span>SEXP x<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>length()</code></p>
 <ul>
 <li><code>x</code>: any vector.</li>
 </ul>
+<p><strong>Returns:</strong> The length of <code>x</code>: <code>LENGTH()</code> returns an <code>int</code>, <code>XLENGTH()</code> an <code>R_xlen_t</code>.</p>
 <p>Uppercase variants of <code>Rf_length()</code>/<code>Rf_xlength()</code>, implemented as macros in base R for efficiency.</p>
 <p><strong>See also:</strong> <a href="#Rf_xlength"><code>Rf_xlength()</code></a>, <a href="#SETLENGTH"><code>SETLENGTH()</code></a></p>
 </section>
 <section id="IS_LONG_VEC" class="level3" data-number="5.1.4">
 <h3 data-number="5.1.4" class="anchored" data-anchor-id="IS_LONG_VEC"><span class="header-section-number">5.1.4</span> <code>IS_LONG_VEC()</code></h3>
+<p><span class="badge badge-experimental">experimental</span></p>
+<p><strong>Header:</strong> <code>Rinternals.h</code></p>
 <p>Test whether a vector is a long vector.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> IS_LONG_VEC<span class="op">(</span>SEXP x<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> experimental · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 <ul>
 <li><code>x</code>: any vector.</li>
 </ul>
+<p><strong>Returns:</strong> Non-zero if <code>x</code> is a long vector (length over 2^31 - 1), zero otherwise.</p>
 <p>True when a vector’s length exceeds the <code>int</code>-based limit of 2^31 - 1.</p>
 <p><strong>See also:</strong> <a href="#Rf_xlength"><code>Rf_xlength()</code></a></p>
 </section>
@@ -589,53 +613,64 @@ window.Quarto = {
 <span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="op">}</span> R_allocator_t<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <section id="Rf_allocVector" class="level3" data-number="5.2.1">
 <h3 data-number="5.2.1" class="anchored" data-anchor-id="Rf_allocVector"><span class="header-section-number">5.2.1</span> <code>Rf_allocVector()</code></h3>
+<p><span class="badge badge-protect">needs protect</span> <span class="badge badge-errors">throws</span></p>
+<p><strong>Header:</strong> <code>Rinternals.h</code><br>
+<strong>R equivalent:</strong> <code>vector()</code></p>
 <p>Create a new vector of the given type and length.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>SEXP Rf_allocVector<span class="op">(</span>SEXPTYPE type<span class="op">,</span> R_xlen_t n<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> result · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>vector()</code></p>
 <ul>
 <li><code>type</code>: any vector <code>SEXPTYPE</code> (<code>LGLSXP</code>, <code>INTSXP</code>, <code>REALSXP</code>, <code>CPLXSXP</code>, <code>STRSXP</code>, <code>VECSXP</code>, <code>RAWSXP</code>, <code>EXPRSXP</code>).</li>
 <li><code>n</code>: number of elements; <code>R_xlen_t</code> supports long vectors on 64-bit platforms.</li>
 </ul>
+<p><strong>Returns:</strong> A freshly allocated vector of <code>type</code> and length <code>n</code>; atomic contents are uninitialized.</p>
 <p>Atomic vector contents are uninitialised; <code>VECSXP</code>/<code>EXPRSXP</code> elements are <code>R_NilValue</code> and <code>STRSXP</code> elements are <code>""</code>. Attributes are unset.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>SEXP out <span class="op">=</span> PROTECT<span class="op">(</span>Rf_allocVector<span class="op">(</span>REALSXP<span class="op">,</span> n<span class="op">));</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>See also:</strong> <a href="#Rf_allocVector3"><code>Rf_allocVector3()</code></a>, <a href="#Rf_coerceVector"><code>Rf_coerceVector()</code></a></p>
 </section>
 <section id="Rf_ScalarLogical" class="level3" data-number="5.2.2">
-<h3 data-number="5.2.2" class="anchored" data-anchor-id="Rf_ScalarLogical"><span class="header-section-number">5.2.2</span> <code>Rf_ScalarLogical()</code> (<code>Rf_ScalarInteger()</code>, <code>Rf_ScalarReal()</code>, <code>Rf_ScalarComplex()</code>, <code>Rf_ScalarRaw()</code>)</h3>
+<h3 data-number="5.2.2" class="anchored" data-anchor-id="Rf_ScalarLogical"><span class="header-section-number">5.2.2</span> <code>Rf_ScalarLogical()</code>, <code>Rf_ScalarInteger()</code>, <code>Rf_ScalarReal()</code>, <code>Rf_ScalarComplex()</code>, <code>Rf_ScalarRaw()</code></h3>
+<p><span class="badge badge-protect">needs protect</span> <span class="badge badge-errors">throws</span></p>
+<p><strong>Header:</strong> <code>Rinternals.h</code></p>
 <p>Create a vector of length 1 from the corresponding C type.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>SEXP Rf_ScalarLogical<span class="op">(</span><span class="dt">int</span> x<span class="op">);</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>SEXP Rf_ScalarInteger<span class="op">(</span><span class="dt">int</span> x<span class="op">);</span></span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>SEXP Rf_ScalarReal<span class="op">(</span><span class="dt">double</span> x<span class="op">);</span></span>
 <span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>SEXP Rf_ScalarComplex<span class="op">(</span>Rcomplex x<span class="op">);</span></span>
 <span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>SEXP Rf_ScalarRaw<span class="op">(</span>Rbyte x<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> result · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 <ul>
 <li><code>x</code>: the C value to wrap.</li>
 </ul>
+<p><strong>Returns:</strong> A length-1 vector of the corresponding type holding <code>x</code>; <code>Rf_ScalarLogical()</code> returns a cached singleton.</p>
 <p>For strings, use <a href="strings.html#Rf_ScalarString"><code>Rf_ScalarString()</code></a> or <a href="#Rf_mkString"><code>Rf_mkString()</code></a> instead. <code>Rf_ScalarLogical()</code> returns cached singletons and never allocates; the other <code>Rf_Scalar*()</code> variants always allocate.</p>
 <p><strong>See also:</strong> <a href="#Rf_allocVector"><code>Rf_allocVector()</code></a>, <a href="strings.html#Rf_ScalarString"><code>Rf_ScalarString()</code></a>, <a href="#Rf_mkString"><code>Rf_mkString()</code></a></p>
 </section>
 <section id="Rf_coerceVector" class="level3" data-number="5.2.3">
 <h3 data-number="5.2.3" class="anchored" data-anchor-id="Rf_coerceVector"><span class="header-section-number">5.2.3</span> <code>Rf_coerceVector()</code></h3>
+<p><span class="badge badge-protect">needs protect</span> <span class="badge badge-errors">throws</span></p>
+<p><strong>Header:</strong> <code>Rinternals.h</code><br>
+<strong>R equivalent:</strong> <code>as.vector()</code></p>
 <p>Coerce an existing vector to a different type.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>SEXP Rf_coerceVector<span class="op">(</span>SEXP x<span class="op">,</span> SEXPTYPE newtype<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> result · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>as.vector()</code></p>
 <ul>
 <li><code>x</code>: a vector.</li>
 <li><code>newtype</code>: the <code>SEXPTYPE</code> to coerce to.</li>
 </ul>
+<p><strong>Returns:</strong> A freshly allocated copy of <code>x</code> coerced to <code>newtype</code>.</p>
 <p>Errors if it can’t coerce between <code>TYPEOF(x)</code> and <code>newtype</code>.</p>
 <p><strong>See also:</strong> <a href="#Rf_allocVector"><code>Rf_allocVector()</code></a>, <a href="#Rf_asLogical"><code>Rf_asLogical()</code></a></p>
 </section>
 <section id="Rf_mkNamed" class="level3" data-number="5.2.4">
 <h3 data-number="5.2.4" class="anchored" data-anchor-id="Rf_mkNamed"><span class="header-section-number">5.2.4</span> <code>Rf_mkNamed()</code></h3>
+<p><span class="badge badge-protect">needs protect</span> <span class="badge badge-errors">throws</span></p>
+<p><strong>Header:</strong> <code>Rinternals.h</code><br>
+<strong>R equivalent:</strong> <code>setNames()</code></p>
 <p>Create a named vector of the given type.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>SEXP Rf_mkNamed<span class="op">(</span>SEXPTYPE type<span class="op">,</span> <span class="dt">const</span> <span class="dt">char</span> <span class="op">**</span>names<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> result · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>setNames()</code></p>
 <ul>
 <li><code>type</code>: any vector <code>SEXPTYPE</code>.</li>
 <li><code>names</code>: a null-terminated array of <code>const char*</code> names.</li>
 </ul>
+<p><strong>Returns:</strong> A freshly allocated vector of <code>type</code> with one element per name and the names attribute set.</p>
 <p>The vector’s length matches the number of names supplied, and its names attribute is set from them.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co">// array of names; note the null string</span></span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> <span class="dt">char</span> <span class="op">*</span>names<span class="op">[]</span> <span class="op">=</span> <span class="op">{</span><span class="st">"xname"</span><span class="op">,</span> <span class="st">"yname"</span><span class="op">,</span> <span class="st">""</span><span class="op">};</span></span>
@@ -647,9 +682,11 @@ window.Quarto = {
 </section>
 <section id="Rf_allocVector3" class="level3" data-number="5.2.5">
 <h3 data-number="5.2.5" class="anchored" data-anchor-id="Rf_allocVector3"><span class="header-section-number">5.2.5</span> <code>Rf_allocVector3()</code></h3>
+<p><span class="badge badge-protect">needs protect</span> <span class="badge badge-errors">throws</span></p>
+<p><strong>Header:</strong> <code>Rinternals.h</code></p>
 <p>Create a new vector using a custom allocator.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>SEXP Rf_allocVector3<span class="op">(</span>SEXPTYPE type<span class="op">,</span> R_xlen_t n<span class="op">,</span> R_allocator_t <span class="op">*</span>allocator<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> result · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<p><strong>Returns:</strong> A freshly allocated vector of <code>type</code> and length <code>n</code>, with payload memory from <code>allocator</code>.</p>
 <p>Like <code>Rf_allocVector()</code>, but memory for the data payload comes from <code>allocator</code>; pass <code>NULL</code> for plain <code>Rf_allocVector()</code> behaviour. Rarely needed in package code.</p>
 <p><strong>See also:</strong> <a href="#Rf_allocVector"><code>Rf_allocVector()</code></a></p>
 </section>
@@ -658,137 +695,200 @@ window.Quarto = {
 <h2 data-number="5.3" class="anchored" data-anchor-id="resizable-vectors"><span class="header-section-number">5.3</span> Resizable vectors</h2>
 <p>R 4.6.0 added an <strong>experimental</strong> API for vectors that can grow in place: allocate with a maximum length, then resize without copying. This replaces the non-API <code>SETLENGTH()</code>/<code>SET_TRUELENGTH()</code> idiom; the interface may change in future R releases.</p>
 <section id="R_allocResizableVector" class="level3" data-number="5.3.1">
-<h3 data-number="5.3.1" class="anchored" data-anchor-id="R_allocResizableVector"><span class="header-section-number">5.3.1</span> <code>R_allocResizableVector()</code> (<code>R_duplicateAsResizable()</code>, <code>R_resizeVector()</code>, <code>R_isResizable()</code>, <code>R_maxLength()</code>)</h3>
-<p>Create and resize vectors that can grow in place.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>SEXP R_allocResizableVector<span class="op">(</span>SEXPTYPE type<span class="op">,</span> R_xlen_t maxlen<span class="op">);</span></span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>SEXP R_duplicateAsResizable<span class="op">(</span>SEXP x<span class="op">);</span></span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> R_resizeVector<span class="op">(</span>SEXP x<span class="op">,</span> R_xlen_t newlen<span class="op">);</span></span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="dt">bool</span> R_isResizable<span class="op">(</span>SEXP x<span class="op">);</span></span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>R_xlen_t R_maxLength<span class="op">(</span>SEXP x<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> experimental · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> result · <strong>Errors:</strong> can throw · <strong>Since:</strong> 4.6.0 · <strong>R equivalent:</strong> —</p>
+<h3 data-number="5.3.1" class="anchored" data-anchor-id="R_allocResizableVector"><span class="header-section-number">5.3.1</span> <code>R_allocResizableVector()</code></h3>
+<p><span class="badge badge-experimental">experimental</span> <span class="badge badge-protect">needs protect</span> <span class="badge badge-errors">throws</span></p>
+<p><strong>Header:</strong> <code>Rinternals.h</code><br>
+<strong>Since:</strong> 4.6.0</p>
+<p>Create a vector that can grow in place up to a maximum length.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>SEXP R_allocResizableVector<span class="op">(</span>SEXPTYPE type<span class="op">,</span> R_xlen_t maxlen<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
+<li><code>type</code>: any vector <code>SEXPTYPE</code>.</li>
 <li><code>maxlen</code>: maximum length the vector can grow to.</li>
-<li><code>newlen</code>: new length, at most <code>maxlen</code>.</li>
 </ul>
-<p>A resizable vector allocates <code>maxlen</code> up front and can be resized in place with <code>R_resizeVector()</code> — the API replacement for the non-API <code>SETLENGTH()</code>/<code>SET_TRUELENGTH()</code> idiom. Experimental: the interface may change in future R releases.</p>
-<p><strong>See also:</strong> <a href="#Rf_allocVector"><code>Rf_allocVector()</code></a></p>
+<p><strong>Returns:</strong> A freshly allocated resizable vector of <code>type</code>, initially length 0, able to grow to <code>maxlen</code>.</p>
+<p>Allocates <code>maxlen</code> elements up front; the vector starts at length 0 and can be resized in place with <code>R_resizeVector()</code>. Experimental: the interface may change in future R releases.</p>
+<p><strong>See also:</strong> <a href="#Rf_allocVector"><code>Rf_allocVector()</code></a>, <a href="#R_resizeVector"><code>R_resizeVector()</code></a></p>
+</section>
+<section id="R_duplicateAsResizable" class="level3" data-number="5.3.2">
+<h3 data-number="5.3.2" class="anchored" data-anchor-id="R_duplicateAsResizable"><span class="header-section-number">5.3.2</span> <code>R_duplicateAsResizable()</code></h3>
+<p><span class="badge badge-experimental">experimental</span> <span class="badge badge-protect">needs protect</span> <span class="badge badge-errors">throws</span></p>
+<p><strong>Header:</strong> <code>Rinternals.h</code><br>
+<strong>Since:</strong> 4.6.0</p>
+<p>Duplicate a vector as a resizable vector.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>SEXP R_duplicateAsResizable<span class="op">(</span>SEXP x<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<ul>
+<li><code>x</code>: a vector.</li>
+</ul>
+<p><strong>Returns:</strong> A freshly allocated resizable copy of <code>x</code> that can grow up to its current length.</p>
+<p>The copy keeps its current length and can grow up to that length with <code>R_resizeVector()</code>. Experimental: the interface may change in future R releases.</p>
+<p><strong>See also:</strong> <a href="#R_allocResizableVector"><code>R_allocResizableVector()</code></a>, <a href="#R_resizeVector"><code>R_resizeVector()</code></a></p>
+</section>
+<section id="R_resizeVector" class="level3" data-number="5.3.3">
+<h3 data-number="5.3.3" class="anchored" data-anchor-id="R_resizeVector"><span class="header-section-number">5.3.3</span> <code>R_resizeVector()</code></h3>
+<p><span class="badge badge-experimental">experimental</span> <span class="badge badge-errors">throws</span></p>
+<p><strong>Header:</strong> <code>Rinternals.h</code><br>
+<strong>Since:</strong> 4.6.0</p>
+<p>Resize a resizable vector in place.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> R_resizeVector<span class="op">(</span>SEXP x<span class="op">,</span> R_xlen_t newlen<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<ul>
+<li><code>x</code>: a resizable vector.</li>
+<li><code>newlen</code>: new length, at most the vector’s maximum length.</li>
+</ul>
+<p>The API replacement for the non-API <code>SETLENGTH()</code>/<code>SET_TRUELENGTH()</code> idiom. Experimental: the interface may change in future R releases.</p>
+<p><strong>See also:</strong> <a href="#R_allocResizableVector"><code>R_allocResizableVector()</code></a>, <a href="#R_maxLength"><code>R_maxLength()</code></a></p>
+</section>
+<section id="R_isResizable" class="level3" data-number="5.3.4">
+<h3 data-number="5.3.4" class="anchored" data-anchor-id="R_isResizable"><span class="header-section-number">5.3.4</span> <code>R_isResizable()</code></h3>
+<p><span class="badge badge-experimental">experimental</span></p>
+<p><strong>Header:</strong> <code>Rinternals.h</code><br>
+<strong>Since:</strong> 4.6.0</p>
+<p>Test if a vector is resizable.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="dt">bool</span> R_isResizable<span class="op">(</span>SEXP x<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<ul>
+<li><code>x</code>: any SEXP.</li>
+</ul>
+<p><strong>Returns:</strong> <code>true</code> if <code>x</code> is a resizable vector, otherwise <code>false</code>.</p>
+<p><strong>See also:</strong> <a href="#R_allocResizableVector"><code>R_allocResizableVector()</code></a></p>
+</section>
+<section id="R_maxLength" class="level3" data-number="5.3.5">
+<h3 data-number="5.3.5" class="anchored" data-anchor-id="R_maxLength"><span class="header-section-number">5.3.5</span> <code>R_maxLength()</code></h3>
+<p><span class="badge badge-experimental">experimental</span></p>
+<p><strong>Header:</strong> <code>Rinternals.h</code><br>
+<strong>Since:</strong> 4.6.0</p>
+<p>Get the maximum length a resizable vector can grow to.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>R_xlen_t R_maxLength<span class="op">(</span>SEXP x<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<ul>
+<li><code>x</code>: a resizable vector.</li>
+</ul>
+<p><strong>Returns:</strong> The maximum length <code>x</code> can grow to.</p>
+<p><strong>See also:</strong> <a href="#R_resizeVector"><code>R_resizeVector()</code></a></p>
 </section>
 </section>
 <section id="get-and-set-values" class="level2" data-number="5.4">
 <h2 data-number="5.4" class="anchored" data-anchor-id="get-and-set-values"><span class="header-section-number">5.4</span> Get and set values</h2>
 <p>The atomic types wrap a C array, so you get and set values through a helper that returns a pointer to the underlying data. These helpers are all uppercase and don’t start with <code>Rf_</code>.</p>
 <p>When working with longer vectors, cache the pointer instead of calling the accessor on every iteration. Instead of:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> <span class="op">(</span>R_xlen_t i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> n<span class="op">;</span> <span class="op">++</span>i<span class="op">)</span> <span class="op">{</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  INTEGER<span class="op">(</span>x<span class="op">)[</span>i<span class="op">]</span> <span class="op">=</span> INTEGER<span class="op">(</span>x<span class="op">)[</span>i<span class="op">]</span> <span class="op">*</span> <span class="dv">2</span><span class="op">;</span></span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> <span class="op">(</span>R_xlen_t i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> n<span class="op">;</span> <span class="op">++</span>i<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  INTEGER<span class="op">(</span>x<span class="op">)[</span>i<span class="op">]</span> <span class="op">=</span> INTEGER<span class="op">(</span>x<span class="op">)[</span>i<span class="op">]</span> <span class="op">*</span> <span class="dv">2</span><span class="op">;</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>do:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span><span class="op">*</span> px <span class="op">=</span> INTEGER<span class="op">(</span>x<span class="op">);</span></span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> <span class="op">(</span>R_xlen_t i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> n<span class="op">;</span> <span class="op">++</span>i<span class="op">)</span> <span class="op">{</span></span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  px<span class="op">[</span>i<span class="op">]</span> <span class="op">=</span> px<span class="op">[</span>i<span class="op">]</span> <span class="op">*</span> <span class="dv">2</span><span class="op">;</span></span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span><span class="op">*</span> px <span class="op">=</span> INTEGER<span class="op">(</span>x<span class="op">);</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> <span class="op">(</span>R_xlen_t i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> n<span class="op">;</span> <span class="op">++</span>i<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  px<span class="op">[</span>i<span class="op">]</span> <span class="op">=</span> px<span class="op">[</span>i<span class="op">]</span> <span class="op">*</span> <span class="dv">2</span><span class="op">;</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Strings and lists don’t map to simple C arrays, so they have paired get/set functions (<code>STRING_ELT()</code>/<code>SET_STRING_ELT()</code>, <code>VECTOR_ELT()</code>/<code>SET_VECTOR_ELT()</code>). (<code>STRING_PTR()</code> exists but is used only in a handful of places in R itself; <code>VECTOR_PTR()</code> is a deprecated interface that now throws an error.)</p>
 <section id="LOGICAL" class="level3" data-number="5.4.1">
-<h3 data-number="5.4.1" class="anchored" data-anchor-id="LOGICAL"><span class="header-section-number">5.4.1</span> <code>LOGICAL()</code> (<code>INTEGER()</code>, <code>REAL()</code>, <code>COMPLEX()</code>, <code>RAW()</code>)</h3>
+<h3 data-number="5.4.1" class="anchored" data-anchor-id="LOGICAL"><span class="header-section-number">5.4.1</span> <code>LOGICAL()</code>, <code>INTEGER()</code>, <code>REAL()</code>, <code>COMPLEX()</code>, <code>RAW()</code></h3>
+<p><strong>Header:</strong> <code>Rinternals.h</code></p>
 <p>Get a pointer to the underlying C array of an atomic vector.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span><span class="op">*</span>      LOGICAL<span class="op">(</span>SEXP x<span class="op">);</span></span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span><span class="op">*</span>      INTEGER<span class="op">(</span>SEXP x<span class="op">);</span></span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="dt">double</span><span class="op">*</span>   REAL<span class="op">(</span>SEXP x<span class="op">);</span></span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>Rcomplex<span class="op">*</span> COMPLEX<span class="op">(</span>SEXP x<span class="op">);</span></span>
-<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>Rbyte<span class="op">*</span>    RAW<span class="op">(</span>SEXP x<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb24"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span><span class="op">*</span>      LOGICAL<span class="op">(</span>SEXP x<span class="op">);</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span><span class="op">*</span>      INTEGER<span class="op">(</span>SEXP x<span class="op">);</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="dt">double</span><span class="op">*</span>   REAL<span class="op">(</span>SEXP x<span class="op">);</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>Rcomplex<span class="op">*</span> COMPLEX<span class="op">(</span>SEXP x<span class="op">);</span></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>Rbyte<span class="op">*</span>    RAW<span class="op">(</span>SEXP x<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li><code>x</code>: a vector of the corresponding type.</li>
 </ul>
+<p><strong>Returns:</strong> A writable pointer to the underlying C array of <code>x</code>.</p>
 <p>For long vectors, cache the returned pointer and reuse it rather than calling the accessor on every iteration.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span><span class="op">*</span> px <span class="op">=</span> INTEGER<span class="op">(</span>x<span class="op">);</span></span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> n<span class="op">;</span> <span class="op">++</span>i<span class="op">)</span> <span class="op">{</span></span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  px<span class="op">[</span>i<span class="op">]</span> <span class="op">=</span> px<span class="op">[</span>i<span class="op">]</span> <span class="op">*</span> <span class="dv">2</span><span class="op">;</span></span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb25"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span><span class="op">*</span> px <span class="op">=</span> INTEGER<span class="op">(</span>x<span class="op">);</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> n<span class="op">;</span> <span class="op">++</span>i<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  px<span class="op">[</span>i<span class="op">]</span> <span class="op">=</span> px<span class="op">[</span>i<span class="op">]</span> <span class="op">*</span> <span class="dv">2</span><span class="op">;</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>See also:</strong> <a href="#STRING_ELT"><code>STRING_ELT()</code></a>, <a href="#VECTOR_ELT"><code>VECTOR_ELT()</code></a></p>
 </section>
 <section id="STRING_ELT" class="level3" data-number="5.4.2">
-<h3 data-number="5.4.2" class="anchored" data-anchor-id="STRING_ELT"><span class="header-section-number">5.4.2</span> <code>STRING_ELT()</code> (<code>SET_STRING_ELT()</code>)</h3>
+<h3 data-number="5.4.2" class="anchored" data-anchor-id="STRING_ELT"><span class="header-section-number">5.4.2</span> <code>STRING_ELT()</code>, <code>SET_STRING_ELT()</code></h3>
+<p><span class="badge badge-errors">throws</span></p>
+<p><strong>Header:</strong> <code>Rinternals.h</code></p>
 <p>Get or set a single element of a character vector.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>SEXP STRING_ELT<span class="op">(</span>SEXP x<span class="op">,</span> R_xlen_t i<span class="op">);</span></span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> SET_STRING_ELT<span class="op">(</span>SEXP x<span class="op">,</span> R_xlen_t i<span class="op">,</span> SEXP v<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>SEXP STRING_ELT<span class="op">(</span>SEXP x<span class="op">,</span> R_xlen_t i<span class="op">);</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> SET_STRING_ELT<span class="op">(</span>SEXP x<span class="op">,</span> R_xlen_t i<span class="op">,</span> SEXP v<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li><code>x</code>: a <code>STRSXP</code>.</li>
 <li><code>i</code>: zero-based element index.</li>
 <li><code>v</code>: the <code>CHARSXP</code> to set.</li>
 </ul>
+<p><strong>Returns:</strong> <code>STRING_ELT()</code> returns the <code>CHARSXP</code> element at index <code>i</code> (not a copy); <code>SET_STRING_ELT()</code> returns nothing.</p>
 <p><code>STRING_ELT()</code> returns a <code>CHARSXP</code>, not an ordinary <code>SEXP</code> value; strings use a pair of accessor functions rather than a plain C array.</p>
 <p><strong>See also:</strong> <a href="#VECTOR_ELT"><code>VECTOR_ELT()</code></a>, <a href="#STRING_PTR"><code>STRING_PTR()</code></a></p>
 </section>
 <section id="VECTOR_ELT" class="level3" data-number="5.4.3">
-<h3 data-number="5.4.3" class="anchored" data-anchor-id="VECTOR_ELT"><span class="header-section-number">5.4.3</span> <code>VECTOR_ELT()</code> (<code>SET_VECTOR_ELT()</code>)</h3>
+<h3 data-number="5.4.3" class="anchored" data-anchor-id="VECTOR_ELT"><span class="header-section-number">5.4.3</span> <code>VECTOR_ELT()</code>, <code>SET_VECTOR_ELT()</code></h3>
+<p><span class="badge badge-errors">throws</span></p>
+<p><strong>Header:</strong> <code>Rinternals.h</code></p>
 <p>Get or set a single element of a list.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>SEXP VECTOR_ELT<span class="op">(</span>SEXP x<span class="op">,</span> R_xlen_t i<span class="op">);</span></span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>SEXP SET_VECTOR_ELT<span class="op">(</span>SEXP x<span class="op">,</span> R_xlen_t i<span class="op">,</span> SEXP v<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> not needed · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb27"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>SEXP VECTOR_ELT<span class="op">(</span>SEXP x<span class="op">,</span> R_xlen_t i<span class="op">);</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>SEXP SET_VECTOR_ELT<span class="op">(</span>SEXP x<span class="op">,</span> R_xlen_t i<span class="op">,</span> SEXP v<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li><code>x</code>: a <code>VECSXP</code>.</li>
 <li><code>i</code>: zero-based element index.</li>
 <li><code>v</code>: the value to set.</li>
 </ul>
+<p><strong>Returns:</strong> <code>VECTOR_ELT()</code> returns the element at index <code>i</code> (not a copy); <code>SET_VECTOR_ELT()</code> returns <code>v</code>.</p>
 <p><code>VECTOR_ELT()</code> may return any <code>SEXPTYPE</code>; lists use a pair of accessor functions rather than a plain C array.</p>
 <p><strong>See also:</strong> <a href="#STRING_ELT"><code>STRING_ELT()</code></a>, <a href="#VECTOR_PTR"><code>VECTOR_PTR()</code></a></p>
 </section>
 <section id="STRING_PTR_RO" class="level3" data-number="5.4.4">
-<h3 data-number="5.4.4" class="anchored" data-anchor-id="STRING_PTR_RO"><span class="header-section-number">5.4.4</span> <code>STRING_PTR_RO()</code> (<code>VECTOR_PTR_RO()</code>)</h3>
+<h3 data-number="5.4.4" class="anchored" data-anchor-id="STRING_PTR_RO"><span class="header-section-number">5.4.4</span> <code>STRING_PTR_RO()</code>, <code>VECTOR_PTR_RO()</code></h3>
+<p><strong>Header:</strong> <code>Rinternals.h</code><br>
+<strong>Since:</strong> 4.5.0</p>
 <p>Get read-only access to the elements of a character or list vector.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb24"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> SEXP <span class="op">*</span>STRING_PTR_RO<span class="op">(</span>SEXP x<span class="op">);</span></span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> SEXP <span class="op">*</span>VECTOR_PTR_RO<span class="op">(</span>SEXP x<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> 4.5.0 · <strong>R equivalent:</strong> —</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb28"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> SEXP <span class="op">*</span>STRING_PTR_RO<span class="op">(</span>SEXP x<span class="op">);</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> SEXP <span class="op">*</span>VECTOR_PTR_RO<span class="op">(</span>SEXP x<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Returns:</strong> A read-only pointer to the <code>SEXP</code> element array of <code>x</code>.</p>
 <p>The read-only analogues of <code>STRING_PTR()</code>/<code>VECTOR_PTR()</code>; use them when you only read elements so ALTREP and future representations aren’t forced to materialize a writable array.</p>
 <p><strong>See also:</strong> <a href="#STRING_ELT"><code>STRING_ELT()</code></a></p>
 </section>
 <section id="DATAPTR_RO" class="level3" data-number="5.4.5">
-<h3 data-number="5.4.5" class="anchored" data-anchor-id="DATAPTR_RO"><span class="header-section-number">5.4.5</span> <code>DATAPTR_RO()</code> (<code>DATAPTR()</code>)</h3>
+<h3 data-number="5.4.5" class="anchored" data-anchor-id="DATAPTR_RO"><span class="header-section-number">5.4.5</span> <code>DATAPTR_RO()</code>, <code>DATAPTR()</code></h3>
+<p><strong>Header:</strong> <code>Rinternals.h</code></p>
 <p>Get an untyped pointer to a vector’s data.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb25"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> <span class="dt">void</span> <span class="op">*(</span>DATAPTR_RO<span class="op">)(</span>SEXP x<span class="op">);</span></span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> <span class="op">*(</span>DATAPTR<span class="op">)(</span>SEXP x<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb29"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> <span class="dt">void</span> <span class="op">*(</span>DATAPTR_RO<span class="op">)(</span>SEXP x<span class="op">);</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> <span class="op">*(</span>DATAPTR<span class="op">)(</span>SEXP x<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li><code>x</code>: any vector.</li>
 </ul>
+<p><strong>Returns:</strong> An untyped pointer to the data payload of <code>x</code>; <code>DATAPTR()</code> is writable, <code>DATAPTR_RO()</code> read-only.</p>
 <p>Prefer the typed accessors (<code>REAL()</code>, <code>INTEGER_RO()</code>, …), which check the vector type. <code>DATAPTR()</code> gives write access; <code>DATAPTR_RO()</code> is read-only.</p>
 <p><strong>See also:</strong> <a href="#LOGICAL"><code>LOGICAL()</code></a>, <a href="#INTEGER_RO"><code>INTEGER_RO()</code></a></p>
 </section>
 <section id="INTEGER_RO" class="level3" data-number="5.4.6">
-<h3 data-number="5.4.6" class="anchored" data-anchor-id="INTEGER_RO"><span class="header-section-number">5.4.6</span> <code>INTEGER_RO()</code> (<code>LOGICAL_RO()</code>, <code>REAL_RO()</code>, <code>COMPLEX_RO()</code>, <code>RAW_RO()</code>)</h3>
+<h3 data-number="5.4.6" class="anchored" data-anchor-id="INTEGER_RO"><span class="header-section-number">5.4.6</span> <code>INTEGER_RO()</code>, <code>LOGICAL_RO()</code>, <code>REAL_RO()</code>, <code>COMPLEX_RO()</code>, <code>RAW_RO()</code></h3>
+<p><strong>Header:</strong> <code>Rinternals.h</code></p>
 <p>Get a read-only pointer to the underlying C array.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> <span class="dt">int</span><span class="op">*</span>      <span class="op">(</span>INTEGER_RO<span class="op">)(</span>SEXP x<span class="op">);</span></span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> <span class="dt">int</span><span class="op">*</span>      <span class="op">(</span>LOGICAL_RO<span class="op">)(</span>SEXP x<span class="op">);</span></span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> <span class="dt">double</span><span class="op">*</span>   <span class="op">(</span>REAL_RO<span class="op">)(</span>SEXP x<span class="op">);</span></span>
-<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> Rcomplex<span class="op">*</span> <span class="op">(</span>COMPLEX_RO<span class="op">)(</span>SEXP x<span class="op">);</span></span>
-<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> Rbyte<span class="op">*</span>    <span class="op">(</span>RAW_RO<span class="op">)(</span>SEXP x<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb30"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> <span class="dt">int</span><span class="op">*</span>      <span class="op">(</span>INTEGER_RO<span class="op">)(</span>SEXP x<span class="op">);</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> <span class="dt">int</span><span class="op">*</span>      <span class="op">(</span>LOGICAL_RO<span class="op">)(</span>SEXP x<span class="op">);</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> <span class="dt">double</span><span class="op">*</span>   <span class="op">(</span>REAL_RO<span class="op">)(</span>SEXP x<span class="op">);</span></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> Rcomplex<span class="op">*</span> <span class="op">(</span>COMPLEX_RO<span class="op">)(</span>SEXP x<span class="op">);</span></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> Rbyte<span class="op">*</span>    <span class="op">(</span>RAW_RO<span class="op">)(</span>SEXP x<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li><code>x</code>: a vector of the corresponding type.</li>
 </ul>
+<p><strong>Returns:</strong> A read-only pointer to the underlying C array of <code>x</code>.</p>
 <p>Read-only variants of <code>INTEGER()</code> etc. Use them when you only read: the <code>const</code> pointer catches accidental writes, and ALTREP vectors can avoid materialising a writable copy.</p>
 <p><strong>See also:</strong> <a href="#LOGICAL"><code>LOGICAL()</code></a>, <a href="#DATAPTR_RO"><code>DATAPTR_RO()</code></a></p>
 </section>
 <section id="INTEGER_ELT" class="level3" data-number="5.4.7">
-<h3 data-number="5.4.7" class="anchored" data-anchor-id="INTEGER_ELT"><span class="header-section-number">5.4.7</span> <code>INTEGER_ELT()</code> (<code>LOGICAL_ELT()</code>, <code>REAL_ELT()</code>, <code>COMPLEX_ELT()</code>, <code>RAW_ELT()</code>, <code>SET_INTEGER_ELT()</code>, <code>SET_LOGICAL_ELT()</code>, <code>SET_REAL_ELT()</code>, <code>SET_COMPLEX_ELT()</code>, <code>SET_RAW_ELT()</code>)</h3>
+<h3 data-number="5.4.7" class="anchored" data-anchor-id="INTEGER_ELT"><span class="header-section-number">5.4.7</span> <code>INTEGER_ELT()</code>, <code>LOGICAL_ELT()</code>, <code>REAL_ELT()</code>, <code>COMPLEX_ELT()</code>, <code>RAW_ELT()</code>, <code>SET_INTEGER_ELT()</code>, <code>SET_LOGICAL_ELT()</code>, <code>SET_REAL_ELT()</code>, <code>SET_COMPLEX_ELT()</code>, <code>SET_RAW_ELT()</code></h3>
+<p><strong>Header:</strong> <code>Rinternals.h</code></p>
 <p>Get or set a single element of an atomic vector.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb27"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span>      <span class="op">(</span>INTEGER_ELT<span class="op">)(</span>SEXP x<span class="op">,</span> R_xlen_t i<span class="op">);</span></span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span>      <span class="op">(</span>LOGICAL_ELT<span class="op">)(</span>SEXP x<span class="op">,</span> R_xlen_t i<span class="op">);</span></span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="dt">double</span>   <span class="op">(</span>REAL_ELT<span class="op">)(</span>SEXP x<span class="op">,</span> R_xlen_t i<span class="op">);</span></span>
-<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>Rcomplex <span class="op">(</span>COMPLEX_ELT<span class="op">)(</span>SEXP x<span class="op">,</span> R_xlen_t i<span class="op">);</span></span>
-<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>Rbyte    <span class="op">(</span>RAW_ELT<span class="op">)(</span>SEXP x<span class="op">,</span> R_xlen_t i<span class="op">);</span></span>
-<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> SET_INTEGER_ELT<span class="op">(</span>SEXP x<span class="op">,</span> R_xlen_t i<span class="op">,</span> <span class="dt">int</span> v<span class="op">);</span></span>
-<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> SET_LOGICAL_ELT<span class="op">(</span>SEXP x<span class="op">,</span> R_xlen_t i<span class="op">,</span> <span class="dt">int</span> v<span class="op">);</span></span>
-<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> SET_REAL_ELT<span class="op">(</span>SEXP x<span class="op">,</span> R_xlen_t i<span class="op">,</span> <span class="dt">double</span> v<span class="op">);</span></span>
-<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> SET_COMPLEX_ELT<span class="op">(</span>SEXP x<span class="op">,</span> R_xlen_t i<span class="op">,</span> Rcomplex v<span class="op">);</span></span>
-<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> SET_RAW_ELT<span class="op">(</span>SEXP x<span class="op">,</span> R_xlen_t i<span class="op">,</span> Rbyte v<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb31"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span>      <span class="op">(</span>INTEGER_ELT<span class="op">)(</span>SEXP x<span class="op">,</span> R_xlen_t i<span class="op">);</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span>      <span class="op">(</span>LOGICAL_ELT<span class="op">)(</span>SEXP x<span class="op">,</span> R_xlen_t i<span class="op">);</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a><span class="dt">double</span>   <span class="op">(</span>REAL_ELT<span class="op">)(</span>SEXP x<span class="op">,</span> R_xlen_t i<span class="op">);</span></span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>Rcomplex <span class="op">(</span>COMPLEX_ELT<span class="op">)(</span>SEXP x<span class="op">,</span> R_xlen_t i<span class="op">);</span></span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>Rbyte    <span class="op">(</span>RAW_ELT<span class="op">)(</span>SEXP x<span class="op">,</span> R_xlen_t i<span class="op">);</span></span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> SET_INTEGER_ELT<span class="op">(</span>SEXP x<span class="op">,</span> R_xlen_t i<span class="op">,</span> <span class="dt">int</span> v<span class="op">);</span></span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> SET_LOGICAL_ELT<span class="op">(</span>SEXP x<span class="op">,</span> R_xlen_t i<span class="op">,</span> <span class="dt">int</span> v<span class="op">);</span></span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> SET_REAL_ELT<span class="op">(</span>SEXP x<span class="op">,</span> R_xlen_t i<span class="op">,</span> <span class="dt">double</span> v<span class="op">);</span></span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> SET_COMPLEX_ELT<span class="op">(</span>SEXP x<span class="op">,</span> R_xlen_t i<span class="op">,</span> Rcomplex v<span class="op">);</span></span>
+<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> SET_RAW_ELT<span class="op">(</span>SEXP x<span class="op">,</span> R_xlen_t i<span class="op">,</span> Rbyte v<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li><code>x</code>: a vector of the corresponding type.</li>
 <li><code>i</code>: zero-based element index.</li>
 <li><code>v</code>: the new value.</li>
 </ul>
+<p><strong>Returns:</strong> The <code>*_ELT()</code> getters return the element at index <code>i</code> as the corresponding C type; the <code>SET_*_ELT()</code> setters return nothing.</p>
 <p>Element-wise access is much slower than sweeping a cached pointer; use it when the type is not known in advance or only a few elements are touched.</p>
 <p><strong>See also:</strong> <a href="#LOGICAL"><code>LOGICAL()</code></a>, <a href="#STRING_ELT"><code>STRING_ELT()</code></a></p>
 </section>
@@ -797,27 +897,33 @@ window.Quarto = {
 <p>A few helpers extract the first value of a vector, coercing as necessary:</p>
 </section>
 <section id="Rf_asLogical" class="level3" data-number="5.4.9">
-<h3 data-number="5.4.9" class="anchored" data-anchor-id="Rf_asLogical"><span class="header-section-number">5.4.9</span> <code>Rf_asLogical()</code> (<code>Rf_asInteger()</code>, <code>Rf_asReal()</code>, <code>Rf_asComplex()</code>)</h3>
+<h3 data-number="5.4.9" class="anchored" data-anchor-id="Rf_asLogical"><span class="header-section-number">5.4.9</span> <code>Rf_asLogical()</code>, <code>Rf_asInteger()</code>, <code>Rf_asReal()</code>, <code>Rf_asComplex()</code></h3>
+<p><span class="badge badge-errors">throws</span></p>
+<p><strong>Header:</strong> <code>Rinternals.h</code><br>
+<strong>R equivalent:</strong> <code>as.logical()</code></p>
 <p>Extract the first value of a vector as a C type, coercing as necessary.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb28"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> Rf_asLogical<span class="op">(</span>SEXP x<span class="op">);</span></span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> Rf_asInteger<span class="op">(</span>SEXP x<span class="op">);</span></span>
-<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="dt">double</span> Rf_asReal<span class="op">(</span>SEXP x<span class="op">);</span></span>
-<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>Rcomplex Rf_asComplex<span class="op">(</span>SEXP x<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>as.logical()</code></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb32"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> Rf_asLogical<span class="op">(</span>SEXP x<span class="op">);</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> Rf_asInteger<span class="op">(</span>SEXP x<span class="op">);</span></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a><span class="dt">double</span> Rf_asReal<span class="op">(</span>SEXP x<span class="op">);</span></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>Rcomplex Rf_asComplex<span class="op">(</span>SEXP x<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li><code>x</code>: a vector.</li>
 </ul>
+<p><strong>Returns:</strong> The first element of <code>x</code> coerced to the corresponding C type; may be an <code>NA</code> sentinel such as <code>NA_INTEGER</code> or <code>NA_REAL</code>.</p>
 <p><strong>See also:</strong> <a href="#Rf_coerceVector"><code>Rf_coerceVector()</code></a></p>
 </section>
 <section id="Rf_asBool" class="level3" data-number="5.4.10">
-<h3 data-number="5.4.10" class="anchored" data-anchor-id="Rf_asBool"><span class="header-section-number">5.4.10</span> <code>Rf_asBool()</code> (<code>Rf_asRboolean()</code>)</h3>
+<h3 data-number="5.4.10" class="anchored" data-anchor-id="Rf_asBool"><span class="header-section-number">5.4.10</span> <code>Rf_asBool()</code>, <code>Rf_asRboolean()</code></h3>
+<p><span class="badge badge-errors">throws</span></p>
+<p><strong>Header:</strong> <code>Rinternals.h</code><br>
+<strong>Since:</strong> 4.5.0</p>
 <p>Extract a checked single logical value as a C bool.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb29"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="dt">bool</span> Rf_asBool<span class="op">(</span>SEXP x<span class="op">);</span></span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>Rboolean Rf_asRboolean<span class="op">(</span>SEXP x<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> can throw · <strong>Since:</strong> 4.5.0 · <strong>R equivalent:</strong> —</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb33"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="dt">bool</span> Rf_asBool<span class="op">(</span>SEXP x<span class="op">);</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>Rboolean Rf_asRboolean<span class="op">(</span>SEXP x<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li><code>x</code>: a vector coercible to a single logical.</li>
 </ul>
+<p><strong>Returns:</strong> The single logical value of <code>x</code> as a C boolean; never <code>NA</code> because <code>NA</code> inputs raise an error.</p>
 <p>Like <code>Rf_asLogical()</code>, but errors if the coerced value is <code>NA</code> (or the input is not a single value), so the result is always usable as a C boolean.</p>
 <p><strong>See also:</strong> <a href="#Rf_asLogical"><code>Rf_asLogical()</code></a></p>
 </section>
@@ -827,61 +933,69 @@ window.Quarto = {
 <p>Missing values are more complicated for <code>REALSXP</code> because doubles already have a missing-value protocol defined by the floating-point standard (<a href="http://en.wikipedia.org/wiki/IEEE_floating_point">IEEE 754</a>). An <code>NA</code> is a <code>NaN</code> with a special bit pattern (the lowest word is 1954, the year Ross Ihaka was born), and there are distinct values for positive and negative infinity. Test with the <code>ISNA()</code>, <code>ISNAN()</code>, and <code>!R_FINITE()</code> macros; set with the constants <code>NA_REAL</code>, <code>R_NaN</code>, <code>R_PosInf</code>, and <code>R_NegInf</code>.</p>
 </section>
 <section id="NA_LOGICAL" class="level3" data-number="5.4.12">
-<h3 data-number="5.4.12" class="anchored" data-anchor-id="NA_LOGICAL"><span class="header-section-number">5.4.12</span> <code>NA_LOGICAL()</code> (<code>NA_INTEGER()</code>)</h3>
+<h3 data-number="5.4.12" class="anchored" data-anchor-id="NA_LOGICAL"><span class="header-section-number">5.4.12</span> <code>NA_LOGICAL()</code>, <code>NA_INTEGER()</code></h3>
+<p><strong>Header:</strong> <code>R_ext/Arith.h</code><br>
+<strong>R equivalent:</strong> <code>NA</code></p>
 <p>Represent missing logical and integer values.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb30"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#define NA_LOGICAL </span>R_NaInt</span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#define NA_INTEGER </span>R_NaInt</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>R_ext/Arith.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>NA</code></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb34"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#define NA_LOGICAL </span>R_NaInt</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#define NA_INTEGER </span>R_NaInt</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><code>NA_LOGICAL</code> and <code>NA_INTEGER</code> are both <code>R_NaInt</code> (currently <code>INT_MIN</code>); <code>NA_STRING</code> is <code>R_NaString</code>.</p>
 <p><strong>See also:</strong> <a href="#NA_REAL"><code>NA_REAL()</code></a></p>
 </section>
 <section id="NA_REAL" class="level3" data-number="5.4.13">
-<h3 data-number="5.4.13" class="anchored" data-anchor-id="NA_REAL"><span class="header-section-number">5.4.13</span> <code>NA_REAL()</code> (<code>R_NaReal()</code>)</h3>
+<h3 data-number="5.4.13" class="anchored" data-anchor-id="NA_REAL"><span class="header-section-number">5.4.13</span> <code>NA_REAL()</code>, <code>R_NaReal()</code></h3>
+<p><strong>Header:</strong> <code>R_ext/Arith.h</code><br>
+<strong>R equivalent:</strong> <code>NA_real_</code></p>
 <p>Represent a missing double value.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb31"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="dt">double</span> R_NaReal<span class="op">;</span></span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#define NA_REAL </span>R_NaReal</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>R_ext/Arith.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>NA_real_</code></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb35"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="dt">double</span> R_NaReal<span class="op">;</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#define NA_REAL </span>R_NaReal</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Represented as an <code>NaN</code> with a specific bit pattern, per the IEEE 754 floating-point standard.</p>
 <p><strong>See also:</strong> <a href="#R_NaN"><code>R_NaN()</code></a>, <a href="#ISNA"><code>ISNA()</code></a>, <a href="#NA_LOGICAL"><code>NA_LOGICAL()</code></a></p>
 </section>
 <section id="R_NaN" class="level3" data-number="5.4.14">
-<h3 data-number="5.4.14" class="anchored" data-anchor-id="R_NaN"><span class="header-section-number">5.4.14</span> <code>R_NaN()</code> (<code>R_PosInf()</code>, <code>R_NegInf()</code>)</h3>
+<h3 data-number="5.4.14" class="anchored" data-anchor-id="R_NaN"><span class="header-section-number">5.4.14</span> <code>R_NaN()</code>, <code>R_PosInf()</code>, <code>R_NegInf()</code></h3>
+<p><strong>Header:</strong> <code>R_ext/Arith.h</code><br>
+<strong>R equivalent:</strong> <code>NaN</code></p>
 <p>Represent NaN and positive or negative infinity as doubles.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb32"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="dt">double</span> R_NaN<span class="op">;</span></span>
-<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="dt">double</span> R_PosInf<span class="op">;</span></span>
-<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a><span class="dt">double</span> R_NegInf<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>R_ext/Arith.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>NaN</code></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb36"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="dt">double</span> R_NaN<span class="op">;</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="dt">double</span> R_PosInf<span class="op">;</span></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a><span class="dt">double</span> R_NegInf<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Use these constants, together with <code>NA_REAL</code>, for cross-platform-safe NaN, infinite, and missing values.</p>
 <p><strong>See also:</strong> <a href="#NA_REAL"><code>NA_REAL()</code></a>, <a href="#ISNA"><code>ISNA()</code></a></p>
 </section>
 <section id="ISNA" class="level3" data-number="5.4.15">
-<h3 data-number="5.4.15" class="anchored" data-anchor-id="ISNA"><span class="header-section-number">5.4.15</span> <code>ISNA()</code> (<code>ISNAN()</code>, <code>R_FINITE()</code>)</h3>
+<h3 data-number="5.4.15" class="anchored" data-anchor-id="ISNA"><span class="header-section-number">5.4.15</span> <code>ISNA()</code>, <code>ISNAN()</code>, <code>R_FINITE()</code></h3>
+<p><strong>Header:</strong> <code>R_ext/Arith.h</code><br>
+<strong>R equivalent:</strong> <code>is.na()</code></p>
 <p>Check a double for missing, NaN, or non-finite values.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb33"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> ISNA<span class="op">(</span><span class="dt">double</span> x<span class="op">);</span></span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> ISNAN<span class="op">(</span><span class="dt">double</span> x<span class="op">);</span></span>
-<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> R_FINITE<span class="op">(</span><span class="dt">double</span> x<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>R_ext/Arith.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>is.na()</code></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb37"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> ISNA<span class="op">(</span><span class="dt">double</span> x<span class="op">);</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> ISNAN<span class="op">(</span><span class="dt">double</span> x<span class="op">);</span></span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> R_FINITE<span class="op">(</span><span class="dt">double</span> x<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li><code>x</code>: the double to check.</li>
 </ul>
+<p><strong>Returns:</strong> Non-zero if <code>x</code> is <code>NA</code> (<code>ISNA()</code>), <code>NaN</code> or <code>NA</code> (<code>ISNAN()</code>), or finite (<code>R_FINITE()</code>); zero otherwise.</p>
 <p>These are macros; <code>R_IsNA()</code>, <code>R_IsNaN()</code>, and <code>R_finite()</code> are the equivalent functions. Check <code>!R_FINITE()</code> for non-finite values.</p>
 <p><strong>See also:</strong> <a href="#R_IsNA"><code>R_IsNA()</code></a>, <a href="#NA_REAL"><code>NA_REAL()</code></a></p>
 </section>
 <section id="R_IsNA" class="level3" data-number="5.4.16">
-<h3 data-number="5.4.16" class="anchored" data-anchor-id="R_IsNA"><span class="header-section-number">5.4.16</span> <code>R_IsNA()</code> (<code>R_IsNaN()</code>, <code>R_finite()</code>)</h3>
+<h3 data-number="5.4.16" class="anchored" data-anchor-id="R_IsNA"><span class="header-section-number">5.4.16</span> <code>R_IsNA()</code>, <code>R_IsNaN()</code>, <code>R_finite()</code></h3>
+<p><strong>Header:</strong> <code>R_ext/Arith.h</code><br>
+<strong>R equivalent:</strong> <code>is.finite()</code></p>
 <p>Check a double for missing, NaN, or non-finite values.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb34"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> R_IsNA<span class="op">(</span><span class="dt">double</span><span class="op">);</span></span>
-<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> R_IsNaN<span class="op">(</span><span class="dt">double</span><span class="op">);</span></span>
-<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> R_finite<span class="op">(</span><span class="dt">double</span><span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>R_ext/Arith.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>is.finite()</code></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb38"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> R_IsNA<span class="op">(</span><span class="dt">double</span><span class="op">);</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> R_IsNaN<span class="op">(</span><span class="dt">double</span><span class="op">);</span></span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> R_finite<span class="op">(</span><span class="dt">double</span><span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Returns:</strong> Non-zero if the argument is <code>NA</code> (<code>R_IsNA()</code>), <code>NaN</code> or <code>NA</code> (<code>R_IsNaN()</code>), or finite (<code>R_finite()</code>); zero otherwise.</p>
 <p>Function equivalents of the <code>ISNA()</code>, <code>ISNAN()</code>, and <code>R_FINITE()</code> macros. <code>R_finite()</code> is false for <code>NA</code>, <code>NaN</code>, <code>Inf</code>, and <code>-Inf</code>.</p>
 <p><strong>See also:</strong> <a href="#ISNA"><code>ISNA()</code></a></p>
 </section>
 <section id="R_isnancpp" class="level3" data-number="5.4.17">
 <h3 data-number="5.4.17" class="anchored" data-anchor-id="R_isnancpp"><span class="header-section-number">5.4.17</span> <code>R_isnancpp()</code></h3>
+<p><strong>Header:</strong> <code>R_ext/Arith.h</code></p>
 <p>Test for NaN in a way that is safe from C++ compiler optimisations.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb35"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> R_isnancpp<span class="op">(</span><span class="dt">double</span><span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>R_ext/Arith.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb39"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> R_isnancpp<span class="op">(</span><span class="dt">double</span><span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Returns:</strong> Non-zero if the argument is <code>NaN</code>, zero otherwise.</p>
 <p>Only needed from C++; it backs the <code>ISNAN()</code> macro there. In C, use <code>ISNAN()</code> directly.</p>
 <p><strong>See also:</strong> <a href="#ISNA"><code>ISNA()</code></a>, <a href="#R_IsNA"><code>R_IsNA()</code></a></p>
 </section>
@@ -891,42 +1005,155 @@ window.Quarto = {
 <p>A number of helpers test whether a SEXP has a given type. There’s no <code>Rf_isRaw()</code> or <code>Rf_isList()</code> for <code>RAWSXP</code>/<code>VECSXP</code>; use <code>TYPEOF(x) == RAWSXP</code> or <code>TYPEOF(x) == VECSXP</code>. (<code>Rf_isList()</code> tests for a pairlist.)</p>
 <p>These tests are not always consistent with their R equivalents. For example, <code>Rf_isVectorAtomic(R_NilValue)</code> is false but <code>is.atomic(NULL)</code> is true; <code>Rf_isNewList(R_NilValue)</code> is true but <code>is.list(NULL)</code> is false. Because of this confusion, prefer writing your own wrappers around <code>TYPEOF(x)</code>.</p>
 <section id="Rf_isLogical" class="level3" data-number="5.5.1">
-<h3 data-number="5.5.1" class="anchored" data-anchor-id="Rf_isLogical"><span class="header-section-number">5.5.1</span> <code>Rf_isLogical()</code> (<code>Rf_isInteger()</code>, <code>Rf_isReal()</code>, <code>Rf_isComplex()</code>, <code>Rf_isString()</code>, <code>Rf_isExpression()</code>)</h3>
-<p>Test if an SEXP is a vector of the given type.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb36"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>Rboolean Rf_isLogical<span class="op">(</span>SEXP s<span class="op">);</span></span>
-<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>Rboolean Rf_isInteger<span class="op">(</span>SEXP s<span class="op">);</span></span>
-<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>Rboolean Rf_isReal<span class="op">(</span>SEXP s<span class="op">);</span></span>
-<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>Rboolean Rf_isComplex<span class="op">(</span>SEXP s<span class="op">);</span></span>
-<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>Rboolean Rf_isString<span class="op">(</span>SEXP s<span class="op">);</span></span>
-<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>Rboolean Rf_isExpression<span class="op">(</span>SEXP s<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>is.logical()</code></p>
+<h3 data-number="5.5.1" class="anchored" data-anchor-id="Rf_isLogical"><span class="header-section-number">5.5.1</span> <code>Rf_isLogical()</code></h3>
+<p><strong>Header:</strong> <code>Rinternals.h</code><br>
+<strong>R equivalent:</strong> <code>is.logical()</code></p>
+<p>Test if an SEXP is a logical vector.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb40"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>Rboolean Rf_isLogical<span class="op">(</span>SEXP s<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li><code>s</code>: any SEXP.</li>
 </ul>
-<p>No function tests for <code>RAWSXP</code> or <code>VECSXP</code>; use <code>TYPEOF(x) == RAWSXP</code> or <code>TYPEOF(x) == VECSXP</code> instead. Factors are also <code>INTSXP</code>s, so <code>TYPEOF(x) == INTSXP</code> accepts both plain integer vectors and factors; combine <code>Rf_isInteger()</code> with <code>Rf_isFactor()</code> to distinguish them.</p>
+<p><strong>Returns:</strong> <code>TRUE</code> if <code>s</code> is an <code>LGLSXP</code>, otherwise <code>FALSE</code>.</p>
+<p>No function tests for <code>RAWSXP</code> or <code>VECSXP</code>; use <code>TYPEOF(x) == RAWSXP</code> or <code>TYPEOF(x) == VECSXP</code> instead.</p>
 <p><strong>See also:</strong> <a href="#Rf_isNewList"><code>Rf_isNewList()</code></a>, <a href="attributes.html#Rf_isFactor"><code>Rf_isFactor()</code></a></p>
 </section>
-<section id="Rf_isNewList" class="level3" data-number="5.5.2">
-<h3 data-number="5.5.2" class="anchored" data-anchor-id="Rf_isNewList"><span class="header-section-number">5.5.2</span> <code>Rf_isNewList()</code> (<code>Rf_isVectorAtomic()</code>, <code>Rf_isVectorList()</code>, <code>Rf_isVector()</code>, <code>Rf_isNumber()</code>, <code>Rf_isNumeric()</code>)</h3>
-<p>Test for frequently used combinations of vector types.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb37"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>Rboolean Rf_isNewList<span class="op">(</span>SEXP s<span class="op">);</span></span>
-<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>Rboolean Rf_isVectorAtomic<span class="op">(</span>SEXP s<span class="op">);</span></span>
-<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>Rboolean Rf_isVectorList<span class="op">(</span>SEXP s<span class="op">);</span></span>
-<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>Rboolean Rf_isVector<span class="op">(</span>SEXP s<span class="op">);</span></span>
-<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>Rboolean Rf_isNumber<span class="op">(</span>SEXP s<span class="op">);</span></span>
-<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>Rboolean Rf_isNumeric<span class="op">(</span>SEXP s<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<section id="Rf_isInteger" class="level3" data-number="5.5.2">
+<h3 data-number="5.5.2" class="anchored" data-anchor-id="Rf_isInteger"><span class="header-section-number">5.5.2</span> <code>Rf_isInteger()</code></h3>
+<p><strong>Header:</strong> <code>Rinternals.h</code><br>
+<strong>R equivalent:</strong> <code>is.integer()</code></p>
+<p>Test if an SEXP is an integer vector.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb41"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>Rboolean Rf_isInteger<span class="op">(</span>SEXP s<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li><code>s</code>: any SEXP.</li>
 </ul>
-<p><code>Rf_isNewList()</code> matches <code>NILSXP</code>/<code>VECSXP</code>; <code>Rf_isVectorAtomic()</code> matches <code>LGLSXP</code>/<code>INTSXP</code>/<code>REALSXP</code>/<code>CPLXSXP</code>/<code>STRSXP</code>/<code>RAWSXP</code>; <code>Rf_isVectorList()</code> matches <code>LISTSXP</code>/<code>EXPRSXP</code>; <code>Rf_isVector()</code> is their union; <code>Rf_isNumber()</code> and <code>Rf_isNumeric()</code> match <code>LGLSXP</code>/<code>REALSXP</code>/ <code>CPLXSXP</code> and non-factor <code>INTSXP</code>. Results can diverge from their R equivalents: <code>Rf_isVectorAtomic(R_NilValue)</code> is false (<code>is.atomic(NULL)</code> is true) while <code>Rf_isNewList(R_NilValue)</code> is true (<code>is.list(NULL)</code> is false); consider writing your own wrapper around <code>TYPEOF(x)</code> instead.</p>
+<p><strong>Returns:</strong> <code>TRUE</code> if <code>s</code> is an <code>INTSXP</code> (including factors), otherwise <code>FALSE</code>.</p>
+<p>Factors are also <code>INTSXP</code>s, so <code>Rf_isInteger()</code> accepts both plain integer vectors and factors; combine with <code>Rf_isFactor()</code> to distinguish them.</p>
+<p><strong>See also:</strong> <a href="attributes.html#Rf_isFactor"><code>Rf_isFactor()</code></a></p>
+</section>
+<section id="Rf_isReal" class="level3" data-number="5.5.3">
+<h3 data-number="5.5.3" class="anchored" data-anchor-id="Rf_isReal"><span class="header-section-number">5.5.3</span> <code>Rf_isReal()</code></h3>
+<p><strong>Header:</strong> <code>Rinternals.h</code><br>
+<strong>R equivalent:</strong> <code>is.double()</code></p>
+<p>Test if an SEXP is a double vector.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb42"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>Rboolean Rf_isReal<span class="op">(</span>SEXP s<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<ul>
+<li><code>s</code>: any SEXP.</li>
+</ul>
+<p><strong>Returns:</strong> <code>TRUE</code> if <code>s</code> is a <code>REALSXP</code>, otherwise <code>FALSE</code>.</p>
+</section>
+<section id="Rf_isComplex" class="level3" data-number="5.5.4">
+<h3 data-number="5.5.4" class="anchored" data-anchor-id="Rf_isComplex"><span class="header-section-number">5.5.4</span> <code>Rf_isComplex()</code></h3>
+<p><strong>Header:</strong> <code>Rinternals.h</code><br>
+<strong>R equivalent:</strong> <code>is.complex()</code></p>
+<p>Test if an SEXP is a complex vector.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb43"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>Rboolean Rf_isComplex<span class="op">(</span>SEXP s<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<ul>
+<li><code>s</code>: any SEXP.</li>
+</ul>
+<p><strong>Returns:</strong> <code>TRUE</code> if <code>s</code> is a <code>CPLXSXP</code>, otherwise <code>FALSE</code>.</p>
+</section>
+<section id="Rf_isString" class="level3" data-number="5.5.5">
+<h3 data-number="5.5.5" class="anchored" data-anchor-id="Rf_isString"><span class="header-section-number">5.5.5</span> <code>Rf_isString()</code></h3>
+<p><strong>Header:</strong> <code>Rinternals.h</code><br>
+<strong>R equivalent:</strong> <code>is.character()</code></p>
+<p>Test if an SEXP is a character vector.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb44"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>Rboolean Rf_isString<span class="op">(</span>SEXP s<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<ul>
+<li><code>s</code>: any SEXP.</li>
+</ul>
+<p><strong>Returns:</strong> <code>TRUE</code> if <code>s</code> is a <code>STRSXP</code>, otherwise <code>FALSE</code>.</p>
+</section>
+<section id="Rf_isExpression" class="level3" data-number="5.5.6">
+<h3 data-number="5.5.6" class="anchored" data-anchor-id="Rf_isExpression"><span class="header-section-number">5.5.6</span> <code>Rf_isExpression()</code></h3>
+<p><strong>Header:</strong> <code>Rinternals.h</code><br>
+<strong>R equivalent:</strong> <code>is.expression()</code></p>
+<p>Test if an SEXP is an expression vector.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb45"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>Rboolean Rf_isExpression<span class="op">(</span>SEXP s<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<ul>
+<li><code>s</code>: any SEXP.</li>
+</ul>
+<p><strong>Returns:</strong> <code>TRUE</code> if <code>s</code> is an <code>EXPRSXP</code>, otherwise <code>FALSE</code>.</p>
+</section>
+<section id="Rf_isNewList" class="level3" data-number="5.5.7">
+<h3 data-number="5.5.7" class="anchored" data-anchor-id="Rf_isNewList"><span class="header-section-number">5.5.7</span> <code>Rf_isNewList()</code></h3>
+<p><strong>Header:</strong> <code>Rinternals.h</code><br>
+<strong>R equivalent:</strong> <code>is.list()</code></p>
+<p>Test if an SEXP is a list (<code>VECSXP</code>) or <code>NULL</code>.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb46"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>Rboolean Rf_isNewList<span class="op">(</span>SEXP s<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<ul>
+<li><code>s</code>: any SEXP.</li>
+</ul>
+<p><strong>Returns:</strong> <code>TRUE</code> if <code>s</code> is a <code>VECSXP</code> or <code>NILSXP</code>, otherwise <code>FALSE</code>.</p>
+<p>Matches <code>NILSXP</code>/<code>VECSXP</code>, so the result diverges from <code>is.list()</code> on <code>NULL</code>: <code>Rf_isNewList(R_NilValue)</code> is true while <code>is.list(NULL)</code> is false. Consider writing your own wrapper around <code>TYPEOF(x)</code> instead.</p>
 <p><strong>See also:</strong> <a href="#Rf_isLogical"><code>Rf_isLogical()</code></a></p>
 </section>
-<section id="Rf_isNull" class="level3" data-number="5.5.3">
-<h3 data-number="5.5.3" class="anchored" data-anchor-id="Rf_isNull"><span class="header-section-number">5.5.3</span> <code>Rf_isNull()</code></h3>
+<section id="Rf_isVectorAtomic" class="level3" data-number="5.5.8">
+<h3 data-number="5.5.8" class="anchored" data-anchor-id="Rf_isVectorAtomic"><span class="header-section-number">5.5.8</span> <code>Rf_isVectorAtomic()</code></h3>
+<p><strong>Header:</strong> <code>Rinternals.h</code><br>
+<strong>R equivalent:</strong> <code>is.atomic()</code></p>
+<p>Test if an SEXP is an atomic vector.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb47"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>Rboolean Rf_isVectorAtomic<span class="op">(</span>SEXP s<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<ul>
+<li><code>s</code>: any SEXP.</li>
+</ul>
+<p><strong>Returns:</strong> <code>TRUE</code> if <code>s</code> is an atomic vector (<code>LGLSXP</code>, <code>INTSXP</code>, <code>REALSXP</code>, <code>CPLXSXP</code>, <code>STRSXP</code>, or <code>RAWSXP</code>), otherwise <code>FALSE</code>.</p>
+<p>Matches <code>LGLSXP</code>/<code>INTSXP</code>/<code>REALSXP</code>/<code>CPLXSXP</code>/<code>STRSXP</code>/<code>RAWSXP</code>, so the result diverges from <code>is.atomic()</code> on <code>NULL</code>: <code>Rf_isVectorAtomic(R_NilValue)</code> is false while <code>is.atomic(NULL)</code> is true. Consider writing your own wrapper around <code>TYPEOF(x)</code> instead.</p>
+</section>
+<section id="Rf_isVectorList" class="level3" data-number="5.5.9">
+<h3 data-number="5.5.9" class="anchored" data-anchor-id="Rf_isVectorList"><span class="header-section-number">5.5.9</span> <code>Rf_isVectorList()</code></h3>
+<p><strong>Header:</strong> <code>Rinternals.h</code></p>
+<p>Test if an SEXP is a pairlist or expression vector.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb48"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>Rboolean Rf_isVectorList<span class="op">(</span>SEXP s<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<ul>
+<li><code>s</code>: any SEXP.</li>
+</ul>
+<p><strong>Returns:</strong> <code>TRUE</code> if <code>s</code> is a <code>LISTSXP</code> or <code>EXPRSXP</code>, otherwise <code>FALSE</code>.</p>
+<p>Matches <code>LISTSXP</code>/<code>EXPRSXP</code>.</p>
+</section>
+<section id="Rf_isVector" class="level3" data-number="5.5.10">
+<h3 data-number="5.5.10" class="anchored" data-anchor-id="Rf_isVector"><span class="header-section-number">5.5.10</span> <code>Rf_isVector()</code></h3>
+<p><strong>Header:</strong> <code>Rinternals.h</code></p>
+<p>Test if an SEXP is any kind of vector.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb49"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>Rboolean Rf_isVector<span class="op">(</span>SEXP s<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<ul>
+<li><code>s</code>: any SEXP.</li>
+</ul>
+<p><strong>Returns:</strong> <code>TRUE</code> if <code>s</code> is any kind of vector, otherwise <code>FALSE</code>.</p>
+<p>The union of <code>Rf_isVectorAtomic()</code> and <code>Rf_isVectorList()</code>.</p>
+<p><strong>See also:</strong> <a href="#Rf_isVectorAtomic"><code>Rf_isVectorAtomic()</code></a>, <a href="#Rf_isVectorList"><code>Rf_isVectorList()</code></a></p>
+</section>
+<section id="Rf_isNumber" class="level3" data-number="5.5.11">
+<h3 data-number="5.5.11" class="anchored" data-anchor-id="Rf_isNumber"><span class="header-section-number">5.5.11</span> <code>Rf_isNumber()</code></h3>
+<p><strong>Header:</strong> <code>Rinternals.h</code></p>
+<p>Test if an SEXP is a numeric-like vector.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb50"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>Rboolean Rf_isNumber<span class="op">(</span>SEXP s<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<ul>
+<li><code>s</code>: any SEXP.</li>
+</ul>
+<p><strong>Returns:</strong> <code>TRUE</code> if <code>s</code> is <code>LGLSXP</code>, <code>REALSXP</code>, <code>CPLXSXP</code>, or a non-factor <code>INTSXP</code>, otherwise <code>FALSE</code>.</p>
+<p>Matches <code>LGLSXP</code>/<code>REALSXP</code>/<code>CPLXSXP</code> and non-factor <code>INTSXP</code>.</p>
+<p><strong>See also:</strong> <a href="#Rf_isNumeric"><code>Rf_isNumeric()</code></a></p>
+</section>
+<section id="Rf_isNumeric" class="level3" data-number="5.5.12">
+<h3 data-number="5.5.12" class="anchored" data-anchor-id="Rf_isNumeric"><span class="header-section-number">5.5.12</span> <code>Rf_isNumeric()</code></h3>
+<p><strong>Header:</strong> <code>Rinternals.h</code><br>
+<strong>R equivalent:</strong> <code>is.numeric()</code></p>
+<p>Test if an SEXP is a numeric-like vector.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb51"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>Rboolean Rf_isNumeric<span class="op">(</span>SEXP s<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<ul>
+<li><code>s</code>: any SEXP.</li>
+</ul>
+<p><strong>Returns:</strong> <code>TRUE</code> if <code>s</code> is <code>LGLSXP</code>, <code>REALSXP</code>, <code>CPLXSXP</code>, or a non-factor <code>INTSXP</code>, otherwise <code>FALSE</code>.</p>
+<p>Matches <code>LGLSXP</code>/<code>REALSXP</code>/<code>CPLXSXP</code> and non-factor <code>INTSXP</code>.</p>
+<p><strong>See also:</strong> <a href="#Rf_isNumber"><code>Rf_isNumber()</code></a></p>
+</section>
+<section id="Rf_isNull" class="level3" data-number="5.5.13">
+<h3 data-number="5.5.13" class="anchored" data-anchor-id="Rf_isNull"><span class="header-section-number">5.5.13</span> <code>Rf_isNull()</code></h3>
+<p><strong>Header:</strong> <code>Rinternals.h</code><br>
+<strong>R equivalent:</strong> <code>is.null()</code></p>
 <p>Test whether an object is NULL.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb38"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>Rboolean <span class="op">(</span>Rf_isNull<span class="op">)(</span>SEXP s<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>is.null()</code></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb52"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>Rboolean <span class="op">(</span>Rf_isNull<span class="op">)(</span>SEXP s<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Returns:</strong> <code>TRUE</code> if <code>s</code> is <code>NULL</code> (<code>NILSXP</code>), otherwise <code>FALSE</code>.</p>
 </section>
 </section>
 <section id="sorting-and-ordering" class="level2" data-number="5.6">
@@ -934,92 +1161,108 @@ window.Quarto = {
 <p>Follows <a href="https://cran.r-project.org/doc/manuals/R-exts.html#Utility-functions-1">WRE §6.10, Utility functions</a> closely.</p>
 <p>Two families: the <code>R_*sort</code> functions sort C arrays in place (the <code>R_qsort*</code> variants use 1-based <code>i:j</code> ranges and don’t handle <code>NA</code>; <code>R_isort</code>/<code>R_rsort</code>/<code>R_csort</code> sort <code>NA</code>s last), while <code>R_orderVector()</code> computes an ordering permutation of R vectors, like <code>order()</code> — note it returns 0-based indices. None of the in-place sorts are stable.</p>
 <section id="R_qsort" class="level3" data-number="5.6.1">
-<h3 data-number="5.6.1" class="anchored" data-anchor-id="R_qsort"><span class="header-section-number">5.6.1</span> <code>R_qsort()</code> (<code>R_qsort_I()</code>, <code>R_qsort_int()</code>, <code>R_qsort_int_I()</code>)</h3>
+<h3 data-number="5.6.1" class="anchored" data-anchor-id="R_qsort"><span class="header-section-number">5.6.1</span> <code>R_qsort()</code>, <code>R_qsort_I()</code>, <code>R_qsort_int()</code>, <code>R_qsort_int_I()</code></h3>
+<p><strong>Header:</strong> <code>R_ext/Utils.h</code><br>
+<strong>R equivalent:</strong> <code>sort()</code></p>
 <p>Sort a numeric array in place using quicksort.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb39"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> R_qsort    <span class="op">(</span><span class="dt">double</span> <span class="op">*</span>v<span class="op">,</span>         <span class="dt">size_t</span> i<span class="op">,</span> <span class="dt">size_t</span> j<span class="op">);</span></span>
-<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> R_qsort_I  <span class="op">(</span><span class="dt">double</span> <span class="op">*</span>v<span class="op">,</span> <span class="dt">int</span> <span class="op">*</span>II<span class="op">,</span> <span class="dt">int</span> i<span class="op">,</span> <span class="dt">int</span> j<span class="op">);</span></span>
-<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> R_qsort_int  <span class="op">(</span><span class="dt">int</span> <span class="op">*</span>iv<span class="op">,</span>         <span class="dt">size_t</span> i<span class="op">,</span> <span class="dt">size_t</span> j<span class="op">);</span></span>
-<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> R_qsort_int_I<span class="op">(</span><span class="dt">int</span> <span class="op">*</span>iv<span class="op">,</span> <span class="dt">int</span> <span class="op">*</span>II<span class="op">,</span> <span class="dt">int</span> i<span class="op">,</span> <span class="dt">int</span> j<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>R_ext/Utils.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>sort()</code></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb53"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> R_qsort    <span class="op">(</span><span class="dt">double</span> <span class="op">*</span>v<span class="op">,</span>         <span class="dt">size_t</span> i<span class="op">,</span> <span class="dt">size_t</span> j<span class="op">);</span></span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> R_qsort_I  <span class="op">(</span><span class="dt">double</span> <span class="op">*</span>v<span class="op">,</span> <span class="dt">int</span> <span class="op">*</span>II<span class="op">,</span> <span class="dt">int</span> i<span class="op">,</span> <span class="dt">int</span> j<span class="op">);</span></span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> R_qsort_int  <span class="op">(</span><span class="dt">int</span> <span class="op">*</span>iv<span class="op">,</span>         <span class="dt">size_t</span> i<span class="op">,</span> <span class="dt">size_t</span> j<span class="op">);</span></span>
+<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> R_qsort_int_I<span class="op">(</span><span class="dt">int</span> <span class="op">*</span>iv<span class="op">,</span> <span class="dt">int</span> <span class="op">*</span>II<span class="op">,</span> <span class="dt">int</span> i<span class="op">,</span> <span class="dt">int</span> j<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>The dummy index argument is renamed to <code>II</code> to avoid problems with g++ on Solaris.</p>
 <p><strong>See also:</strong> <a href="#R_isort"><code>R_isort()</code></a>, <a href="#R_orderVector"><code>R_orderVector()</code></a></p>
 </section>
 <section id="R_isort" class="level3" data-number="5.6.2">
-<h3 data-number="5.6.2" class="anchored" data-anchor-id="R_isort"><span class="header-section-number">5.6.2</span> <code>R_isort()</code> (<code>R_rsort()</code>, <code>R_csort()</code>)</h3>
+<h3 data-number="5.6.2" class="anchored" data-anchor-id="R_isort"><span class="header-section-number">5.6.2</span> <code>R_isort()</code>, <code>R_rsort()</code>, <code>R_csort()</code></h3>
+<p><strong>Header:</strong> <code>R_ext/Utils.h</code><br>
+<strong>R equivalent:</strong> <code>sort()</code></p>
 <p>Sort an int, double, or complex array in place.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb40"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> R_isort<span class="op">(</span><span class="dt">int</span><span class="op">*,</span> <span class="dt">int</span><span class="op">);</span></span>
-<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> R_rsort<span class="op">(</span><span class="dt">double</span><span class="op">*,</span> <span class="dt">int</span><span class="op">);</span></span>
-<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> R_csort<span class="op">(</span>Rcomplex<span class="op">*,</span> <span class="dt">int</span><span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>R_ext/Utils.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>sort()</code></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb54"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> R_isort<span class="op">(</span><span class="dt">int</span><span class="op">*,</span> <span class="dt">int</span><span class="op">);</span></span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> R_rsort<span class="op">(</span><span class="dt">double</span><span class="op">*,</span> <span class="dt">int</span><span class="op">);</span></span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> R_csort<span class="op">(</span>Rcomplex<span class="op">*,</span> <span class="dt">int</span><span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>See also:</strong> <a href="#R_qsort"><code>R_qsort()</code></a></p>
 </section>
 <section id="rsort_with_index" class="level3" data-number="5.6.3">
 <h3 data-number="5.6.3" class="anchored" data-anchor-id="rsort_with_index"><span class="header-section-number">5.6.3</span> <code>rsort_with_index()</code></h3>
+<p><strong>Header:</strong> <code>R_ext/Utils.h</code></p>
 <p>Sort a double array in place, reordering an index array alongside.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb41"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> rsort_with_index<span class="op">(</span><span class="dt">double</span> <span class="op">*,</span> <span class="dt">int</span> <span class="op">*,</span> <span class="dt">int</span><span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>R_ext/Utils.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb55"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> rsort_with_index<span class="op">(</span><span class="dt">double</span> <span class="op">*,</span> <span class="dt">int</span> <span class="op">*,</span> <span class="dt">int</span><span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>See also:</strong> <a href="#Rf_revsort"><code>Rf_revsort()</code></a></p>
 </section>
 <section id="Rf_revsort" class="level3" data-number="5.6.4">
 <h3 data-number="5.6.4" class="anchored" data-anchor-id="Rf_revsort"><span class="header-section-number">5.6.4</span> <code>Rf_revsort()</code></h3>
+<p><strong>Header:</strong> <code>R_ext/Utils.h</code></p>
 <p>Sort a double array in reverse order, reordering an index array alongside.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb42"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> Rf_revsort<span class="op">(</span><span class="dt">double</span><span class="op">*,</span> <span class="dt">int</span><span class="op">*,</span> <span class="dt">int</span><span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>R_ext/Utils.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb56"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> Rf_revsort<span class="op">(</span><span class="dt">double</span><span class="op">*,</span> <span class="dt">int</span><span class="op">*,</span> <span class="dt">int</span><span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>See also:</strong> <a href="#rsort_with_index"><code>rsort_with_index()</code></a></p>
 </section>
 <section id="Rf_iPsort" class="level3" data-number="5.6.5">
-<h3 data-number="5.6.5" class="anchored" data-anchor-id="Rf_iPsort"><span class="header-section-number">5.6.5</span> <code>Rf_iPsort()</code> (<code>Rf_rPsort()</code>, <code>Rf_cPsort()</code>)</h3>
+<h3 data-number="5.6.5" class="anchored" data-anchor-id="Rf_iPsort"><span class="header-section-number">5.6.5</span> <code>Rf_iPsort()</code>, <code>Rf_rPsort()</code>, <code>Rf_cPsort()</code></h3>
+<p><strong>Header:</strong> <code>R_ext/Utils.h</code></p>
 <p>Partially sort an int, double, or complex array around the k-th element.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb43"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> Rf_iPsort<span class="op">(</span><span class="dt">int</span><span class="op">*,</span>    <span class="dt">int</span><span class="op">,</span> <span class="dt">int</span><span class="op">);</span></span>
-<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> Rf_rPsort<span class="op">(</span><span class="dt">double</span><span class="op">*,</span> <span class="dt">int</span><span class="op">,</span> <span class="dt">int</span><span class="op">);</span></span>
-<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> Rf_cPsort<span class="op">(</span>Rcomplex<span class="op">*,</span> <span class="dt">int</span><span class="op">,</span> <span class="dt">int</span><span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>R_ext/Utils.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb57"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> Rf_iPsort<span class="op">(</span><span class="dt">int</span><span class="op">*,</span>    <span class="dt">int</span><span class="op">,</span> <span class="dt">int</span><span class="op">);</span></span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> Rf_rPsort<span class="op">(</span><span class="dt">double</span><span class="op">*,</span> <span class="dt">int</span><span class="op">,</span> <span class="dt">int</span><span class="op">);</span></span>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> Rf_cPsort<span class="op">(</span>Rcomplex<span class="op">*,</span> <span class="dt">int</span><span class="op">,</span> <span class="dt">int</span><span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>See also:</strong> <a href="#R_qsort"><code>R_qsort()</code></a></p>
 </section>
 <section id="R_orderVector" class="level3" data-number="5.6.6">
-<h3 data-number="5.6.6" class="anchored" data-anchor-id="R_orderVector"><span class="header-section-number">5.6.6</span> <code>R_orderVector()</code> (<code>R_orderVector1()</code>)</h3>
+<h3 data-number="5.6.6" class="anchored" data-anchor-id="R_orderVector"><span class="header-section-number">5.6.6</span> <code>R_orderVector()</code>, <code>R_orderVector1()</code></h3>
+<p><span class="badge badge-errors">throws</span></p>
+<p><strong>Header:</strong> <code>Rinternals.h</code><br>
+<strong>R equivalent:</strong> <code>order()</code></p>
 <p>Compute an ordering permutation into an index array.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb44"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> R_orderVector <span class="op">(</span><span class="dt">int</span> <span class="op">*</span>indx<span class="op">,</span> <span class="dt">int</span> n<span class="op">,</span> SEXP arglist<span class="op">,</span> Rboolean nalast<span class="op">,</span> Rboolean decreasing<span class="op">);</span></span>
-<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> R_orderVector1<span class="op">(</span><span class="dt">int</span> <span class="op">*</span>indx<span class="op">,</span> <span class="dt">int</span> n<span class="op">,</span> SEXP x<span class="op">,</span>       Rboolean nalast<span class="op">,</span> Rboolean decreasing<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>order()</code></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb58"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> R_orderVector <span class="op">(</span><span class="dt">int</span> <span class="op">*</span>indx<span class="op">,</span> <span class="dt">int</span> n<span class="op">,</span> SEXP arglist<span class="op">,</span> Rboolean nalast<span class="op">,</span> Rboolean decreasing<span class="op">);</span></span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> R_orderVector1<span class="op">(</span><span class="dt">int</span> <span class="op">*</span>indx<span class="op">,</span> <span class="dt">int</span> n<span class="op">,</span> SEXP x<span class="op">,</span>       Rboolean nalast<span class="op">,</span> Rboolean decreasing<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>C equivalent of <code>order(..., na.last, decreasing)</code>; build <code>arglist</code> with <code>Rf_lang2()</code> or <code>Rf_lang3()</code>. <code>R_orderVector1()</code> is the single-vector version, equivalent to <code>order(x, na.last, decreasing)</code>.</p>
 <p><strong>See also:</strong> <a href="#R_qsort"><code>R_qsort()</code></a></p>
 </section>
 <section id="Rf_isUnsorted" class="level3" data-number="5.6.7">
 <h3 data-number="5.6.7" class="anchored" data-anchor-id="Rf_isUnsorted"><span class="header-section-number">5.6.7</span> <code>Rf_isUnsorted()</code></h3>
+<p><span class="badge badge-experimental">experimental</span> <span class="badge badge-errors">throws</span></p>
+<p><strong>Header:</strong> <code>Rinternals.h</code><br>
+<strong>R equivalent:</strong> <code>is.unsorted()</code></p>
 <p>Test whether a vector may be unsorted.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb45"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>Rboolean Rf_isUnsorted<span class="op">(</span>SEXP<span class="op">,</span> Rboolean<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> experimental · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>is.unsorted()</code></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb59"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>Rboolean Rf_isUnsorted<span class="op">(</span>SEXP<span class="op">,</span> Rboolean<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Returns:</strong> <code>TRUE</code> if <code>x</code> may be unsorted, otherwise <code>FALSE</code>.</p>
 </section>
 </section>
 <section id="matching-and-duplication" class="level2" data-number="5.7">
 <h2 data-number="5.7" class="anchored" data-anchor-id="matching-and-duplication"><span class="header-section-number">5.7</span> Matching and duplication</h2>
 <p>Vector-level equivalents of <code>match()</code>, <code>duplicated()</code>, and <code>anyDuplicated()</code>.</p>
 <section id="Rf_any_duplicated" class="level3" data-number="5.7.1">
-<h3 data-number="5.7.1" class="anchored" data-anchor-id="Rf_any_duplicated"><span class="header-section-number">5.7.1</span> <code>Rf_any_duplicated()</code> (<code>Rf_any_duplicated3()</code>)</h3>
+<h3 data-number="5.7.1" class="anchored" data-anchor-id="Rf_any_duplicated"><span class="header-section-number">5.7.1</span> <code>Rf_any_duplicated()</code>, <code>Rf_any_duplicated3()</code></h3>
+<p><span class="badge badge-experimental">experimental</span> <span class="badge badge-errors">throws</span></p>
+<p><strong>Header:</strong> <code>Rinternals.h</code><br>
+<strong>R equivalent:</strong> <code>anyDuplicated()</code></p>
 <p>Find the position of the first duplicated element of a vector.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb46"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>R_xlen_t Rf_any_duplicated<span class="op">(</span>SEXP x<span class="op">,</span> Rboolean from_last<span class="op">);</span></span>
-<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>R_xlen_t Rf_any_duplicated3<span class="op">(</span>SEXP x<span class="op">,</span> SEXP incomp<span class="op">,</span> Rboolean from_last<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> experimental · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>anyDuplicated()</code></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb60"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>R_xlen_t Rf_any_duplicated<span class="op">(</span>SEXP x<span class="op">,</span> Rboolean from_last<span class="op">);</span></span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a>R_xlen_t Rf_any_duplicated3<span class="op">(</span>SEXP x<span class="op">,</span> SEXP incomp<span class="op">,</span> Rboolean from_last<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Returns:</strong> The one-based index of the first duplicated element, or 0 if there are no duplicates.</p>
 </section>
 <section id="Rf_match" class="level3" data-number="5.7.2">
-<h3 data-number="5.7.2" class="anchored" data-anchor-id="Rf_match"><span class="header-section-number">5.7.2</span> <code>Rf_match()</code> (<code>Rf_matchE()</code>)</h3>
+<h3 data-number="5.7.2" class="anchored" data-anchor-id="Rf_match"><span class="header-section-number">5.7.2</span> <code>Rf_match()</code>, <code>Rf_matchE()</code></h3>
+<p><span class="badge badge-experimental">experimental</span> <span class="badge badge-protect">needs protect</span> <span class="badge badge-errors">throws</span></p>
+<p><strong>Header:</strong> <code>Rinternals.h</code><br>
+<strong>R equivalent:</strong> <code>match()</code></p>
 <p>Find the positions of first matches between two vectors.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb47"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>SEXP Rf_match<span class="op">(</span>SEXP itable<span class="op">,</span> SEXP ix<span class="op">,</span> <span class="dt">int</span> no_match<span class="op">);</span></span>
-<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>SEXP Rf_matchE<span class="op">(</span>SEXP itable<span class="op">,</span> SEXP ix<span class="op">,</span> <span class="dt">int</span> no_match<span class="op">,</span> SEXP env<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> experimental · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> result · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>match()</code></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb61"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a>SEXP Rf_match<span class="op">(</span>SEXP itable<span class="op">,</span> SEXP ix<span class="op">,</span> <span class="dt">int</span> no_match<span class="op">);</span></span>
+<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a>SEXP Rf_matchE<span class="op">(</span>SEXP itable<span class="op">,</span> SEXP ix<span class="op">,</span> <span class="dt">int</span> no_match<span class="op">,</span> SEXP env<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Returns:</strong> A freshly allocated <code>INTSXP</code> the length of <code>ix</code> giving one-based match positions in <code>itable</code>, or <code>no_match</code> where unmatched.</p>
 <p>In <code>Rf_matchE()</code>, <code>env</code> is used to look up <code>as.character</code> when translating <code>POSIXlt</code>; rarely needed directly.</p>
 <p><strong>See also:</strong> <a href="strings.html#Rf_pmatch"><code>Rf_pmatch()</code></a></p>
 </section>
 <section id="Rf_duplicated" class="level3" data-number="5.7.3">
 <h3 data-number="5.7.3" class="anchored" data-anchor-id="Rf_duplicated"><span class="header-section-number">5.7.3</span> <code>Rf_duplicated()</code></h3>
+<p><span class="badge badge-experimental">experimental</span> <span class="badge badge-protect">needs protect</span> <span class="badge badge-errors">throws</span></p>
+<p><strong>Header:</strong> <code>Rinternals.h</code><br>
+<strong>R equivalent:</strong> <code>duplicated()</code></p>
 <p>Identify duplicated elements of a vector.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb48"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>SEXP Rf_duplicated<span class="op">(</span>SEXP x<span class="op">,</span> Rboolean from_last<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> experimental · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> result · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>duplicated()</code></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb62"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a>SEXP Rf_duplicated<span class="op">(</span>SEXP x<span class="op">,</span> Rboolean from_last<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li><code>x</code>: a vector.</li>
 <li><code>from_last</code>: if <code>TRUE</code>, search from the last element.</li>
 </ul>
+<p><strong>Returns:</strong> A freshly allocated <code>LGLSXP</code> the same length as <code>x</code>, <code>TRUE</code> at duplicated positions.</p>
 <p>Returns an <code>LGLSXP</code> the same length as <code>x</code>.</p>
 </section>
 </section>
@@ -1028,9 +1271,10 @@ window.Quarto = {
 <p>A couple of macros test whether an object is a “scalar” (a vector of length 1):</p>
 <section id="Rf_copyVector" class="level3" data-number="5.8.1">
 <h3 data-number="5.8.1" class="anchored" data-anchor-id="Rf_copyVector"><span class="header-section-number">5.8.1</span> <code>Rf_copyVector()</code></h3>
+<p><span class="badge badge-errors">throws</span></p>
+<p><strong>Header:</strong> <code>Rinternals.h</code></p>
 <p>Copy from one vector to another, recycling as necessary.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb49"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> Rf_copyVector<span class="op">(</span>SEXP source<span class="op">,</span> SEXP target<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb63"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> Rf_copyVector<span class="op">(</span>SEXP source<span class="op">,</span> SEXP target<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li><code>source</code>: the vector to copy from.</li>
 <li><code>target</code>: the vector to copy to.</li>
@@ -1040,20 +1284,24 @@ window.Quarto = {
 </section>
 <section id="Rf_stringSuffix" class="level3" data-number="5.8.2">
 <h3 data-number="5.8.2" class="anchored" data-anchor-id="Rf_stringSuffix"><span class="header-section-number">5.8.2</span> <code>Rf_stringSuffix()</code></h3>
+<p><span class="badge badge-protect">needs protect</span> <span class="badge badge-errors">throws</span></p>
+<p><strong>Header:</strong> <code>Rinternals.h</code><br>
+<strong>R equivalent:</strong> <code>substring()</code></p>
 <p>Extract the tail of a STRSXP.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb50"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>SEXP Rf_stringSuffix<span class="op">(</span>SEXP string<span class="op">,</span> <span class="dt">int</span> fromIndex<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> result · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>substring()</code></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb64"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a>SEXP Rf_stringSuffix<span class="op">(</span>SEXP string<span class="op">,</span> <span class="dt">int</span> fromIndex<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li><code>string</code>: a <code>STRSXP</code>.</li>
 <li><code>fromIndex</code>: the index to start the suffix from.</li>
 </ul>
+<p><strong>Returns:</strong> A freshly allocated <code>STRSXP</code> with each element replaced by its suffix starting at <code>fromIndex</code>.</p>
 </section>
 <section id="IS_SCALAR" class="level3" data-number="5.8.3">
-<h3 data-number="5.8.3" class="anchored" data-anchor-id="IS_SCALAR"><span class="header-section-number">5.8.3</span> <code>IS_SCALAR()</code> (<code>IS_SIMPLE_SCALAR()</code>)</h3>
+<h3 data-number="5.8.3" class="anchored" data-anchor-id="IS_SCALAR"><span class="header-section-number">5.8.3</span> <code>IS_SCALAR()</code>, <code>IS_SIMPLE_SCALAR()</code></h3>
+<p><span class="badge badge-experimental">experimental</span></p>
+<p><strong>Header:</strong> <code>Rinternals.h</code></p>
 <p>Test if an object is a scalar (a vector of length 1) of the given type.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb51"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#define IS_SCALAR</span><span class="op">(</span><span class="pp">x</span><span class="op">,</span><span class="pp"> type</span><span class="op">)</span><span class="pp"> </span><span class="op">(</span><span class="pp">TYPEOF</span><span class="op">(</span><span class="pp">x</span><span class="op">)</span><span class="pp"> </span><span class="op">==</span><span class="pp"> </span><span class="op">(</span><span class="pp">type</span><span class="op">)</span><span class="pp"> </span><span class="op">&amp;&amp;</span><span class="pp"> XLENGTH</span><span class="op">(</span><span class="pp">x</span><span class="op">)</span><span class="pp"> </span><span class="op">==</span><span class="pp"> </span><span class="dv">1</span><span class="op">)</span></span>
-<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#define IS_SIMPLE_SCALAR</span><span class="op">(</span><span class="pp">x</span><span class="op">,</span><span class="pp"> type</span><span class="op">)</span><span class="pp"> </span><span class="op">(</span><span class="pp">IS_SCALAR</span><span class="op">(</span><span class="pp">x</span><span class="op">,</span><span class="pp"> type</span><span class="op">)</span><span class="pp"> </span><span class="op">&amp;&amp;</span><span class="pp"> ATTRIB</span><span class="op">(</span><span class="pp">x</span><span class="op">)</span><span class="pp"> </span><span class="op">==</span><span class="pp"> </span>R_NilValue<span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> experimental · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb65"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#define IS_SCALAR</span><span class="op">(</span><span class="pp">x</span><span class="op">,</span><span class="pp"> type</span><span class="op">)</span><span class="pp"> </span><span class="op">(</span><span class="pp">TYPEOF</span><span class="op">(</span><span class="pp">x</span><span class="op">)</span><span class="pp"> </span><span class="op">==</span><span class="pp"> </span><span class="op">(</span><span class="pp">type</span><span class="op">)</span><span class="pp"> </span><span class="op">&amp;&amp;</span><span class="pp"> XLENGTH</span><span class="op">(</span><span class="pp">x</span><span class="op">)</span><span class="pp"> </span><span class="op">==</span><span class="pp"> </span><span class="dv">1</span><span class="op">)</span></span>
+<span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#define IS_SIMPLE_SCALAR</span><span class="op">(</span><span class="pp">x</span><span class="op">,</span><span class="pp"> type</span><span class="op">)</span><span class="pp"> </span><span class="op">(</span><span class="pp">IS_SCALAR</span><span class="op">(</span><span class="pp">x</span><span class="op">,</span><span class="pp"> type</span><span class="op">)</span><span class="pp"> </span><span class="op">&amp;&amp;</span><span class="pp"> ATTRIB</span><span class="op">(</span><span class="pp">x</span><span class="op">)</span><span class="pp"> </span><span class="op">==</span><span class="pp"> </span>R_NilValue<span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li><code>x</code>: any SEXP.</li>
 <li><code>type</code>: a <code>SEXPTYPE</code>.</li>
@@ -1062,12 +1310,14 @@ window.Quarto = {
 </section>
 <section id="Rf_isVectorizable" class="level3" data-number="5.8.4">
 <h3 data-number="5.8.4" class="anchored" data-anchor-id="Rf_isVectorizable"><span class="header-section-number">5.8.4</span> <code>Rf_isVectorizable()</code></h3>
+<p><span class="badge badge-experimental">experimental</span></p>
+<p><strong>Header:</strong> <code>Rinternals.h</code></p>
 <p>Test if a list can be converted into a vector.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb52"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>Rboolean Rf_isVectorizable<span class="op">(</span>SEXP x<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> experimental · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb66"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a>Rboolean Rf_isVectorizable<span class="op">(</span>SEXP x<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li><code>x</code>: a list or pairlist.</li>
 </ul>
+<p><strong>Returns:</strong> <code>TRUE</code> if every element of <code>x</code> is a vector of length 0 or 1, otherwise <code>FALSE</code>.</p>
 <p>True when every element of the list or pairlist is a vector of length 0 or 1.</p>
 
 

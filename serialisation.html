@@ -112,6 +112,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 }</script>
 
 
+<link rel="stylesheet" href="badges.css">
 </head>
 
 <body class="nav-sidebar floating quarto-light">
@@ -368,17 +369,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul>
   <li><a href="#xdr-encoding" id="toc-xdr-encoding" class="nav-link active" data-scroll-target="#xdr-encoding"><span class="header-section-number">17.1</span> XDR encoding</a>
   <ul class="collapse">
-  <li><a href="#R_XDR_DOUBLE_SIZE" id="toc-R_XDR_DOUBLE_SIZE" class="nav-link" data-scroll-target="#R_XDR_DOUBLE_SIZE"><span class="header-section-number">17.1.1</span> <code>R_XDR_DOUBLE_SIZE()</code> (<code>R_XDR_INTEGER_SIZE()</code>)</a></li>
-  <li><a href="#R_XDREncodeDouble" id="toc-R_XDREncodeDouble" class="nav-link" data-scroll-target="#R_XDREncodeDouble"><span class="header-section-number">17.1.2</span> <code>R_XDREncodeDouble()</code> (<code>R_XDRDecodeDouble()</code>, <code>R_XDREncodeInteger()</code>, <code>R_XDRDecodeInteger()</code>)</a></li>
+  <li><a href="#R_XDR_DOUBLE_SIZE" id="toc-R_XDR_DOUBLE_SIZE" class="nav-link" data-scroll-target="#R_XDR_DOUBLE_SIZE"><span class="header-section-number">17.1.1</span> <code>R_XDR_DOUBLE_SIZE()</code>, <code>R_XDR_INTEGER_SIZE()</code></a></li>
+  <li><a href="#R_XDREncodeDouble" id="toc-R_XDREncodeDouble" class="nav-link" data-scroll-target="#R_XDREncodeDouble"><span class="header-section-number">17.1.2</span> <code>R_XDREncodeDouble()</code>, <code>R_XDRDecodeDouble()</code>, <code>R_XDREncodeInteger()</code>, <code>R_XDRDecodeInteger()</code></a></li>
   </ul></li>
   <li><a href="#persistence-streams" id="toc-persistence-streams" class="nav-link" data-scroll-target="#persistence-streams"><span class="header-section-number">17.2</span> Persistence streams</a>
   <ul class="collapse">
-  <li><a href="#R_InitInPStream" id="toc-R_InitInPStream" class="nav-link" data-scroll-target="#R_InitInPStream"><span class="header-section-number">17.2.1</span> <code>R_InitInPStream()</code> (<code>R_InitOutPStream()</code>)</a></li>
-  <li><a href="#R_InitFileInPStream" id="toc-R_InitFileInPStream" class="nav-link" data-scroll-target="#R_InitFileInPStream"><span class="header-section-number">17.2.2</span> <code>R_InitFileInPStream()</code> (<code>R_InitFileOutPStream()</code>)</a></li>
+  <li><a href="#R_InitInPStream" id="toc-R_InitInPStream" class="nav-link" data-scroll-target="#R_InitInPStream"><span class="header-section-number">17.2.1</span> <code>R_InitInPStream()</code>, <code>R_InitOutPStream()</code></a></li>
+  <li><a href="#R_InitFileInPStream" id="toc-R_InitFileInPStream" class="nav-link" data-scroll-target="#R_InitFileInPStream"><span class="header-section-number">17.2.2</span> <code>R_InitFileInPStream()</code>, <code>R_InitFileOutPStream()</code></a></li>
   </ul></li>
   <li><a href="#serialising-objects" id="toc-serialising-objects" class="nav-link" data-scroll-target="#serialising-objects"><span class="header-section-number">17.3</span> Serialising objects</a>
   <ul class="collapse">
-  <li><a href="#R_Serialize" id="toc-R_Serialize" class="nav-link" data-scroll-target="#R_Serialize"><span class="header-section-number">17.3.1</span> <code>R_Serialize()</code> (<code>R_Unserialize()</code>)</a></li>
+  <li><a href="#R_Serialize" id="toc-R_Serialize" class="nav-link" data-scroll-target="#R_Serialize"><span class="header-section-number">17.3.1</span> <code>R_Serialize()</code>, <code>R_Unserialize()</code></a></li>
   </ul></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/hadley/r-internals/edit/main/serialisation.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/hadley/r-internals/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
@@ -410,20 +411,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 data-number="17.1" class="anchored" data-anchor-id="xdr-encoding"><span class="header-section-number">17.1</span> XDR encoding</h2>
 <p>XDR is the default binary serialisation format: big-endian and platform-independent, so streams are portable across architectures. These helpers encode and decode individual values when you implement a custom stream.</p>
 <section id="R_XDR_DOUBLE_SIZE" class="level3" data-number="17.1.1">
-<h3 data-number="17.1.1" class="anchored" data-anchor-id="R_XDR_DOUBLE_SIZE"><span class="header-section-number">17.1.1</span> <code>R_XDR_DOUBLE_SIZE()</code> (<code>R_XDR_INTEGER_SIZE()</code>)</h3>
+<h3 data-number="17.1.1" class="anchored" data-anchor-id="R_XDR_DOUBLE_SIZE"><span class="header-section-number">17.1.1</span> <code>R_XDR_DOUBLE_SIZE()</code>, <code>R_XDR_INTEGER_SIZE()</code></h3>
+<p><strong>Header:</strong> <code>Rinternals.h</code></p>
 <p>Specify the byte sizes of doubles and integers in XDR serialisation format.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#define R_XDR_DOUBLE_SIZE </span><span class="dv">8</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#define R_XDR_INTEGER_SIZE </span><span class="dv">4</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 </section>
 <section id="R_XDREncodeDouble" class="level3" data-number="17.1.2">
-<h3 data-number="17.1.2" class="anchored" data-anchor-id="R_XDREncodeDouble"><span class="header-section-number">17.1.2</span> <code>R_XDREncodeDouble()</code> (<code>R_XDRDecodeDouble()</code>, <code>R_XDREncodeInteger()</code>, <code>R_XDRDecodeInteger()</code>)</h3>
+<h3 data-number="17.1.2" class="anchored" data-anchor-id="R_XDREncodeDouble"><span class="header-section-number">17.1.2</span> <code>R_XDREncodeDouble()</code>, <code>R_XDRDecodeDouble()</code>, <code>R_XDREncodeInteger()</code>, <code>R_XDRDecodeInteger()</code></h3>
+<p><strong>Header:</strong> <code>Rinternals.h</code></p>
 <p>Encode and decode doubles and integers in XDR format.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> R_XDREncodeDouble<span class="op">(</span><span class="dt">double</span> d<span class="op">,</span> <span class="dt">void</span> <span class="op">*</span>buf<span class="op">);</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="dt">double</span> R_XDRDecodeDouble<span class="op">(</span><span class="dt">void</span> <span class="op">*</span>buf<span class="op">);</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> R_XDREncodeInteger<span class="op">(</span><span class="dt">int</span> i<span class="op">,</span> <span class="dt">void</span> <span class="op">*</span>buf<span class="op">);</span></span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> R_XDRDecodeInteger<span class="op">(</span><span class="dt">void</span> <span class="op">*</span>buf<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> API · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
+<p><strong>Returns:</strong> <code>R_XDRDecodeDouble()</code> and <code>R_XDRDecodeInteger()</code> return the value decoded from <code>buf</code>.</p>
 </section>
 </section>
 <section id="persistence-streams" class="level2" data-number="17.2">
@@ -468,7 +470,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="pp">#endif</span></span>
 <span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="pp">#endif</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <section id="R_InitInPStream" class="level3" data-number="17.2.1">
-<h3 data-number="17.2.1" class="anchored" data-anchor-id="R_InitInPStream"><span class="header-section-number">17.2.1</span> <code>R_InitInPStream()</code> (<code>R_InitOutPStream()</code>)</h3>
+<h3 data-number="17.2.1" class="anchored" data-anchor-id="R_InitInPStream"><span class="header-section-number">17.2.1</span> <code>R_InitInPStream()</code>, <code>R_InitOutPStream()</code></h3>
+<p><span class="badge badge-experimental">experimental</span></p>
+<p><strong>Header:</strong> <code>Rinternals.h</code></p>
 <p>Initialise a custom input or output persistence stream.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> R_InitInPStream<span class="op">(</span>R_inpstream_t stream<span class="op">,</span> R_pstream_data_t data<span class="op">,</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  R_pstream_format_t type<span class="op">,</span></span>
@@ -480,10 +484,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  <span class="dt">void</span> <span class="op">(*</span>outchar<span class="op">)(</span>R_outpstream_t<span class="op">,</span> <span class="dt">int</span><span class="op">),</span></span>
 <span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  <span class="dt">void</span> <span class="op">(*</span>outbytes<span class="op">)(</span>R_outpstream_t<span class="op">,</span> <span class="dt">void</span> <span class="op">*,</span> <span class="dt">int</span><span class="op">),</span></span>
 <span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  SEXP <span class="op">(*</span>phook<span class="op">)(</span>SEXP<span class="op">,</span> SEXP<span class="op">),</span> SEXP pdata<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> experimental · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 </section>
 <section id="R_InitFileInPStream" class="level3" data-number="17.2.2">
-<h3 data-number="17.2.2" class="anchored" data-anchor-id="R_InitFileInPStream"><span class="header-section-number">17.2.2</span> <code>R_InitFileInPStream()</code> (<code>R_InitFileOutPStream()</code>)</h3>
+<h3 data-number="17.2.2" class="anchored" data-anchor-id="R_InitFileInPStream"><span class="header-section-number">17.2.2</span> <code>R_InitFileInPStream()</code>, <code>R_InitFileOutPStream()</code></h3>
+<p><span class="badge badge-experimental">experimental</span></p>
+<p><strong>Header:</strong> <code>Rinternals.h</code></p>
 <p>Initialise a persistence stream that reads from or writes to a file.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> R_InitFileInPStream<span class="op">(</span>R_inpstream_t stream<span class="op">,</span> <span class="dt">FILE</span> <span class="op">*</span>fp<span class="op">,</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  R_pstream_format_t type<span class="op">,</span></span>
@@ -491,18 +496,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> R_InitFileOutPStream<span class="op">(</span>R_outpstream_t stream<span class="op">,</span> <span class="dt">FILE</span> <span class="op">*</span>fp<span class="op">,</span></span>
 <span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  R_pstream_format_t type<span class="op">,</span> <span class="dt">int</span> version<span class="op">,</span></span>
 <span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  SEXP <span class="op">(*</span>phook<span class="op">)(</span>SEXP<span class="op">,</span> SEXP<span class="op">),</span> SEXP pdata<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> experimental · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> n/a · <strong>Errors:</strong> never · <strong>Since:</strong> — · <strong>R equivalent:</strong> —</p>
 </section>
 </section>
 <section id="serialising-objects" class="level2" data-number="17.3">
 <h2 data-number="17.3" class="anchored" data-anchor-id="serialising-objects"><span class="header-section-number">17.3</span> Serialising objects</h2>
 <p>With a stream initialised, these two functions do the actual work:</p>
 <section id="R_Serialize" class="level3" data-number="17.3.1">
-<h3 data-number="17.3.1" class="anchored" data-anchor-id="R_Serialize"><span class="header-section-number">17.3.1</span> <code>R_Serialize()</code> (<code>R_Unserialize()</code>)</h3>
+<h3 data-number="17.3.1" class="anchored" data-anchor-id="R_Serialize"><span class="header-section-number">17.3.1</span> <code>R_Serialize()</code>, <code>R_Unserialize()</code></h3>
+<p><span class="badge badge-experimental">experimental</span> <span class="badge badge-protect">needs protect</span> <span class="badge badge-errors">throws</span></p>
+<p><strong>Header:</strong> <code>Rinternals.h</code><br>
+<strong>R equivalent:</strong> <code>serialize()</code></p>
 <p>Serialise an R object to an output stream, or unserialise it from an input stream.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> R_Serialize<span class="op">(</span>SEXP s<span class="op">,</span> R_outpstream_t ops<span class="op">);</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>SEXP R_Unserialize<span class="op">(</span>R_inpstream_t ips<span class="op">);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Status:</strong> experimental · <strong>Header:</strong> <code>Rinternals.h</code> · <strong>Protect:</strong> result · <strong>Errors:</strong> can throw · <strong>Since:</strong> — · <strong>R equivalent:</strong> <code>serialize()</code></p>
+<p><strong>Returns:</strong> <code>R_Unserialize()</code> returns the unserialised object; freshly allocated and unprotected.</p>
 <p>The <code>SEXP</code> returned by <code>R_Unserialize()</code> is freshly allocated and must be protected from garbage collection.</p>
 
 
